@@ -9,7 +9,11 @@ target/
 .classpath
 .factorypath
 .project
+<<<<<<< HEAD
 .settings/
+=======
+.settings
+>>>>>>> 6703599e7401e0ce706613b73d838f5b3aee501c
 .springBeans
 .sts4-cache
 
@@ -31,6 +35,7 @@ build/
 
 ### VS Code ###
 .vscode/
+<<<<<<< HEAD
 
 ### Windows OS ###
 Thumbs.db
@@ -43,3 +48,5 @@ Desktop.ini
 .cache/
 
 
+=======
+>>>>>>> 6703599e7401e0ce706613b73d838f5b3aee501c
