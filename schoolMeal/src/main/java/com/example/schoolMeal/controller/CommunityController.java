@@ -21,8 +21,12 @@ public class CommunityController {
     // 게시물 생성
     @PostMapping("/create")  // ResponseEntity<?> 에서 ?인 이유는 어떠한 타입도 반환이 가능하다, 동적 응답을 위해서
     public ResponseEntity<?> createCommunity(@RequestBody @Valid CommunityDto communityDto, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {    // bindingResult 를 통해 검사 , 에러가 있으면 badRequest로
-            String errorMessage = bindingResult.getFieldError().getDefaultMessage();
+        if (bindingResult.hasErrors()) {
+
+            // bindingResult.getFieldError()가 null이 아닌지 체크하고, null일 경우 기본 메시지 설정
+            String errorMessage = bindingResult.getFieldError() != null
+                    ? bindingResult.getFieldError().getDefaultMessage()
+                    : "유효성 검사 오류가 발생했습니다.";
             return ResponseEntity.badRequest().body(errorMessage);
         }
 
