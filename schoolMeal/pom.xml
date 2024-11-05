@@ -117,7 +117,23 @@
 			<version>0.11.2</version>
 			<scope>runtime</scope>
 		</dependency>
-		
+
+		<!-- Jakarta Validation API  유효성검사에 notblank notnul을 쓰기위한 종속성추가 -->
+		<dependency>
+			<groupId>jakarta.validation</groupId>
+			<artifactId>jakarta.validation-api</artifactId>
+			<version>3.0.2</version> <!-- 최신 버전 확인 후 사용 -->
+		</dependency>
+
+		<!-- Hibernate Validator  유효성검사에 notblank notnul을 쓰기위한 종속성추가 -->
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>8.0.1.Final</version> <!-- 최신 버전 확인 후 사용 -->
+		</dependency>
+
+
+
 	</dependencies>
 
 	<build>
