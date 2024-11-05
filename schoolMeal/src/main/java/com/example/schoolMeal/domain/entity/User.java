@@ -1,5 +1,7 @@
 package com.example.schoolMeal.domain.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,6 +32,17 @@ public class User {
 	
 	@Column(nullable=false)
 	private String role;
+	
+	
+	// ---------------------------
+	
+	// 관리자의 밴 여부를 위한 필드들
+	@Column(nullable=false)
+	private String status = "active";
+	
+	@Column(name="ban_until")
+	private LocalDateTime banUntil;
+	
 	
 	public User(String username, String password, String role) {
 		super();
