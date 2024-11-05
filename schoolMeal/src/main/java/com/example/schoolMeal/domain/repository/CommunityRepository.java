@@ -20,11 +20,11 @@ public interface CommunityRepository extends JpaRepository<Community, Long> {
     @Query("UPDATE Community SET viewCount = viewCount + 1 WHERE id = :id")
     void incrementViewCount(@Param("id") Long id);
 
-    // 선택 게시물 삭제 메서드
-    @Transactional
-    @Modifying
-    @Query("DELETE FROM Community WHERE id IN (:deleteList)")
-    void deleteCommunityByIds(@Param("deleteList") Long[] deleteList);
+//    // 선택 게시물 삭제 메서드   (전기수 참고해서 작성했는데 오류가 날 수도 있다해서 보류)
+//    @Transactional
+//    @Modifying
+//    @Query("DELETE FROM Community WHERE id IN (:deleteList)")
+//    void deleteCommunityByIds(@Param("deleteList") Long[] deleteList);
 
     // 공지사항 게시판에서 제목, 내용, 작성자 키워드 검색 ( 일단 종류 관계없이 그냥 검색기능부터 추가 )
    // Page<Community> findAllByCategory(Pageable pageable, Category category);
