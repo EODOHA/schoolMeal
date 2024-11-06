@@ -32,7 +32,14 @@ public class SchoolMealApplication implements CommandLineRunner {
 	
 	@Autowired
 	ExpertQualificationRepository expQualRepository;
+
+	// 급시자료실 - 급식 청책 예시(DB)
+	@Autowired
+    private MealPolicyService mealPolicyService;
 	
+	// 교육 자료 - 영양 및 식생활 교육자료(DB)
+	@Autowired
+	private NutrEduService nutrEduService;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(SchoolMealApplication.class, args);
@@ -59,6 +66,25 @@ public class SchoolMealApplication implements CommandLineRunner {
 		expQualRepository.save(new ExpertQualification("영양사 자격증", expert2));
 		expQualRepository.save(new ExpertQualification("영양교사 자격증", expert2));
 		expQualRepository.save(new ExpertQualification("영양교사 자격증", expert3));
+
+		// 급식 자료실 - 급식 청책 예시(DB)
+		if (mealPolicyService.mealPolicyList().isEmpty()) {
+            MealPolicy mealPolicy1 = new MealPolicy();
+            mealPolicy1.setTitle("제목1");
+            mealPolicy1.setContent("내용1");
+            mealPolicy1.setWriter("작성자1");
+            mealPolicy1.setCreatedDate(LocalDateTime.now());
+            mealPolicyService.write(mealPolicy1);
+		}
+		
+		// 교육 자료 - 영양 및 식생활 교육자료(DB)
+	    if (nutrEduService.nutrEduList().isEmpty()) {
+	    	NutrEdu nutrEdu1 = new NutrEdu();
+	    	nutrEdu1.setTitle("제목1");
+	    	nutrEdu1.setContent("내용1");
+	    	nutrEdu1.setWriter("작성자1");
+	    	nutrEdu1.setCreatedDate(LocalDateTime.now());
+	    	nutrEduService.write(nutrEdu1);
 	}
 
 }
