@@ -8,7 +8,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.example.schoolMeal.domain.entity.User;
+import com.example.schoolMeal.domain.entity.mealInfo.ExpertHistory;
+import com.example.schoolMeal.domain.entity.mealInfo.ExpertQualification;
+import com.example.schoolMeal.domain.entity.mealInfo.MealExpert;
 import com.example.schoolMeal.domain.repository.UserRepository;
+import com.example.schoolMeal.domain.repository.mealInfo.ExpertHistoryRepository;
+import com.example.schoolMeal.domain.repository.mealInfo.ExpertQualificationRepository;
+import com.example.schoolMeal.domain.repository.mealInfo.MealExpertRepository;
 
 @SpringBootApplication
 public class SchoolMealApplication implements CommandLineRunner {
@@ -17,6 +23,16 @@ public class SchoolMealApplication implements CommandLineRunner {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	MealExpertRepository mealExpRepository;
+	
+	@Autowired
+	ExpertHistoryRepository expHistRepository;
+	
+	@Autowired
+	ExpertQualificationRepository expQualRepository;
+	
 	
 	public static void main(String[] args) {
 		SpringApplication.run(SchoolMealApplication.class, args);
@@ -28,6 +44,21 @@ public class SchoolMealApplication implements CommandLineRunner {
 		userRepository.save(new User("admin", "$2a$10$8cjz47bjbR4Mn8GMg9IZx.vyjhLXR/SKKMSZ9.mP9vpMu0ssKi8GW", "ADMIN"));
 		userRepository.save(new User("user1", "$2a$10$NVM0n8ElaRgg7zWO1CxUdei7vWoPg91Lz2aYavh9.f9q0e4bRadue", "USER"));
 		userRepository.save(new User("user2", "$2a$10$NVM0n8ElaRgg7zWO1CxUdei7vWoPg91Lz2aYavh9.f9q0e4bRadue", "USER"));
+		
+		//급식 전문인력 데이터 주입(전문인력, 보유자격, 이력사항)
+		MealExpert expert1 = mealExpRepository.save(new MealExpert("test1", "대전", "영양교사", "test1@test.com"));
+		MealExpert expert2 = mealExpRepository.save(new MealExpert("test2", "세종", "영양사", "test2@test.com"));
+		MealExpert expert3 = mealExpRepository.save(new MealExpert("test3", "충남", "영양교사", "test3@test.com"));
+		
+		expHistRepository.save(new ExpertHistory("A 초등학교 근무",expert1));
+		expHistRepository.save(new ExpertHistory("D 초등학교 근무",expert1));
+		expHistRepository.save(new ExpertHistory("B 중학교 근무",expert2));
+		expHistRepository.save(new ExpertHistory("C 고등학교 근무",expert3));
+		
+		expQualRepository.save(new ExpertQualification("영양교사 자격증", expert1));
+		expQualRepository.save(new ExpertQualification("영양사 자격증", expert2));
+		expQualRepository.save(new ExpertQualification("영양교사 자격증", expert2));
+		expQualRepository.save(new ExpertQualification("영양교사 자격증", expert3));
 	}
 
 }
