@@ -39,5 +39,7 @@ public class MealPolicy {
 	@Column(nullable = false)
 	private LocalDateTime createdDate = LocalDateTime.now();  // 기본값을 현재 시간으로 설정
 	
-	// 첨부자료 추가 예정
+	// 첨부자료(사진의 URL을 저장)
+	@Column(length = 255)
+	private String imgURL;
 }
