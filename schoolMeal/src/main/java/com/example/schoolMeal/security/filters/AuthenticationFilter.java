@@ -33,6 +33,12 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 		// 여러 필터를 처리하기 위해 체인 형태로 연결하는데,
 		// 이때 요청이 각각의 필터를 거치도록 하는 것이 FilterChain의 역할.
 		
+		// "/login" 경로는, 필터를 통과시켜야 하므로.
+		if (request.getRequestURI().equals("/login")) {
+			filterChain.doFilter(request, response);
+			return;
+		}
+		
 		String jws = request.getHeader(HttpHeaders.AUTHORIZATION);
 			// Authorization 헤더에서 토큰을 가져옴.
 		
