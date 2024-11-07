@@ -29,7 +29,6 @@ public class NutrEduService {
 		return nutrEduRepository.findById(id).get();
 	}
 	
-	/*     미구현
 	// 특정 게시글 삭제
 	public void nutrEduDelete(Integer id) {
 		nutrEduRepository.deleteById(id);
@@ -37,8 +36,7 @@ public class NutrEduService {
 	
 	// 게시글 수정
 	public void nutrEduUpdate(NutrEdu nutrEdu) {
-		nutrEduRepository.updateById(nutrEdu);
+		nutrEduRepository.save(nutrEdu);
 	}
 	 
-	*/
 }
