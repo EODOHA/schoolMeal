@@ -1,5 +1,6 @@
 package com.example.schoolMeal.domain.entity.mealInfo;
 
+import com.example.schoolMeal.domain.entity.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -21,7 +22,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExpertHistory {
+public class ExpertHistory extends BaseEntity {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

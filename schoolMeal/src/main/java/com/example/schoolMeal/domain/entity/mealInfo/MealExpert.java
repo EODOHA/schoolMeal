@@ -2,6 +2,8 @@ package com.example.schoolMeal.domain.entity.mealInfo;
 
 import java.util.List;
 
+import com.example.schoolMeal.domain.entity.BaseEntity;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,7 +23,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MealExpert {
+public class MealExpert extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,6 +33,7 @@ public class MealExpert {
 	private String exp_department;	//소속
 	private String exp_position;	//직책
 	private String exp_email;		//이메일
+	
 
 	// 전문가의 이력(1:N 연관관계) -> 한 전문가는 여러 개의 이력을 가질 수 있다.
 	@OneToMany(mappedBy = "mealExpert",
