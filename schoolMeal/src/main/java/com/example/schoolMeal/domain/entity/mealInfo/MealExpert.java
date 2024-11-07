@@ -2,7 +2,7 @@ package com.example.schoolMeal.domain.entity.mealInfo;
 
 import java.util.List;
 
-import com.example.schoolMeal.domain.entity.BaseEntity;
+import com.example.schoolMeal.common.entity.BaseEntity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

@@ -19,6 +19,9 @@ public interface CommunityRepository extends JpaRepository<Community, Long> {
     @Query("UPDATE Community SET viewCount = viewCount + 1 WHERE id = :id")
     void incrementViewCount(@Param("id") Long id);
 
+    // 카테고리에 따른 목록 조회
+    Page<Community> findByCategoryName(String categoryName, Pageable pageable);
+
 
     // 제목 검색 + 카테고리
     Page<Community> findByCategoryNameAndTitleContaining(Pageable pageable, String categoryName, String titleKeyword);

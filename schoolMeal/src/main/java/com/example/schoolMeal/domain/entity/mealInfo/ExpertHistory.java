@@ -1,6 +1,6 @@
 package com.example.schoolMeal.domain.entity.mealInfo;
 
-import com.example.schoolMeal.domain.entity.BaseEntity;
+import com.example.schoolMeal.common.entity.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
