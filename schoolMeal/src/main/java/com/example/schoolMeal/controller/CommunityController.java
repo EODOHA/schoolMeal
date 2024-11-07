@@ -1,8 +1,6 @@
 package com.example.schoolMeal.controller;
 
-import com.example.schoolMeal.dto.communityInfo.CommunityCommentDto;
-import com.example.schoolMeal.dto.communityInfo.CommunityDto;
-import com.example.schoolMeal.dto.communityInfo.CreateCommentRequest;
+import com.example.schoolMeal.dto.CommunityDto;
 import com.example.schoolMeal.service.CommunityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,10 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/communities")
+@RequestMapping("/api/communities")
 public class CommunityController {
 
     @Autowired
@@ -24,17 +20,10 @@ public class CommunityController {
 
     // ------------------------------------ 공지사항 ------------------------------------------------------//
 
-    // 공지사항 목록 조회
-    @GetMapping("/notice/list")
-    public ResponseEntity<Page<CommunityDto>> getNoticeList(Pageable pageable) {
-        Page<CommunityDto> notices = communityService.getCommunityList("notice", pageable);
-        return ResponseEntity.ok(notices);
-    }
-
     // 공지사항  notice/create로 매핑, 리퀘스트바디로 DTO 데이터전달 후 DTO객체로변환 , @Valid로 유효성검사
     @PostMapping("/notice/create")
     public ResponseEntity<?> createNotice(@RequestBody @Valid CommunityDto communityDto, BindingResult bindingResult) {
-        return createCommunity("notice", communityDto, bindingResult);
+        return createCommunity("공지사항", communityDto, bindingResult);
     }
 
     // 특정 게시물 조회
@@ -54,7 +43,7 @@ public class CommunityController {
     // 게시물 수정
     @PutMapping("/notice/{id}")
     public ResponseEntity<CommunityDto> updateNotice(@PathVariable Long id, @RequestBody @Valid CommunityDto communityDto) {
-        communityDto.setCategoryName("notice");
+        communityDto.setCategoryName("공지사항");
         CommunityDto updatedCommunity = communityService.updateCommunity(id, communityDto);
         return ResponseEntity.ok(updatedCommunity);
     }
@@ -69,34 +58,26 @@ public class CommunityController {
     // 공지사항에서 제목으로 검색
     @GetMapping("/notice/search/title")
     public Page<CommunityDto> searchNoticeByTitle(@RequestParam String titleKeyword, Pageable pageable) {
-        return searchByTitle("notice", titleKeyword, pageable);
+        return searchByTitle("공지사항", titleKeyword, pageable);
     }
 
     // 공지사항에서 내용으로 검색
     @GetMapping("/notice/search/content")
     public Page<CommunityDto> searchNoticeByContent(@RequestParam String contentKeyword, Pageable pageable) {
-        return searchByContent("notice", contentKeyword, pageable);
+        return searchByContent("공지사항", contentKeyword, pageable);
     }
 
     // 공지사항에서 작성자ID로 검색
     @GetMapping("/notice/search/author")
     public Page<CommunityDto> searchNoticeByAuthor(@RequestParam String authorKeyword, Pageable pageable) {
-        return searchByAuthor("notice", authorKeyword, pageable);
+        return searchByAuthor("공지사항", authorKeyword, pageable);
     }
 
     // ------------------------------------ 급식 뉴스/소식지 ------------------------------------------------------//
 
-
-    // 급식 뉴스/소식지 목록 조회
-    @GetMapping("/school-news/list")
-    public ResponseEntity<Page<CommunityDto>> getSchoolNewsList(Pageable pageable) {
-        Page<CommunityDto> notices = communityService.getCommunityList("school-news", pageable);
-        return ResponseEntity.ok(notices);
-    }
-
     @PostMapping("/school-news/create")
     public ResponseEntity<?> createSchoolNews(@RequestBody @Valid CommunityDto communityDto, BindingResult bindingResult) {
-        return createCommunity("school-news", communityDto, bindingResult);
+        return createCommunity("급식 뉴스/소식지", communityDto, bindingResult);
     }
 
     // 특정 게시물 조회
@@ -116,7 +97,7 @@ public class CommunityController {
     // 게시물 수정
     @PutMapping("/school-news/{id}")
     public ResponseEntity<CommunityDto> updateSchoolNews(@PathVariable Long id, @RequestBody @Valid CommunityDto communityDto) {
-        communityDto.setCategoryName("school-news");
+        communityDto.setCategoryName("급식 뉴스/소식지");
         CommunityDto updatedCommunity = communityService.updateCommunity(id, communityDto);
         return ResponseEntity.ok(updatedCommunity);
     }
@@ -131,34 +112,27 @@ public class CommunityController {
     // 공지사항에서 제목으로 검색
     @GetMapping("/school-news/search/title")
     public Page<CommunityDto> searchSchoolNewsByTitle(@RequestParam String titleKeyword, Pageable pageable) {
-        return searchByTitle("school-news", titleKeyword, pageable);
+        return searchByTitle("급식 뉴스/소식지", titleKeyword, pageable);
     }
 
     // 공지사항에서 내용으로 검색
     @GetMapping("/school-news/search/content")
     public Page<CommunityDto> searchSchoolNewsContent(@RequestParam String contentKeyword, Pageable pageable) {
-        return searchByContent("school-news", contentKeyword, pageable);
+        return searchByContent("급식 뉴스/소식지", contentKeyword, pageable);
     }
 
     // 공지사항에서 작성자ID로 검색
     @GetMapping("/school-news/search/author")
     public Page<CommunityDto> searchSchoolNewsAuthor(@RequestParam String authorKeyword, Pageable pageable) {
-        return searchByAuthor("school-news", authorKeyword, pageable);
+        return searchByAuthor("급식 뉴스/소식지", authorKeyword, pageable);
     }
 
 
     // ------------------------------------ 학술/연구자료 ------------------------------------------------------//
 
-    // 학술/연구자료 목록 조회
-    @GetMapping("/materials/list")
-    public ResponseEntity<Page<CommunityDto>> getMaterialsList(Pageable pageable) {
-        Page<CommunityDto> notices = communityService.getCommunityList("materials", pageable);
-        return ResponseEntity.ok(notices);
-    }
-
     @PostMapping("/materials/create")
     public ResponseEntity<?> createMaterials(@RequestBody @Valid CommunityDto communityDto, BindingResult bindingResult) {
-        return createCommunity("materials", communityDto, bindingResult);
+        return createCommunity("학술/연구자료", communityDto, bindingResult);
     }
 
     // 특정 게시물 조회
@@ -178,7 +152,7 @@ public class CommunityController {
     // 게시물 수정
     @PutMapping("/materials/{id}")
     public ResponseEntity<CommunityDto> updateMaterials(@PathVariable Long id, @RequestBody @Valid CommunityDto communityDto) {
-        communityDto.setCategoryName("materials");
+        communityDto.setCategoryName("학술/연구자료");
         CommunityDto updatedCommunity = communityService.updateCommunity(id, communityDto);
         return ResponseEntity.ok(updatedCommunity);
     }
@@ -193,34 +167,27 @@ public class CommunityController {
     // 공지사항에서 제목으로 검색
     @GetMapping("/materials/search/title")
     public Page<CommunityDto> searchMaterialsByTitle(@RequestParam String titleKeyword, Pageable pageable) {
-        return searchByTitle("materials", titleKeyword, pageable);
+        return searchByTitle("학술/연구자료", titleKeyword, pageable);
     }
 
     // 공지사항에서 내용으로 검색
     @GetMapping("/materials/search/content")
     public Page<CommunityDto> searchMaterialsContent(@RequestParam String contentKeyword, Pageable pageable) {
-        return searchByContent("materials", contentKeyword, pageable);
+        return searchByContent("학술/연구자료", contentKeyword, pageable);
     }
 
     // 공지사항에서 작성자ID로 검색
     @GetMapping("/materials/search/author")
     public Page<CommunityDto> searchMaterialsAuthor(@RequestParam String authorKeyword, Pageable pageable) {
-        return searchByAuthor("materials", authorKeyword, pageable);
+        return searchByAuthor("학술/연구자료", authorKeyword, pageable);
     }
 
 
     // ------------------------------------ 가공식품 정보 ------------------------------------------------------//
 
-    // 가공식품 목록 조회
-    @GetMapping("/gagongfoods/list")
-    public ResponseEntity<Page<CommunityDto>> getGagongFoodsList(Pageable pageable) {
-        Page<CommunityDto> notices = communityService.getCommunityList("gagongfoods", pageable);
-        return ResponseEntity.ok(notices);
-    }
-
     @PostMapping("/gagongfoods/create")
     public ResponseEntity<?> createGagongFoods(@RequestBody @Valid CommunityDto communityDto, BindingResult bindingResult) {
-        return createCommunity("gagongfoods", communityDto, bindingResult);
+        return createCommunity("가공식품 정보", communityDto, bindingResult);
     }
 
     // 특정 게시물 조회
@@ -240,7 +207,7 @@ public class CommunityController {
     // 게시물 수정
     @PutMapping("/gagongfoods/{id}")
     public ResponseEntity<CommunityDto> updateGagongFoods(@PathVariable Long id, @RequestBody @Valid CommunityDto communityDto) {
-        communityDto.setCategoryName("gagongfoods");
+        communityDto.setCategoryName("가공식품 정보");
         CommunityDto updatedCommunity = communityService.updateCommunity(id, communityDto);
         return ResponseEntity.ok(updatedCommunity);
     }
@@ -255,33 +222,26 @@ public class CommunityController {
     // 가공식품 정보 에서 제목으로 검색
     @GetMapping("/gagongfoods/search/title")
     public Page<CommunityDto> searchGagongFoodsByTitle(@RequestParam String titleKeyword, Pageable pageable) {
-        return searchByTitle("gagongfoods", titleKeyword, pageable);
+        return searchByTitle("가공식품 정보", titleKeyword, pageable);
     }
 
     // 가공식품 정보 에서 내용으로 검색
     @GetMapping("/gagongfoods/search/content")
     public Page<CommunityDto> searchGagongFoodsContent(@RequestParam String contentKeyword, Pageable pageable) {
-        return searchByContent("gagongfoods", contentKeyword, pageable);
+        return searchByContent("가공식품 정보", contentKeyword, pageable);
     }
 
     // 가공식품 정보 에서 작성자ID로 검색
     @GetMapping("/gagongfoods/search/author")
     public Page<CommunityDto> searchGagongFoodsAuthor(@RequestParam String authorKeyword, Pageable pageable) {
-        return searchByAuthor("gagongfoods", authorKeyword, pageable);
+        return searchByAuthor("가공식품 정보", authorKeyword, pageable);
     }
 
     // ------------------------------------ 급식시설·기구 정보 ------------------------------------------------------//
 
-    // 급식시설·기구 목록 조회
-    @GetMapping("/food-equipment/list")
-    public ResponseEntity<Page<CommunityDto>> getFoodEquipmentList(Pageable pageable) {
-        Page<CommunityDto> notices = communityService.getCommunityList("food-equipment", pageable);
-        return ResponseEntity.ok(notices);
-    }
-
     @PostMapping("/food-equipment/create")
     public ResponseEntity<?> createFoodEquipment(@RequestBody @Valid CommunityDto communityDto, BindingResult bindingResult) {
-        return createCommunity("food-equipment", communityDto, bindingResult);
+        return createCommunity("급식시설·기구 정보", communityDto, bindingResult);
     }
 
     // 특정 게시물 조회
@@ -301,7 +261,7 @@ public class CommunityController {
     // 게시물 수정
     @PutMapping("/food-equipment/{id}")
     public ResponseEntity<CommunityDto> updateFoodEquipment(@PathVariable Long id, @RequestBody @Valid CommunityDto communityDto) {
-        communityDto.setCategoryName("food-equipment");
+        communityDto.setCategoryName("급식시설·기구 정보");
         CommunityDto updatedCommunity = communityService.updateCommunity(id, communityDto);
         return ResponseEntity.ok(updatedCommunity);
     }
@@ -316,35 +276,28 @@ public class CommunityController {
     // 가공식품 정보 에서 제목으로 검색
     @GetMapping("/food-equipment/search/title")
     public Page<CommunityDto> searchFoodEquipmentByTitle(@RequestParam String titleKeyword, Pageable pageable) {
-        return searchByTitle("food-equipment", titleKeyword, pageable);
+        return searchByTitle("급식시설·기구 정보", titleKeyword, pageable);
     }
 
     // 가공식품 정보 에서 내용으로 검색
     @GetMapping("/food-equipment/search/content")
     public Page<CommunityDto> searchFoodEquipmentContent(@RequestParam String contentKeyword, Pageable pageable) {
-        return searchByContent("food-equipment", contentKeyword, pageable);
+        return searchByContent("급식시설·기구 정보", contentKeyword, pageable);
     }
 
     // 가공식품 정보 에서 작성자ID로 검색
     @GetMapping("/food-equipment/search/author")
     public Page<CommunityDto> searchFoodEquipmentAuthor(@RequestParam String authorKeyword, Pageable pageable) {
-        return searchByAuthor("food-equipment", authorKeyword, pageable);
+        return searchByAuthor("급식시설·기구 정보", authorKeyword, pageable);
     }
 
-
+    // Add similar methods for other categories...
 
     // ------------------------------------ 지역별 커뮤니티 ------------------------------------------------------//
 
-    // 지역별 커뮤니티 목록 조회
-    @GetMapping("/region-community/list")
-    public ResponseEntity<Page<CommunityDto>> getRegionCommunityList(Pageable pageable) {
-        Page<CommunityDto> notices = communityService.getCommunityList("region-community", pageable);
-        return ResponseEntity.ok(notices);
-    }
-
     @PostMapping("/region-community/create")
     public ResponseEntity<?> createRegionCommunity(@RequestBody @Valid CommunityDto communityDto, BindingResult bindingResult) {
-        return createCommunity("region-community" , communityDto, bindingResult);
+        return createCommunity("지역별 커뮤니티" , communityDto, bindingResult);
     }
 
     // 특정 게시물 조회
@@ -364,7 +317,7 @@ public class CommunityController {
     // 지역별 커뮤니티 게시물 수정
     @PutMapping("/region-community/{id}")
     public ResponseEntity<CommunityDto> updateRegionCommunity(@PathVariable Long id, @RequestBody @Valid CommunityDto communityDto) {
-        communityDto.setCategoryName("region-community");
+        communityDto.setCategoryName("지역별 커뮤니티");
         CommunityDto updatedCommunity = communityService.updateCommunity(id, communityDto);
         return ResponseEntity.ok(updatedCommunity);
     }
@@ -379,62 +332,19 @@ public class CommunityController {
     // 가공식품 정보 에서 제목으로 검색
     @GetMapping("/region-community/search/title")
     public Page<CommunityDto> searchRegionCommunityByTitle(@RequestParam String titleKeyword, Pageable pageable) {
-        return searchByTitle("region-community", titleKeyword, pageable);
+        return searchByTitle("지역별 커뮤니티", titleKeyword, pageable);
     }
 
     // 가공식품 정보 에서 내용으로 검색
     @GetMapping("/region-community/search/content")
     public Page<CommunityDto> searchRegionCommunityContent(@RequestParam String contentKeyword, Pageable pageable) {
-        return searchByContent("region-community", contentKeyword, pageable);
+        return searchByContent("지역별 커뮤니티", contentKeyword, pageable);
     }
 
     // 가공식품 정보 에서 작성자ID로 검색
     @GetMapping("/region-community/search/author")
     public Page<CommunityDto> searchRegionCommunityAuthor(@RequestParam String authorKeyword, Pageable pageable) {
-        return searchByAuthor("region-community", authorKeyword, pageable);
-    }
-
-    // ------------------------------------ 댓글 기능 추가 ------------------------------------------------------//
-
-    // 댓글 조회
-    @GetMapping("/{category}/{id}/comments")
-    public ResponseEntity<List<CommunityCommentDto>> getCommentsByPostId(
-            @PathVariable String category,
-            @PathVariable Long id) {
-        List<CommunityCommentDto> comments = communityService.getCommentsByPostId(id);
-        return ResponseEntity.ok(comments);
-    }
-
-    // 댓글 작성
-    @PostMapping("/{category}/{id}/comments")
-    public ResponseEntity<CommunityCommentDto> createComment(
-            @PathVariable String category,
-            @PathVariable Long id,
-            @RequestBody CreateCommentRequest request) {
-        CommunityCommentDto newComment = communityService.createComment(id, request.getParentCommentId(), request.getContent());
-        return ResponseEntity.ok(newComment);
-    }
-
-    // 댓글 좋아요 증가
-    @PostMapping("/{category}/comments/{commentId}/like")
-    public ResponseEntity<Void> likeComment(@PathVariable String category, @PathVariable Long commentId) {
-        communityService.likeComment(commentId);
-        return ResponseEntity.noContent().build();
-    }
-
-    // 댓글 싫어요 증가
-    @PostMapping("/{category}/comments/{commentId}/dislike")
-    public ResponseEntity<Void> dislikeComment(@PathVariable String category, @PathVariable Long commentId) {
-        communityService.dislikeComment(commentId);
-        return ResponseEntity.noContent().build();
-    }
-
-
-    // 댓글 삭제
-    @DeleteMapping("/comments/{commentId}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Long commentId) {
-        communityService.deleteComment(commentId);
-        return ResponseEntity.noContent().build();
+        return searchByAuthor("지역별 커뮤니티", authorKeyword, pageable);
     }
 
 
