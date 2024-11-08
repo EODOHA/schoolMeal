@@ -33,7 +33,7 @@ public class MealInfoController {
 	}
 	
 	// 전문인력 목록 조회
-	@GetMapping("/experts/select")
+	@GetMapping("/experts/list")
 	public List<MealExpert> getAllExperts(){
 		return mealExpertService.getAllExperts();
 	}

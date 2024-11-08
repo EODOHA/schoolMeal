@@ -18,7 +18,7 @@ import jakarta.transaction.Transactional;
 @Transactional
 public class MealExpertService {
 	
-	private static final Logger logger = LoggerFactory.getLogger(MealExpertService.class);
+//	private static final Logger logger = LoggerFactory.getLogger(MealExpertService.class);
 	
 	
 /* @@@@@@@@@@@@@@@@@@@@@@@	급식 전문 인력관리 게시판	@@@@@@@@@@@@@@@@@@@@@@@ */

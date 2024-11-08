@@ -33,13 +33,13 @@ public class SchoolMealApplication implements CommandLineRunner {
 	private UserRepository userRepository;
 
 	@Autowired
-	MealExpertRepository mealExpRepository;
+	private MealExpertRepository mealExpRepository;
 
 	@Autowired
-	ExpertHistoryRepository expHistRepository;
+	private ExpertHistoryRepository expHistRepository;
 
 	@Autowired
-	ExpertQualificationRepository expQualRepository;
+	private ExpertQualificationRepository expQualRepository;
 
 	// 급식자료실 - 급식 청책 예시(DB)
 	@Autowired
