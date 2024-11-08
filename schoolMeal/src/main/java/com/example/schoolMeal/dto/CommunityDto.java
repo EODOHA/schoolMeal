@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class CommunityDto {
+public class CommunityDto { // asdf
 
     private Long id;
 
