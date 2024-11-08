@@ -1,33 +1,38 @@
-package com.example.schoolMeal.dto;
+package com.example.schoolMeal.dto.communityInfo;
 
 import com.example.schoolMeal.domain.entity.Community;
+import com.example.schoolMeal.domain.entity.Community_Comment;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
-public class CommunityDto { // asdf
+@NoArgsConstructor
+public class CommunityDto {
 
     private Long id;
 
     @NotBlank(message = "제목을 적어주세요")
     @Size(max = 100, message = "제목은 최대 100자까지 입력 가능합니다.")
-    private String title;       //제목
+    private String title;
 
     @Size(max = 2000, message = "내용은 최대 2000자까지 입력 가능합니다.")
-    private String content;     //게시글내용
+    private String content;
 
-    private int viewCount;      //조회수
-    private String author;      //사용자
-    private LocalDateTime createdAt;    //생성일
-    private LocalDateTime updatedAt;    //수정일
+    private int viewCount;
+    private String author;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private String categoryName;
 
-    private String categoryName; // 카테고리 이름
+    // 댓글 리스트 추가
+    private List<com.example.schoolMeal.dto.communityInfo.CommunityCommentDto> comments;
 
-    // Community 엔티티를 CommunityDto로 변환하는 생성자
     public CommunityDto(Community community) {
         this.id = community.getId();
         this.title = community.getTitle();
@@ -36,10 +41,16 @@ public class CommunityDto { // asdf
         this.author = community.getAuthor();
         this.createdAt = community.getCreatedAt();
         this.updatedAt = community.getUpdatedAt();
-        this.categoryName = community.getCategoryName(); // 카테고리 정보 추가
-    }
+        this.categoryName = community.getCategoryName();
 
-    // DTO에서 엔티티로 변환하는 메서드... 사용안해도 되지만 사용하면 유지보수하기 용이하다고 합니다
+        // Community_Comment 엔티티를 CommunityCommentDto로 변환하여 리스트에 추가
+        if (community.getComments() != null) {
+            this.comments = community.getComments().stream()
+                    .map(CommunityCommentDto::new)
+                    .collect(Collectors.toList());
+        }
+    }
+    // CommunityDto를 Community 엔티티로 변환하는 메서드 ( 사용하면 코드가깔끔해지고 유지보수에 용이하다해서 추가)
     public Community toEntity() {
         return Community.builder()
                 .id(this.id)
