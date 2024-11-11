@@ -1,6 +1,5 @@
 package com.example.schoolMeal.controller.mealResource;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +25,7 @@ public class MealPolicyController {
 	
 	@Autowired
 	private MealPolicyService mealPolicyService;
+
 	
 	// 정책자료 작성 폼
 	@GetMapping("/write")
@@ -35,20 +35,10 @@ public class MealPolicyController {
 	
 	// 정책자료 작성 처리
 	@PostMapping("/writepro")
-	public String mealPolicyWritePro(@ModelAttribute MealPolicy mealPolicy) {
-		mealPolicyService.write(mealPolicy);  // 작성된 영양 교육자료 저장
-		return "redirect:/mealPolicy/list";
-	}
-	
-	// 정책자료 첨부파일 저장
-	@PostMapping("/uploadImage")
-	public String uploadImage(@RequestParam("Image") MultipartFile file) {
-		try {
-	        String imageUrl = mealPolicyService.saveImage(file);
-	        return imageUrl;  // 성공 시 이미지 URL 반환
-	    } catch (IOException e) {
-	        return "파일 저장 실패";  // 실패 시 간단히 실패 메시지 반환
-	    }
+	public String mealPolicyWritePro(@ModelAttribute MealPolicy mealPolicy, @RequestParam("file") MultipartFile file) {
+	    // MealPolicyService의 write() 메서드 호출 (file도 함께 전달)
+	    mealPolicyService.write(mealPolicy, file);  // service 메서드에서 MealPolicy와 FileUrl 연결 처리
+	    return "redirect:/mealPolicy/list";  // 저장 후 게시판 리스트로 리디렉션
 	}
 
 	// 정책자료 목록을 반환
@@ -58,16 +48,28 @@ public class MealPolicyController {
 	    return mealPolicyService.mealPolicyList(); // 정잭자료 목록을 JSON 형식으로 반환
 	}
 	
-	// 개별 정책자료를 조회 (ID로 조회) (+ ID로 조회는 임시)
+	// 개별 정책자료를 조회 (ID로 조회)
 	@GetMapping("/view") // localhost:8090/mealPolicy/view?id=1
-	public String mealPolicyView(Model model, @RequestParam("id") Integer id) {
-	    model.addAttribute("mealPolicy", mealPolicyService.mealPolicyView(id));
+	public String mealPolicyView(Model model, @RequestParam("id") Long id) {
+	    // 특정 게시글을 조회하면서 첨부 파일 정보도 함께 가져옴
+	    MealPolicy mealPolicy = mealPolicyService.getPostWithFileDetails(id);
+	    model.addAttribute("mealPolicy", mealPolicy);
 	    return "mealPolicyview";
 	}
 	
+	// 파일 업로드
+	@PostMapping("/post")
+	public String write(@RequestParam("file") MultipartFile files, MealPolicy mealPolicy) {
+	    // MealPolicyService의 write() 메서드 호출
+		mealPolicyService.write(mealPolicy, files);  // 여기서 파일 업로드와 게시글 저장을 처리
+
+	    return "redirect:/mealPolicy/list";
+	}
+
+	
 	// 정책자료 삭제
 	@DeleteMapping("/delete")
-	public String mealPolicyDelete(@RequestParam("id") Integer id) {
+	public String mealPolicyDelete(@RequestParam("id") Long id) {
 		mealPolicyService.mealPolicyDelete(id);
 		return "redirect:/mealPolicy/list";
 	}
@@ -78,6 +80,7 @@ public class MealPolicyController {
         mealPolicyService.mealPolicyUpdate(mealPolicy); // 정책자료 수정
         return "redirect:/mealPolicy/list"; 
     }
+    
     
 }
 
