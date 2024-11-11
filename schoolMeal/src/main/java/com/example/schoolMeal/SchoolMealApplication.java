@@ -1,5 +1,6 @@
 package com.example.schoolMeal;
 
+import java.io.File;
 import java.time.LocalDateTime;
 
 import org.slf4j.Logger;
@@ -9,19 +10,24 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.example.schoolMeal.common.SimpleMultipartFile;
 import com.example.schoolMeal.domain.entity.User;
 import com.example.schoolMeal.domain.entity.edudata.NutrEdu;
 import com.example.schoolMeal.domain.entity.mealInfo.ExpertHistory;
 import com.example.schoolMeal.domain.entity.mealInfo.ExpertQualification;
 import com.example.schoolMeal.domain.entity.mealInfo.MealExpert;
 import com.example.schoolMeal.domain.entity.mealResource.MealPolicy;
+import com.example.schoolMeal.domain.entity.mealResource.MenuRecipe;
 import com.example.schoolMeal.domain.repository.UserRepository;
 import com.example.schoolMeal.domain.repository.mealInfo.ExpertHistoryRepository;
 import com.example.schoolMeal.domain.repository.mealInfo.ExpertQualificationRepository;
 import com.example.schoolMeal.domain.repository.mealInfo.MealExpertRepository;
 import com.example.schoolMeal.service.edudata.NutrEduService;
 import com.example.schoolMeal.service.mealResource.MealPolicyService;
+import com.example.schoolMeal.service.mealResource.MenuRecipeService;
+
 
 @SpringBootApplication
 @EnableJpaAuditing	//Auditing 활성화
@@ -33,17 +39,21 @@ public class SchoolMealApplication implements CommandLineRunner {
 	private UserRepository userRepository;
 
 	@Autowired
-	private MealExpertRepository mealExpRepository;
+	MealExpertRepository mealExpRepository;
 
 	@Autowired
-	private ExpertHistoryRepository expHistRepository;
+	ExpertHistoryRepository expHistRepository;
 
 	@Autowired
-	private ExpertQualificationRepository expQualRepository;
+	ExpertQualificationRepository expQualRepository;
 
 	// 급식자료실 - 급식 청책 예시(DB)
 	@Autowired
 	private MealPolicyService mealPolicyService;
+	
+	// 급식자료실 - 식단 및 레시피 예시(DB)
+	@Autowired
+	private MenuRecipeService menuRecipeService;
 
 	// 교육 자료 - 영양 및 식생활 교육자료(DB)
 	@Autowired
@@ -75,14 +85,56 @@ public class SchoolMealApplication implements CommandLineRunner {
 		expQualRepository.save(new ExpertQualification("영양교사 자격증", expert2));
 		expQualRepository.save(new ExpertQualification("영양교사 자격증", expert3));
 
-		// 급식 자료실 - 급식 청책 예시(DB)
+		// 급식 자료실 - 급식 정책 예시(DB)
 		if (mealPolicyService.mealPolicyList().isEmpty()) {
 			MealPolicy mealPolicy1 = new MealPolicy();
-			mealPolicy1.setTitle("제목1");
-			mealPolicy1.setContent("내용1");
-			mealPolicy1.setWriter("작성자1");
-			mealPolicy1.setCreatedDate(LocalDateTime.now());
-			mealPolicyService.write(mealPolicy1);
+		    mealPolicy1.setTitle("제목1");
+		    mealPolicy1.setContent("내용1");
+		    mealPolicy1.setWriter("작성자1");
+		    mealPolicy1.setCreatedDate(LocalDateTime.now());
+
+		    // 임시 파일을 생성하여 전달
+		    File sampleFile = new File("src/main/resources/sample.txt");
+		    MultipartFile file = new SimpleMultipartFile(sampleFile);
+
+		    mealPolicyService.write(mealPolicy1, file);
+		    
+			for (int i = 2; i < 7; i++) {
+			    // 반복문 안에서 mealPolicy 객체를 생성
+			    MealPolicy mealPolicy = new MealPolicy();
+			    
+			    // mealPolicy에 데이터 설정
+			    mealPolicy.setTitle("제목" + i);  // 제목에 i 값 추가
+			    mealPolicy.setContent("내용" + i);
+			    mealPolicy.setWriter("작성자" + i);
+			    mealPolicy.setCreatedDate(LocalDateTime.now());
+
+			    // 임시 파일을 넣지 않은 버전
+			    mealPolicyService.write(mealPolicy, null);
+			}
+		    
+		}
+		
+		// 급식 자료실 - 식단 및 레시피 예시(DB)
+		if (menuRecipeService.menuRecipeList().isEmpty()) {
+			MenuRecipe menuRecipe1 = new MenuRecipe();
+			menuRecipe1.setTitle("제목1");
+			menuRecipe1.setContent("내용1");
+			menuRecipe1.setWriter("작성자1");
+			menuRecipe1.setCreatedDate(LocalDateTime.now());
+			
+			// 임시 파일을 생성하여 전달
+			File sampleFile = new File("src/main/resources/sample.txt");
+			MultipartFile file = new SimpleMultipartFile(sampleFile);
+			
+			menuRecipeService.write(menuRecipe1, file);
+			
+			MenuRecipe menuRecipe2 = new MenuRecipe();
+			menuRecipe2.setTitle("제목2");
+			menuRecipe2.setContent("내용2");
+			menuRecipe2.setWriter("작성자2");
+			menuRecipe2.setCreatedDate(LocalDateTime.now());
+			menuRecipeService.write(menuRecipe2, null);
 		}
 
 		// 교육 자료 - 영양 및 식생활 교육자료(DB)
