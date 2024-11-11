@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.schoolMeal.domain.entity.mealResource.MenuRecipe;
 import com.example.schoolMeal.service.mealResource.MenuRecipeService;
@@ -30,10 +31,11 @@ public class MenuRecipeController {
 		return "menuRecipewrite";
 	}
 	
-	// 식단 및 레시피 처리
+	// 식단 및 레시피 작성 처리
 	@PostMapping("/writepro")
-	public String menuRecipeWritePro(@ModelAttribute MenuRecipe menuRecipe) {
-		menuRecipeService.write(menuRecipe);  // 작성된 식단 및 레시피 저장
+	public String menuRecipeWritePro(@ModelAttribute MenuRecipe menuRecipe, @RequestParam("file") MultipartFile file) {
+		// MmenuRecipeService의 write() 메서드 호출 (file도 함께 전달)
+		menuRecipeService.write(menuRecipe ,file);  // service 메서드에서 MenuRecipe와 FileUrl 연결 처리
 		return "redirect:/menuRecipe/list";
 	}
 
@@ -45,14 +47,24 @@ public class MenuRecipeController {
 	
 	// 식단 및 레시피를 조회 (ID로 조회) (+ ID로 조회는 임시)
 	@GetMapping("/view") // localhost:8090/menuRecipe/view?id=1
-    public String menuRecipeView(Model model, @RequestParam("id") Integer id) {
-        model.addAttribute("menuRecipe", menuRecipeService.menuRecipeView(id));
+    public String menuRecipeView(Model model, @RequestParam("id") Long id) {
+		MenuRecipe menuRecipe = menuRecipeService.getPostWithFileDetails(id);
+	    model.addAttribute("mealPolicy", menuRecipe);
         return "menuRecipeview";
     }
 	
+	// 파일 업로드
+	@PostMapping("/post")
+	public String write(@RequestParam("file") MultipartFile files, MenuRecipe menuRecipe) {
+		// MenuRecipeService의 write() 메서드 호출
+		menuRecipeService.write(menuRecipe, files);  // 여기서 파일 업로드와 게시글 저장을 처리
+
+		return "redirect:/MenuRecipe/list";
+	}
+	
 	// 식단 및 레시피 삭제
 	@DeleteMapping("/delete")
-	public String menuRecipeDelete(@RequestParam("id") Integer id) {
+	public String menuRecipeDelete(@RequestParam("id") Long id) {
 		menuRecipeService.menuRecipeDelete(id); 
 		return "redirect:/menuRecipe/list";
 	}
