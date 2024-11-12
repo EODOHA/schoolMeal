@@ -7,6 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.example.schoolMeal.domain.entity.mealInfo.ExpertHistory;
 import com.example.schoolMeal.domain.entity.mealInfo.ExpertQualification;
 import com.example.schoolMeal.domain.entity.mealInfo.MealExpert;
+import com.example.schoolMeal.domain.repository.mealInfo.ExpertHistoryRepository;
+import com.example.schoolMeal.domain.repository.mealInfo.ExpertQualificationRepository;
 import com.example.schoolMeal.domain.repository.mealInfo.MealExpertRepository;
 
 @SpringBootTest
@@ -14,72 +16,45 @@ public class MealExpertRepositoryTest {
 
 	@Autowired
 	MealExpertRepository mealExpRepository;
+	@Autowired
+	ExpertHistoryRepository expHistRepository;
+	@Autowired
+	ExpertQualificationRepository expQualRepository;
 
-	
 	@Test
-	void expertCascadeTest() {  // 급식전문인력 연관관계, 영속성 전의 테스트
-		
-		MealExpert expert1 = new MealExpert();
-		expert1.setExp_name("test1");
-		expert1.setExp_department("대전");
-		expert1.setExp_position("영양교사");
-		expert1.setExp_email("test1@test.com");
-	
-		MealExpert expert2 = new MealExpert();
-		expert2.setExp_name("test2");
-		expert2.setExp_department("세종");
-		expert2.setExp_position("영양사");
-		expert2.setExp_email("test2@test.com");
-	
-		MealExpert expert3 = new MealExpert();
-		expert3.setExp_name("test3");
-		expert3.setExp_department("대전");
-		expert3.setExp_position("영양교사");
-		expert3.setExp_email("test3@test.com");
-		
-		mealExpRepository.save(expert1);
-		mealExpRepository.save(expert2);
-		mealExpRepository.save(expert3);
-		
-		// 각각의 전문가에 대해 2개의 이력과 자격을 추가(test)
-		
-		//이력 추가
-		for (int i = 1; i <= 2; i++) {
-		    ExpertHistory history1 = new ExpertHistory();
-		    history1.setExp_hist_history("근무 이력 " + i + " for expert1");
-		    history1.setMealExpert(expert1);
-		    expert1.getHistories().add(history1); 
-		    ExpertHistory history2 = new ExpertHistory();
-		    history2.setExp_hist_history("근무 이력 " + i + " for expert2");
-		    history2.setMealExpert(expert2);
-		    expert2.getHistories().add(history2); 
+	void expertCascadeTest() { // 급식전문인력 연관관계, 영속성 전의 테스트
 
-		    ExpertHistory history3 = new ExpertHistory();
-		    history3.setExp_hist_history("근무 이력 " + i + " for expert3");
-		    history3.setMealExpert(expert3);
-		    expert3.getHistories().add(history3); 
+		for (int i = 1; i <= 3; i++) {
+			// MealExpert 객체 생성
+			MealExpert expert = new MealExpert();
+
+			// 동적으로 값 설정
+			expert.setExp_name("expert" + i);
+			expert.setExp_department("dep" + i);
+			expert.setExp_position("position" + i);
+			expert.setExp_email("expert" + i + "@test.com");
+
+			// 전문가 데이터 저장
+			mealExpRepository.save(expert);
+
+			// 이력 추가
+			for (int j = 1; j <= 2; j++) {
+				ExpertHistory history = new ExpertHistory();
+				history.setExp_hist_history("근무 이력 " + j + " for expert" + i);
+				history.setMealExpert(expert);
+				expert.getHistories().add(history);
+				expHistRepository.save(history);
+			}
+
+			// 자격 추가
+			for (int k = 1; k <= 2; k++) {
+				ExpertQualification qualification = new ExpertQualification();
+				qualification.setExp_qual_qualification("자격증 " + k + " for expert" + i); // 자격증 1 for expert1, 2 for
+																							// expert2 등
+				qualification.setMealExpert(expert);
+				expert.getQualifications().add(qualification);
+				expQualRepository.save(qualification);
+			}
 		}
-
-		// 자격 추가
-		for (int i = 1; i <= 2; i++) {
-		    ExpertQualification qualification1 = new ExpertQualification();
-		    qualification1.setExp_qual_qualification("자격증 " + i + " for expert1");
-		    qualification1.setMealExpert(expert1);
-		    expert1.getQualifications().add(qualification1); 
-		    ExpertQualification qualification2 = new ExpertQualification();
-		    qualification2.setExp_qual_qualification("자격증 " + i + " for expert2");
-		    qualification2.setMealExpert(expert2);
-		    expert2.getQualifications().add(qualification2);
-
-		    ExpertQualification qualification3 = new ExpertQualification();
-		    qualification3.setExp_qual_qualification("자격증 " + i + " for expert3");
-		    qualification3.setMealExpert(expert3);
-		    expert3.getQualifications().add(qualification3); 
-		}
-
-		mealExpRepository.save(expert1);
-		mealExpRepository.save(expert2);
-		mealExpRepository.save(expert3);
 	}
-	
 }
