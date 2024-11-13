@@ -10,4 +10,5 @@ public interface CommunityCommentRepository extends JpaRepository<Community_Comm
 
     // 대댓글을 찾는 메서드
     List<Community_Comment> findByParentComment(Community_Comment parentComment);
+
 }

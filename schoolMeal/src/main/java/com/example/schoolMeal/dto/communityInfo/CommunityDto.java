@@ -29,9 +29,14 @@ public class CommunityDto {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String categoryName;
+    private String videoUrl;
+
+    private String imageUrl;  // 이미지 URL 필드 추가
+    private String fileUrl;   // 파일 URL 필드 추가
+    private String fileName;  // 파일 이름 필드 추가
 
     // 댓글 리스트 추가
-    private List<com.example.schoolMeal.dto.communityInfo.CommunityCommentDto> comments;
+    private List<CommunityCommentDto> comments;
 
     public CommunityDto(Community community) {
         this.id = community.getId();
@@ -43,6 +48,9 @@ public class CommunityDto {
         this.updatedAt = community.getUpdatedAt();
         this.categoryName = community.getCategoryName();
 
+        this.fileUrl = community.getFileUrl();    // 파일 URL 설정
+
+
         // Community_Comment 엔티티를 CommunityCommentDto로 변환하여 리스트에 추가
         if (community.getComments() != null) {
             this.comments = community.getComments().stream()
@@ -50,7 +58,8 @@ public class CommunityDto {
                     .collect(Collectors.toList());
         }
     }
-    // CommunityDto를 Community 엔티티로 변환하는 메서드 ( 사용하면 코드가깔끔해지고 유지보수에 용이하다해서 추가)
+
+    // CommunityDto를 Community 엔티티로 변환하는 메서드
     public Community toEntity() {
         return Community.builder()
                 .id(this.id)
@@ -59,6 +68,10 @@ public class CommunityDto {
                 .viewCount(this.viewCount)
                 .author(this.author)
                 .categoryName(this.categoryName)
+
+
+                .fileUrl(this.fileUrl)    // 파일 URL 설정
+
                 .build();
     }
 }

@@ -8,14 +8,14 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
-@NoArgsConstructor
 @Entity
-@Table(name = "community")
 @Getter
 @Setter
-@ToString
+@NoArgsConstructor
+@Table(name = "community")
 @EntityListeners(AuditingEntityListener.class)
 public class Community {
 
@@ -23,35 +23,56 @@ public class Community {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;       // 게시물 제목
+    private String title;  // 게시물 제목
 
     @Column(length = 2000)
-    private String content;     // 게시물 내용
+    private String content;  // 게시물 내용
 
     @ColumnDefault("0")
-    private int viewCount;      // 조회수, 기본값 0
+    private int viewCount;  // 조회수, 기본값 0
 
-    private String author;      // 작성자 정보
+    private String author;  // 작성자 정보
 
-    private String categoryName; // 카테고리 이름
+    private String categoryName;  // 카테고리 이름
+
+    private String fileUrl;  // 파일 URL을 저장할 필드 추가
 
     @CreatedDate
-    private LocalDateTime createdAt;    // 생성일 (자동 생성)
+    private LocalDateTime createdAt;  // 생성일 (자동 생성)
 
     @LastModifiedDate
-    private LocalDateTime updatedAt;    // 수정일 (자동 수정)
+    private LocalDateTime updatedAt;  // 수정일 (자동 수정)
 
-    // 댓글 리스트 추가 (양방향 관계 설정)
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Community_Comment> comments;
+    // 파일 리스트 (양방향 관계 설정)
+    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommunityFile> files = new ArrayList<>();
 
+    // 댓글 리스트 (양방향 관계 설정)
+    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Community_Comment> comments = new ArrayList<>();
+
+
+    // 엔터티 객체를 쉽세 생성하기위함
     @Builder
-    public Community(Long id, String title, String content, int viewCount, String author, String categoryName) {
+    public Community(Long id, String title, String content, int viewCount, String author, String categoryName, String fileUrl) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.viewCount = viewCount;
         this.author = author;
         this.categoryName = categoryName;
+        this.fileUrl = fileUrl; // fileUrl 필드 초기화
+    }
+
+    // 파일 추가 편의 메서드
+    public void addFile(CommunityFile file) {
+        files.add(file);
+        file.setCommunity(this);  // 연관 관계 설정
+    }
+
+    // 댓글 추가 편의 메서드
+    public void addComment(Community_Comment comment) {
+        comments.add(comment);
+        comment.setCommunity(this);
     }
 }
