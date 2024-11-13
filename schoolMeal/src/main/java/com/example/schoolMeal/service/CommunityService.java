@@ -128,12 +128,14 @@ public class CommunityService {
     //------------------댓글 기능 ----------------//
 
     // 댓글 조회
+    // 댓글 조회
     public List<CommunityCommentDto> getCommentsByPostId(Long postId) {
-        List<Community_Comment> comments = communityCommentRepository.findByPostId(postId);
+        List<Community_Comment> comments = communityCommentRepository.findByCommunity_Id(postId);
         return comments.stream()
                 .map(CommunityCommentDto::new)
                 .collect(Collectors.toList());
     }
+
 
     // 댓글 작성
     public CommunityCommentDto createComment(Long postId, Long parentCommentId, String content) {
