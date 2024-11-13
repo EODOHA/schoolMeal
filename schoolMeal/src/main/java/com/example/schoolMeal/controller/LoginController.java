@@ -1,5 +1,8 @@
 package com.example.schoolMeal.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.schoolMeal.domain.entity.AccountCredentials;
+import com.example.schoolMeal.dto.loginResponse.LoginResponseDto;
 import com.example.schoolMeal.exception.AccountLockedException;
 import com.example.schoolMeal.exception.UserNotFoundException;
 import com.example.schoolMeal.service.JwtService;
@@ -32,6 +36,7 @@ public class LoginController {
 	
 	@RequestMapping(value="/login", method=RequestMethod.POST)
 	public ResponseEntity<?> getToken(@RequestBody AccountCredentials credentials) {
+		LoginResponseDto response = new LoginResponseDto();
 		try {
 			// 사용자 존재 여부 체크
 			boolean isAuthenticated = userService.checkUser(credentials.getUsername(), credentials.getPassword());
@@ -46,25 +51,33 @@ public class LoginController {
 				// 인증 성공 시, 토큰 생성
 				String jwts = jwtService.getToken(auth.getName());
 				
-				// 생성된 토큰으로, 응답을 생성
-				return ResponseEntity.ok()
-						.header(HttpHeaders.AUTHORIZATION, "Bearer" + jwts)
-						.header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Authorization")
-						.build();
+				response.setSuccess(true);
+				response.setToken(jwts);
+				return ResponseEntity.ok(response);
 			} else {
-				// 비밀번호가 틀린 경우.
-				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+				response.setSuccess(false);
+				response.setError("아이디나 비밀번호를 확인해 주세요!");
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
 			}
 		} catch (UserNotFoundException e) {
-			// 사용자 미존재.
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            response.setSuccess(false);
+            response.setError(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		} catch (AccountLockedException e) {
-			// 계정이 잠긴 경우
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
-		} catch (Exception e) {
-			// 기타 다른 예외 처리
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occured");
-		}
-		
+	        response.setSuccess(false);
+	        response.setError(e.getMessage());
+
+	        // HashMap 사용으로 JSON 응답 생성
+	        HashMap<String, Object> responseMap = new HashMap<>();
+	        responseMap.put("error", e.getMessage());
+	        responseMap.put("ban_until", userService.getBanUntil(credentials.getUsername()));
+	        responseMap.put("failed_attempts", userService.getFailedAttempts(credentials.getUsername()));
+
+	        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(responseMap);  // 응답 객체를 JSON으로 보냄	
+        } catch (Exception e) {
+            response.setSuccess(false);
+            response.setError("An error occurred");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
 	}
 }

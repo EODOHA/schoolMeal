@@ -83,5 +83,15 @@ public class User {
 	public void unlockAccount() {
 		this.isLocked = false;
 		this.status = "active"; // 잠금 해제에서는 상태가 "active"
+		this.banUntil = null;
+	}
+	
+	// 6. User 엔티티에 banUntil 설정 시 isLocked을 true로 설정
+	public void setBanUntil(LocalDateTime banUntil) {
+	    this.banUntil = banUntil;
+	    if (banUntil != null && banUntil.isAfter(LocalDateTime.now())) {
+	        this.isLocked = true;  // banUntil이 현재 시간보다 미래라면 계정 잠금
+	        this.status = "banned"; // 상태도 banned로 변경
+	    }
 	}
 }

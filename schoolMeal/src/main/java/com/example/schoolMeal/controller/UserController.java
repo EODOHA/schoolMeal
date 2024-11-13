@@ -13,7 +13,7 @@ public class UserController {
 	@Autowired
 	UserRepository userRepository;
 	
-	@RequestMapping("/users")
+	@RequestMapping
 	public Iterable<User> getUsers() {
 		return userRepository.findAll();
 	}

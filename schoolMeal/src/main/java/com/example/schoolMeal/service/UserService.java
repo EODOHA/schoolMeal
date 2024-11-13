@@ -1,5 +1,7 @@
 package com.example.schoolMeal.service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,11 +51,15 @@ public class UserService {
 		// Optional이 비어 있으면, 사용자 없음.
 		User user = optionalUser
 				.orElseThrow(() -> 
-					new UserNotFoundException("사용자를 찾을 수 없습니다."));
+					new UserNotFoundException("사용자를 찾을 수 없습니다! 계정을 확인해 주세요!"));
 
 		// 계정 잠금 상태 확인
 		if (user.isAccountLocked()) {
-			throw new AccountLockedException("계정이 잠겼습니다.");
+			if (user.getBanUntil() != null && LocalDateTime.now().isAfter(user.getBanUntil())) {
+				user.unlockAccount();
+				userRepository.save(user);
+			}
+			throw new AccountLockedException("계정이 잠겼습니다! 관리자에게 문의해 주세요!");
 		}
 		
 		// 비밀번호가 맞는지 확인.
@@ -70,5 +76,17 @@ public class UserService {
 			userRepository.save(user);
 			return false; // 비밀번호 틀렸으므로 실패.
 		}
+	}
+	
+	public LocalDateTime getBanUntil(String username) {
+		User user = userRepository.findByUsername(username)
+				.orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다! 계정을 확인해 주세요!"));
+		return user.getBanUntil();
+	}
+	
+	public int getFailedAttempts(String username) {
+		User user = userRepository.findByUsername(username)
+				.orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다! 계정을 확인해 주세요!"));
+		return user.getFailedAttempts();
 	}
 }
