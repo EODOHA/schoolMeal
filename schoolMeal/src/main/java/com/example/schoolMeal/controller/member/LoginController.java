@@ -1,4 +1,4 @@
-package com.example.schoolMeal.controller;
+package com.example.schoolMeal.controller.member;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.schoolMeal.domain.entity.AccountCredentials;
 import com.example.schoolMeal.dto.loginResponse.LoginResponseDto;
+import com.example.schoolMeal.dto.member.AccountCredentialsDto;
 import com.example.schoolMeal.exception.AccountLockedException;
 import com.example.schoolMeal.exception.UserNotFoundException;
 import com.example.schoolMeal.service.JwtService;
-import com.example.schoolMeal.service.UserService;
+import com.example.schoolMeal.service.member.MemberService;
 
 @RestController
 public class LoginController {
@@ -32,19 +32,19 @@ public class LoginController {
 	AuthenticationManager authenticationManager;
 	
 	@Autowired
-	private UserService userService;
+	private MemberService memberService;
 	
 	@RequestMapping(value="/login", method=RequestMethod.POST)
-	public ResponseEntity<?> getToken(@RequestBody AccountCredentials credentials) {
+	public ResponseEntity<?> getToken(@RequestBody AccountCredentialsDto credentials) {
 		LoginResponseDto response = new LoginResponseDto();
 		try {
 			// 사용자 존재 여부 체크
-			boolean isAuthenticated = userService.checkUser(credentials.getUsername(), credentials.getPassword());
+			boolean isAuthenticated = memberService.checkMember(credentials.getMemberId(), credentials.getPassword());
 			
 			if (isAuthenticated) {
 				// 인증 및 패스워드 인코더
 				UsernamePasswordAuthenticationToken creds = new UsernamePasswordAuthenticationToken(
-						credentials.getUsername(),
+						credentials.getMemberId(),
 						credentials.getPassword());
 				Authentication auth = authenticationManager.authenticate(creds);
 				
@@ -70,8 +70,8 @@ public class LoginController {
 	        // HashMap 사용으로 JSON 응답 생성
 	        HashMap<String, Object> responseMap = new HashMap<>();
 	        responseMap.put("error", e.getMessage());
-	        responseMap.put("ban_until", userService.getBanUntil(credentials.getUsername()));
-	        responseMap.put("failed_attempts", userService.getFailedAttempts(credentials.getUsername()));
+	        responseMap.put("ban_until", memberService.getBanUntil(credentials.getMemberId()));
+	        responseMap.put("failed_attempts", memberService.getFailedAttempts(credentials.getMemberId()));
 
 	        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(responseMap);  // 응답 객체를 JSON으로 보냄	
         } catch (Exception e) {

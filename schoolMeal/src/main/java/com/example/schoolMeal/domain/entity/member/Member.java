@@ -1,9 +1,11 @@
-package com.example.schoolMeal.domain.entity;
+package com.example.schoolMeal.domain.entity.member;
 
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -12,26 +14,43 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Table(name="`user`")
+@Table(name="member")
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-public class User {
+public class Member {
 
+	// 키
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(nullable=false, updatable=false)
 	private Long id;
 	
-	@Column(nullable=false, unique=true)
-	private String username;
+	// 회원명
+	@Column(nullable=false)
+	private String memberName;
 	
+	// 회원 아이디
+	@Column(nullable=false, unique=true)
+	private String memberId;
+	
+	// 회원 비밀번호
 	@Column(nullable=false)
 	private String password;
 	
+	// 회원 이메일
 	@Column(nullable=false)
-	private String role;
+	private String email;
+	
+	// 회원 전화번호
+	@Column(nullable=false)
+	private String phone;
+	
+	// 회원 권한
+	@Enumerated(EnumType.STRING)
+	@Column(nullable=false)
+	private Role role;
 	
 	
 	// ---------------------------
@@ -50,10 +69,18 @@ public class User {
 	private int failedAttempts = 0; // 비밀번호 틀린 횟수.
 	
 	// 계정 생성의 기본적인 생성자
-	public User(String username, String password, String role) {
+	public Member(String memberName,
+				  String memberId,
+				  String password,
+				  String email,
+				  String phone,
+				  Role role) {
 		super();
-		this.username = username;
+		this.memberName = memberName;
+		this.memberId = memberId;
 		this.password = password;
+		this.email = email;
+		this.phone = phone;
 		this.role = role;
 	}
 	
@@ -86,7 +113,7 @@ public class User {
 		this.banUntil = null;
 	}
 	
-	// 6. User 엔티티에 banUntil 설정 시 isLocked을 true로 설정
+	// 6. Member 엔티티에 banUntil 설정 시 isLocked을 true로 설정
 	public void setBanUntil(LocalDateTime banUntil) {
 	    this.banUntil = banUntil;
 	    if (banUntil != null && banUntil.isAfter(LocalDateTime.now())) {

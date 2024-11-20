@@ -22,9 +22,9 @@ public class JwtService {
 	static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 	
 	// 서명된 JWT 토큰 생성
-	public String getToken(String username) {
+	public String getToken(String memberId) {
 		String token = Jwts.builder()
-				.setSubject(username)
+				.setSubject(memberId)
 				.setExpiration(new Date(System.currentTimeMillis()
 						+ EXPIRATIONTIME))
 				.signWith(key)
@@ -33,19 +33,19 @@ public class JwtService {
 	}
 	
 	// 요청 권한 부여 헤더에서, 토큰 가져와서 토큰을 확인 후 사용자 이름 얻음
-	public String getAuthUser(HttpServletRequest request) {
+	public String getAuthMember(HttpServletRequest request) {
 		String token = request.getHeader(HttpHeaders.AUTHORIZATION);
 		
 		if (token != null) {
-			String user = Jwts.parserBuilder()
+			String member = Jwts.parserBuilder()
 					.setSigningKey(key)
 					.build()
 					.parseClaimsJws(token.replace(PREFIX, ""))
 					.getBody()
 					.getSubject();
 			
-			if (user != null) {
-				return user;
+			if (member != null) {
+				return member;
 			}
 		}
 		return null;
