@@ -1,0 +1,18 @@
+/* Login.css */
+.login-form {
+    max-width: 400px;      /* 폼의 최대 너비 */
+    width: 100%;           /* 너비 100%로 확장 */
+    padding: 50px;         /* 폼 안쪽 여백 */
+    background-color: #fff; /* 배경 색상 */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* 그림자 효과 */
+    border-radius: 8px;    /* 둥근 모서리 */
+    margin: 0 auto;        /* 좌우 중앙 정렬 */
+    margin-top: 10%;
+    margin-bottom: 10%;
+}
+.inLogjs-log-btn:hover {
+    background-color: #52a8ff !important;
+}
+.inLogjs-signup-btn:hover {
+    background-color: #52a8ff !important;
+}

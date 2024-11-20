@@ -1,0 +1,142 @@
+/* 전체 레이아웃 컨테이너 1 */
+html {
+    height: 100%;  /* 화면 크기와 일치하도록 설정 */
+    min-height: 100%;  /* 콘텐츠가 화면보다 많아지면 스크롤을 활성화 */
+    margin: 0;     /* 기본 마진 제거 */
+    padding: 0;    /* 기본 패딩 제거 */
+    overflow-y: scroll;  /* 세로 스크롤을 항상 표시 */
+}
+body {
+    height: 100%;  /* 화면 크기와 일치하도록 설정 */
+    min-height: 100%;  /* 콘텐츠가 화면보다 많아지면 스크롤을 활성화 */
+    margin: 0;     /* 기본 마진 제거 */
+    padding: 0;    /* 기본 패딩 제거 */
+}
+
+.layout-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%; /* 화면 전체 높이를 채우도록 설정 */
+    padding: auto;
+    margin: 0 auto;
+    width: 100%;
+    align-items: center; /* 가로 및 세로 중앙 정렬 */
+}
+
+.layout-header-image {
+    width: 100%;
+    height: 121px; /* 원하는 높이 */
+    overflow: hidden; /* 자식 요소가 박스를 넘지 않도록 숨기기 */
+    position: absolute; /* 절대 위치 설정 */
+    top: 0; /* 상단에 위치 */
+    left: 0; /* 왼쪽에 위치 */
+    z-index: -10; /* 다른 요소 위에 표시되도록 */
+}
+
+.layout-header-image img {
+    width: 100%; /* 너비를 100%로 설정하여 박스에 맞게 조정 */
+    height: 100%; /* 높이를 100%로 설정하여 박스에 맞게 조정 */
+    object-fit: cover; /* 비율 유지하면서 크기 조정 */
+    opacity: 0.6;
+    display: block; /* 이미지 주변의 여백 제거 */
+}
+
+/* 전체 레이아웃 컨테이너 2 */
+/* layout-main-content 영역의 높이를 자식 요소 크기에 맞게 설정 */
+.layout-main-content {
+    display: flex;
+    flex: 1; /* 남은 공간을 차지하게 설정 */
+    width: 100%;
+    height: auto; /* 높이를 자식 요소의 콘텐츠에 맞게 설정 */
+    /* background-color: red; */
+}
+
+/* layout-main 영역 */
+.layout-main {
+    flex: 0 1 auto; /* 늘어나지 않도록, 너비는 자동 */
+    padding: 70px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    overflow-y: hidden; /* 부모 크기를 넘지 않게 숨기기 */
+    transition: transform 0.3s ease;
+    width: 100%;
+}
+
+/* layout-content의 크기를 자동으로 제한 */
+.layout-content {
+    /* background-color: red; */
+    flex-shrink: 0; /* 줄어들지 않도록 */
+    flex-grow: 0; /* 여유 공간을 차지하지 않도록 */
+    height: auto; /* 콘텐츠 크기만큼 높이 조정 */
+}
+
+/* 추가적인 반응형 디자인 설정 (Optional) */
+@media (max-width: 768px) {
+    .layout-container {
+        flex-direction: column; /* 작은 화면에서는 세로로 배치 */
+    }
+    
+    .layout-main {
+        margin-left: 0; /* 사이드바 없을 때는 왼쪽 여백 제거 */
+        /* padding: 15px; 작은 화면에서는 여백 줄이기 */
+    }
+    
+    /* 콘텐츠들이 들어가는 부분 */
+    /* .layout-content {
+        padding-top: 20px; 
+        background-color: red;
+    } */
+}
+
+/* ---------------------------------------------------------------- */
+
+/* 사이드바가 열릴 때 content가 밀리도록 설정 */
+.layout-with-sidebar .layout-main {
+    transform: translateX(10px); /* 사이드바가 열릴 때 오른쪽으로 밀기 */
+    flex-grow: 1; /* 콘텐츠가 남은 공간을 차지하도록 */
+}
+
+/* 사이드바가 없을 때는 원래 위치 */
+.layout-container:not(.layout-with-sidebar) .layout-main {
+    transform: translateX(0);
+    
+}
+
+/* 사이드바가 열릴 때 main-content와 header를 오른쪽으로 60px 이동 */
+.layout-with-sidebar .layout-main-content{
+    width: calc(100% - 30px);
+    transition: width 1s cubic-bezier(1.1, 0.1, 0.1, 0.1), transform 2s cubic-bezier(1.1, 0.1, 0.1, 0.1);
+}
+
+/* 사이드바가 닫힐 때 원래 위치 */
+.layout-container:not(.layout-with-sidebar) .layout-main-content {
+    width: 100%;
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1), transform 2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.resize-message {
+    position: fixed;
+    min-width: 280px;
+    max-width: 280px;
+    text-align: center;
+    font-weight: bold;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 1);
+    color: #1976d2;
+    padding: 30px;
+    border-radius: 5px;
+    z-index: 1000; /* 다른 요소 위에 표시되도록 */
+}
+
+.resize-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.97);
+    z-index: 999;
+}

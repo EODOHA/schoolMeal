@@ -1,0 +1,179 @@
+/* 전체를 감싸는 박스 */
+
+.outer-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+    height: 100%;
+    margin-top: -30px;
+    margin-bottom: -200px;
+    }
+    
+/* 화면을 수직 및 수평 가운데로 배치 */
+.centered-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* height: 100%; */
+    text-align: center;
+    position: relative;
+    padding-top: 140px; /* 로고 높이 만큼 여백을 추가 */
+}
+    
+/* 로고 및 텍스트를 왼쪽 상단에 배치 */
+.logo-container {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.65);
+    width: 100%;
+    top: 50px;
+    margin-top: 43px;
+    height: 130px;
+    display: flex;
+    align-items: center;  /* 텍스트가 로고의 수직 중앙에 오도록 */
+    justify-content: center;
+    z-index: 1; /* 로고가 이미지 위로 오도록 */
+    border-radius: 20px;
+}
+    
+.logo-container .logo {
+    width: 100px; /* 로고 이미지 크기 */
+    border-radius: 50px;
+    height: auto;
+    transform: translateY(-50px);
+}
+    
+.logo-container .logo-text {
+    font-size: 40px;
+    font-weight: bold;
+    margin-left: 20px; /* 로고와 텍스트 사이의 간격 */
+    color: white;
+    /* transform: translateY(50px); */
+}
+    
+/* 이미지 스타일 (로고 제외) */
+.centered-container img {
+    width: 100%; /* 화면 너비에 맞게 조정 */
+    height: auto; /* 비율을 유지하며 높이를 자동으로 설정 */
+    max-width: 900px; /* 최대 너비 제한 */
+    max-height: 600px; /* 최대 높이 제한 */
+    margin-top: 100px; /* 로고와 이미지 사이의 간격 추가 */
+    border-radius: 20px; /* 모서리 둥글게 */
+}
+    
+/* 버튼 전체적 스타일 */
+.centered-container button {
+    padding: 8px;
+    font-size: 20px;
+    font-weight: bold;
+    border: 1px solid #7a7a7a;
+    border-radius: 8px;
+    width: 150px;
+    height: auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 5px 5px 5px 2px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease;
+}
+    
+/* 일반회원 버튼 색상 -------------------------------- */
+    .centered-container button.member {
+    background-color: #1976d2;
+    opacity: 0.8;
+}
+    
+.centered-container button.member:hover {
+    background-color: #1976d2;
+    transform: translateY(-10px);
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    box-shadow: 5px 5px 5px 2px rgba(0, 0, 0, 0.5);
+    opacity: 1;
+}
+/* 일반회원 버튼 색상 -------------------------------- */
+    
+/* 연계회원 버튼 색상 -------------------------------- */
+.centered-container button.linkage {
+    background-color: #FF9E9B;
+    opacity: 0.8;
+}
+    
+.centered-container button.linkage:hover {
+    background-color: #FF9E9B;
+    transform: translateY(-10px);
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    box-shadow: 5px 5px 5px 2px rgba(0, 0, 0, 0.5);
+    opacity: 1;
+}
+/* 연계회원 버튼 색상 -------------------------------- */
+    
+/* 관리자 버튼 색상 -------------------------------- */
+.centered-container button.admin {
+    background-color: #5dd35d;
+    opacity: 0.8;
+}
+    
+.centered-container button.admin:hover {
+    background-color: #5dd35d;
+    transform: translateY(-10px);
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    box-shadow: 5px 5px 5px 2px rgba(0, 0, 0, 0.5);
+    opacity: 1;
+}
+/* 관리자 버튼 색상 -------------------------------- */
+    
+/* 비로그인 버튼 색상 -------------------------------- */
+.centered-container button.guest {
+    background-color: #bebebe;
+    opacity: 0.6;
+}
+    
+.centered-container button.guest:hover {
+    background-color: #bebebe;
+    transform: translateY(-10px);
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    box-shadow: 5px 5px 5px 2px rgba(0, 0, 0, 0.5);
+    opacity: 1;
+}
+/* 비로그인 버튼 색상 -------------------------------- */
+    
+.button-image-container {
+    display: flex;
+    flex-direction: column; /* 세로 정렬 */
+    align-items: center;
+    top: -100px;
+}
+    
+/* 이미지 크기 고정 */
+.button-image-container .button-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+    
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.outer-container,
+.centered-container,
+.logo-container {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+.button-show-fadeIn {
+    animation: fadeIn 0.5s ease forwards;
+}

@@ -1,0 +1,168 @@
+/* 전체적인 헤더 스타일 */
+
+.header-box {
+  display: flex;
+  justify-content: center; /* 가운데 정렬 */
+  width: 100%;
+}
+
+.custom-appbar {
+  background-color: #87D669 !important;
+  box-shadow: none !important;
+  width: 85%; /* 전체 너비로 설정 */
+  margin-right: 0; /* 오른쪽 마진을 0으로 설정 */
+  margin-left: auto; /* 왼쪽 마진을 자동으로 설정하여 오른쪽 정렬 */
+  top: 0; /* 상단에 고정 */
+  right: 0; /* 오른쪽에 고정 */
+  border-radius: 5px;
+}
+
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100px;
+    min-height: 70px;
+    position: relative; /* 로그인 관련 버튼을 위해 relative 위치 설정 */
+  }
+
+/* 로그인/회원가입/로그아웃 버튼들과 환영 메시지가 포함된 상단 박스 */
+.auth-buttons {
+  display: flex;
+  align-items: center; /* 가로로 정렬 */
+  position: absolute;
+  top: -50px;
+  right: 20px;
+  z-index: 10; /* 네비게이션 바보다 위에 표시되도록 설정 */
+  color: white;
+}
+    
+/* 버튼 그룹을 가로로 배치 */
+.button-group {
+  display: flex;
+  gap: 1rem;
+  top: -40px;
+}
+  
+.button-group .log-btn {
+  background-color: #1976d2;
+}
+  .button-group .log-btn:hover {
+    background-color: #52a8ff;
+  }
+  
+.button-group .sign-btn {
+  background-color: #1976d2;
+}
+  .button-group .sign-btn:hover {
+    background-color: #52a8ff;
+  }
+  
+.button-group .mng-btn {
+  background-color: #1976d2;
+}
+  .button-group .mng-btn:hover {
+    background-color: #d84164;
+  }
+  
+.button-group .logout-btn {
+  background-color: #1976d2;
+}
+  .button-group .logout-btn:hover {
+    background-color: #52a8ff;
+  }
+    
+/* 버튼들이 로그인/회원가입일 때 상단에, 로그아웃일 때는 동일한 위치에 표시 */
+.auth-buttons .welcome-message {
+  margin-right: 15px;
+
+  padding: 5px;
+  background-color:beige;
+  border-radius: 8px;
+  border: 3px solid #1976d2;
+
+  text-align: center;
+  color: black;
+  font-size: 14px;
+  font-weight: bold;
+}
+  
+/* 로고 스타일 */
+.logo {
+  text-decoration: none;
+  color: inherit;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.logo-img {
+  width: 90px;
+  border-radius: 5px;
+}
+  
+/* 네비게이션 링크 스타일 */
+.nav-links {
+  display: flex;
+  gap: 1rem;
+  margin: 0 auto;
+  width: fit-content; /* 요소 크기만큼만 너비 설정 */
+}
+  
+/* 검색창을 헤더에 추가 */
+.search-box {
+  display: flex;
+  margin-left: auto;
+  margin-right: 0; /* 오른쪽 고정 */
+  align-items: center;
+  max-width: 150px; /* 기본 최대 너비 */
+  width: 100%; /* 기본 너비는 100% */
+  transition: max-width 0.3s ease, transform 0.3s ease; /* 부드러운 변화 */
+}
+
+.search {
+  position: relative;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.25);
+  width: 100%;
+  padding: 10px;
+}
+
+.search:hover {
+  background-color: rgba(255, 255, 255, 0.35);
+}
+
+.search-icon-wrapper {
+  padding: 0 10px;
+  height: 100%;
+  margin-left: -15px;
+  margin-top: -10px;
+  position: absolute;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-inputBase {
+  margin-left: 25px;
+  color: white !important;
+  font-weight: bold !important;
+}
+
+@media (max-width: 750px) {
+  .nav-links {
+    display: none;
+  }
+
+  .search-box {
+    flex-grow: 1;
+    margin-left: auto;
+    margin-right: auto; /* 오른쪽 고정 */
+    width: 100%; /* 화면 크기가 줄어들면 너비가 80%로 증가 */
+    max-width: 300px; /* 최대 너비 설정 */
+    right: 0; /* 왼쪽을 고정시켜서 오른쪽 끝은 고정 */
+  }
+}

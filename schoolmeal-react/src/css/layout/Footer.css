@@ -1,0 +1,32 @@
+/* Footer.css */
+.foot-root-box {
+    text-align: center;
+    padding: 10px;
+    /* background-color: #f1f1f1; */
+}
+.foot-box1 {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    gap: 10px
+}
+
+.p-title {
+    font-weight: bold;
+}
+
+.logo-box {
+    width: 50px;
+    border-radius: 50px;
+    border: 2px solid #969696;
+}
+
+.p-sentence1 {
+    color: #6e6e6e;
+    margin-bottom: -12px;
+}
+
+.p-sentence2 {
+    font-size: 12px;
+    color: #6e6e6e;
+}
