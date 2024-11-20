@@ -10,7 +10,7 @@ const Layout = ({ hideHeaderFooter }) => {
 
   // 로그인 선택, 메인 화면, 로그인, 회원가입 페이지에서는 Sidebar를 숨깁니다.
   const isNoSidebarPage =
-    location.pathname === "/" ||
+    location.pathname === "/*" ||
     location.pathname === "/main" ||
     location.pathname === "/login" ||
     location.pathname === "/signup";
