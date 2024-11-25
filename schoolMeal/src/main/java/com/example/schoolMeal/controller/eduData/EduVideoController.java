@@ -101,9 +101,9 @@ public class EduVideoController {
             @RequestParam("writer") String writer,
             @RequestParam("content") String content,
             @RequestParam(value = "thumbnail", required = false) MultipartFile thumbnail,
-            @RequestParam(value = "videoFile", required = false) MultipartFile videoFile) {
+            @RequestParam(value = "video", required = false) MultipartFile video) {
         try {
-            eduVideoService.updateEduVideo(id, writer, content, thumbnail, videoFile);
+            eduVideoService.updateEduVideo(id, writer, content, thumbnail, video);
             return ResponseEntity.ok("수정 완료");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("수정 중 오류: " + e.getMessage());
