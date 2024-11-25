@@ -1,11 +1,12 @@
 package com.example.schoolMeal.controller.mealcounsel;
 
-// 영양상담 게시판
+// 영양상담 자료실 게시판 Controller
 import com.example.schoolMeal.dto.mealcounsel.MealCounselRequestDTO;
 import com.example.schoolMeal.dto.mealcounsel.MealCounselResponseDTO;
 import com.example.schoolMeal.service.mealcounsel.FileStorageService;
 import com.example.schoolMeal.service.mealcounsel.MealCounselService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,7 @@ import jakarta.validation.Valid;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.List;
 
 //파일 다운로드 엔드포인트를 위한 import
@@ -49,6 +51,18 @@ public class MealCounselController {
     public ResponseEntity<MealCounselResponseDTO> getMealCounselById(@PathVariable Long id) {
         MealCounselResponseDTO mealCounsel = mealCounselService.getCounselPostById(id);
         return ResponseEntity.ok(mealCounsel);
+    }
+
+    //제목, 내용, 작성자, 생성일자로 검색
+    @GetMapping("/search")
+    public ResponseEntity<List<MealCounselResponseDTO>> searchMealCounsels(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String content,
+            @RequestParam(required = false) String author,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate createdAt) {
+
+        List<MealCounselResponseDTO> results = mealCounselService.searchMealCounsels(title, content, author, createdAt);
+        return ResponseEntity.ok(results);
     }
 
     // 새로운 게시글 추가 (ADMIN 권한만 가능)
