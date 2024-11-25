@@ -1,4 +1,4 @@
-package com.example.schoolMeal.controller;
+package com.example.schoolMeal.controller.communityController;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

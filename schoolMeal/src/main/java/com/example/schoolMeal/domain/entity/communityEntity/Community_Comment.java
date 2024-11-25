@@ -1,7 +1,8 @@
-package com.example.schoolMeal.domain.entity;
+package com.example.schoolMeal.domain.entity.communityEntity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,9 @@ public class Community_Comment {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();  // 댓글 작성 시간
 
+    @Column(nullable = false)
+    private LocalDateTime updatedAt = LocalDateTime.now();  // 댓글 수정 시간
+
     @Builder
     public Community_Comment(Community community, Community_Comment parentComment, String content) {
         this.community = community;
@@ -54,5 +58,20 @@ public class Community_Comment {
     public void addChildComment(Community_Comment child) {
         childComments.add(child);
         child.setParentComment(this);
+    }
+
+    // 댓글 수정 메서드
+    public void updateContent(String newContent) {
+        this.content = newContent;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    // 좋아요/싫어요 증가 메서드
+    public void incrementLikes() {
+        this.likes++;
+    }
+
+    public void incrementDislikes() {
+        this.dislikes++;
     }
 }

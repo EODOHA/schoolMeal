@@ -1,4 +1,4 @@
-package com.example.schoolMeal.domain.entity;
+package com.example.schoolMeal.domain.entity.communityEntity;
 
 import jakarta.persistence.*;
 import lombok.*;
