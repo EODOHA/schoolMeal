@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,7 +34,11 @@ public class SimpleMultipartFile implements MultipartFile {
 
     @Override
     public String getContentType() {
-        return "text/plain"; // 적절한 MIME 타입으로 설정
+        try {
+            return Files.probeContentType(file.toPath());
+        } catch (IOException e) {
+            return "application/octet-stream"; // 기본값
+        }
     }
 
     @Override
