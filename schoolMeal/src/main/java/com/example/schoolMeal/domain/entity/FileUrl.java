@@ -1,5 +1,7 @@
 package com.example.schoolMeal.domain.entity;
 
+import java.io.File;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,7 +13,7 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter
-@NoArgsConstructor  // 접근 제어자 변경: 기본 생성자를 public으로
+@NoArgsConstructor  
 public class FileUrl {
 
     @Id

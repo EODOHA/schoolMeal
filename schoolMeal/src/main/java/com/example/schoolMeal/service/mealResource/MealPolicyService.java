@@ -28,15 +28,15 @@ public class MealPolicyService extends PathResolver {
     @Autowired
     private FileUrlRepository fileUrlRepository;
 
-    /* 파일 업로그 경로 설정 */
+    /* 파일 업로드 경로 설정 */
     private String mealPolicyPath;
 
     @PostConstruct
     public void init() {
-        mealPolicyPath = buildPath("급식 정책 자료실");
+        mealPolicyPath = buildPath("게시글 자료실");
     }
 
-    // 급식 정책 저장
+    // 게시글 저장
     public void write(MealPolicy mealPolicy, MultipartFile file) {
         try {
             if (mealPolicy == null) {
@@ -53,13 +53,13 @@ public class MealPolicyService extends PathResolver {
                 mealPolicy.setFileId(fileUrl.getId()); // fileId 설정
             }
 
-            // 급식 정책 저장
+            // 게시글 저장
             MealPolicy savedMealPolicy = mealPolicyRepository.save(mealPolicy);
             System.out.println("DB에 저장된 MealPolicy ID: " + savedMealPolicy.getId());
         } catch (IOException e) {
             throw new RuntimeException("파일 업로드 중 오류가 발생했습니다. 자세한 내용을 확인하세요.", e);
         } catch (Exception e) {
-            throw new RuntimeException("급식 정책 저장 중 오류가 발생했습니다. 다시 시도해 주세요.", e);
+            throw new RuntimeException("게시글 저장 중 오류가 발생했습니다. 다시 시도해 주세요.", e);
         }
     }
 
@@ -108,30 +108,30 @@ public class MealPolicyService extends PathResolver {
         return savedFileUrl;
     }
 
-    // 급식 정책 리스트 반환
+    // 게시글 리스트 반환
     public List<MealPolicy> mealPolicyList() {
         try {
             return mealPolicyRepository.findAll();
         } catch (Exception e) {
-            throw new RuntimeException("급식 정책 목록 조회 중 오류가 발생했습니다. 다시 시도해 주세요.", e);
+            throw new RuntimeException("게시글 목록 조회 중 오류가 발생했습니다. 다시 시도해 주세요.", e);
         }
     }
 
-    // 특정 mealPolicy의 파일 정보 조회
+    // 특정 파일 정보 조회
     public FileUrl getFileUrlByMealPolicyId(Long id) {
         // 해당 ID의 MealPolicy 조회
         MealPolicy mealPolicy = mealPolicyRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 급식 정책이 존재하지 않습니다: " + id));
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 게시글이 존재하지 않습니다: " + id));
 
         // MealPolicy에 연결된 FileUrl 조회
         return mealPolicy.getFileUrl();  // 파일이 없으면 null 반환
     }
 
-    // 특정 급식 정책을 조회하면서 첨부 파일 정보도 함께 반환
+    // 특정 게시글을 조회하면서 첨부 파일 정보도 함께 반환
     public MealPolicy getPostWithFileDetails(Long id) {
         try {
             MealPolicy mealPolicy = mealPolicyRepository.findById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("해당 ID의 급식 정책이 존재하지 않습니다: " + id));
+                    .orElseThrow(() -> new IllegalArgumentException("해당 ID의 게시글이 존재하지 않습니다: " + id));
 
             if (mealPolicy.getFileUrl() != null) {
                 FileUrl fileUrl = fileUrlRepository.findById(mealPolicy.getFileUrl().getId()).orElse(null); // 파일이 없을 경우 null 처리
@@ -140,16 +140,16 @@ public class MealPolicyService extends PathResolver {
 
             return mealPolicy;
         } catch (Exception e) {
-            throw new RuntimeException("급식 정책 조회 중 오류가 발생했습니다. 다시 시도해 주세요.", e);
+            throw new RuntimeException("게시글 조회 중 오류가 발생했습니다. 다시 시도해 주세요.", e);
         }
     }
 
-    // 급식 정책 삭제
+    // 게시글 삭제
     @Transactional
     public ResponseEntity<Integer> mealPolicyDelete(Long id) {
         try {
             MealPolicy mealPolicy = mealPolicyRepository.findById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("해당 ID의 급식 정책이 존재하지 않습니다: " + id));
+                    .orElseThrow(() -> new IllegalArgumentException("해당 ID의 게시글이 존재하지 않습니다: " + id));
 
             if (mealPolicy.getFileUrl() != null) {
                 FileUrl fileUrl = mealPolicy.getFileUrl();
@@ -171,7 +171,7 @@ public class MealPolicyService extends PathResolver {
         }
     }
 
-    // 급식 정책 수정
+    // 게시글 수정
     @Transactional
     public void mealPolicyUpdate(MealPolicy mealPolicy, MultipartFile file) throws IOException {
         try {
@@ -201,13 +201,13 @@ public class MealPolicyService extends PathResolver {
                 mealPolicy.setFileId(mealPolicy.getFileUrl().getId());
             }
 
-            // 급식 정책 업데이트
+            // 게시글 업데이트
             mealPolicyRepository.save(mealPolicy);
 
         } catch (IOException e) {
-            throw new RuntimeException("파일 업로드 또는 급식 정책 수정 중 오류가 발생했습니다. 세부사항: " + e.getMessage(), e);
+            throw new RuntimeException("파일 업로드 또는 게시글 수정 중 오류가 발생했습니다. 세부사항: " + e.getMessage(), e);
         } catch (Exception e) {
-            throw new RuntimeException("급식 정책 수정 중 예기치 못한 오류가 발생했습니다.", e);
+            throw new RuntimeException("게시글 수정 중 예기치 못한 오류가 발생했습니다.", e);
         }
     }
 

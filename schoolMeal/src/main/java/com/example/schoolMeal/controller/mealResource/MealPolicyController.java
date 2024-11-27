@@ -2,6 +2,7 @@ package com.example.schoolMeal.controller.mealResource;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -39,14 +40,14 @@ public class MealPolicyController {
     @Autowired
     private MealPolicyService mealPolicyService;
 
-    // 정책자료 목록을 반환
+    // 목록을 반환
     @GetMapping("/list")
     public ResponseEntity<List<MealPolicy>> mealPolicyList() {
         List<MealPolicy> mealPolicies = mealPolicyService.mealPolicyList();
         return ResponseEntity.ok(mealPolicies);
     }
 
-    // 정책자료 작성 처리
+    // 작성 처리
     @PostMapping("/writepro")
     public String mealPolicyWritePro(@RequestParam("title") String title,
                                       @RequestParam("writer") String writer,
@@ -69,18 +70,18 @@ public class MealPolicyController {
         // 파일 처리 로직
         mealPolicyService.write(mealPolicy, file);
 
-        redirectAttributes.addFlashAttribute("message", "급식 정책이 성공적으로 작성되었습니다.");
+        redirectAttributes.addFlashAttribute("message", "게시글이 성공적으로 작성되었습니다.");
         return "redirect:/mealPolicy/list";
     }
 
-    // 특정 MealPolicy 조회
+    // 특정 id 조회
     @GetMapping("/{id}")
     public ResponseEntity<MealPolicy> getMealPolicyById(@PathVariable Long id) {
         MealPolicy mealPolicy = mealPolicyService.getPostWithFileDetails(id);
         return mealPolicy != null ? ResponseEntity.ok(mealPolicy) : ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
-    // 정책자료 수정 처리하는 PUT 요청
+    // 수정 처리하는 PUT 요청
     @PutMapping("/update/{id}")
     public ResponseEntity<String> updateMealPolicy(
             @PathVariable Long id,
@@ -91,7 +92,7 @@ public class MealPolicyController {
             // 기존 데이터 조회
             MealPolicy existingMealPolicy = mealPolicyService.getPostWithFileDetails(id);
             if (existingMealPolicy == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("급식 정책이 존재하지 않습니다.");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("게시글이 존재하지 않습니다.");
             }
 
             // 필드 업데이트
@@ -114,25 +115,25 @@ public class MealPolicyController {
         }
     }
 
-    // 급식 정책 삭제
+    // 게시글 삭제
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteMealPolicy(@PathVariable Long id) {
         try {
             mealPolicyService.mealPolicyDelete(id);
-            return ResponseEntity.ok("급식 정책이 삭제되었습니다.");
+            return ResponseEntity.ok("게시글이 삭제되었습니다.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("삭제 실패: " + e.getMessage());
         }
     }
     
-    // 급식 정책 파일 다운로드
+    // 파일 다운로드
     @GetMapping("/download/{id}")
     public ResponseEntity<InputStreamResource> downloadMealPolicyFile(@PathVariable Long id) {
-        // 해당 ID의 급식 정책 조회
+        // 해당 ID의 게시글 조회
         MealPolicy mealPolicy = mealPolicyRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 급식 정책이 존재하지 않습니다: " + id));
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 게시글이 존재하지 않습니다: " + id));
 
-        // 급식 정책에 첨부된 파일이 있는지 확인
+        // 게시글에 첨부된 파일이 있는지 확인
         if (mealPolicy.getFileUrl() == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -154,10 +155,13 @@ public class MealPolicyController {
                 contentType = "application/octet-stream"; // 기본 타입 설정
             }
 
+            // 파일 이름 인코딩 (UTF-8로 인코딩 후 URL-safe 형식으로 변환)
+            String encodedFileName = URLEncoder.encode(filePath.getFileName().toString(), "UTF-8").replaceAll("\\+", "%20");
+
             // 파일 다운로드 응답
             return ResponseEntity.ok()
                     .contentType(MediaType.parseMediaType(contentType))
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filePath.getFileName().toString() + "\"")
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=utf-8''" + encodedFileName)
                     .body(resource);
 
         } catch (IOException e) {
