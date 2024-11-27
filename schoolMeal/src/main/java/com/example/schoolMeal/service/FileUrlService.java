@@ -4,26 +4,31 @@ import java.io.File;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.schoolMeal.common.PathResolver;
 import com.example.schoolMeal.domain.entity.FileUrl;
 import com.example.schoolMeal.domain.repository.FileUrlRepository;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 
 @Service
-public class FileUrlService {
+public class FileUrlService extends PathResolver {
 
     @Autowired
     private FileUrlRepository fileUrlRepository;
 
-    @Value("${file.upload.path.service1}")
-    private String service1SavePath;
+    private String mealPolicyPath;
+    
+    private String menuRecipePath;
 
-    @Value("${file.upload.path.service2}")
-    private String service2SavePath;
+    @PostConstruct
+    public void init() {
+        mealPolicyPath = buildPath("급식 정책 자료실");
+        menuRecipePath = buildPath("메뉴 및 레시피 자료실");
+    }
 
     @Transactional
     public FileUrl saveFile(MultipartFile file, Long existingFileId, String serviceType) throws IOException {
@@ -76,9 +81,9 @@ public class FileUrlService {
 
     private String selectSavePath(String serviceType) {
         if ("service1".equals(serviceType)) {
-            return service1SavePath;
+            return mealPolicyPath;
         } else if ("service2".equals(serviceType)) {
-            return service2SavePath;
+            return menuRecipePath;
         }
         throw new IllegalArgumentException("지원하지 않는 서비스 유형: " + serviceType);
     }
