@@ -21,14 +21,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.schoolMeal.domain.entity.edudata.EduVideo;
-import com.example.schoolMeal.service.edudata.EduVideoService;
+import com.example.schoolMeal.service.eduDate.EduVideoService;
 
 @RestController
 @RequestMapping("/eduVideo")
@@ -101,9 +100,9 @@ public class EduVideoController {
             @RequestParam("writer") String writer,
             @RequestParam("content") String content,
             @RequestParam(value = "thumbnail", required = false) MultipartFile thumbnail,
-            @RequestParam(value = "video", required = false) MultipartFile video) {
+            @RequestParam(value = "videoFile", required = false) MultipartFile videoFile) {
         try {
-            eduVideoService.updateEduVideo(id, writer, content, thumbnail, video);
+            eduVideoService.updateEduVideo(id, writer, content, thumbnail, videoFile);
             return ResponseEntity.ok("수정 완료");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("수정 중 오류: " + e.getMessage());

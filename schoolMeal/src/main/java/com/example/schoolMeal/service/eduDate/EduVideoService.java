@@ -1,4 +1,4 @@
-package com.example.schoolMeal.service.edudata;
+package com.example.schoolMeal.service.eduDate;
 
 import java.io.File;
 import java.io.IOException;
