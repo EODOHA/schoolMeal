@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.schoolMeal.domain.entity.edudata.EduVideo;
-import com.example.schoolMeal.domain.repository.edudata.EduVideoRepository;
+import com.example.schoolMeal.domain.entity.eduData.EduVideo;
+import com.example.schoolMeal.domain.repository.eduData.EduVideoRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 

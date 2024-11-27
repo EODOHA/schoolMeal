@@ -1,12 +1,12 @@
-package com.example.schoolMeal.service.edudata;
+package com.example.schoolMeal.service.eduDate;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.schoolMeal.domain.entity.edudata.NutrEdu;
-import com.example.schoolMeal.domain.repository.edudata.NutrEduRepository;
+import com.example.schoolMeal.domain.entity.eduData.NutrEdu;
+import com.example.schoolMeal.domain.repository.eduData.NutrEduRepository;
 
 @Service
 public class NutrEduService {
@@ -25,12 +25,12 @@ public class NutrEduService {
 	}
 	
 	// 특정 게시글 불러오기
-	public NutrEdu nutrEduView(Integer id) {
+	public NutrEdu nutrEduView(Long id) {
 		return nutrEduRepository.findById(id).get();
 	}
 	
 	// 특정 게시글 삭제
-	public void nutrEduDelete(Integer id) {
+	public void nutrEduDelete(Long id) {
 		nutrEduRepository.deleteById(id);
 	}
 	

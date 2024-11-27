@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.schoolMeal.domain.entity.edudata.NutrEdu;
-import com.example.schoolMeal.service.edudata.NutrEduService;
+import com.example.schoolMeal.domain.entity.eduData.NutrEdu;
+import com.example.schoolMeal.service.eduDate.NutrEduService;
 
 /*   교육 자료 - 영양 및 식생활 교육자료   */
 @RestController
@@ -45,14 +45,14 @@ public class NutrEduController {
 	
 	// 개별 교육자료를 조회 (ID로 조회) (+ ID로 조회는 임시)
 	@GetMapping("/view") // localhost:8090/nutrEdu/view?id=1
-    public String nutrEduView(Model model, @RequestParam("id") Integer id) {
+    public String nutrEduView(Model model, @RequestParam("id") Long id) {
         model.addAttribute("nutrEdu", nutrEduService.nutrEduView(id));
         return "nutrEduview";
     }
 	
 	// 교육자료 삭제
 	@DeleteMapping("/delete")
-	public String nutrEduDelete(@RequestParam("id") Integer id) {
+	public String nutrEduDelete(@RequestParam("id") Long id) {
 		nutrEduService.nutrEduDelete(id); 
 		return "redirect:/nutrEdu/list";
 	}

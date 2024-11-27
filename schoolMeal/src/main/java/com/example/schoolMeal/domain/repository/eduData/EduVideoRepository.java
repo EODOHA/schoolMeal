@@ -1,10 +1,11 @@
-package com.example.schoolMeal.domain.repository.edudata;
+package com.example.schoolMeal.domain.repository.eduData;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import java.util.Optional;
 
-import com.example.schoolMeal.domain.entity.edudata.EduVideo;
+import com.example.schoolMeal.domain.entity.eduData.EduVideo;
+
+import java.util.Optional;
 
 @Repository
 public interface EduVideoRepository extends JpaRepository<EduVideo, Long> {

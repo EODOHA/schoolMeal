@@ -1,11 +1,11 @@
-package com.example.schoolMeal.domain.repository.edudata;
+package com.example.schoolMeal.domain.repository.eduData;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.example.schoolMeal.domain.entity.edudata.NutrEdu;
+import com.example.schoolMeal.domain.entity.eduData.NutrEdu;
 
 @Repository
-public interface NutrEduRepository extends JpaRepository<NutrEdu, Integer> {
+public interface NutrEduRepository extends JpaRepository<NutrEdu, Long> {
 
 }

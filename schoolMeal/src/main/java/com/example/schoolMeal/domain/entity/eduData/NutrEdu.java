@@ -1,4 +1,4 @@
-package com.example.schoolMeal.domain.entity.edudata;
+package com.example.schoolMeal.domain.entity.eduData;
 
 import java.time.LocalDateTime;
 
@@ -12,7 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Table(name = "`Nutr_Edu`") // 테이블 명
+@Table(name = "NutrEdu") // 테이블 명
 @Entity
 @Getter @Setter
 @NoArgsConstructor
@@ -21,7 +21,7 @@ public class NutrEdu {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)  // 번호가 차례대로 늘어나도록
 	@Column(nullable = false, updatable = false)
-	private Integer id;
+	private Long id;
 	
 	// 내용 필드, 최대 500자
 	@Column(length = 500)

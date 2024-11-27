@@ -1,4 +1,4 @@
-package com.example.schoolMeal.domain.entity.edudata;
+package com.example.schoolMeal.domain.entity.eduData;
 
 import java.time.LocalDateTime;
 
