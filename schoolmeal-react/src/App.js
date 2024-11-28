@@ -13,6 +13,7 @@ import Login from './component/sign/Login';
 import Signup from './component/sign/Signup';
 import UnauthorizedPage from './component/sign/UnauthorizedPage';
 import Memberlist from './component/memManage/Memberlist';
+import MainManager from './component/mainManage/MainManager';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
 
               {/* 권한으로 보호된 페이지 */}
               <Route path="memberlist" element={<AdminRoute element={<Memberlist />} />} />
+              <Route path="mainManager" element={<AdminRoute element={<MainManager />} />} />
             </Route>
 
             {/* 권한 없음 페이지 */}

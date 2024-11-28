@@ -4,7 +4,8 @@ html {
     min-height: 100%;  /* 콘텐츠가 화면보다 많아지면 스크롤을 활성화 */
     margin: 0;     /* 기본 마진 제거 */
     padding: 0;    /* 기본 패딩 제거 */
-    overflow-y: scroll;  /* 세로 스크롤을 항상 표시 */
+    overflow-x: hidden;
+    overflow-y: scroll;
 }
 body {
     height: 100%;  /* 화면 크기와 일치하도록 설정 */
@@ -24,21 +25,8 @@ body {
 }
 
 .layout-header-image {
-    width: 100%;
-    height: 121px; /* 원하는 높이 */
-    overflow: hidden; /* 자식 요소가 박스를 넘지 않도록 숨기기 */
-    position: absolute; /* 절대 위치 설정 */
-    top: 0; /* 상단에 위치 */
-    left: 0; /* 왼쪽에 위치 */
-    z-index: -10; /* 다른 요소 위에 표시되도록 */
-}
-
-.layout-header-image img {
-    width: 100%; /* 너비를 100%로 설정하여 박스에 맞게 조정 */
-    height: 100%; /* 높이를 100%로 설정하여 박스에 맞게 조정 */
-    object-fit: cover; /* 비율 유지하면서 크기 조정 */
-    opacity: 0.6;
-    display: block; /* 이미지 주변의 여백 제거 */
+    overflow: hidden;
+    box-sizing: border-box;
 }
 
 /* 전체 레이아웃 컨테이너 2 */
@@ -58,7 +46,7 @@ body {
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
-    overflow-y: hidden; /* 부모 크기를 넘지 않게 숨기기 */
+    
     transition: transform 0.3s ease;
     width: 100%;
 }
@@ -106,7 +94,11 @@ body {
 /* 사이드바가 열릴 때 main-content와 header를 오른쪽으로 60px 이동 */
 .layout-with-sidebar .layout-main-content{
     width: calc(100% - 30px);
-    transition: width 1s cubic-bezier(1.1, 0.1, 0.1, 0.1), transform 2s cubic-bezier(1.1, 0.1, 0.1, 0.1);
+    transition: 
+        width 1s ease-in-out;
+    /* transition: 
+        width 1s cubic-bezier(1.1, 0.1, 0.1, 0.1), 
+        transform 2s cubic-bezier(1.1, 0.1, 0.1, 0.1); */
 }
 
 /* 사이드바가 닫힐 때 원래 위치 */

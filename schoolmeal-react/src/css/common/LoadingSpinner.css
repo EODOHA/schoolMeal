@@ -1,0 +1,17 @@
+/* LoadingSpinner.css */
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+}
+.rotating-icon {
+    animation: spin 1s infinite linear; /* spin 애니메이션을 1초마다 무한 반복 */
+    transform-origin: center; /* 회전할 중심을 아이콘의 중앙으로 설정 */
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

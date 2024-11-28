@@ -33,9 +33,11 @@ h2 {
     justify-items: center;
     overflow: hidden;
     width: 100%;
-    height: 200px;
+    min-height: 200px;
+    height: 300px;
     border: 1px solid #ccc;
     border-radius: 8px;
+    cursor: pointer;
 }
 
 .single-image-slider img {
@@ -69,6 +71,63 @@ h2 {
     z-index: 10;
 }
 
+/* 팝업 오버레이 스타일 */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);  /* 배경 어두워지게 */
+    display: flex;
+    justify-content: center; /* 수평 중앙 */
+    z-index: 888;  /* 다른 요소 위에 띄우기 */
+}
+
+/* 팝업 내용 */
+.modal-content {
+    position: relative;
+    background-color: white;
+    padding: 30px;
+    margin-top: 100px;
+    max-width: 75%;  /* 최대 너비 설정 */
+    max-height: 25%; /* 최대 높이 설정 */
+    overflow: auto;  /* 내용이 많으면 스크롤이 생김 */
+    overflow-x: hidden;
+    overflow-y: scroll;
+    border-radius: 8px;
+    text-align: center;
+}
+
+/* 이미지 스타일 */
+.modal-image {
+    width: 100%;
+    max-height: 50%;
+    margin-top: 10px;
+    max-height: 70vh; /* 이미지의 최대 높이를 화면의 70%로 제한 */
+    object-fit: contain;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+/* 닫기 버튼 */
+.modal-close-btn {
+    position: absolute;
+    text-align: center;
+    justify-content: center;
+    color: rgb(49, 49, 49);
+    background-color: white;
+    top: 10px;
+    right: 30px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+
+/* ---------------------------------------------------------------------------------- */
+
 .notice-container {
     width: 100%; /* 또는 원하는 너비를 명시적으로 설정 */
     max-width: 500px; /* 예시로 최대 너비를 설정 */
@@ -89,6 +148,8 @@ h2 {
     width: 100%; /* li의 너비가 부모 요소에 맞도록 설정 */
     display: block; /* li 요소를 블록으로 설정 */
 }
+
+/* ---------------------------------------------------------------------------------- */
 
 .resource-container {
     width: 100%; /* 또는 원하는 너비를 명시적으로 설정 */

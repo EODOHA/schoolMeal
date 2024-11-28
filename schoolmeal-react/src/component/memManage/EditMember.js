@@ -1,17 +1,17 @@
 import React, { useState } from "react";
-import Dialog from '@mui/material/Dialog'
+import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import FormControl from "@mui/material/FormControl"
+import FormControl from "@mui/material/FormControl";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from '@mui/icons-material/Edit';
+import { Button, Typography, Box } from "@mui/material";
 
 function EditMember(props) {
-    
     const [open, setOpen] = useState(false);
     const [member, setMember] = useState({
         memberId: '',
@@ -41,8 +41,8 @@ function EditMember(props) {
 
     // 변경 감지 이벤트 핸들러
     const handleChange = (event) => {
-        setMember({...member, [event.target.name]: event.target.value});
-    }
+        setMember({ ...member, [event.target.name]: event.target.value });
+    };
 
     // 유저 수정하고 모달 폼 닫음
     const handleSave = () => {
@@ -53,38 +53,67 @@ function EditMember(props) {
         };
         props.updateMember(updateMember, props.data.id);
         handleClose();
-    }
+    };
 
     return (
         <div>
-            <IconButton onClick={handleClickOpen}>
-                <EditIcon color="primary"></EditIcon>
+            <IconButton onClick={handleClickOpen} sx={{ fontSize: '2rem', color: 'primary.main' }}>
+                <EditIcon />
             </IconButton>
             <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>권한 수정</DialogTitle>
-                <DialogContent>
-                <FormControl fullWidth margin="normal">
-                    <DialogContentText>
+                <DialogTitle sx={{ fontWeight: 'bold', textAlign: 'center' }}>권한 수정</DialogTitle>
+                <DialogContent sx={{ minWidth: 400 }}>
+                    <Typography variant="body1" color="textSecondary" gutterBottom>
                         유저의 권한을 선택하세요.
-                    </DialogContentText>
+                    </Typography>
+                    <FormControl fullWidth margin="normal" sx={{ boxShadow: 1 }}>
                         <Select
                             labelId="role-label"
                             name="role"
                             value={member.role}
                             onChange={handleChange}
+                            sx={{
+                                backgroundColor: 'background.paper',
+                                borderRadius: '4px',
+                                boxShadow: 1,
+                                '& .MuiSelect-icon': { color: 'primary.main' }
+                            }}
                         >
                             <MenuItem value="LINKAGE">LINKAGE</MenuItem>
                             <MenuItem value="MEMBER">MEMBER</MenuItem>
                             <MenuItem value="GUEST">GUEST</MenuItem>
                         </Select>
-                </FormControl>
+                    </FormControl>
                 </DialogContent>
-                <DialogActions>
-                    <button onClick={handleSave}>수정</button>
-                    <button onClick={handleClose}>취소</button>
+                <DialogActions sx={{ justifyContent: 'center' }}>
+                    <Button
+                        onClick={handleSave}
+                        variant="contained"
+                        color="primary"
+                        sx={{
+                            fontWeight: 'bold',
+                            padding: '6px 20px',
+                            borderRadius: '8px',
+                            '&:hover': { backgroundColor: 'primary.dark' }
+                        }}>
+                        수정
+                    </Button>
+                    <Button
+                        onClick={handleClose}
+                        variant="outlined"
+                        color="secondary"
+                        sx={{
+                            fontWeight: 'bold',
+                            padding: '6px 20px',
+                            borderRadius: '8px',
+                            '&:hover': { backgroundColor: 'secondary.light' }
+                        }}>
+                        취소
+                    </Button>
                 </DialogActions>
             </Dialog>
         </div>
     );
 }
+
 export default EditMember;

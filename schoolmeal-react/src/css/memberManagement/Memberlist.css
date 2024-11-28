@@ -2,7 +2,7 @@
 
 /* 데이터 그리드 전체 박스 */
 .data-grid-box {
-    width: 100%; /* 화면 크기에 맞춰 크기 조정 */
+    width: 110%; /* 화면 크기에 맞춰 크기 조정 */
     max-width: 1200px; /* 최대 크기 설정 */
     background-color: #fff;
     padding: 5px;
@@ -12,30 +12,9 @@
     margin-bottom: 100px;
 }
 
-/* 로딩 중 표시 영역 */
-.loading-container {
-    width: 100%;
-    height: 100px; /* 로딩 아이콘의 크기를 맞추기 위해 높이를 설정 */
+.addMember-box {
     display: flex;
-    align-items: center;
     justify-content: center;
-    text-align: center;
-    font-size: 18px;
-    color: #999;
-}
-
-/* 로딩 아이콘 회전 애니메이션 */
-.rotating-icon {
-    animation: spin 1s linear infinite; /* spin 애니메이션을 1초마다 무한 반복 */
-    transform-origin: center; /* 회전할 중심을 아이콘의 중앙으로 설정 */
-}
-
-/* spin 애니메이션 정의 */
-@keyframes spin {
-    0% {
-        transform: rotate(0deg); /* 0도에서 시작 */
-    }
-    100% {
-        transform: rotate(360deg); /* 360도 회전 */
-    }
+    align-items: center;
+    margin-top: 5px;
 }

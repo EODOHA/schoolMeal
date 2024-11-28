@@ -9,7 +9,7 @@ import '../../css/sign/Login.css';  // 로그인 스타일을 위한 CSS 파일 
 function Login() {
     const [member, setMember] = useState({
         memberId: '',
-        password: ''
+        password: '',
     });
 
     const { login: authLogin, isAuth } = useAuth();
@@ -33,8 +33,8 @@ function Login() {
     };
 
     const login = (token) => {
-        localStorage.setItem('jwt', token); // 토큰 저장
-        localStorage.setItem('isAuth', 'true'); // 인증 상태 저장
+        sessionStorage.setItem('jwt', token); // 토큰 저장
+        sessionStorage.setItem('isAuth', 'true'); // 인증 상태 저장
         fetch(SERVER_URL + 'login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -42,6 +42,7 @@ function Login() {
         })
         .then(async res => {
             const data = await res.json();
+            // console.log("응답 데이터:", data)
 
             if (!res.ok) {
                 // 로그인 실패 시, 서버에서 전달한 실패 횟수 반영
@@ -58,6 +59,16 @@ function Login() {
             }
 
             if (data.success && data.token) {
+                // 로그인 타입 확인
+                if ((loginType === 'admin' && data.role !== 'ADMIN') ||
+                (loginType === 'linkage' && data.role !== 'LINKAGE') ||
+                (loginType === 'member' && data.role !== 'MEMBER')) {
+                    // console.log("loginType:", loginType)
+                    // console.log("memberRole:", data.role)
+                    setOpen(true);
+                    throw new Error("올바른 권한이 아닙니다. 다른 로그인을 선택해 주세요.");
+                }
+
                 const jwtToken = `Bearer ${data.token}`;
                 sessionStorage.setItem("jwt", jwtToken);
                 authLogin(jwtToken);
@@ -80,7 +91,7 @@ function Login() {
             navigate("/main");
         })
         .catch(err => {
-            console.error(err);
+            // console.error(err);
             setErrorMessage(err.message);
             setOpen(true);
         });
@@ -150,7 +161,10 @@ function Login() {
                     autoHideDuration={3000}
                     onClose={() => setOpen(false)}
                     message={errorMessage}
-                    anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                    anchorOrigin={{ 
+                        vertical: 'top',
+                        horizontal: 'center'
+                    }}
                 />
             </div>
         );

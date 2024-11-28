@@ -1,41 +1,109 @@
 /* 전체적인 헤더 스타일 */
 
+/* 부모 컨테이너 */
+/* 부모 요소는 sticky */
 .header-box {
-  display: flex;
-  justify-content: center; /* 가운데 정렬 */
+  /* display: flex; */
+  justify-content: center;
   width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  overflow: visible;
 }
 
-.custom-appbar {
-  background-color: #87D669 !important;
-  box-shadow: none !important;
-  width: 85%; /* 전체 너비로 설정 */
-  margin-right: 0; /* 오른쪽 마진을 0으로 설정 */
-  margin-left: auto; /* 왼쪽 마진을 자동으로 설정하여 오른쪽 정렬 */
-  top: 0; /* 상단에 고정 */
-  right: 0; /* 오른쪽에 고정 */
-  border-radius: 5px;
+.header-topInner-box {
+  display: flex;
+  height: 100px;
+  width: 100%;
+  justify-content: space-between; /* 왼쪽 끝과 오른쪽 끝으로 요소 배치 */
+  z-index: 100;
 }
 
-.toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 100px;
-    min-height: 70px;
-    position: relative; /* 로그인 관련 버튼을 위해 relative 위치 설정 */
-  }
+.header-innerImage-box {
+  width: 100%;
+  overflow: hidden;
+}
+
+.header-innerImage-box img {
+  width: 150%;
+  height: 250px;
+  object-fit: cover;
+  position: absolute;
+  left: -100px;
+  z-index: -10;
+  margin-top: -100px;
+}
 
 /* 로그인/회원가입/로그아웃 버튼들과 환영 메시지가 포함된 상단 박스 */
 .auth-buttons {
   display: flex;
-  align-items: center; /* 가로로 정렬 */
-  position: absolute;
-  top: -50px;
-  right: 20px;
-  z-index: 10; /* 네비게이션 바보다 위에 표시되도록 설정 */
+  align-items: end;
+  justify-content: end;
+  flex-direction: column; /* 세로로 배치 */
+  position: relative;
+  top: -5px;
   color: white;
+  margin-top: 10px;
+  width: 400px;
+  z-index: 100;
+  gap: 4px;
 }
+
+/* 버튼들이 로그인/회원가입일 때 상단에, 로그아웃일 때는 동일한 위치에 표시 */
+.auth-buttons .welcome-message {
+  padding: 5px;
+  background-color:beige;
+  border-radius: 8px;
+  border: 2px solid #1976d2;
+
+  text-align: center;
+  color: black;
+  font-size: 14px;
+  font-weight: bold;
+}
+  
+/* 로고 스타일 */
+.logo {
+  width: 100px;
+  border-radius: 5px;
+  background-color: white;
+  border: 2px solid #ccc;
+  text-decoration: none;
+  justify-content: center;
+  text-align: center;
+  z-index: 100;
+}
+
+.logo-img {
+  width: 90px;
+  border-radius: 5px;
+}
+
+/* 초록색 툴바 */
+.custom-appbar {
+  background-color: #87D669 !important;
+  box-shadow: none !important;
+  width: 85%;
+  margin-right: 0;
+  margin-left: auto;
+  top: 0;
+  right: 0;
+  position: relative; /* sticky에서 relative로 변경 */
+  z-index: 100;
+  border-radius: 5px;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100px;
+  min-height: 70px;
+  position: relative;
+  z-index: 100;
+}
+
     
 /* 버튼 그룹을 가로로 배치 */
 .button-group {
@@ -72,36 +140,6 @@
     background-color: #52a8ff;
   }
     
-/* 버튼들이 로그인/회원가입일 때 상단에, 로그아웃일 때는 동일한 위치에 표시 */
-.auth-buttons .welcome-message {
-  margin-right: 15px;
-
-  padding: 5px;
-  background-color:beige;
-  border-radius: 8px;
-  border: 3px solid #1976d2;
-
-  text-align: center;
-  color: black;
-  font-size: 14px;
-  font-weight: bold;
-}
-  
-/* 로고 스타일 */
-.logo {
-  text-decoration: none;
-  color: inherit;
-  justify-content: center;
-  text-align: center;
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.logo-img {
-  width: 90px;
-  border-radius: 5px;
-}
   
 /* 네비게이션 링크 스타일 */
 .nav-links {

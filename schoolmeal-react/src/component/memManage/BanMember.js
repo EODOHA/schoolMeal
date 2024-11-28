@@ -11,6 +11,7 @@ import Button from "@mui/material/Button";
 import { Typography } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import DoNotTouchIcon from '@mui/icons-material/DoNotTouch';
+import { Box } from "@mui/material";
 
 function BanMember(props) {
     const [open, setOpen] = useState(false);
@@ -75,7 +76,8 @@ function BanMember(props) {
                 banEndDate = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
                 break;
             case '1m':
-                banEndDate = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate());
+                // 1개월 후의 시간을 구할 때 getTime()을 사용하여 정확한 계산
+                banEndDate = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);  // 1개월 후 (대략 30일 기준)
                 break;
             case 'permanent':
                 banEndDate = new Date(9999, 11, 31); // 영구 차단
@@ -85,45 +87,52 @@ function BanMember(props) {
                 break;
         }
 
-        return banEndDate ? new Date(banEndDate.getTime() - banEndDate.getTimezoneOffset() * 60000).toISOString() : null;
+        return banEndDate ? new Date(
+            banEndDate.getTime() - banEndDate.getTimezoneOffset() * 60000).toISOString()
+            : null;
     };
 
     return (
         <div>
             <IconButton onClick={handleClickOpen}>
-                <DoNotTouchIcon color="error"></DoNotTouchIcon>
+                <DoNotTouchIcon color="error"/>
             </IconButton>
             <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>회원 차단 설정</DialogTitle>
+                <DialogTitle sx={{ fontWeight: 'bold', fontSize: '1.2rem', textAlign: 'center' }}>회원 차단 설정</DialogTitle>
                 <DialogContent>
-                    <DialogContentText>
+                    <DialogContentText sx={{ mb: 2 }}>
                         회원을 차단할 기간을 선택하세요.
                     </DialogContentText>
-                    <br />
-                    <Typography variant="body2" color="textSecondary">
+                    <Typography variant="body2" color="textSecondary" sx={{ mb: 1 }}>
                         차단된 회원은 차단 해제 전까지 로그인이 불가능하며,
                     </Typography>
-                    <Typography variant="body2" color="textSecondary">
+                    <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
                         잠금도 함께 해제됩니다.
                     </Typography>
-                    <FormControl fullWidth margin="normal">
+                    <FormControl fullWidth>
                         <Select
                             value={banDuration}
                             onChange={handleBanDurationChange}
                             displayEmpty
+                            sx={{
+                                backgroundColor: 'background.paper',
+                                borderRadius: '4px',
+                                boxShadow: 1,
+                                '& .MuiSelect-icon': { color: 'primary.main' }
+                            }}
                         >
-                            <MenuItem value="10sec">10초</MenuItem>
+                            <MenuItem value="10sec">10초(테스트용)</MenuItem>
                             <MenuItem value="1d">1일</MenuItem>
                             <MenuItem value="7d">7일</MenuItem>
-                            <MenuItem value="1m">1개월</MenuItem>
+                            <MenuItem value="1m">30일</MenuItem>
                             <MenuItem value="permanent">영구 차단</MenuItem>
-                            <MenuItem value="defalut">차단 해제</MenuItem>
+                            <MenuItem value="default" sx={{ color: 'blue' }}>차단 해제</MenuItem>
                         </Select>
                     </FormControl>
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleSave} color="primary">설정</Button>
-                    <Button onClick={handleClose} color="secondary">취소</Button>
+                <DialogActions sx={{ justifyContent: 'center' }}>
+                    <Button onClick={handleSave} color="primary" variant="contained" sx={{ fontWeight: 'bold' }}>설정</Button>
+                    <Button onClick={handleClose} color="secondary" variant="outlined" sx={{ fontWeight: 'bold' }}>취소</Button>
                 </DialogActions>
             </Dialog>
         </div>

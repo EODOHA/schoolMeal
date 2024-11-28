@@ -28,13 +28,13 @@ const Sidebar = ({ isMemberManageOpen }) => {
             {/* 유저 관리 메뉴 추가 */}
             {isMemberManageOpen && (
                 <div className="sub-links">
-                    <h3>유저 관리</h3>
+                    <h3>관리</h3>
                     <ul>
                         <li>
-                            <Link to="/memberlist">유저 목록</Link>
+                            <Link to="/memberlist">유저 관리</Link>
                         </li>
                         <li>
-                            <Link to="/rolemanagement">권한 관리</Link>
+                            <Link to="/mainManager">메인 페이지 관리</Link>
                         </li>
                     </ul>
                 </div>

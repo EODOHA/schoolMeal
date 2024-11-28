@@ -1,0 +1,104 @@
+/* 전체 컨테이너 스타일 */
+.main-manager {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    width: 85%;
+    margin: 0 auto;
+    margin-top: 50px;
+    margin-bottom: 100px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* 카테고리 선택 스타일 */
+.category-selector {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.category-selector label {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.category-selector select {
+    padding: 8px 12px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+/* 업로드 섹션 */
+.upload-section {
+    display: none; /* 기본적으로 숨겨두기 */
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.upload-section h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.upload-section input {
+    margin-bottom: 15px;
+}
+
+.upload-section button {
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.upload-section button:hover {
+    background-color: #45a049;
+}
+
+/* 이미지 목록 */
+.image-list {
+    display: none; /* 기본적으로 숨겨두기 */
+    text-align: center;
+}
+
+.image-list h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.image-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 100px;
+    justify-content: center;
+}
+
+.image-item img {
+    width: 100%;
+    max-width: 200px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    
+}
+
+.image-item button {
+    margin-top: 10px;
+    padding: 8px 16px;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.image-item button:hover {
+    background-color: #d32f2f;
+}

@@ -47,9 +47,7 @@ const Layout = ({ hideHeaderFooter }) => {
 
   return (
     <div className={`layout-container ${isNoSidebarPage ? "" : "layout-with-sidebar"}`}>
-      <div className="layout-header-image">
-        <img src="./layout/layout-header-image.jpg" alt="헤더_이미지"></img>
-      </div>
+      
       <div className="layout-main-content">
         {/* 메인, 로그인, 회원가입 페이지가 아닌 경우에만 Sidebar 표시 */}
         {!isNoSidebarPage && <Sidebar isMemberManageOpen={isMemberManageOpen} />}
