@@ -2,7 +2,7 @@ package com.example.schoolMeal.domain.entity.mealResource;
 
 import java.time.LocalDateTime;
 
-import com.example.schoolMeal.domain.entity.FileUrl;
+import com.example.schoolMeal.domain.entity.FileUrl;  // FileUrl import 추가
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,11 +17,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Table(name = "MenuRecipe") // 테이블 명
+@Table(name = "mealPolicy") // 테이블 명
 @Entity
 @Getter @Setter
 @NoArgsConstructor
-public class MenuRecipe {
+public class MealPolicyOperation {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +37,7 @@ public class MenuRecipe {
 	private String title;
 	
 	// 작성자 필드
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false)
 	private String writer;
 	
 	// 생성 날짜와 시간을 저장하는 필드
@@ -46,10 +46,11 @@ public class MenuRecipe {
 	
 	// 첨부파일 외래키
 	@Column(name = "file_id")
-	private Long fileId;
+    private Long fileId;
 
-	// 파일 정보와의 1:1 관계
+    // 파일 정보와의 1:1 관계 (MealPolicy와 FileUrl)
 	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "file_id", referencedColumnName = "id", insertable = false, updatable = false)
-	private FileUrl fileUrl;
+    @JoinColumn(name = "file_id", referencedColumnName = "id", insertable = false, updatable = false)
+    private FileUrl fileUrl;
+
 }

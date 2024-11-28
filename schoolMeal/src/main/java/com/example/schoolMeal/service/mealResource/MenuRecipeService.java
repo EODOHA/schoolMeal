@@ -5,110 +5,226 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.schoolMeal.common.PathResolver;
 import com.example.schoolMeal.domain.entity.FileUrl;
-import com.example.schoolMeal.domain.entity.mealResource.MealPolicy;
 import com.example.schoolMeal.domain.entity.mealResource.MenuRecipe;
 import com.example.schoolMeal.domain.repository.FileUrlRepository;
 import com.example.schoolMeal.domain.repository.mealResource.MenuRecipeRepository;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
+
 @Service
-public class MenuRecipeService {
+public class MenuRecipeService extends PathResolver {
 
-	@Autowired
-	private MenuRecipeRepository menuRecipeRepository;
-	
-	@Autowired
-    private FileUrlRepository fileUrlRepository;
-	
-	// 글 작성
-	public void write(MenuRecipe menuRecipe, MultipartFile file) {
-        try {
-            if (file != null && !file.isEmpty()) {
-                // 파일이 있을 경우 파일 업로드 처리
-                FileUrl fileUrl = saveFile(file);
-                menuRecipe.setFileId(fileUrl.getId());  // 파일 ID 설정
-            } else {
-            	menuRecipe.setFileId(null);  // 파일이 없으면 null 설정
-            }
-            
-            // 게시글 저장
-            menuRecipeRepository.save(menuRecipe);
-        } catch (IOException e) {
-            e.printStackTrace();
-            // 파일 처리 오류 발생 시 적절한 처리가 필요
-        }
-    }
-	
-	// 파일 정보를 DB에 저장하는 메서드
-    public FileUrl saveFile(MultipartFile file) throws IOException {
-        if (file == null || file.isEmpty()) {
-            return null;  // 파일이 없으면 null 반환
-        }
+	 @Autowired
+	 private MenuRecipeRepository menuRecipeRepository;
 
-        // 원본 파일 이름 가져오기
-        String origFilename = file.getOriginalFilename();
-
-        // 파일 이름을 고유하게 설정 (현재 시간 + 원본 파일명)
-        String filename = System.currentTimeMillis() + "_" + origFilename;
-
-        // 파일이 저장될 경로 설정
-        String savePath = System.getProperty("user.dir") + "/src/main/resources/static/files";
-
-        // 파일이 저장될 폴더가 없으면 생성
-        java.io.File saveDir = new java.io.File(savePath);
-        if (!saveDir.exists()) {
-            saveDir.mkdir();
-        }
-
-        // 파일 경로 설정
-        String filePath = savePath + File.separator + filename;
-
-        // 파일을 지정한 경로에 저장
-        file.transferTo(new java.io.File(filePath));
-
-        // FileUrl 엔티티에 파일 정보 설정
-        FileUrl fileUrl = FileUrl.builder()
-                .origFileName(origFilename)
-                .fileName(filename)
-                .filePath(filePath)
-                .build();
-
-        // FileUrl 엔티티를 DB에 저장하고 ID 반환
-        return fileUrlRepository.save(fileUrl);
-    }
-	
-	// 게시글 리스트 처리
-	public List<MenuRecipe> menuRecipeList() {
-		return menuRecipeRepository.findAll();
-	}
-	
-	// 특정 게시글을 조회하면서 첨부 파일 정보도 함께 반환하는 메서드
-    public MenuRecipe getPostWithFileDetails(Long id) {
-        // 특정 ID로 게시글을 조회
-    	MenuRecipe menuRecipe = menuRecipeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 게시글이 존재하지 않습니다: " + id));
-
-        // 파일 ID가 존재하는 경우, 연관된 파일 정보를 조회
-        if (menuRecipe.getFileId() != null) {
-            FileUrl fileUrl = fileUrlRepository.findById(menuRecipe.getFileId())
-                    .orElse(null); // 파일이 없을 경우 null 처리
-            menuRecipe.setFileUrl(fileUrl); // MealPolicy에 FileUrl 설정
-        }
-
-        return menuRecipe;
-    }
-	
-	// 특정 게시글 삭제
-	public void menuRecipeDelete(Long id) {
-		menuRecipeRepository.deleteById(id);
-	}
-	
-	// 게시글 수정
-	public void menuRecipeUpdate(MenuRecipe menuRecipe) {
-		menuRecipeRepository.save(menuRecipe);
-	}
+	 @Autowired
+	 private FileUrlRepository fileUrlRepository;
 	 
-}
+	 /* 파일 업로드 경로 설정 */
+	 private String menuRecipePath;
+	 
+	 @PostConstruct
+	 public void init() {
+		 menuRecipePath = buildPath("게시글 자료실");
+	 }
+	 
+	 // 게시글 저장
+	 public void write(MenuRecipe menuRecipe, MultipartFile file) {
+		 try {
+			 if (menuRecipe == null) {
+				 throw new IllegalArgumentException("MenuRecipe 객체가 null입니다.");
+			 }
+			 
+			 if (file != null && !file.isEmpty()) {
+				 System.out.println("write 메서드에서 파일 처리 시작");
+				 System.out.println("파일 이름: " + file.getOriginalFilename());
+				 System.out.println("파일 크기: " + file.getSize());
+				 
+				 // 파일 저장 및 FileUrl 생성
+				 FileUrl fileUrl = saveFile(file);
+				 menuRecipe.setFileId(fileUrl.getId()); // fileId 설정
+			 }
+			 
+			 // 게시글 저장
+			 MenuRecipe savedMenuRecipe = menuRecipeRepository.save(menuRecipe);
+			 System.out.println("DB에 저장된 MenuRecipe ID: " + savedMenuRecipe.getId());
+		 } catch (IOException e) {
+			 throw new RuntimeException("파일 업로드 중 오류가 발생했습니다. 자세한 내용을 확인하세요.", e);
+		 } catch (Exception e) {
+			 throw new RuntimeException("게시글 저장 중 오류가 발생했습니다. 다시 시도해 주세요.", e);
+		 }
+	 }
+	 
+	 // 파일 정보를 DB에 저장하는 메서드
+	 public FileUrl saveFile(MultipartFile file) throws IOException {
+		 // 파일 디버깅 출력
+		 if (file == null || file.isEmpty()) {
+			 throw new IOException("파일이 비어 있거나 유효하지 않습니다.");
+		 }
+		 
+		 System.out.println("파일 저장 시작 - 이름: " + file.getOriginalFilename());
+		 System.out.println("파일 크기: " + file.getSize());
+		 
+		 String origFilename = file.getOriginalFilename();
+		 if (origFilename == null) {
+			 throw new IOException("파일 이름이 null입니다.");
+		 }
+		 
+		 String filename = System.currentTimeMillis() + "_" + origFilename;
+		 File saveDir = new File(menuRecipePath);
+		 if (!saveDir.exists() && !saveDir.mkdirs()) {
+			 throw new IOException("저장 폴더를 생성할 수 없습니다.");
+		 }
+		 
+		 String filePath = menuRecipePath + File.separator + filename;
+		 Long fileSize = file.getSize();
+		 
+		 // 파일 저장 로직
+		 try {
+			 file.transferTo(new File(filePath));
+			 System.out.println("파일이 성공적으로 저장되었습니다: " + filePath);
+		 } catch (IOException e) {
+			 throw new IOException("파일 저장 중 오류가 발생했습니다.", e);
+		 }
+		 
+		 // FileUrl 객체 생성 및 저장
+		 FileUrl fileUrl = FileUrl.builder()
+				 .origFileName(origFilename)
+				 .fileName(filename)
+				 .filePath(filePath)
+				 .fileSize(fileSize)
+				 .build();
+		 
+		 FileUrl savedFileUrl = fileUrlRepository.save(fileUrl);
+		 System.out.println("DB에 저장된 FileUrl ID: " + savedFileUrl.getId());
+		 return savedFileUrl;
+	 }
+	 
+	 // 게시글 리스트 반환
+	 public List<MenuRecipe> menuRecipeList() {
+		 try {
+			 return menuRecipeRepository.findAll();
+		 } catch (Exception e) {
+			 throw new RuntimeException("게시글 목록 조회 중 오류가 발생했습니다. 다시 시도해 주세요.", e);
+		 }
+	 }
+	 
+	 // 특정 파일 정보 조회
+	 public FileUrl getFileUrlByMenuRecipeId(Long id) {
+		 // 해당 ID의 MenuRecipe 조회
+		 MenuRecipe menuRecipe = menuRecipeRepository.findById(id)
+				 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 게시글이 존재하지 않습니다: " + id));
+		 
+		 // MenuRecipe에 연결된 FileUrl 조회
+		 return menuRecipe.getFileUrl();  // 파일이 없으면 null 반환
+	 }
+	 
+	 // 특정 게시글을 조회하면서 첨부 파일 정보도 함께 반환
+	 public MenuRecipe getPostWithFileDetails(Long id) {
+		 try {
+			 MenuRecipe menuRecipe = menuRecipeRepository.findById(id)
+					 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 게시글이 존재하지 않습니다: " + id));
+			 
+			 if (menuRecipe.getFileUrl() != null) {
+				 FileUrl fileUrl = fileUrlRepository.findById(menuRecipe.getFileUrl().getId()).orElse(null); // 파일이 없을 경우 null 처리
+				 menuRecipe.setFileUrl(fileUrl); // MenuRecipe에 FileUrl 설정
+			 }
+			 
+			 return menuRecipe;
+		 } catch (Exception e) {
+			 throw new RuntimeException("게시글 조회 중 오류가 발생했습니다. 다시 시도해 주세요.", e);
+		 }
+	 }
+	 
+	 // 게시글 삭제
+	 @Transactional
+	 public ResponseEntity<Integer> menuRecipeDelete(Long id) {
+		 try {
+			 MenuRecipe menuRecipe = menuRecipeRepository.findById(id)
+					 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 게시글이 존재하지 않습니다: " + id));
+			 
+			 if (menuRecipe.getFileUrl() != null) {
+				 FileUrl fileUrl = menuRecipe.getFileUrl();
+				 File fileToDelete = new File(fileUrl.getFilePath());
+				 if (fileToDelete.exists()) {
+					 boolean deleted = fileToDelete.delete();
+					 if (!deleted) {
+						 System.err.println("파일 삭제 실패: " + fileUrl.getFilePath() + " (삭제되지 않았습니다)");
+					 }
+				 }
+				 fileUrlRepository.delete(fileUrl);
+			 }
+			 
+			 menuRecipeRepository.deleteById(id);
+			 return ResponseEntity.ok(1); // 삭제 성공 시 명시적으로 1 반환
+			 
+		 } catch (Exception e) {
+			 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(0); // 오류 시 0 반환
+		 }
+	 }
+	 
+	 // 게시글 수정
+	 @Transactional
+	 public void menuRecipeUpdate(MenuRecipe menuRecipe, MultipartFile file) throws IOException {
+		 try {
+			 if (file != null && !file.isEmpty()) {
+				 FileUrl existingFile = menuRecipe.getFileUrl(); // 기존 파일 정보 가져오기
+				 
+				 if (existingFile != null) {
+					 // 기존 파일 삭제
+					 File fileToDelete = new File(existingFile.getFilePath());
+					 if (fileToDelete.exists() && !fileToDelete.delete()) {
+						 throw new IOException("기존 파일 삭제에 실패했습니다.");
+					 }
+					 
+					 // 기존 FileUrl 엔티티 업데이트
+					 String newFilePath = saveFileToDisk(file);
+					 existingFile.setFileName(file.getOriginalFilename());
+					 existingFile.setFilePath(newFilePath);
+					 existingFile.setFileSize(file.getSize());
+					 fileUrlRepository.save(existingFile); // 업데이트된 파일 정보 저장
+				 } else {
+					 // 기존 파일이 없으면 새 파일 생성
+					 FileUrl newFileUrl = saveFile(file);
+					 menuRecipe.setFileUrl(newFileUrl);
+				 }
+				 
+				 // 파일 ID도 MenuRecipe에 설정
+				 menuRecipe.setFileId(menuRecipe.getFileUrl().getId());
+			 }
+			 
+			 // 게시글 업데이트
+			 menuRecipeRepository.save(menuRecipe);
+			 
+		 } catch (IOException e) {
+			 throw new RuntimeException("파일 업로드 또는 게시글 수정 중 오류가 발생했습니다. 세부사항: " + e.getMessage(), e);
+		 } catch (Exception e) {
+			 throw new RuntimeException("게시글 수정 중 예기치 못한 오류가 발생했습니다.", e);
+		 }
+	 }
+	 
+	 // 파일을 디스크에 저장
+	 private String saveFileToDisk(MultipartFile file) throws IOException {
+		 // 파일 저장 경로 생성 (저장 디렉터리 유효성 검사 추가)
+		 String uploadDir = menuRecipePath;
+		 File directory = new File(uploadDir);
+		 if (!directory.exists() && !directory.mkdirs()) {
+			 throw new IOException("파일 저장 디렉터리를 생성하지 못했습니다: " + uploadDir);
+		 }
+		 
+		 String filename = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+		 String filePath = uploadDir + File.separator + filename;
+		 File destination = new File(filePath);
+		 file.transferTo(destination); // 파일 저장
+		 return filePath;
+	 }
+	 
+	}

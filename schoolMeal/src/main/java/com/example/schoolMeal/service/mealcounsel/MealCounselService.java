@@ -1,8 +1,9 @@
 package com.example.schoolMeal.service.mealcounsel;
 
-
+//영양상담 자료실 Service
 import com.example.schoolMeal.domain.entity.mealcounsel.MealCounsel;
 import com.example.schoolMeal.domain.entity.mealcounsel.MealCounselFile;
+import com.example.schoolMeal.domain.entity.mealcounsel.MealCounselSpecifications;
 import com.example.schoolMeal.domain.repository.mealcounsel.MealCounselFileRepository;
 import com.example.schoolMeal.domain.repository.mealcounsel.MealCounselRepository;
 import com.example.schoolMeal.dto.mealcounsel.MealCounselRequestDTO;
@@ -10,12 +11,13 @@ import com.example.schoolMeal.dto.mealcounsel.MealCounselResponseDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-
+import java.time.LocalDate;
 import java.util.List;
 
 import java.util.stream.Collectors;
@@ -124,5 +126,39 @@ public class MealCounselService {
                 mealCounsel.addFile(mealCounselFile);
             }
         }
+    }
+
+    //Spring Data JPA의 Specification를 활용하여 동적 검색 조건 처리하기 위한 메소드
+    public List<MealCounselResponseDTO> searchMealCounsels(String title, String content, String author, LocalDate createdAt) {
+
+        //초기화
+        Specification<MealCounsel> spec = Specification.where(null);
+
+        //제목 검색 조건
+        if (title != null && !title.isEmpty()) {
+            spec = spec.and(MealCounselSpecifications.titleContains(title));
+        }
+
+        //내용 검색 조건
+        if (content != null && !content.isEmpty()) {
+            spec = spec.and(MealCounselSpecifications.contentContains(content));
+        }
+
+        //작성자 검색 조건
+        if (author != null && !author.isEmpty()) {
+            spec = spec.and(MealCounselSpecifications.authorContains(author));
+        }
+
+        //생성일 검색 조건
+        if (createdAt != null) {
+            spec = spec.and(MealCounselSpecifications.createdAtEquals(createdAt));
+        }
+
+        List<MealCounsel> results = mealCounselRepository.findAll(spec);
+
+        //DTO로 변환 후 반환
+        return results.stream()
+                .map(MealCounselResponseDTO::fromEntity)
+                .collect(Collectors.toList());
     }
 }
