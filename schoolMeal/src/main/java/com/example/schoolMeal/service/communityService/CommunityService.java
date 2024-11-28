@@ -35,7 +35,7 @@ public class CommunityService {
     // 파일이 저장될 기본 경로를 application.properties에서 가져옴
     private final Path uploadPath;
 
-    public CommunityService(@Value("${file.upload-dir}") String uploadDir) throws IOException {
+    public CommunityService(@Value("${file.upload.path}") String uploadDir) throws IOException {
         this.uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath); // 디렉토리가 없을 경우 생성
