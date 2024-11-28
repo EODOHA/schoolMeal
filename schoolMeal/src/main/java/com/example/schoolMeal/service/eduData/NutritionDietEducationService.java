@@ -12,31 +12,31 @@ import com.example.schoolMeal.domain.repository.eduData.NutritionDietEducationRe
 public class NutritionDietEducationService {
 
 	@Autowired
-	private NutritionDietEducationRepository nutrEduRepository;
+	private NutritionDietEducationRepository ntritionDietEducationRepository;
 	
 	// 글 작성
-	public void write(NutritionDietEducation nutrEdu) {
-		nutrEduRepository.save(nutrEdu);
+	public void write(NutritionDietEducation ntritionDietEducation) {
+		ntritionDietEducationRepository.save(ntritionDietEducation);
 	}
 	
 	// 게시글 리스트 처리
-	public List<NutritionDietEducation> nutrEduList() {
-		return nutrEduRepository.findAll();
+	public List<NutritionDietEducation> ntritionDietEducationList() {
+		return ntritionDietEducationRepository.findAll();
 	}
 	
 	// 특정 게시글 불러오기
-	public NutritionDietEducation nutrEduView(Long id) {
-		return nutrEduRepository.findById(id).get();
+	public NutritionDietEducation ntritionDietEducationView(Long id) {
+		return ntritionDietEducationRepository.findById(id).get();
 	}
 	
 	// 특정 게시글 삭제
-	public void nutrEduDelete(Long id) {
-		nutrEduRepository.deleteById(id);
+	public void ntritionDietEducationDelete(Long id) {
+		ntritionDietEducationRepository.deleteById(id);
 	}
 	
 	// 게시글 수정
-	public void nutrEduUpdate(NutritionDietEducation nutrEdu) {
-		nutrEduRepository.save(nutrEdu);
+	public void ntritionDietEducationUpdate(NutritionDietEducation ntritionDietEducation) {
+		ntritionDietEducationRepository.save(ntritionDietEducation);
 	}
 	 
 }

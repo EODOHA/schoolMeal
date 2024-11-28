@@ -34,31 +34,31 @@ import com.example.schoolMeal.service.eduData.VideoEducationService;
 public class VideoEducationController {
 
     @Autowired
-    private VideoEducationService eduVideoService;
+    private VideoEducationService videoEducationService;
 
     // 모든 영상 교육자료 조회
     @GetMapping("/list")
-    public ResponseEntity<List<VideoEducation>> getAllEduVideos() {
-        return ResponseEntity.ok(eduVideoService.getAllEduVideos());
+    public ResponseEntity<List<VideoEducation>> getAllVideoEducations() {
+        return ResponseEntity.ok(videoEducationService.getAllVideoEducations());
     }
 
     // 영상 교육자료 작성 (영상 및 이미지 업로드)
     @PostMapping("/writepro")
-    public ResponseEntity<String> eduVideoWritePro(
+    public ResponseEntity<String> videoEducationWritePro(
             @RequestParam("video") MultipartFile videoFile,
             @RequestParam("thumbnail") MultipartFile imageFile,
-            @ModelAttribute VideoEducation eduVideo) {
+            @ModelAttribute VideoEducation videoEducation) {
         try {
             // 영상 업로드 처리 및 URL 설정
-            String videoUrl = eduVideoService.uploadVideo(videoFile);
-            eduVideo.setVideoUrl(videoUrl);
+            String videoUrl = videoEducationService.uploadVideo(videoFile);
+            videoEducation.setVideoUrl(videoUrl);
 
             // 이미지 업로드 처리 및 URL 설정
-            String imageUrl = eduVideoService.uploadImage(imageFile);
-            eduVideo.setImageUrl(imageUrl);
+            String imageUrl = videoEducationService.uploadImage(imageFile);
+            videoEducation.setImageUrl(imageUrl);
 
             // 데이터베이스에 저장
-            eduVideoService.write(eduVideo);
+            videoEducationService.write(videoEducation);
 
             return ResponseEntity.ok("영상 및 이미지가 업로드되었습니다. 영상 URL: " + videoUrl + ", 이미지 URL: " + imageUrl);
         } catch (IOException e) {
@@ -68,25 +68,25 @@ public class VideoEducationController {
 
     // 개별 영상 교육자료 조회
     @GetMapping("/{id}")
-    public ResponseEntity<VideoEducation> getEduVideoById(@PathVariable Long id) {
-        VideoEducation eduVideo = eduVideoService.getEduVideoById(id);
+    public ResponseEntity<VideoEducation> getVideoEducationById(@PathVariable Long id) {
+        VideoEducation videoEducation = videoEducationService.getVideoEducationById(id);
 
-        String imageUrl = eduVideo.getImageUrl();
-        if (imageUrl != null && !imageUrl.startsWith("/eduVideo/images/")) {
-            imageUrl = "/eduVideo/images/" + imageUrl;
+        String imageUrl = videoEducation.getImageUrl();
+        if (imageUrl != null && !imageUrl.startsWith("/videoEducation/images/")) {
+            imageUrl = "/videoEducation/images/" + imageUrl;
         }
 
         imageUrl = imageUrl.replaceAll("/+/","/");
-        eduVideo.setImageUrl(imageUrl);
+        videoEducation.setImageUrl(imageUrl);
 
-        return ResponseEntity.ok(eduVideo);
+        return ResponseEntity.ok(videoEducation);
     }
 
     // 영상 교육자료 삭제
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> eduVideoDelete(@PathVariable("id") Long id) {
+    public ResponseEntity<?> videoEducationDelete(@PathVariable("id") Long id) {
         try {
-            eduVideoService.eduVideoDelete(id); // 삭제 서비스 호출
+            videoEducationService.videoEducationDelete(id); // 삭제 서비스 호출
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("삭제 중 오류 발생");
@@ -95,14 +95,14 @@ public class VideoEducationController {
 
     // 영상 교육자료 수정
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateEduVideo(
+    public ResponseEntity<?> updateVideoEducation(
             @PathVariable Long id,
             @RequestParam("writer") String writer,
             @RequestParam("content") String content,
             @RequestParam(value = "thumbnail", required = false) MultipartFile thumbnail,
             @RequestParam(value = "videoFile", required = false) MultipartFile videoFile) {
         try {
-            eduVideoService.updateEduVideo(id, writer, content, thumbnail, videoFile);
+            videoEducationService.updateVideoEducation(id, writer, content, thumbnail, videoFile);
             return ResponseEntity.ok("수정 완료");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("수정 중 오류: " + e.getMessage());
@@ -112,14 +112,14 @@ public class VideoEducationController {
     // 영상 다운로드
     @GetMapping("/download/{id}")
     public ResponseEntity<Resource> downloadVideo(@PathVariable Long id) {
-        VideoEducation eduVideo = eduVideoService.getEduVideoById(id);
-        if (eduVideo == null || eduVideo.getVideoUrl() == null) {
+        VideoEducation videoEducation = videoEducationService.getVideoEducationById(id);
+        if (videoEducation == null || videoEducation.getVideoUrl() == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
         // videoUrl에서 경로 수정, 해당 경로를 uploadPath와 합침
-        String videoUrl = eduVideo.getVideoUrl().replaceFirst("^/videos/eduVideo/", "");
-        Path filePath = Paths.get("C:/Video/videos/eduVideo/", videoUrl).normalize();  // 경로 수정
+        String videoUrl = videoEducation.getVideoUrl().replaceFirst("^/videos/videoEducation/", "");
+        Path filePath = Paths.get("C:/Video/videos/videoEducation/", videoUrl).normalize();  // 경로 수정
 
         if (!Files.exists(filePath)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -168,7 +168,7 @@ public class VideoEducationController {
     public ResponseEntity<Resource> getVideo(@PathVariable String filename) {
         try {
             // 비디오 파일 경로 설정
-            Path filePath = Paths.get("C:/Video/videos/eduVideo/").resolve(filename).normalize();
+            Path filePath = Paths.get("C:/Video/videos/videoEducation/").resolve(filename).normalize();
             
             // 파일이 존재하는지 확인
             File file = filePath.toFile();

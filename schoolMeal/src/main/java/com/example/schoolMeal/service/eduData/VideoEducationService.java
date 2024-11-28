@@ -21,27 +21,27 @@ import jakarta.persistence.EntityNotFoundException;
 public class VideoEducationService {
 
     @Autowired
-    private VideoEducationRepository eduVideoRepository;
+    private VideoEducationRepository videoEducationRepository;
 
     // 영상 교육자료 목록 반환
-    public List<VideoEducation> eduVideoList() {
-        return eduVideoRepository.findAll();
+    public List<VideoEducation> videoEducationList() {
+        return videoEducationRepository.findAll();
     }
 
     // 개별 영상 교육자료 조회
-    public VideoEducation getEduVideoById(Long id) {
-        return eduVideoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 EduVideo가 존재하지 않습니다."));
+    public VideoEducation getVideoEducationById(Long id) {
+        return videoEducationRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 VideoEducation가 존재하지 않습니다."));
     }
 
     // 영상 교육자료 저장
-    public void write(VideoEducation eduVideo) {
-        eduVideoRepository.save(eduVideo);
+    public void write(VideoEducation videoEducation) {
+        videoEducationRepository.save(videoEducation);
     }
 
   	// 영상 교육자료 수정
-    public void updateEduVideo(Long id, String writer, String content, MultipartFile thumbnail, MultipartFile videoFile) throws IOException {
-        Optional<VideoEducation> existingVideo = eduVideoRepository.findById(id);
+    public void updateVideoEducation(Long id, String writer, String content, MultipartFile thumbnail, MultipartFile videoFile) throws IOException {
+        Optional<VideoEducation> existingVideo = videoEducationRepository.findById(id);
 
         if (existingVideo.isPresent()) {
             VideoEducation video = existingVideo.get();
@@ -67,7 +67,7 @@ public class VideoEducationService {
             }
 
             // 수정된 엔티티 저장
-            eduVideoRepository.save(video);
+            videoEducationRepository.save(video);
         } else {
             throw new EntityNotFoundException("영상이 존재하지 않습니다.");
         }
@@ -93,8 +93,8 @@ public class VideoEducationService {
 
 
     // 영상 교육자료 삭제
-    public void eduVideoDelete(Long id) {
-        eduVideoRepository.deleteById(id);
+    public void videoEducationDelete(Long id) {
+        videoEducationRepository.deleteById(id);
     }
 
     // 영상 업로드 처리 (파일 업로드 후 URL 반환)
@@ -105,7 +105,7 @@ public class VideoEducationService {
 
         // 파일 이름 설정
         String fileName = file.getOriginalFilename();
-        Path filePath = Paths.get("C:/Video/videos/eduVideo/").resolve(fileName);
+        Path filePath = Paths.get("C:/Video/videos/videoEducation/").resolve(fileName);
 
         // 업로드할 디렉터리가 없으면 생성
         Files.createDirectories(filePath.getParent());
@@ -114,7 +114,7 @@ public class VideoEducationService {
         file.transferTo(filePath.toFile());
 
         // 저장된 파일의 URL 반환
-        return "/videos/eduVideo/" + fileName;
+        return "/videos/videoEducation/" + fileName;
     }
     
     // 이미지 업로드 메서드
@@ -138,7 +138,7 @@ public class VideoEducationService {
     }
 
     // 모든 영상 교육자료 조회
-    public List<VideoEducation> getAllEduVideos() {
-        return eduVideoRepository.findAll();
+    public List<VideoEducation> getAllVideoEducations() {
+        return videoEducationRepository.findAll();
     }
 }

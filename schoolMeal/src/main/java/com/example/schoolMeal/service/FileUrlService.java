@@ -20,13 +20,13 @@ public class FileUrlService extends PathResolver {
     @Autowired
     private FileUrlRepository fileUrlRepository;
 
-    private String mealPolicyPath;
+    private String mealPolicyOperationPath;
     
     private String menuRecipePath;
 
     @PostConstruct
     public void init() {
-        mealPolicyPath = buildPath("급식 정책 자료실");
+    	mealPolicyOperationPath = buildPath("급식 정책 자료실");
         menuRecipePath = buildPath("메뉴 및 레시피 자료실");
     }
 
@@ -81,7 +81,7 @@ public class FileUrlService extends PathResolver {
 
     private String selectSavePath(String serviceType) {
         if ("service1".equals(serviceType)) {
-            return mealPolicyPath;
+            return mealPolicyOperationPath;
         } else if ("service2".equals(serviceType)) {
             return menuRecipePath;
         }

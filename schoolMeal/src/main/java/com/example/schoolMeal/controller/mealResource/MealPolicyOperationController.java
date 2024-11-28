@@ -29,35 +29,34 @@ import com.example.schoolMeal.domain.entity.FileUrl;
 import com.example.schoolMeal.domain.entity.mealResource.MealPolicyOperation;
 import com.example.schoolMeal.domain.repository.mealResource.MealPolicyOperationRepository;
 import com.example.schoolMeal.service.mealResource.MealPolicyOperationService;
-
 @RestController
 @RequestMapping(value = "/mealPolicyOperation")
-public class MealPolicyController {
+public class MealPolicyOperationController {
 
 	@Autowired
-    private MealPolicyOperationRepository mealPolicyRepository;
+    private MealPolicyOperationRepository mealPolicyOperationRepository;
 	
     @Autowired
-    private MealPolicyOperationService mealPolicyService;
+    private MealPolicyOperationService mealPolicyOperationService;
 
     // 목록을 반환
     @GetMapping("/list")
-    public ResponseEntity<List<MealPolicyOperation>> mealPolicyList() {
-        List<MealPolicyOperation> mealPolicies = mealPolicyService.mealPolicyList();
+    public ResponseEntity<List<MealPolicyOperation>> mealPolicyOperationList() {
+        List<MealPolicyOperation> mealPolicies = mealPolicyOperationService.mealPolicyOperationList();
         return ResponseEntity.ok(mealPolicies);
     }
 
     // 작성 처리
     @PostMapping("/writepro")
-    public String mealPolicyWritePro(@RequestParam("title") String title,
+    public String mealPolicyOperationWritePro(@RequestParam("title") String title,
                                       @RequestParam("writer") String writer,
                                       @RequestParam("content") String content,
                                       @RequestParam(value = "file", required = false) MultipartFile file,
                                       RedirectAttributes redirectAttributes) throws IOException {
-        MealPolicyOperation mealPolicy = new MealPolicyOperation();
-        mealPolicy.setTitle(title);
-        mealPolicy.setWriter(writer);
-        mealPolicy.setContent(content);
+        MealPolicyOperation mealPolicyOperation = new MealPolicyOperation();
+        mealPolicyOperation.setTitle(title);
+        mealPolicyOperation.setWriter(writer);
+        mealPolicyOperation.setContent(content);
 
         // 파일 디버깅 출력
         if (file != null && !file.isEmpty()) {
@@ -68,44 +67,44 @@ public class MealPolicyController {
         }
 
         // 파일 처리 로직
-        mealPolicyService.write(mealPolicy, file);
+        mealPolicyOperationService.write(mealPolicyOperation, file);
 
         redirectAttributes.addFlashAttribute("message", "게시글이 성공적으로 작성되었습니다.");
-        return "redirect:/mealPolicy/list";
+        return "redirect:/mealPolicyOperation/list";
     }
 
     // 특정 id 조회
     @GetMapping("/{id}")
-    public ResponseEntity<MealPolicyOperation> getMealPolicyById(@PathVariable Long id) {
-        MealPolicyOperation mealPolicy = mealPolicyService.getPostWithFileDetails(id);
-        return mealPolicy != null ? ResponseEntity.ok(mealPolicy) : ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    public ResponseEntity<MealPolicyOperation> getMealPolicyOperationById(@PathVariable Long id) {
+        MealPolicyOperation mealPolicyOperation = mealPolicyOperationService.getPostWithFileDetails(id);
+        return mealPolicyOperation != null ? ResponseEntity.ok(mealPolicyOperation) : ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
     // 수정 처리하는 PUT 요청
     @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateMealPolicy(
+    public ResponseEntity<String> updateMealPolicyOperation(
             @PathVariable Long id,
             @RequestParam(value = "content", required = false) String content,
             @RequestParam(value = "writer", required = false) String writer,
             @RequestParam(value = "file", required = false) MultipartFile file) {
         try {
             // 기존 데이터 조회
-            MealPolicyOperation existingMealPolicy = mealPolicyService.getPostWithFileDetails(id);
-            if (existingMealPolicy == null) {
+            MealPolicyOperation existingMealPolicyOperation = mealPolicyOperationService.getPostWithFileDetails(id);
+            if (existingMealPolicyOperation == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("게시글이 존재하지 않습니다.");
             }
 
             // 필드 업데이트
-            if (content != null) existingMealPolicy.setContent(content);
-            if (writer != null) existingMealPolicy.setWriter(writer);
+            if (content != null) existingMealPolicyOperation.setContent(content);
+            if (writer != null) existingMealPolicyOperation.setWriter(writer);
 
             // 파일 처리 로직
             if (file != null && !file.isEmpty()) {
                 System.out.println("첨부된 파일: " + file.getOriginalFilename());
-                mealPolicyService.mealPolicyUpdate(existingMealPolicy, file);
+                mealPolicyOperationService.mealPolicyOperationUpdate(existingMealPolicyOperation, file);
             } else {
                 System.out.println("첨부된 파일이 없습니다.");
-                mealPolicyService.mealPolicyUpdate(existingMealPolicy, null);
+                mealPolicyOperationService.mealPolicyOperationUpdate(existingMealPolicyOperation, null);
             }
 
             return ResponseEntity.ok("수정되었습니다.");
@@ -117,9 +116,9 @@ public class MealPolicyController {
 
     // 게시글 삭제
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteMealPolicy(@PathVariable Long id) {
+    public ResponseEntity<String> deleteMealPolicyOperation(@PathVariable Long id) {
         try {
-            mealPolicyService.mealPolicyDelete(id);
+            mealPolicyOperationService.mealPolicyOperationDelete(id);
             return ResponseEntity.ok("게시글이 삭제되었습니다.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("삭제 실패: " + e.getMessage());
@@ -128,17 +127,17 @@ public class MealPolicyController {
     
     // 파일 다운로드
     @GetMapping("/download/{id}")
-    public ResponseEntity<InputStreamResource> downloadMealPolicyFile(@PathVariable Long id) {
+    public ResponseEntity<InputStreamResource> downloadMealPolicyOperation(@PathVariable Long id) {
         // 해당 ID의 게시글 조회
-        MealPolicyOperation mealPolicy = mealPolicyRepository.findById(id)
+    	MealPolicyOperation mealPolicyOperation = mealPolicyOperationRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 게시글이 존재하지 않습니다: " + id));
 
         // 게시글에 첨부된 파일이 있는지 확인
-        if (mealPolicy.getFileUrl() == null) {
+        if (mealPolicyOperation.getFileUrl() == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        FileUrl fileUrl = mealPolicy.getFileUrl();
+        FileUrl fileUrl = mealPolicyOperation.getFileUrl();
         Path filePath = Paths.get(fileUrl.getFilePath()).normalize();  // 파일 경로 얻기
 
         // 파일 존재 여부 확인

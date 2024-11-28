@@ -23,24 +23,24 @@ import jakarta.transaction.Transactional;
 public class MealPolicyOperationService extends PathResolver {
 
     @Autowired
-    private MealPolicyOperationRepository mealPolicyRepository;
+    private MealPolicyOperationRepository mealPolicyOperationRepository;
 
     @Autowired
     private FileUrlRepository fileUrlRepository;
 
     /* 파일 업로드 경로 설정 */
-    private String mealPolicyPath;
+    private String mealPolicyOperationPath;
 
     @PostConstruct
     public void init() {
-        mealPolicyPath = buildPath("게시글 자료실");
+    	mealPolicyOperationPath = buildPath("게시글 자료실");
     }
 
     // 게시글 저장
-    public void write(MealPolicyOperation mealPolicy, MultipartFile file) {
+    public void write(MealPolicyOperation mealPolicyOperation, MultipartFile file) {
         try {
-            if (mealPolicy == null) {
-                throw new IllegalArgumentException("MealPolicy 객체가 null입니다.");
+            if (mealPolicyOperation == null) {
+                throw new IllegalArgumentException("MealPolicyOperation 객체가 null입니다.");
             }
 
             if (file != null && !file.isEmpty()) {
@@ -50,12 +50,12 @@ public class MealPolicyOperationService extends PathResolver {
 
                 // 파일 저장 및 FileUrl 생성
                 FileUrl fileUrl = saveFile(file);
-                mealPolicy.setFileId(fileUrl.getId()); // fileId 설정
+                mealPolicyOperation.setFileId(fileUrl.getId()); // fileId 설정
             }
 
             // 게시글 저장
-            MealPolicyOperation savedMealPolicy = mealPolicyRepository.save(mealPolicy);
-            System.out.println("DB에 저장된 MealPolicy ID: " + savedMealPolicy.getId());
+            MealPolicyOperation savedMealPolicyOperation = mealPolicyOperationRepository.save(mealPolicyOperation);
+            System.out.println("DB에 저장된 MealPolicy ID: " + savedMealPolicyOperation.getId());
         } catch (IOException e) {
             throw new RuntimeException("파일 업로드 중 오류가 발생했습니다. 자세한 내용을 확인하세요.", e);
         } catch (Exception e) {
@@ -79,12 +79,12 @@ public class MealPolicyOperationService extends PathResolver {
         }
 
         String filename = System.currentTimeMillis() + "_" + origFilename;
-        File saveDir = new File(mealPolicyPath);
+        File saveDir = new File(mealPolicyOperationPath);
         if (!saveDir.exists() && !saveDir.mkdirs()) {
             throw new IOException("저장 폴더를 생성할 수 없습니다.");
         }
 
-        String filePath = mealPolicyPath + File.separator + filename;
+        String filePath = mealPolicyOperationPath + File.separator + filename;
         Long fileSize = file.getSize();
 
         // 파일 저장 로직
@@ -108,37 +108,37 @@ public class MealPolicyOperationService extends PathResolver {
         return savedFileUrl;
     }
 
-    // 게시글 리스트 반환
-    public List<MealPolicyOperation> mealPolicyList() {
+    // 게시글 리스트 반환 메서드
+    public List<MealPolicyOperation> mealPolicyOperationList() {
         try {
-            return mealPolicyRepository.findAll();
+            return mealPolicyOperationRepository.findAll();
         } catch (Exception e) {
             throw new RuntimeException("게시글 목록 조회 중 오류가 발생했습니다. 다시 시도해 주세요.", e);
         }
     }
 
     // 특정 파일 정보 조회
-    public FileUrl getFileUrlByMealPolicyId(Long id) {
-        // 해당 ID의 MealPolicy 조회
-        MealPolicyOperation mealPolicy = mealPolicyRepository.findById(id)
+    public FileUrl getFileUrlByMealPolicyOperationId(Long id) {
+        // 해당 ID의 MealPolicyOperation 조회
+        MealPolicyOperation mealPolicy = mealPolicyOperationRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 게시글이 존재하지 않습니다: " + id));
 
-        // MealPolicy에 연결된 FileUrl 조회
+        // MealPolicyOperation에 연결된 FileUrl 조회
         return mealPolicy.getFileUrl();  // 파일이 없으면 null 반환
     }
 
     // 특정 게시글을 조회하면서 첨부 파일 정보도 함께 반환
     public MealPolicyOperation getPostWithFileDetails(Long id) {
         try {
-            MealPolicyOperation mealPolicy = mealPolicyRepository.findById(id)
+            MealPolicyOperation mealPolicyOperation = mealPolicyOperationRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("해당 ID의 게시글이 존재하지 않습니다: " + id));
 
-            if (mealPolicy.getFileUrl() != null) {
-                FileUrl fileUrl = fileUrlRepository.findById(mealPolicy.getFileUrl().getId()).orElse(null); // 파일이 없을 경우 null 처리
-                mealPolicy.setFileUrl(fileUrl); // MealPolicy에 FileUrl 설정
+            if (mealPolicyOperation.getFileUrl() != null) {
+                FileUrl fileUrl = fileUrlRepository.findById(mealPolicyOperation.getFileUrl().getId()).orElse(null); // 파일이 없을 경우 null 처리
+                mealPolicyOperation.setFileUrl(fileUrl); // MealPolicyOperation에 FileUrl 설정
             }
 
-            return mealPolicy;
+            return mealPolicyOperation;
         } catch (Exception e) {
             throw new RuntimeException("게시글 조회 중 오류가 발생했습니다. 다시 시도해 주세요.", e);
         }
@@ -146,13 +146,13 @@ public class MealPolicyOperationService extends PathResolver {
 
     // 게시글 삭제
     @Transactional
-    public ResponseEntity<Integer> mealPolicyDelete(Long id) {
+    public ResponseEntity<Integer> mealPolicyOperationDelete(Long id) {
         try {
-            MealPolicyOperation mealPolicy = mealPolicyRepository.findById(id)
+            MealPolicyOperation mealPolicyOperation = mealPolicyOperationRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("해당 ID의 게시글이 존재하지 않습니다: " + id));
 
-            if (mealPolicy.getFileUrl() != null) {
-                FileUrl fileUrl = mealPolicy.getFileUrl();
+            if (mealPolicyOperation.getFileUrl() != null) {
+                FileUrl fileUrl = mealPolicyOperation.getFileUrl();
                 File fileToDelete = new File(fileUrl.getFilePath());
                 if (fileToDelete.exists()) {
                     boolean deleted = fileToDelete.delete();
@@ -163,7 +163,7 @@ public class MealPolicyOperationService extends PathResolver {
                 fileUrlRepository.delete(fileUrl);
             }
 
-            mealPolicyRepository.deleteById(id);
+            mealPolicyOperationRepository.deleteById(id);
             return ResponseEntity.ok(1); // 삭제 성공 시 명시적으로 1 반환
 
         } catch (Exception e) {
@@ -173,10 +173,10 @@ public class MealPolicyOperationService extends PathResolver {
 
     // 게시글 수정
     @Transactional
-    public void mealPolicyUpdate(MealPolicyOperation mealPolicy, MultipartFile file) throws IOException {
+    public void mealPolicyOperationUpdate(MealPolicyOperation mealPolicyOperation, MultipartFile file) throws IOException {
         try {
             if (file != null && !file.isEmpty()) {
-                FileUrl existingFile = mealPolicy.getFileUrl(); // 기존 파일 정보 가져오기
+                FileUrl existingFile = mealPolicyOperation.getFileUrl(); // 기존 파일 정보 가져오기
 
                 if (existingFile != null) {
                     // 기존 파일 삭제
@@ -194,15 +194,15 @@ public class MealPolicyOperationService extends PathResolver {
                 } else {
                     // 기존 파일이 없으면 새 파일 생성
                     FileUrl newFileUrl = saveFile(file);
-                    mealPolicy.setFileUrl(newFileUrl);
+                    mealPolicyOperation.setFileUrl(newFileUrl);
                 }
 
                 // 파일 ID도 MealPolicy에 설정
-                mealPolicy.setFileId(mealPolicy.getFileUrl().getId());
+                mealPolicyOperation.setFileId(mealPolicyOperation.getFileUrl().getId());
             }
 
             // 게시글 업데이트
-            mealPolicyRepository.save(mealPolicy);
+            mealPolicyOperationRepository.save(mealPolicyOperation);
 
         } catch (IOException e) {
             throw new RuntimeException("파일 업로드 또는 게시글 수정 중 오류가 발생했습니다. 세부사항: " + e.getMessage(), e);
@@ -214,7 +214,7 @@ public class MealPolicyOperationService extends PathResolver {
     // 파일을 디스크에 저장
     private String saveFileToDisk(MultipartFile file) throws IOException {
         // 파일 저장 경로 생성 (저장 디렉터리 유효성 검사 추가)
-        String uploadDir = mealPolicyPath;
+        String uploadDir = mealPolicyOperationPath;
         File directory = new File(uploadDir);
         if (!directory.exists() && !directory.mkdirs()) {
             throw new IOException("파일 저장 디렉터리를 생성하지 못했습니다: " + uploadDir);
@@ -226,5 +226,5 @@ public class MealPolicyOperationService extends PathResolver {
         file.transferTo(destination); // 파일 저장
         return filePath;
     }
-    
+
 }

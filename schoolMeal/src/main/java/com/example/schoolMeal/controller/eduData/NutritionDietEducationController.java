@@ -22,46 +22,46 @@ import com.example.schoolMeal.service.eduData.NutritionDietEducationService;
 public class NutritionDietEducationController {
 	
 	@Autowired
-	private NutritionDietEducationService nutrEduService;
+	private NutritionDietEducationService ntritionDietEducationService;
 	
 	// 교육자료 작성 폼
 	@GetMapping("/write")
-	public String nutrEduWriteForm() {
-		return "nutrEduwrite";
+	public String ntritionDietEducationWriteForm() {
+		return "ntritionDietEducationwrite";
 	}
 	
 	// 교육자료 작성 처리
 	@PostMapping("/writepro")
-	public String nutrEduWritePro(@ModelAttribute NutritionDietEducation nutrEdu) {
-		nutrEduService.write(nutrEdu);  // 작성된 영양 교육자료 저장
-		return "redirect:/nutrEdu/list";
+	public String ntritionDietEducationWritePro(@ModelAttribute NutritionDietEducation ntritionDietEducation) {
+		ntritionDietEducationService.write(ntritionDietEducation);  // 작성된 영양 교육자료 저장
+		return "redirect:/ntritionDietEducation/list";
 	}
 
 	// 교육자료 목록을 반환
 	@GetMapping("/list")
-	public List<NutritionDietEducation> nutrEduList() {
-	    return nutrEduService.nutrEduList(); // 영양 교육자료 목록을 JSON 형식으로 반환
+	public List<NutritionDietEducation> ntritionDietEducationList() {
+	    return ntritionDietEducationService.ntritionDietEducationList(); // 영양 교육자료 목록을 JSON 형식으로 반환
 	}
 	
 	// 개별 교육자료를 조회 (ID로 조회) (+ ID로 조회는 임시)
-	@GetMapping("/view") // localhost:8090/nutrEdu/view?id=1
-    public String nutrEduView(Model model, @RequestParam("id") Long id) {
-        model.addAttribute("nutrEdu", nutrEduService.nutrEduView(id));
-        return "nutrEduview";
+	@GetMapping("/view") // localhost:8090/ntritionDietEducation/view?id=1
+    public String ntritionDietEducationView(Model model, @RequestParam("id") Long id) {
+        model.addAttribute("ntritionDietEducation", ntritionDietEducationService.ntritionDietEducationView(id));
+        return "ntritionDietEducationview";
     }
 	
 	// 교육자료 삭제
 	@DeleteMapping("/delete")
-	public String nutrEduDelete(@RequestParam("id") Long id) {
-		nutrEduService.nutrEduDelete(id); 
-		return "redirect:/nutrEdu/list";
+	public String ntritionDietEducationDelete(@RequestParam("id") Long id) {
+		ntritionDietEducationService.ntritionDietEducationDelete(id); 
+		return "redirect:/ntritionDietEducation/list";
 	}
 	
 	// 교육자료 수정 처리하는 PUT 요청
     @PutMapping("/update")
-    public String nutrEduUpdate(NutritionDietEducation nutrEdu) {
-        nutrEduService.nutrEduUpdate(nutrEdu); // 교육자료 수정
-        return "redirect:/nutrEdu/list"; 
+    public String ntritionDietEducationUpdate(NutritionDietEducation ntritionDietEducation) {
+        ntritionDietEducationService.ntritionDietEducationUpdate(ntritionDietEducation); // 교육자료 수정
+        return "redirect:/ntritionDietEducation/list"; 
     }
 
 }

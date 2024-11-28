@@ -17,7 +17,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Table(name = "mealPolicy") // 테이블 명
+@Table(name = "MealPolicyOperation") // 테이블 명
 @Entity
 @Getter @Setter
 @NoArgsConstructor
