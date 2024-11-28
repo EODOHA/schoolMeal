@@ -26,24 +26,24 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.schoolMeal.domain.entity.FileUrl;
-import com.example.schoolMeal.domain.entity.mealResource.MealPolicy;
-import com.example.schoolMeal.domain.repository.mealResource.MealPolicyRepository;
-import com.example.schoolMeal.service.mealResource.MealPolicyService;
+import com.example.schoolMeal.domain.entity.mealResource.MealPolicyOperation;
+import com.example.schoolMeal.domain.repository.mealResource.MealPolicyOperationRepository;
+import com.example.schoolMeal.service.mealResource.MealPolicyOperationService;
 
 @RestController
-@RequestMapping(value = "/mealPolicy")
+@RequestMapping(value = "/mealPolicyOperation")
 public class MealPolicyController {
 
 	@Autowired
-    private MealPolicyRepository mealPolicyRepository;
+    private MealPolicyOperationRepository mealPolicyRepository;
 	
     @Autowired
-    private MealPolicyService mealPolicyService;
+    private MealPolicyOperationService mealPolicyService;
 
     // 목록을 반환
     @GetMapping("/list")
-    public ResponseEntity<List<MealPolicy>> mealPolicyList() {
-        List<MealPolicy> mealPolicies = mealPolicyService.mealPolicyList();
+    public ResponseEntity<List<MealPolicyOperation>> mealPolicyList() {
+        List<MealPolicyOperation> mealPolicies = mealPolicyService.mealPolicyList();
         return ResponseEntity.ok(mealPolicies);
     }
 
@@ -54,7 +54,7 @@ public class MealPolicyController {
                                       @RequestParam("content") String content,
                                       @RequestParam(value = "file", required = false) MultipartFile file,
                                       RedirectAttributes redirectAttributes) throws IOException {
-        MealPolicy mealPolicy = new MealPolicy();
+        MealPolicyOperation mealPolicy = new MealPolicyOperation();
         mealPolicy.setTitle(title);
         mealPolicy.setWriter(writer);
         mealPolicy.setContent(content);
@@ -76,8 +76,8 @@ public class MealPolicyController {
 
     // 특정 id 조회
     @GetMapping("/{id}")
-    public ResponseEntity<MealPolicy> getMealPolicyById(@PathVariable Long id) {
-        MealPolicy mealPolicy = mealPolicyService.getPostWithFileDetails(id);
+    public ResponseEntity<MealPolicyOperation> getMealPolicyById(@PathVariable Long id) {
+        MealPolicyOperation mealPolicy = mealPolicyService.getPostWithFileDetails(id);
         return mealPolicy != null ? ResponseEntity.ok(mealPolicy) : ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
@@ -90,7 +90,7 @@ public class MealPolicyController {
             @RequestParam(value = "file", required = false) MultipartFile file) {
         try {
             // 기존 데이터 조회
-            MealPolicy existingMealPolicy = mealPolicyService.getPostWithFileDetails(id);
+            MealPolicyOperation existingMealPolicy = mealPolicyService.getPostWithFileDetails(id);
             if (existingMealPolicy == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("게시글이 존재하지 않습니다.");
             }
@@ -130,7 +130,7 @@ public class MealPolicyController {
     @GetMapping("/download/{id}")
     public ResponseEntity<InputStreamResource> downloadMealPolicyFile(@PathVariable Long id) {
         // 해당 ID의 게시글 조회
-        MealPolicy mealPolicy = mealPolicyRepository.findById(id)
+        MealPolicyOperation mealPolicy = mealPolicyRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 게시글이 존재하지 않습니다: " + id));
 
         // 게시글에 첨부된 파일이 있는지 확인

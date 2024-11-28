@@ -1,4 +1,4 @@
-package com.example.schoolMeal.service.eduDate;
+package com.example.schoolMeal.service.eduData;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,39 +12,39 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.schoolMeal.domain.entity.eduData.EduVideo;
-import com.example.schoolMeal.domain.repository.eduData.EduVideoRepository;
+import com.example.schoolMeal.domain.entity.eduData.VideoEducation;
+import com.example.schoolMeal.domain.repository.eduData.VideoEducationRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
-public class EduVideoService {
+public class VideoEducationService {
 
     @Autowired
-    private EduVideoRepository eduVideoRepository;
+    private VideoEducationRepository eduVideoRepository;
 
     // 영상 교육자료 목록 반환
-    public List<EduVideo> eduVideoList() {
+    public List<VideoEducation> eduVideoList() {
         return eduVideoRepository.findAll();
     }
 
     // 개별 영상 교육자료 조회
-    public EduVideo getEduVideoById(Long id) {
+    public VideoEducation getEduVideoById(Long id) {
         return eduVideoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 EduVideo가 존재하지 않습니다."));
     }
 
     // 영상 교육자료 저장
-    public void write(EduVideo eduVideo) {
+    public void write(VideoEducation eduVideo) {
         eduVideoRepository.save(eduVideo);
     }
 
   	// 영상 교육자료 수정
     public void updateEduVideo(Long id, String writer, String content, MultipartFile thumbnail, MultipartFile videoFile) throws IOException {
-        Optional<EduVideo> existingVideo = eduVideoRepository.findById(id);
+        Optional<VideoEducation> existingVideo = eduVideoRepository.findById(id);
 
         if (existingVideo.isPresent()) {
-            EduVideo video = existingVideo.get();
+            VideoEducation video = existingVideo.get();
 
             // 수정할 데이터 업데이트
             video.setWriter(writer);
@@ -138,7 +138,7 @@ public class EduVideoService {
     }
 
     // 모든 영상 교육자료 조회
-    public List<EduVideo> getAllEduVideos() {
+    public List<VideoEducation> getAllEduVideos() {
         return eduVideoRepository.findAll();
     }
 }

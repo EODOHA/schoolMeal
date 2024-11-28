@@ -12,18 +12,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.schoolMeal.common.PathResolver;
 import com.example.schoolMeal.domain.entity.FileUrl;
-import com.example.schoolMeal.domain.entity.mealResource.MealPolicy;
+import com.example.schoolMeal.domain.entity.mealResource.MealPolicyOperation;
 import com.example.schoolMeal.domain.repository.FileUrlRepository;
-import com.example.schoolMeal.domain.repository.mealResource.MealPolicyRepository;
+import com.example.schoolMeal.domain.repository.mealResource.MealPolicyOperationRepository;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 
 @Service
-public class MealPolicyService extends PathResolver {
+public class MealPolicyOperationService extends PathResolver {
 
     @Autowired
-    private MealPolicyRepository mealPolicyRepository;
+    private MealPolicyOperationRepository mealPolicyRepository;
 
     @Autowired
     private FileUrlRepository fileUrlRepository;
@@ -37,7 +37,7 @@ public class MealPolicyService extends PathResolver {
     }
 
     // 게시글 저장
-    public void write(MealPolicy mealPolicy, MultipartFile file) {
+    public void write(MealPolicyOperation mealPolicy, MultipartFile file) {
         try {
             if (mealPolicy == null) {
                 throw new IllegalArgumentException("MealPolicy 객체가 null입니다.");
@@ -54,7 +54,7 @@ public class MealPolicyService extends PathResolver {
             }
 
             // 게시글 저장
-            MealPolicy savedMealPolicy = mealPolicyRepository.save(mealPolicy);
+            MealPolicyOperation savedMealPolicy = mealPolicyRepository.save(mealPolicy);
             System.out.println("DB에 저장된 MealPolicy ID: " + savedMealPolicy.getId());
         } catch (IOException e) {
             throw new RuntimeException("파일 업로드 중 오류가 발생했습니다. 자세한 내용을 확인하세요.", e);
@@ -109,7 +109,7 @@ public class MealPolicyService extends PathResolver {
     }
 
     // 게시글 리스트 반환
-    public List<MealPolicy> mealPolicyList() {
+    public List<MealPolicyOperation> mealPolicyList() {
         try {
             return mealPolicyRepository.findAll();
         } catch (Exception e) {
@@ -120,7 +120,7 @@ public class MealPolicyService extends PathResolver {
     // 특정 파일 정보 조회
     public FileUrl getFileUrlByMealPolicyId(Long id) {
         // 해당 ID의 MealPolicy 조회
-        MealPolicy mealPolicy = mealPolicyRepository.findById(id)
+        MealPolicyOperation mealPolicy = mealPolicyRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 게시글이 존재하지 않습니다: " + id));
 
         // MealPolicy에 연결된 FileUrl 조회
@@ -128,9 +128,9 @@ public class MealPolicyService extends PathResolver {
     }
 
     // 특정 게시글을 조회하면서 첨부 파일 정보도 함께 반환
-    public MealPolicy getPostWithFileDetails(Long id) {
+    public MealPolicyOperation getPostWithFileDetails(Long id) {
         try {
-            MealPolicy mealPolicy = mealPolicyRepository.findById(id)
+            MealPolicyOperation mealPolicy = mealPolicyRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("해당 ID의 게시글이 존재하지 않습니다: " + id));
 
             if (mealPolicy.getFileUrl() != null) {
@@ -148,7 +148,7 @@ public class MealPolicyService extends PathResolver {
     @Transactional
     public ResponseEntity<Integer> mealPolicyDelete(Long id) {
         try {
-            MealPolicy mealPolicy = mealPolicyRepository.findById(id)
+            MealPolicyOperation mealPolicy = mealPolicyRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("해당 ID의 게시글이 존재하지 않습니다: " + id));
 
             if (mealPolicy.getFileUrl() != null) {
@@ -173,7 +173,7 @@ public class MealPolicyService extends PathResolver {
 
     // 게시글 수정
     @Transactional
-    public void mealPolicyUpdate(MealPolicy mealPolicy, MultipartFile file) throws IOException {
+    public void mealPolicyUpdate(MealPolicyOperation mealPolicy, MultipartFile file) throws IOException {
         try {
             if (file != null && !file.isEmpty()) {
                 FileUrl existingFile = mealPolicy.getFileUrl(); // 기존 파일 정보 가져오기

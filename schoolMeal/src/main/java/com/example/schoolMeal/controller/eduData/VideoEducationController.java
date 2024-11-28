@@ -26,19 +26,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.schoolMeal.domain.entity.eduData.EduVideo;
-import com.example.schoolMeal.service.eduDate.EduVideoService;
+import com.example.schoolMeal.domain.entity.eduData.VideoEducation;
+import com.example.schoolMeal.service.eduData.VideoEducationService;
 
 @RestController
-@RequestMapping("/eduVideo")
-public class EduVideoController {
+@RequestMapping("/videoEducation")
+public class VideoEducationController {
 
     @Autowired
-    private EduVideoService eduVideoService;
+    private VideoEducationService eduVideoService;
 
     // 모든 영상 교육자료 조회
     @GetMapping("/list")
-    public ResponseEntity<List<EduVideo>> getAllEduVideos() {
+    public ResponseEntity<List<VideoEducation>> getAllEduVideos() {
         return ResponseEntity.ok(eduVideoService.getAllEduVideos());
     }
 
@@ -47,7 +47,7 @@ public class EduVideoController {
     public ResponseEntity<String> eduVideoWritePro(
             @RequestParam("video") MultipartFile videoFile,
             @RequestParam("thumbnail") MultipartFile imageFile,
-            @ModelAttribute EduVideo eduVideo) {
+            @ModelAttribute VideoEducation eduVideo) {
         try {
             // 영상 업로드 처리 및 URL 설정
             String videoUrl = eduVideoService.uploadVideo(videoFile);
@@ -68,8 +68,8 @@ public class EduVideoController {
 
     // 개별 영상 교육자료 조회
     @GetMapping("/{id}")
-    public ResponseEntity<EduVideo> getEduVideoById(@PathVariable Long id) {
-        EduVideo eduVideo = eduVideoService.getEduVideoById(id);
+    public ResponseEntity<VideoEducation> getEduVideoById(@PathVariable Long id) {
+        VideoEducation eduVideo = eduVideoService.getEduVideoById(id);
 
         String imageUrl = eduVideo.getImageUrl();
         if (imageUrl != null && !imageUrl.startsWith("/eduVideo/images/")) {
@@ -112,7 +112,7 @@ public class EduVideoController {
     // 영상 다운로드
     @GetMapping("/download/{id}")
     public ResponseEntity<Resource> downloadVideo(@PathVariable Long id) {
-        EduVideo eduVideo = eduVideoService.getEduVideoById(id);
+        VideoEducation eduVideo = eduVideoService.getEduVideoById(id);
         if (eduVideo == null || eduVideo.getVideoUrl() == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

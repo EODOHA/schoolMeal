@@ -13,16 +13,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.schoolMeal.domain.entity.eduData.NutrEdu;
-import com.example.schoolMeal.service.eduDate.NutrEduService;
+import com.example.schoolMeal.domain.entity.eduData.NutritionDietEducation;
+import com.example.schoolMeal.service.eduData.NutritionDietEducationService;
 
 /*   교육 자료 - 영양 및 식생활 교육자료   */
 @RestController
-@RequestMapping(value = "/nutrEdu")
-public class NutrEduController {
+@RequestMapping(value = "/ntritionDietEducation")
+public class NutritionDietEducationController {
 	
 	@Autowired
-	private NutrEduService nutrEduService;
+	private NutritionDietEducationService nutrEduService;
 	
 	// 교육자료 작성 폼
 	@GetMapping("/write")
@@ -32,14 +32,14 @@ public class NutrEduController {
 	
 	// 교육자료 작성 처리
 	@PostMapping("/writepro")
-	public String nutrEduWritePro(@ModelAttribute NutrEdu nutrEdu) {
+	public String nutrEduWritePro(@ModelAttribute NutritionDietEducation nutrEdu) {
 		nutrEduService.write(nutrEdu);  // 작성된 영양 교육자료 저장
 		return "redirect:/nutrEdu/list";
 	}
 
 	// 교육자료 목록을 반환
 	@GetMapping("/list")
-	public List<NutrEdu> nutrEduList() {
+	public List<NutritionDietEducation> nutrEduList() {
 	    return nutrEduService.nutrEduList(); // 영양 교육자료 목록을 JSON 형식으로 반환
 	}
 	
@@ -59,7 +59,7 @@ public class NutrEduController {
 	
 	// 교육자료 수정 처리하는 PUT 요청
     @PutMapping("/update")
-    public String nutrEduUpdate(NutrEdu nutrEdu) {
+    public String nutrEduUpdate(NutritionDietEducation nutrEdu) {
         nutrEduService.nutrEduUpdate(nutrEdu); // 교육자료 수정
         return "redirect:/nutrEdu/list"; 
     }

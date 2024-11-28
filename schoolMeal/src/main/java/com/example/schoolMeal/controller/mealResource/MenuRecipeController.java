@@ -26,7 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.schoolMeal.domain.entity.FileUrl;
-import com.example.schoolMeal.domain.entity.mealResource.MealPolicy;
+import com.example.schoolMeal.domain.entity.mealResource.MealPolicyOperation;
 import com.example.schoolMeal.domain.entity.mealResource.MenuRecipe;
 import com.example.schoolMeal.domain.repository.mealResource.MenuRecipeRepository;
 import com.example.schoolMeal.service.mealResource.MenuRecipeService;

@@ -1,31 +1,31 @@
-package com.example.schoolMeal.service.eduDate;
+package com.example.schoolMeal.service.eduData;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.schoolMeal.domain.entity.eduData.NutrEdu;
-import com.example.schoolMeal.domain.repository.eduData.NutrEduRepository;
+import com.example.schoolMeal.domain.entity.eduData.NutritionDietEducation;
+import com.example.schoolMeal.domain.repository.eduData.NutritionDietEducationRepository;
 
 @Service
-public class NutrEduService {
+public class NutritionDietEducationService {
 
 	@Autowired
-	private NutrEduRepository nutrEduRepository;
+	private NutritionDietEducationRepository nutrEduRepository;
 	
 	// 글 작성
-	public void write(NutrEdu nutrEdu) {
+	public void write(NutritionDietEducation nutrEdu) {
 		nutrEduRepository.save(nutrEdu);
 	}
 	
 	// 게시글 리스트 처리
-	public List<NutrEdu> nutrEduList() {
+	public List<NutritionDietEducation> nutrEduList() {
 		return nutrEduRepository.findAll();
 	}
 	
 	// 특정 게시글 불러오기
-	public NutrEdu nutrEduView(Long id) {
+	public NutritionDietEducation nutrEduView(Long id) {
 		return nutrEduRepository.findById(id).get();
 	}
 	
@@ -35,7 +35,7 @@ public class NutrEduService {
 	}
 	
 	// 게시글 수정
-	public void nutrEduUpdate(NutrEdu nutrEdu) {
+	public void nutrEduUpdate(NutritionDietEducation nutrEdu) {
 		nutrEduRepository.save(nutrEdu);
 	}
 	 

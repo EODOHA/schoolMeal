@@ -12,11 +12,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Table(name = "EduVideo") // 테이블 명
+@Table(name = "VideoEdu") // 테이블 명
 @Entity
 @Getter @Setter
 @NoArgsConstructor
-public class EduVideo {
+public class VideoEducation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
