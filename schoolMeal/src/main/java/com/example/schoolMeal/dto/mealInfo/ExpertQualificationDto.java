@@ -11,7 +11,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ExpertQualificationDto {
 	
-	private String exp_qual_qualification;	//보유 자격증
+	private Long exp_qual_id;
+	private String exp_qual_description;	//보유 자격증
 
 	
 }

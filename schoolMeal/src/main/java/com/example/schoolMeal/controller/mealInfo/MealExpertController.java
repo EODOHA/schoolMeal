@@ -1,4 +1,4 @@
-package com.example.schoolMeal.controller;
+package com.example.schoolMeal.controller.mealInfo;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +27,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/mealInfo") // 상위 메뉴 -> 급식정보
-public class MealInfoController {
+public class MealExpertController {
 
 	/* @@@@@@@@@@@@@@@@@@@@@@@ 급식 전문 인력 관리 게시판 @@@@@@@@@@@@@@@@@@@@@@@ */
 	@Autowired
@@ -46,7 +46,7 @@ public class MealInfoController {
 		if (mealExpertDto.getHistories() != null) {
 			for (ExpertHistoryDto historyDto : mealExpertDto.getHistories()) {
 				ExpertHistory history = new ExpertHistory();
-				history.setExp_hist_history(historyDto.getExp_hist_history());
+				history.setExp_hist_description(historyDto.getExp_hist_description());
 				mealExpert.addHistory(history);
 			}
 		}
@@ -54,7 +54,7 @@ public class MealInfoController {
 		if (mealExpertDto.getQualifications() != null) {
 			for (ExpertQualificationDto qualificationDto : mealExpertDto.getQualifications()) {
 				ExpertQualification qualification = new ExpertQualification();
-				qualification.setExp_qual_qualification(qualificationDto.getExp_qual_qualification());
+				qualification.setExp_qual_description(qualificationDto.getExp_qual_description());
 				mealExpert.addQualification(qualification);
 			}
 		}
@@ -71,7 +71,7 @@ public class MealInfoController {
 		return ResponseEntity.ok(mealExperts);
 	}
 
-	// 전문인력 상세조회s
+	// 전문인력 상세조회
 	@GetMapping("/experts/{exp_id}")
 	public ResponseEntity<MealExpert> getExpert(@PathVariable Long exp_id) {
 		Optional<MealExpert> mealExpert = mealExpertService.findExpertById(exp_id);
@@ -100,7 +100,7 @@ public class MealInfoController {
 		updateExpert.getHistories().clear();
 		for (ExpertHistoryDto historyDto : mealExpertDto.getHistories()) {
 			ExpertHistory history = new ExpertHistory();
-			history.setExp_hist_history(historyDto.getExp_hist_history());
+			history.setExp_hist_description(historyDto.getExp_hist_description());
 			updateExpert.addHistory(history);
 		}
 
@@ -108,7 +108,7 @@ public class MealInfoController {
 		updateExpert.getQualifications().clear();
 		for (ExpertQualificationDto qualificationDto : mealExpertDto.getQualifications()) {
 			ExpertQualification qualification = new ExpertQualification();
-			qualification.setExp_qual_qualification(qualificationDto.getExp_qual_qualification());
+			qualification.setExp_qual_description(qualificationDto.getExp_qual_description());
 			updateExpert.addQualification(qualification);
 		}
 

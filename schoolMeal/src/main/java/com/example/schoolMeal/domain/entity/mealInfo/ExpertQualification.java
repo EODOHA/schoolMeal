@@ -26,7 +26,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ExpertQualification extends BaseEntity {
 
-	public ExpertQualification(String qualificationDescription, MealExpert expert) {
+	public ExpertQualification(String exp_qual_description, MealExpert expert) {
 	}
 
 	@Id
@@ -34,7 +34,7 @@ public class ExpertQualification extends BaseEntity {
 	@Column(nullable = false, updatable = false)
 	private Long exp_qual_id;
 
-	private String exp_qual_qualification; // 자격사항
+	private String exp_qual_description; // 자격사항
 
 	@ManyToOne // 전문인력과 N:1 연관관계 -> 한 명의 전문인력은 여러 개의 자격사항을 가질 수 있다.
 	@JoinColumn(name = "exp_id", nullable = false) // exp_id를 외래키로 가짐

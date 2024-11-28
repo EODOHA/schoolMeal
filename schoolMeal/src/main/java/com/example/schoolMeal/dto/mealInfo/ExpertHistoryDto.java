@@ -11,8 +11,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ExpertHistoryDto {
 	
-//	private Long exp_hist_id;
-	private String exp_hist_history;	// 경력사항
+	private Long exp_hist_id;
+	private String exp_hist_description;	// 경력사항
 	
 
 }

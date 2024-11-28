@@ -26,7 +26,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ExpertHistory extends BaseEntity {
 
-	public ExpertHistory(String historyDescription, MealExpert expert) {
+	public ExpertHistory(String exp_hist_description, MealExpert expert) {
 	}
 
 	@Id
@@ -34,7 +34,7 @@ public class ExpertHistory extends BaseEntity {
 	@Column(nullable = false, updatable = false)
 	private Long exp_hist_id;
 
-	private String exp_hist_history; // 이력사항
+	private String exp_hist_description; // 이력사항
 
 	@ManyToOne // 전문인력과 N:1 연관관계 -> 한 명의 인력은 여러 개의 이력사항을 가질 수 있다.
 	@JoinColumn(name = "exp_id", nullable = false) // exp_id를 외래키로 가짐

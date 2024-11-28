@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,8 +16,7 @@ import lombok.Setter;
 @NoArgsConstructor
 //@Builder
 public class MealExpertDto {
-
-//	private long exp_id;
+	private Long exp_id;
 
 	@NotBlank(message = "이름은 필수 항목입니다.")
 	private String exp_name; // 이름
@@ -29,6 +29,8 @@ public class MealExpertDto {
 
 	@Email(message = "올바른 이메일 형식을 입력해 주세요.")
 	private String exp_email; // 이메일
+	
+	private String exp_author;
 
 //	private String exp_profileImg; // 프로필이미지
 

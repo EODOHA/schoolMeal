@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.example.schoolMeal.domain.entity.mealResource.MealPolicyOperation;
 import com.example.schoolMeal.domain.repository.mealResource.MealPolicyOperationRepository;
 
+
 @SpringBootTest
 public class MealPolicyTest {
 	
