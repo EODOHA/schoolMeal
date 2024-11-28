@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState, useLayoutEffect } from "react";
 import { Link } from "react-router-dom";
 import "./css/main/MainPage.css";
 import { SERVER_URL } from "./Constants";
+import axios from 'axios';
 
 const MainPage = () => {
     // 이미지 슬라이더 관련 Start -----------------------------------
@@ -10,6 +11,8 @@ const MainPage = () => {
     const [videos, setVideos] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [imageKey, setImageKey] = useState(0); // 이미지 키값 변경용
+    const [resources, setResources] = useState([]); // 급식 자료실 목록
+    const [loading, setLoading] = useState(true); // 로딩 상태
 
     const token = sessionStorage.getItem("jwt");
 
@@ -91,6 +94,20 @@ const MainPage = () => {
                 console.error("Error fetching videos:", error.message);
             });
     }, []); // 컴포넌트 마운트 시 한 번만 실행.
+
+    // 급식자료실 목록을 가져오기
+    useEffect(() => {
+        axios.get(`${SERVER_URL}mealPolicyOperations`) // 급식 자료 API 엔드포인트
+            .then(response => {
+                // 실제 자료는 response.data._embedded.mealPolicyOperations에 있음
+                setResources(response.data._embedded.mealPolicyOperations); // 급식 자료 목록 업데이트
+                setLoading(false); // 데이터 로딩 완료
+            })
+            .catch(error => {
+                console.error('급식 자료 로딩 실패', error);
+                setLoading(false); // 에러가 나도 로딩 상태 끝냄
+            });
+    }, []);
 
     // 팝업 관련 상태
     const [showModal, setShowModal] = useState(false);
@@ -250,12 +267,25 @@ const MainPage = () => {
                 </div>
 
                 <div className="resource-container">
-                    <h2>자료실</h2>
-                    <ul>
-                        <li><Link to="/resources/1">자료 테스트용 기이이이이이이이이이이이이이이이이이이이이이이이이이이이이인 글</Link></li>
-                        <li><Link to="/resources/2">자료 제목 2</Link></li>
-                        <li><Link to="/resources/3">자료 제목 3</Link></li>
-                    </ul>
+                    <h2>급식 자료실</h2>
+                    {loading ? (
+                        <p>로딩 중...</p> // 로딩 중일 때 표시될 메시지
+                    ) : (
+                        <ul>
+                            {resources.length > 0 ? (
+                                // 처음 5개만 보여주기 위해 slice(0, 5) 사용
+                                resources.slice(0, 5).map((resource) => (
+                                    <li key={resource.id}>
+                                        <Link to={`/mealResource/meal-policy-operation/${resource.id}`}>
+                                            {resource.title} {/* title을 올바르게 출력 */}
+                                        </Link>
+                                    </li>
+                                ))
+                            ) : (
+                                <p>자료가 없습니다.</p> // 데이터가 없을 때 표시될 메시지
+                            )}
+                        </ul>
+                    )}
                 </div>
             </section>
 

@@ -1,0 +1,44 @@
+/* Write 페이지 컨테이너 스타일 */
+.meal-write-container {
+    display: flex;
+    justify-content: center;
+    align-items: center; /* 세로 정렬 */
+    max-width: 800px; /* Detail과 일치하는 폭 설정 */
+    width: 100%;
+    margin: 0 auto; /* 중앙 정렬 */
+    padding: 20px;
+    box-sizing: border-box;
+    margin-top: 40px; /* 기존 여백 유지 */
+}
+
+.meal-write-card {
+    width: 100%;
+    max-width: 600px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.meal-write-card-body {
+    padding: 20px;
+}
+
+.meal-write-card h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-between;
+}
+
+.error-message {
+    color: red;
+    margin-bottom: 15px;
+}

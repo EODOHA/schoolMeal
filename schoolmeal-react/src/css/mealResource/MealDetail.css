@@ -1,0 +1,114 @@
+/* 컨테이너 스타일 */
+.meal-detail-container {
+    display: flex;
+    justify-content: center; /* 세로 중앙 정렬 */
+    align-items: center; /* 가로 중앙 정렬 */
+    max-width: 800px; /* 최대 폭 설정 */
+    width: 100%; /* 100% 너비로 확장 가능 */
+    margin: 0 auto; /* 중앙 정렬 */
+    padding: 20px;
+    box-sizing: border-box; /* padding과 border를 크기 안에 포함 */
+    flex-direction: column; /* 내용은 세로로 정렬 */
+    margin-top: 40px;
+}
+
+/* 카드 스타일 */
+.meal-detail-card {
+    width: 100%;
+    max-width: 600px; /* Edite 페이지의 카드 폭 설정 */
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+/* 카드 본문 스타일 */
+/* 제목 스타일 */
+.meal-detail-card-body h2 {
+    text-align: center !important;
+}
+
+/* 제목 스타일 */
+h2 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+
+/* 헤더 스타일 */
+.meal-detail-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.meal-detail-id, 
+.meal-detail-date {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+/* 폼 그룹 스타일 */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    box-sizing: border-box; /* 패딩과 테두리를 포함하여 크기를 계산 */
+}
+
+/* 텍스트 영역 스타일 */
+textarea.form-control {
+    resize: vertical;
+}
+
+/* 첨부파일 링크 스타일 */
+.attachment-link {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.attachment-link:hover {
+    text-decoration: underline;
+}
+
+.attachment-link svg {
+    margin-right: 5px;
+}
+
+/* 버튼 그룹 스타일 */
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+/* 첨부파일 섹션 스타일 */
+.meal-detail-attachment {
+    text-align: right; /* 오른쪽 정렬 */
+    margin-top: 10px; /* 작성일과의 간격 */
+    margin-bottom: 10px; /* 작성자와의 간격 */
+}
+
+/* 첨부파일 다운로드 링크 스타일 */
+.attachment-link {
+    text-decoration: none; /* 밑줄 제거 */
+    color: #1976d2;
+    font-weight: bold;
+    display: inline-flex; /* 아이콘과 텍스트 한 줄 표시 */
+    align-items: center;
+}
+
+/* 첨부파일 없음 아이콘 스타일 */
+.meal-detail-attachment span {
+    display: inline-flex;
+    align-items: center;
+    color: #888;
+    font-style: italic;
+}

@@ -1,0 +1,50 @@
+.edu-write-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.edu-card {
+    width: 100%;
+    max-width: 600px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.edu-card-body {
+    padding: 20px;
+}
+
+.edu-card h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    text-align: center;  /* 텍스트와 이미지를 중앙 정렬 */
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-between;
+}
+
+.error-message {
+    color: red;
+    margin-bottom: 15px;
+}
+
+/* 썸네일 미리보기 컨테이너 스타일 */
+.form-group img {
+    display: block;  /* 이미지가 인라인 요소가 아닌 블록 요소로 표시되도록 설정 */
+    margin-left: auto;  /* 왼쪽 여백 자동 */
+    margin-right: auto; /* 오른쪽 여백 자동 */
+    max-width: 100%;  /* 부모 컨테이너에 맞춰 크기 조정 */
+    height: auto;  /* 이미지 비율을 유지하며 높이 자동 조정 */
+    margin-top: 10px; /* 위쪽 여백 추가 */
+}
+
+
