@@ -12,14 +12,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 @MappedSuperclass // 상속하는 엔터티에서 공통 필드로 사용가능, 상속한 엔터티에 테이블에 자동생성
-@EntityListeners(AuditingEntityListener.class) // Auditing 기능 활성화
-@Getter 
+@EntityListeners(AuditingEntityListener.class)
+@Getter
 @Setter
 public abstract class BaseEntity {
-	
+
 	@CreatedDate
-	private LocalDateTime createDate;	// 생성시간
-	
+	private LocalDateTime createdDate; // 생성시간
+
 	@LastModifiedDate
-	private LocalDateTime lastModifiedDate;	//수정시간
+	private LocalDateTime lastModifiedDate; // 수정시간
 }
