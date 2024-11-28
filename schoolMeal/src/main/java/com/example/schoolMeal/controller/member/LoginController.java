@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.schoolMeal.domain.entity.member.Role;
 import com.example.schoolMeal.dto.loginResponse.LoginResponseDto;
 import com.example.schoolMeal.dto.member.AccountCredentialsDto;
 import com.example.schoolMeal.exception.AccountLockedException;
@@ -51,8 +52,12 @@ public class LoginController {
 				// 인증 성공 시, 토큰 생성
 				String jwts = jwtService.getToken(auth.getName());
 				
+				// 사용자 role 가져오기
+				Role role = memberService.getMemberRole(credentials.getMemberId());
+				
 				response.setSuccess(true);
 				response.setToken(jwts);
+				response.setRole(role.name());
 				return ResponseEntity.ok(response);
 			} else {
 				response.setSuccess(false);

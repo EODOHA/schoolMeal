@@ -70,28 +70,28 @@ public class SchoolMealApplication implements CommandLineRunner {
 				"admin", 
 				"$2a$10$8cjz47bjbR4Mn8GMg9IZx.vyjhLXR/SKKMSZ9.mP9vpMu0ssKi8GW",
 				"admin@admin.com",
-				"010-1234-5678",
+				"01012345678",
 				Role.ADMIN));
 		memberRepository.save(new Member(
 				"연계회원",
 				"member1", 
 				"$2a$12$SIIf/Riy.LSvYwbSBtsLeuiqZMBXHA/nKWhpvIHWS5W/OBUkVo0.y",
 				"member1@member1.com",
-				"010-7562-3132",
+				"01075623132",
 				Role.LINKAGE));
 		memberRepository.save(new Member(
 				"일반회원",
 				"member2", 
 				"$2a$12$SIIf/Riy.LSvYwbSBtsLeuiqZMBXHA/nKWhpvIHWS5W/OBUkVo0.y",
 				"member2@member2.com",
-				"010-4421-7412",
+				"01044217412",
 				Role.MEMBER));
 		memberRepository.save(new Member(
 				"강등회원",
 				"member3", 
 				"$2a$12$SIIf/Riy.LSvYwbSBtsLeuiqZMBXHA/nKWhpvIHWS5W/OBUkVo0.y",
 				"member3@member3.com",
-				"010-5124-4884",
+				"01051244884",
 				Role.GUEST));
 
 		// 급식 자료실 - 급식 정책 예시(DB)

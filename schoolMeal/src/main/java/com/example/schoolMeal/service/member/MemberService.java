@@ -96,4 +96,10 @@ public class MemberService {
 				.orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다! 계정을 확인해 주세요!"));
 		return member.getFailedAttempts();
 	}
+	
+	public Role getMemberRole(String memberId) {
+		Member member = memberRepository.findByMemberId(memberId)
+				.orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다! 계정을 확인해 주세요!"));
+		return member.getRole();
+	}
 }

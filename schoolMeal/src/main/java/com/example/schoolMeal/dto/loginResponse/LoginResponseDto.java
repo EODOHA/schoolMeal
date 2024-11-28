@@ -9,4 +9,5 @@ public class LoginResponseDto {
 	private boolean success;
 	private String token;
 	private String error;
+	private String role;
 }
