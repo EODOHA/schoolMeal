@@ -41,10 +41,10 @@ public class CounselHistory {
 
     @PastOrPresent(message = "상담일은 과거 또는 현재여야 합니다.")
     private LocalDate counselDate; // 상담일
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "school_id")
-    private School school; // 상담이 이루어진 학교
+// 제작 안함
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "school_id")
+//    private School school; // 상담이 이루어진 학교
 
     // 빌더 패턴을 이용한 생성자
     @Builder
