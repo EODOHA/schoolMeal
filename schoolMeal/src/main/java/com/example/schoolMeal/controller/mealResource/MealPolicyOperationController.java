@@ -84,6 +84,7 @@ public class MealPolicyOperationController {
     @PutMapping("/update/{id}")
     public ResponseEntity<String> updateMealPolicyOperation(
             @PathVariable Long id,
+            @RequestParam(value = "title", required = false) String title,
             @RequestParam(value = "content", required = false) String content,
             @RequestParam(value = "writer", required = false) String writer,
             @RequestParam(value = "file", required = false) MultipartFile file) {
@@ -95,6 +96,7 @@ public class MealPolicyOperationController {
             }
 
             // 필드 업데이트
+            if (title != null) existingMealPolicyOperation.setTitle(title);
             if (content != null) existingMealPolicyOperation.setContent(content);
             if (writer != null) existingMealPolicyOperation.setWriter(writer);
 

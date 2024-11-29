@@ -59,7 +59,7 @@ function MenuRecipeList() {
     // URL에서 ID를 추출하는 함수
     const extractIdFromHref = (href) => {
         const parts = href.split('/');
-        return parts[parts.length - 1];
+        return parts[parts.length - 1]; 
     };
 
     // 새 글 쓰기 후 목록을 다시 가져오는 함수
@@ -100,20 +100,23 @@ function MenuRecipeList() {
                     </tr>
                 </thead>
                 <tbody>
-                    {(menuRecipe && menuRecipe.length === 0) ? (
+                    { (menuRecipe && menuRecipe.length === 0) ? (
                         <tr>
-                            <td colSpan="5">데이터가 없습니다.</td>
+                            <td colSpan="6">데이터가 없습니다.</td>
                         </tr>
                     ) : (
                         menuRecipe && menuRecipe.map((menuRecipe, index) => {
                             const isSelected = id && menuRecipe.id && id === menuRecipe.id.toString();
-                        
+
                             // fileUrl은 fileId가 존재할 때만 유효한 것으로 처리
                             const fileUrl = menuRecipe.fileId ? menuRecipe._links?.fileUrl?.href : null;
-                        
+
+                            // menuRecipe에서 ID를 추출
+                            const menuRecipeId = extractIdFromHref(menuRecipe._links?.self?.href);
+
                             return (
                                 <tr
-                                    key={menuRecipe.id || `menuRecipe-${index}`}
+                                    key={menuRecipeId || `menuRecipe-${index}`}
                                     onClick={() => goToDetailPage(menuRecipe)}
                                     style={{
                                         cursor: "pointer",
@@ -124,6 +127,7 @@ function MenuRecipeList() {
                                     <td>{menuRecipe.title}</td>
                                     <td>{formatDate(menuRecipe.createdDate)}</td>
                                     <td>{menuRecipe.writer}</td>
+                                    <td>{menuRecipeId}</td> {/* 추출된 ID 출력 */}
                                     <td>
                                         {fileUrl ? (
                                             <a href={fileUrl} target="_blank" rel="noopener noreferrer">
@@ -135,7 +139,7 @@ function MenuRecipeList() {
                                     </td>
                                 </tr>
                             );
-                        })                                                             
+                        })
                     )}
                 </tbody>
             </table>

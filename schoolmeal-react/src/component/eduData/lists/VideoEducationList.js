@@ -47,7 +47,7 @@ function VideoEducationList() {
         <div className="edu-list-container">
             <h1 className="title">영상 교육자료</h1>
             <div className="button-group">
-                <Button variant="outlined" onClick={() => navigate("/home")}>
+                <Button variant="outlined" onClick={() => navigate("/eduData")}>
                     이전으로
                 </Button>
                 <Button variant="outlined" onClick={() => navigate("/eduData/video-education/write")} style={{ marginLeft: "auto" }}>

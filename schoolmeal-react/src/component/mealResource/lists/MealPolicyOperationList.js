@@ -91,9 +91,7 @@ function MealPolicyOperationList() {
                                     <td>{mealPolicyOperation.writer}</td>
                                     <td>
                                         {fileUrl ? (
-                                            <a href={fileUrl} target="_blank" rel="noopener noreferrer">
-                                                <span className="attachment-icon"><MdAttachFile /></span>
-                                            </a>
+                                            <span className="attachment-icon"><MdAttachFile /></span>
                                         ) : (
                                             <span className="attachment-icon"><BsFileExcel /></span>
                                         )}

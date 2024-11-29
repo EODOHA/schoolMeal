@@ -97,12 +97,13 @@ public class VideoEducationController {
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateVideoEducation(
             @PathVariable Long id,
+            @RequestParam("title") String title,
             @RequestParam("writer") String writer,
             @RequestParam("content") String content,
             @RequestParam(value = "thumbnail", required = false) MultipartFile thumbnail,
             @RequestParam(value = "videoFile", required = false) MultipartFile videoFile) {
         try {
-            videoEducationService.updateVideoEducation(id, writer, content, thumbnail, videoFile);
+            videoEducationService.updateVideoEducation(id, title, writer, content, thumbnail, videoFile);
             return ResponseEntity.ok("수정 완료");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("수정 중 오류: " + e.getMessage());

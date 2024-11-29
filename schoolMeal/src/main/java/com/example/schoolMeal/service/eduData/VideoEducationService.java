@@ -40,13 +40,14 @@ public class VideoEducationService {
     }
 
   	// 영상 교육자료 수정
-    public void updateVideoEducation(Long id, String writer, String content, MultipartFile thumbnail, MultipartFile videoFile) throws IOException {
+    public void updateVideoEducation(Long id, String title, String writer, String content, MultipartFile thumbnail, MultipartFile videoFile) throws IOException {
         Optional<VideoEducation> existingVideo = videoEducationRepository.findById(id);
 
         if (existingVideo.isPresent()) {
             VideoEducation video = existingVideo.get();
 
             // 수정할 데이터 업데이트
+            video.setTitle(title);
             video.setWriter(writer);
             video.setContent(content);
 

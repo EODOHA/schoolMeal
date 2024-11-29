@@ -103,7 +103,8 @@ function VideoEducationEdit() {
                                 fullWidth
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
-                                disabled // 제목 필드를 비활성화
+                                // disabled // 제목 필드를 비활성화
+                                required
                             />
                         </div>
 
@@ -130,6 +131,7 @@ function VideoEducationEdit() {
                         </div>
 
                         <div className="form-group">
+                            <label>썸네일 이미지:</label>
                             <input
                                 type="file"
                                 accept="image/*"
@@ -156,6 +158,7 @@ function VideoEducationEdit() {
                         </div>
 
                         <div className="form-group">
+                            <label>영상 파일:</label>
                             <input
                                 type="file"
                                 accept="video/*"

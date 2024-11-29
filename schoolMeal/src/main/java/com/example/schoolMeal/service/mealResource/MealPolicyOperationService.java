@@ -33,7 +33,13 @@ public class MealPolicyOperationService extends PathResolver {
 
     @PostConstruct
     public void init() {
-    	mealPolicyOperationPath = buildPath("게시글 자료실");
+    	mealPolicyOperationPath = buildPath("급식 자료실");
+    	
+    	// 저장 경로의 유효성 검사
+        File saveDir = new File(mealPolicyOperationPath);
+        if (!saveDir.exists() && !saveDir.mkdirs()) {
+            throw new RuntimeException("저장 폴더를 생성할 수 없습니다: " + mealPolicyOperationPath);
+        }
     }
 
     // 게시글 저장

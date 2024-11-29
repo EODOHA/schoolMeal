@@ -117,7 +117,7 @@ function MenuRecipeEdit() {
         <div className="meal-edit-container">
             <div className="meal-edit-card">
                 <div className="meal-edit-card-body">
-                    <h2>{menuRecipe.title} 수정</h2>
+                    <h2>게시글 수정</h2>
                     <form onSubmit={handleSave}>
                         <div className="form-group">
                             <label>제목</label>
@@ -151,12 +151,6 @@ function MenuRecipeEdit() {
                         </div>
                         <div className="form-group">
                             <label>첨부파일</label>
-                            {menuRecipe.fileUrl ? (
-                                <a href={menuRecipe.fileUrl} target="_blank" rel="noopener noreferrer">
-                                </a>
-                            ) : (
-                                "첨부파일 없음"
-                            )}
                             <input
                                 type="file"
                                 name="file"

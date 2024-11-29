@@ -33,7 +33,7 @@ public class MealPolicyOperation {
 	private String content;
 	
 	// 제목 필드
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false)
 	private String title;
 	
 	// 작성자 필드

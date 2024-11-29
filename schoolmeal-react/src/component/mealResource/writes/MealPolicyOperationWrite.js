@@ -45,13 +45,8 @@ function MealPolicyOperationWrite() {
                 navigate("/mealResource/meal-policy-operation"); // 성공 시 목록 페이지로 이동
             })
             .catch((err) => {
-                if (err.response && err.response.status === 409) {
-                    // 409 Conflict 상태 코드 예시
-                    setError("제목이나 작성자가 중복되었습니다.");
-                } else {
-                    console.error("게시판 등록 중 오류가 발생했습니다.", err);
-                    setError("게시판 등록 중 문제가 발생했습니다. 다시 시도해주세요.");
-                }
+                console.error("게시판 등록 중 오류가 발생했습니다.", err);
+                setError("게시판 등록 중 문제가 발생했습니다. 다시 시도해주세요.");
             })
             .finally(() => {
                 setLoading(false); // 로딩 상태 종료

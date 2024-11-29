@@ -88,7 +88,7 @@ function MealPolicyOperationDetail() {
                     <div className="meal-detail-attachment">
                         {mealPolicyOperation.fileId ? (
                             <a
-                                href={`${SERVER_URL}mealPolicyOperationOperation/download/${mealPolicyOperation.fileId}`}
+                                href={`${SERVER_URL}mealPolicyOperation/download/${mealPolicyOperation.fileId}`}
                                 download
                                 className="attachment-link"
                             >

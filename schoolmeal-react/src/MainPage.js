@@ -274,7 +274,7 @@ const MainPage = () => {
                         <ul>
                             {resources.length > 0 ? (
                                 // 처음 5개만 보여주기 위해 slice(0, 5) 사용
-                                resources.slice(0, 5).map((resource) => (
+                                resources.slice().reverse().slice(0, 5).map((resource) => (
                                     <li key={resource.id}>
                                         <Link to={`/mealResource/meal-policy-operation/${resource.id}`}>
                                             {resource.title} {/* title을 올바르게 출력 */}

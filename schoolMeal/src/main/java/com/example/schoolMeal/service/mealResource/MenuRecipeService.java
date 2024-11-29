@@ -33,7 +33,7 @@ public class MenuRecipeService extends PathResolver {
 	 
 	 @PostConstruct
 	 public void init() {
-		 menuRecipePath = buildPath("게시글 자료실");
+		 menuRecipePath = buildPath("식단 및 레시피");
 	 }
 	 
 	 // 게시글 저장

@@ -85,6 +85,7 @@ public class MenuRecipeController {
     @PutMapping("/update/{id}")
     public ResponseEntity<String> updateMenuRecipe(
             @PathVariable Long id,
+            @RequestParam(value = "title", required = false) String title,
             @RequestParam(value = "content", required = false) String content,
             @RequestParam(value = "writer", required = false) String writer,
             @RequestParam(value = "file", required = false) MultipartFile file) {
@@ -96,6 +97,7 @@ public class MenuRecipeController {
             }
 
             // 필드 업데이트
+            if (title != null) existingMenuRecipe.setTitle(title);
             if (content != null) existingMenuRecipe.setContent(content);
             if (writer != null) existingMenuRecipe.setWriter(writer);
 
