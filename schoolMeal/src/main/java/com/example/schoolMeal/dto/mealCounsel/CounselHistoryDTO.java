@@ -1,4 +1,4 @@
-package com.example.schoolMeal.dto.mealcounsel;
+package com.example.schoolMeal.dto.mealCounsel;
 
 //영양상담기록 DTO
 import java.time.LocalDate;

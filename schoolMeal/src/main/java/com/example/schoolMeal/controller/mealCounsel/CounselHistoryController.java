@@ -1,9 +1,9 @@
-package com.example.schoolMeal.controller.mealcounsel;
+package com.example.schoolMeal.controller.mealCounsel;
 
 // 영양상담기록 controller
-import com.example.schoolMeal.domain.entity.mealcounsel.CounselHistory;
-import com.example.schoolMeal.dto.mealcounsel.CounselHistoryDTO;
-import com.example.schoolMeal.service.mealcounsel.CounselHistoryService;
+import com.example.schoolMeal.domain.entity.mealCounsel.CounselHistory;
+import com.example.schoolMeal.dto.mealCounsel.CounselHistoryDTO;
+import com.example.schoolMeal.service.mealCounsel.CounselHistoryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;

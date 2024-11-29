@@ -1,6 +1,6 @@
-package com.example.schoolMeal.dto.mealcounsel;
+package com.example.schoolMeal.dto.mealCounsel;
 
-import com.example.schoolMeal.domain.entity.mealcounsel.MealCounsel;
+import com.example.schoolMeal.domain.entity.mealCounsel.MealCounsel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

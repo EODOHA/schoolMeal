@@ -1,13 +1,13 @@
-package com.example.schoolMeal.service.mealcounsel;
+package com.example.schoolMeal.service.mealCounsel;
 
 //영양상담 자료실 Service
-import com.example.schoolMeal.domain.entity.mealcounsel.MealCounsel;
-import com.example.schoolMeal.domain.entity.mealcounsel.MealCounselFile;
-import com.example.schoolMeal.domain.entity.mealcounsel.MealCounselSpecifications;
-import com.example.schoolMeal.domain.repository.mealcounsel.MealCounselFileRepository;
-import com.example.schoolMeal.domain.repository.mealcounsel.MealCounselRepository;
-import com.example.schoolMeal.dto.mealcounsel.MealCounselRequestDTO;
-import com.example.schoolMeal.dto.mealcounsel.MealCounselResponseDTO;
+import com.example.schoolMeal.domain.entity.mealCounsel.MealCounsel;
+import com.example.schoolMeal.domain.entity.mealCounsel.MealCounselFile;
+import com.example.schoolMeal.domain.entity.mealCounsel.MealCounselSpecifications;
+import com.example.schoolMeal.domain.repository.mealCounsel.MealCounselFileRepository;
+import com.example.schoolMeal.domain.repository.mealCounsel.MealCounselRepository;
+import com.example.schoolMeal.dto.mealCounsel.MealCounselRequestDTO;
+import com.example.schoolMeal.dto.mealCounsel.MealCounselResponseDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;

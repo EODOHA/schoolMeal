@@ -1,9 +1,9 @@
-package com.example.schoolMeal.domain.repository.mealcounsel;
+package com.example.schoolMeal.domain.repository.mealCounsel;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
-import com.example.schoolMeal.domain.entity.mealcounsel.MealCounsel;
+import com.example.schoolMeal.domain.entity.mealCounsel.MealCounsel;
 
 
 // 영양 상담 자료실에 대한 데이터베이스 접근을 관리하는 리포지토리 인터페이스.

@@ -1,10 +1,10 @@
-package com.example.schoolMeal.controller.mealcounsel;
+package com.example.schoolMeal.controller.mealCounsel;
 
 // 영양상담 자료실 게시판 Controller
-import com.example.schoolMeal.dto.mealcounsel.MealCounselRequestDTO;
-import com.example.schoolMeal.dto.mealcounsel.MealCounselResponseDTO;
-import com.example.schoolMeal.service.mealcounsel.FileStorageService;
-import com.example.schoolMeal.service.mealcounsel.MealCounselService;
+import com.example.schoolMeal.dto.mealCounsel.MealCounselRequestDTO;
+import com.example.schoolMeal.dto.mealCounsel.MealCounselResponseDTO;
+import com.example.schoolMeal.service.mealCounsel.FileStorageService;
+import com.example.schoolMeal.service.mealCounsel.MealCounselService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.annotation.Secured;

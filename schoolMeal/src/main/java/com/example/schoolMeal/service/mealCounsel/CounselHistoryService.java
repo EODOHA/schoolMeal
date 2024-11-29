@@ -1,9 +1,9 @@
-package com.example.schoolMeal.service.mealcounsel;
+package com.example.schoolMeal.service.mealCounsel;
 
 //영양상담기록 service
-import com.example.schoolMeal.domain.entity.mealcounsel.CounselHistorySpecifications;
-import com.example.schoolMeal.domain.repository.mealcounsel.CounselHistoryRepository;
-import com.example.schoolMeal.domain.entity.mealcounsel.CounselHistory;
+import com.example.schoolMeal.domain.entity.mealCounsel.CounselHistorySpecifications;
+import com.example.schoolMeal.domain.repository.mealCounsel.CounselHistoryRepository;
+import com.example.schoolMeal.domain.entity.mealCounsel.CounselHistory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;

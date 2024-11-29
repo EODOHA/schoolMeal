@@ -1,4 +1,4 @@
-package com.example.schoolMeal.controller.mealcounsel;
+package com.example.schoolMeal.controller.mealCounsel;
 
 //식생활 및 습관 진단 프로그램 페이지(현재는 URL형식으로 특정 사이트에 연결)
 //향후 필요하다면 진단 페이지를 직접 제작

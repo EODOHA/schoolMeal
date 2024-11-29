@@ -1,4 +1,4 @@
-package com.example.schoolMeal.domain.entity.mealcounsel;
+package com.example.schoolMeal.domain.entity.mealCounsel;
 
 //MealCounsel Entity
 //영양 상담 자료실을 위한 엔티티로, 게시글의 제목, 내용, 조회수, 작성자, 작성 및 수정 시간, 첨부 파일 등의 정보를 관리.

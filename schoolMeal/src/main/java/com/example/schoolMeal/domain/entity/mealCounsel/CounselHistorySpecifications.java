@@ -1,4 +1,4 @@
-package com.example.schoolMeal.domain.entity.mealcounsel;
+package com.example.schoolMeal.domain.entity.mealCounsel;
 
 //CounselHistory 엔티티에 대한 동적 쿼리 생성
 //다양한 검색 조건을 조합하여 CounselHistory 데이터를 조회할 수 있도록 지원

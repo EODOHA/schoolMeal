@@ -1,4 +1,4 @@
-package com.example.schoolMeal.domain.entity.mealcounsel;
+package com.example.schoolMeal.domain.entity.mealCounsel;
 
 //Meal Counsel에 관련된 파일 엔티티를 나타냅니다.
 //업로드된 파일의 이름, 타입, URL 등의 정보를 저장합니다

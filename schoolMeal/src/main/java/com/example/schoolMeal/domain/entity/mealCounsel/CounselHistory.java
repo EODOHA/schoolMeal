@@ -1,11 +1,8 @@
-package com.example.schoolMeal.domain.entity.mealcounsel;
+package com.example.schoolMeal.domain.entity.mealCounsel;
 
 //영양상담기록 entity
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 
 import jakarta.validation.constraints.NotBlank;
@@ -14,7 +11,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 
 @Entity
 @Table(name = "counsel_history")
@@ -45,6 +41,10 @@ public class CounselHistory {
 
     @PastOrPresent(message = "상담일은 과거 또는 현재여야 합니다.")
     private LocalDate counselDate; // 상담일
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "school_id")
+    private School school; // 상담이 이루어진 학교
 
     // 빌더 패턴을 이용한 생성자
     @Builder

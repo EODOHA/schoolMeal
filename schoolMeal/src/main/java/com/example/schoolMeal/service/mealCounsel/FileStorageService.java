@@ -1,4 +1,4 @@
-package com.example.schoolMeal.service.mealcounsel;
+package com.example.schoolMeal.service.mealCounsel;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;

@@ -1,9 +1,8 @@
-package com.example.schoolMeal.domain.entity.mealcounsel;
+package com.example.schoolMeal.domain.entity.mealCounsel;
 
 //MealCounsel 엔티티에 대한 동적 쿼리 조건을 정의하는 클래스
 //제목, 내용, 작성자, 생성일자 에 따른 검색 조건을 제공
 import org.springframework.data.jpa.domain.Specification;
-import com.example.schoolMeal.domain.entity.mealcounsel.MealCounsel;
 
 import java.time.LocalDate;
 

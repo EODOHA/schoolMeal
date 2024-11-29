@@ -1,4 +1,4 @@
-package com.example.schoolMeal.dto.mealcounsel;
+package com.example.schoolMeal.dto.mealCounsel;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
