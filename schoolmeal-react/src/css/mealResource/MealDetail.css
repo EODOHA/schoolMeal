@@ -1,5 +1,5 @@
 /* 컨테이너 스타일 */
-.meal-detail-container {
+.meal-resource-detail-container {
     max-width: 1000px; /* 최대 폭 설정 */
     width: 100%; /* 100% 너비로 확장 가능 */
     margin: 0 auto; /* 중앙 정렬 */
@@ -13,7 +13,7 @@
 }
 
 /* 카드 스타일 */
-.meal-card {
+.meal-resource-card {
     width: 100%; /* 카드가 컨테이너의 폭에 맞게 채워짐 */
     padding: 20px;
     border: 1px solid #ddd;
@@ -22,36 +22,36 @@
 }
 
 /* 카드 본문 스타일 */
-.meal-card-body {
+.meal-resource-card-body {
     font-family: Arial, sans-serif;
 }
 
 /* 제목 */
-.meal-card-body h2 {
+.meal-resource-card-body h2 {
     font-size: 1.5rem;
     margin-bottom: 15px;
     text-align: center;
 }
 
 /* 헤더 */
-.meal-detail-header {
+.meal-resource-header {
     display: flex;
     justify-content: space-between;
     margin-bottom: 15px;
 }
 
-.meal-id, 
-.meal-date {
+.meal-resource-id, 
+.meal-resource-date {
     font-size: 0.9rem;
     color: #555;
 }
 
 /* 폼 그룹 */
-.meal-form-group {
+.meal-resource-form-group {
     margin-bottom: 1rem;
 }
 
-.meal-form-control {
+.meal-resource-form-control {
     width: 100%;
     padding: 10px;
     font-size: 1rem;
@@ -60,41 +60,41 @@
 }
 
 /* 텍스트 영역 */
-textarea.meal-form-control {
+textarea.meal-resource-form-control {
     resize: vertical;
 }
 
 /* 첨부파일 링크 */
-.meal-attachment-link {
+.meal-resource-attachment-link {
     color: #007bff;
     text-decoration: none;
 }
 
-.meal-attachment-link:hover {
+.meal-resource-attachment-link:hover {
     text-decoration: underline;
 }
 
 /* 첨부파일 아이콘과 텍스트 간 간격 설정 */
-.meal-attachment-link svg {
+.meal-resource-attachment-link svg {
     margin-right: 5px;
 }
 
 /* 버튼 그룹 */
-.meal-button-group {
+.meal-resource-button-group {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
 }
 
 /* 첨부파일 섹션 스타일 */
-.meal-attachment {
+.meal-resource-attachment {
     text-align: right; /* 오른쪽 정렬 */
     margin-top: 10px; /* 작성일과의 간격 */
     margin-bottom: 10px; /* 작성자와의 간격 */
 }
 
 /* 첨부파일 다운로드 링크 스타일 */
-.meal-attachment-link {
+.meal-resource-attachment-link {
     text-decoration: none; /* 밑줄 제거 */
     color: #1976d2;
     font-weight: bold;
@@ -103,7 +103,7 @@ textarea.meal-form-control {
 }
 
 /* 첨부파일 없음 아이콘 스타일 */
-.meal-attachment span {
+.meal-resource-attachment span {
     display: inline-flex;
     align-items: center;
     color: #888;

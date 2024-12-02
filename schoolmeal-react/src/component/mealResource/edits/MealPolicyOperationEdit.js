@@ -111,16 +111,16 @@ function MealPolicyOperationEdit() {
     }
 
     if (error) {
-        return <div className="meal-error-message">{error}</div>;
+        return <div className="meal-resource-error-message">{error}</div>;
     }
 
     return (
-        <div className="meal-edit-container">
-            <div className="meal-card">
-                <div className="meal-card-body">
+        <div className="meal-resource-edit-container">
+            <div className="meal-resource-card">
+                <div className="meal-resource-card-body">
                     <h2>게시글 수정</h2>
                     <form onSubmit={handleSave}>
-                        <div className="meal-form-group">
+                        <div className="meal-resource-form-group">
                             <label>제목:</label>
                             <input
                                 type="text"
@@ -130,7 +130,7 @@ function MealPolicyOperationEdit() {
                                 required
                             />
                         </div>
-                        <div className="meal-form-group">
+                        <div className="meal-resource-form-group">
                             <label>작성자:</label>
                             <input
                                 type="text"
@@ -140,7 +140,7 @@ function MealPolicyOperationEdit() {
                                 required
                             />
                         </div>
-                        <div className="meal-form-group">
+                        <div className="meal-resource-form-group">
                             <label>내용:</label>
                             <textarea
                                 name="content"
@@ -150,7 +150,7 @@ function MealPolicyOperationEdit() {
                                 required
                             />
                         </div>
-                        <div className="meal-form-group">
+                        <div className="meal-resource-form-group">
                             <label>첨부파일</label>
                             <input
                                 type="file"
@@ -159,7 +159,7 @@ function MealPolicyOperationEdit() {
                                 onChange={handleChange}
                             />
                         </div>
-                        <div className="meal-button-group">
+                        <div className="meal-resource-button-group">
                             <Button variant="contained" color="success" type="submit">수정 저장</Button>
                             <Button variant="outlined" onClick={() => navigate(`/mealResource/meal-policy-operation/${id}`)}>취소</Button>
                         </div>

@@ -1,5 +1,5 @@
 /* 컨테이너 스타일 */
-.meal-list-container {
+.meal-resource-list-container {
     padding: 20px;
     margin: 0 auto;
     max-width: 1200px;
@@ -8,82 +8,82 @@
 }
 
 /* 제목 스타일 */
-.meal-title {
+.meal-resource-title {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 15px;
 }
 
 /* 버튼 그룹 스타일 */
-.meal-button-group {
+.meal-resource-button-group {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
 }
 
 /* 테이블 스타일 */
-.meal-table {
+.meal-resource-table {
     width: 100%;
     border-collapse: collapse; /* 셀 간 경계를 합침 */
     margin-top: 20px; /* 테이블 위쪽 여백 추가 */
 }
 
 /* 테이블 헤더 스타일 */
-.meal-thead {
+.meal-resource-thead {
     background-color: #f2f2f2;
     border-bottom: 2px solid #ccc;
 }
 
 /* 셀 스타일 */
-.meal-table td, .meal-table th {
+.meal-resource-table td, .meal-resource-table th {
     padding: 10px; /* 셀 안쪽 여백 */
     text-align: center; /* 셀 내 글자 가운데 정렬 */
 }
 
 /* 각 열 너비 설정 */
-.meal-table th:nth-child(1), .meal-table td:nth-child(1) {
+.meal-resource-table th:nth-child(1), .meal-resource-table td:nth-child(1) {
     width: 10%; /* 번호 열의 너비 */
 }
 
-.meal-table th:nth-child(2), .meal-table td:nth-child(2) {
+.meal-resource-table th:nth-child(2), .meal-resource-table td:nth-child(2) {
     width: 40%; /* 제목 열의 너비 (가장 넓게 설정) */
 }
 
-.meal-table th:nth-child(3), .meal-table td:nth-child(3) {
+.meal-resource-table th:nth-child(3), .meal-resource-table td:nth-child(3) {
     width: 20%; /* 등록일 열의 너비 */
 }
 
-.meal-table th:nth-child(4), .meal-table td:nth-child(4) {
+.meal-resource-table th:nth-child(4), .meal-resource-table td:nth-child(4) {
     width: 15%; /* 작성자 열의 너비 */
 }
 
-.meal-table th:nth-child(5), .meal-table td:nth-child(5) {
+.meal-resource-table th:nth-child(5), .meal-resource-table td:nth-child(5) {
     width: 15%; /* 첨부파일 열의 너비 */
 }
 
 /* 행 스타일 */
-.meal-tbody tr:nth-child(even) {
+.meal-resource-tbody tr:nth-child(even) {
     background-color: #f9f9f9;
 }
 
-.meal-tbody tr:hover {
+.meal-resource-tbody tr:hover {
     background-color: #f1f1f1;
 }
 
 /* 행 간격을 늘리기 위해 tr에 margin-bottom 추가 */
-.meal-tbody tr {
+.meal-resource-tbody tr {
     margin-bottom: 10px; /* 행 간격 */
 }
 
 /* 첨부파일 아이콘 스타일 */
-.meal-attachment-icon {
+.meal-resource-attachment-icon {
     font-size: 18px;
     color: #007bff;
     cursor: pointer;
 }
 
 /* 필터 버튼 스타일 */
-.meal-filter-button {
+.meal-resource-filter-button {
     padding: 10px 15px;
     background-color: #007bff; /* 버튼 배경색 */
     color: white; /* 글자 색 */
@@ -94,6 +94,6 @@
     transition: background-color 0.3s ease; /* 배경색 전환 효과 */
 }
 
-.meal-filter-button:hover {
+.meal-resource-filter-button:hover {
     background-color: #0056b3; /* 호버 시 배경색 */
 }

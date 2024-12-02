@@ -54,14 +54,14 @@ function MealPolicyOperationWrite() {
     };
 
     return (
-        <div className="meal-write-container">
-            <div className="meal-card">
-                <div className="meal-card-body">
+        <div className="meal-resource-write-container">
+            <div className="meal-resource-card">
+                <div className="meal-resource-card-body">
                     <h2>새 게시판 작성</h2>
-                    {error && <div className="meal-error-message">{error}</div>}
+                    {error && <div className="meal-resource-error-message">{error}</div>}
 
                     <form onSubmit={handleSubmit}>
-                        <div className="meal-form-group">
+                        <div className="meal-resource-form-group">
                             <TextField
                                 label="제목"
                                 fullWidth
@@ -71,7 +71,7 @@ function MealPolicyOperationWrite() {
                             />
                         </div>
 
-                        <div className="meal-form-group">
+                        <div className="meal-resource-form-group">
                             <TextField
                                 label="작성자"
                                 fullWidth
@@ -81,7 +81,7 @@ function MealPolicyOperationWrite() {
                             />
                         </div>
 
-                        <div className="meal-form-group">
+                        <div className="meal-resource-form-group">
                             <TextField
                                 label="내용"
                                 fullWidth
@@ -92,7 +92,7 @@ function MealPolicyOperationWrite() {
                                 required
                             />
                         </div>
-                        <div className="meal-form-group">
+                        <div className="meal-resource-form-group">
                             <label>첨부파일:</label>
                             <input
                                 type="file"
@@ -101,7 +101,7 @@ function MealPolicyOperationWrite() {
                             />
                         </div>
 
-                        <div className="meal-button-group">
+                        <div className="meal-resource-button-group">
                             <Button
                                 variant="contained"
                                 color="success"
