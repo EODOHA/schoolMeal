@@ -80,4 +80,5 @@ public class CounselHistoryService {
 
         return counselHistoryRepository.findAll(spec);
     }
+    
 }

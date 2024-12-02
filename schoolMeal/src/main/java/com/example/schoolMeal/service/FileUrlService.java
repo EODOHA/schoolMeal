@@ -124,5 +124,6 @@ public class FileUrlService extends PathResolver {
         return fileUrlRepository.findById(fileId)
                 .orElseThrow(() -> new IllegalArgumentException("파일을 찾을 수 없습니다: " + fileId));
     }
+    
 }
 

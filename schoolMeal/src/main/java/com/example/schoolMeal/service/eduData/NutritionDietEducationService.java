@@ -38,5 +38,6 @@ public class NutritionDietEducationService {
 	public void ntritionDietEducationUpdate(NutritionDietEducation ntritionDietEducation) {
 		ntritionDietEducationRepository.save(ntritionDietEducation);
 	}
+	
 	 
 }

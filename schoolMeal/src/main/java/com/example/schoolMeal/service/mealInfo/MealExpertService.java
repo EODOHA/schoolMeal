@@ -39,4 +39,5 @@ public class MealExpertService {
 	public void deleteExpert(Long exp_id) {
 		mealExpertRepository.deleteById(exp_id);
 	}
+	
 }

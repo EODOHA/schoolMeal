@@ -142,4 +142,5 @@ public class VideoEducationService {
     public List<VideoEducation> getAllVideoEducations() {
         return videoEducationRepository.findAll();
     }
+    
 }

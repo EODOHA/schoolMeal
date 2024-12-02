@@ -72,4 +72,5 @@ public class FileStorageService {
             throw new RuntimeException("파일을 찾을 수 없습니다. 파일 경로: " + filePath, ex);
         }
     }
+    
 }

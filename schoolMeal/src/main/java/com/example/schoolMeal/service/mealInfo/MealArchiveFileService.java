@@ -169,4 +169,5 @@ public class MealArchiveFileService extends PathResolver {
 			throw new RuntimeException("파일 삭제 중 오류가 발생했습니다.", e);
 		}
 	}
+	
 }

@@ -161,4 +161,5 @@ public class MealCounselService {
                 .map(MealCounselResponseDTO::fromEntity)
                 .collect(Collectors.toList());
     }
+    
 }

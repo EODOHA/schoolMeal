@@ -38,4 +38,5 @@ public class MemberDetailsServiceImpl implements UserDetailsService {
 		}
 		return builder.build();
 	}
+	
 }

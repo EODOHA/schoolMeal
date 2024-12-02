@@ -154,7 +154,5 @@ public class MealArchiveService {
 		dto.setArc_files(fileDtos);
 		
 		return dto;
-	}
-	
-	
+	}	
 }

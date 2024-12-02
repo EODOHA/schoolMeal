@@ -99,5 +99,6 @@ public class ImageManageService {
 	public void deleteImageManage(Long id) {
 		imageManageRepository.deleteById(id);
 	}
+	
 
 }

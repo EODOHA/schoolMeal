@@ -18,4 +18,5 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.badRequest().body("파일 다운로드 실패: " + e.getMessage());
 
 	}
+	
 }

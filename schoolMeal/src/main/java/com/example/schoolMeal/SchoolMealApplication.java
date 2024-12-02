@@ -72,5 +72,4 @@ public class SchoolMealApplication implements CommandLineRunner {
 				Role.GUEST));
 
 	}
-
 }

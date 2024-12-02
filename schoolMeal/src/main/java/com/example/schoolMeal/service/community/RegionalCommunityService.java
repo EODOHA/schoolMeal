@@ -53,4 +53,5 @@ public class RegionalCommunityService {
     public void deletePost(Long id) {
         regionalCommunityRepository.deleteById(id);
     }
+    
 }

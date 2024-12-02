@@ -39,6 +39,13 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 			return;
 		}
 		
+		// 메인 페이지 "GET" 요청만 인증없도록 필터.
+		if (request.getRequestURI().startsWith("/imageManage") && 
+				request.getMethod().equals("GET")) {
+			filterChain.doFilter(request, response);
+			return;
+		}
+		
 		String jws = request.getHeader(HttpHeaders.AUTHORIZATION);
 			// Authorization 헤더에서 토큰을 가져옴.
 		
@@ -56,4 +63,5 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 		
 		filterChain.doFilter(request, response);
 	}
+	
 }
