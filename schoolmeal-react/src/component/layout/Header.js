@@ -9,7 +9,7 @@ import InputBase from '@mui/material/InputBase';
 import '../../css/layout/Header.css';  // Header.css 파일을 import
 import { SERVER_URL } from '../../Constants';
 
-const Header = ({ setIsMemberManageOpen }) => {  // setIsMemberManageOpen을 props로 받아옴
+const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setIsMemberManageOpen을 props로 받아옴
     // 헤더 이미지 상태.
     const [headerImages, setHeaderImages] = useState([]);
 
@@ -94,8 +94,16 @@ const Header = ({ setIsMemberManageOpen }) => {  // setIsMemberManageOpen을 pro
     const handleMemberManageClick = () => {
       setSelectedParent(null); // 함수 실행 시, 부모 게시판 초기화.
       setIsMemberManageOpen(true); // 유저관리 관련 메뉴 열기
+      setIsProfileUpdateOpen(false);
       navigate("/memberlist");     // 유저관리 페이지로 이동
     };
+
+    const handleProfileUpdateClick = () => {
+      setSelectedParent(null);
+      setIsProfileUpdateOpen(true);
+      setIsMemberManageOpen(false);
+      navigate("/profileUpdate");
+    }
 
     const handleSearchChange = (e) => {
       setSearchQuery(e.target.value);  // 검색어 변경 처리
@@ -143,6 +151,7 @@ const Header = ({ setIsMemberManageOpen }) => {  // setIsMemberManageOpen을 pro
             {/* <img src="./layout/layout-header-image.jpg" alt="헤더_이미지"></img> */}
             {headerImages.map((image,index) => (
               <img
+                key={image.id || index} // 고유 key 추가.
                 src={image.url}
                 alt={image.name || "헤더_이미지"}
               />
@@ -174,6 +183,9 @@ const Header = ({ setIsMemberManageOpen }) => {  // setIsMemberManageOpen을 pro
                   )}
                   <Button className="logout-btn" color="inherit" onClick={handleLogout}>
                     로그아웃
+                  </Button>
+                  <Button className="logout-btn" color="inherit" onClick={handleProfileUpdateClick}>
+                    마이페이지
                   </Button>
                 </>
               )}

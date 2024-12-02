@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useNavLinks } from './NavLinksContext'; // NavLinksContext import
 import '../../css/layout/Sidebar.css';  // Sidebar.css 파일을 import
 
-const Sidebar = ({ isMemberManageOpen }) => {
+const Sidebar = ({ isMemberManageOpen, isProfileUpdateOpen }) => {
     const { navLinks, selectedParent, setSelectedParent } = useNavLinks();
 
     return (
@@ -35,6 +35,21 @@ const Sidebar = ({ isMemberManageOpen }) => {
                         </li>
                         <li>
                             <Link to="/mainManager">메인 페이지 관리</Link>
+                        </li>
+                    </ul>
+                </div>
+            )}
+
+            {/* 마이페이지 관리 메뉴 추가 */}
+            {isProfileUpdateOpen && (
+                <div className="sub-links">
+                    <h3>마이페이지</h3>
+                    <ul>
+                        <li>
+                            <Link to="/profileUpdate">회원정보수정</Link>
+                        </li>
+                        <li>
+                            <Link to="/test">테스트</Link>
                         </li>
                     </ul>
                 </div>

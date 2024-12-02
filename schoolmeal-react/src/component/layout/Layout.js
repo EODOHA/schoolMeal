@@ -16,8 +16,11 @@ const Layout = ({ hideHeaderFooter }) => {
     location.pathname === "/login" ||
     location.pathname === "/signup";
 
-  // 유저 관리 메뉴 표시 여부를 관리하는 상태 추가
+  // 유저 관리 메뉴 표시 여부를 관리하는 상태 추가.
   const [isMemberManageOpen, setIsMemberManageOpen] = useState(false);
+
+  // 마이페이지 메뉴 표시 여부를 관리하는 상태 추가.
+  const [isProfileUpdateOpen, setIsProfileUpdateOpen] = useState(false);
 
   // resize 메시지 표시 여부.
   const [showResizeMessage, setShowResizeMessage] = useState(false);
@@ -50,12 +53,22 @@ const Layout = ({ hideHeaderFooter }) => {
       
       <div className="layout-main-content">
         {/* 메인, 로그인, 회원가입 페이지가 아닌 경우에만 Sidebar 표시 */}
-        {!isNoSidebarPage && <Sidebar isMemberManageOpen={isMemberManageOpen} />}
+        {!isNoSidebarPage && (
+          <Sidebar
+            isMemberManageOpen={isMemberManageOpen}
+            isProfileUpdateOpen={isProfileUpdateOpen}
+           />
+        )}
 
         {/* 메인 컨텐츠 영역 */}
         <div className="layout-main">
           {/* Header, Footer는 항상 표시 */}
-          {!hideHeaderFooter && <Header setIsMemberManageOpen={setIsMemberManageOpen} />}
+          {!hideHeaderFooter && (
+            <Header
+              setIsMemberManageOpen={setIsMemberManageOpen}
+              setIsProfileUpdateOpen={setIsProfileUpdateOpen}
+              />
+            )}
           <main className="layout-content">
             <Outlet />
           </main>

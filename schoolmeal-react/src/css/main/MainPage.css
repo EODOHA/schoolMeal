@@ -89,8 +89,7 @@ h2 {
     position: relative;
     background-color: white;
     padding: 30px;
-    margin-top: 100px;
-    max-width: 75%;  /* 최대 너비 설정 */
+    max-width: 50%;  /* 최대 너비 설정 */
     max-height: 25%; /* 최대 높이 설정 */
     overflow: auto;  /* 내용이 많으면 스크롤이 생김 */
     overflow-x: hidden;
@@ -293,29 +292,61 @@ h2 {
     overflow: hidden;
 }
 
-/* Link 태그는 전체 박스를 클릭 가능하게 */
-.video-box a {
-    display: block;
-    width: 100%;
-    height: 100%;
-    background-color: #ddd; /* 기본 배경색 */
-    transition: background-color 0.3s ease;
-}
-
-/* hover 시 배경색이 변하도록 */
-.video-box a:hover {
-    background-color: rgba(0, 0, 0, 0.3);
-}
-
 .video-input {
+    display: flex;
     position: absolute;  /* 절대 위치 지정 */
     top: 50%;            /* 부모의 50% 지점 */
     left: 50%;           /* 부모의 50% 지점 */
     transform: translate(-50%, -50%);  /* 정확한 중앙을 맞추기 위해 */
-    width: 200px;          /* 원하는 너비 */
-    height: 80%;         /* 원하는 높이 */
+    max-width: 400px;          /* 원하는 너비 */
+    min-width: 200px;
+    height: 90%;         /* 원하는 높이 */
     border: 1px solid #ccc;
     border-radius: 8px;
+    overflow: hidden;
+    background-color: #5b7794;
+    transition: transform 0.3s ease;
+}
+
+.video-input video {
+    max-width: 300px;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.video-input :hover {
+    cursor: pointer;
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+/* 영상 팝업 내용 */
+.video-modal-content {
+    position: relative;
+    width: auto;
+    max-width: 90%;
+    max-height: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    padding: 30px;
+    overflow: auto;  /* 내용이 많으면 스크롤이 생김 */
+    width: 70%;
+    height: 30%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    border-radius: 8px;
+}
+
+.video-modal-content video {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #ccc;
 }
 
 /* 무한 슬라이드 영역 ------------------------------------------------ */

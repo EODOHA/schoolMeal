@@ -2,17 +2,13 @@ import React, { useEffect, useRef, useState, useLayoutEffect } from "react";
 import { Link } from "react-router-dom";
 import "./css/main/MainPage.css";
 import { SERVER_URL } from "./Constants";
-import axios from 'axios';
 
 const MainPage = () => {
-    // 이미지 슬라이더 관련 Start -----------------------------------
     const [images, setImages] = useState([]);
     const [agencies, setAgencies] = useState([]);
     const [videos, setVideos] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [imageKey, setImageKey] = useState(0); // 이미지 키값 변경용
-    const [resources, setResources] = useState([]); // 급식 자료실 목록
-    const [loading, setLoading] = useState(true); // 로딩 상태
 
     const token = sessionStorage.getItem("jwt");
 
@@ -21,7 +17,7 @@ const MainPage = () => {
         'Authorization': token
     });
 
-    // 이미지 슬라이더 정보 불러오기
+    // 한 눈의 소식 정보 불러오기 -----------------------------------------------------------
     useEffect(() => {
         fetch(SERVER_URL + 'imageManage/slider', {
             method: 'GET',
@@ -51,7 +47,7 @@ const MainPage = () => {
         }
     }, [images]); // images가 변경될 때마다 실행
 
-    // 유관 기관 정보 불러오기
+    // 유관 기관 정보 불러오기 ---------------------------------------------------------------
     useEffect(() => {
         fetch(SERVER_URL + 'imageManage/agency', {
             method: 'GET',
@@ -73,7 +69,7 @@ const MainPage = () => {
             });
     }, []); // 컴포넌트 마운트 시 한 번만 실행.
 
-    // 영상 자료 정보 불러오기
+    // 영상 자료 정보 불러오기 --------------------------------------------------------------
     useEffect(() => {
         fetch(SERVER_URL + 'imageManage/video', {
             method: 'GET',
@@ -95,21 +91,7 @@ const MainPage = () => {
             });
     }, []); // 컴포넌트 마운트 시 한 번만 실행.
 
-    // 급식자료실 목록을 가져오기
-    useEffect(() => {
-        axios.get(`${SERVER_URL}mealPolicyOperations`) // 급식 자료 API 엔드포인트
-            .then(response => {
-                // 실제 자료는 response.data._embedded.mealPolicyOperations에 있음
-                setResources(response.data._embedded.mealPolicyOperations); // 급식 자료 목록 업데이트
-                setLoading(false); // 데이터 로딩 완료
-            })
-            .catch(error => {
-                console.error('급식 자료 로딩 실패', error);
-                setLoading(false); // 에러가 나도 로딩 상태 끝냄
-            });
-    }, []);
-
-    // 팝업 관련 상태
+    // 한 눈의 소식 이미지 팝업 관련 상태. --------------------------------------------------
     const [showModal, setShowModal] = useState(false);
     const [modalImage, setModalImage] = useState(""); // 팝업에 표시할 이미지.
 
@@ -128,6 +110,7 @@ const MainPage = () => {
         setShowModal(true); // 팝업 띄우기 위한 상태 업데이트.
     };
 
+    // 팝업 위치 조절용
     useLayoutEffect(() => {
         if (showModal) {
             const modalElement = document.querySelector('.modal-content');
@@ -149,11 +132,48 @@ const MainPage = () => {
         }
     }, [showModal]);
 
-    // 팝업 닫기
+    // 이미지 팝업 닫기
     const closeModal = () => {
         setShowModal(false); // 팝업 닫기 위한 상태 업데이트.
         setModalImage(""); // modalImage 초기화.
     };
+
+    // 영상 팝업 상태 추가.
+    const [showVideoModal, setShowVideoModal] = useState(false); // 비디오 팝업 표시 여부.
+    const [modalVideoUrl, setModalVideoUrl] = useState(""); // 팝업에 표시할 비디오 URL
+
+    // 영상 클릭 시 팝업 열기.
+    const openVideoModal = (url) => {
+        setModalVideoUrl(url); // 클릭된 비디오의 URL을 저장.
+        setShowVideoModal(true);
+    }
+
+    // 영상 팝업 닫기.
+    const closeVideoModal = () => {
+        setShowVideoModal(false); // 팝업 닫기.
+        setModalVideoUrl(""); // URL 초기화.
+    }
+
+     // 비디오 팝업 위치 조정용
+     useLayoutEffect(() => {
+        if (showVideoModal) {
+            const modalElement = document.querySelector('.video-modal-content');
+            if (modalElement) {
+                const scrollPosition = window.scrollY; // 현재 스크롤 위치
+                const screenHeight = window.innerHeight; // 화면 높이
+                const modalHeight = modalElement.offsetHeight; // 팝업의 높이
+
+                // 팝업 위치를 중간으로 계산
+                const modalTop = scrollPosition + (screenHeight - modalHeight) / 2;
+
+                // 팝업에 해당 위치를 스타일로 적용
+                modalElement.style.position = 'fixed'; // fixed로 위치 설정
+                modalElement.style.top = `${modalTop}px`;
+                modalElement.style.left = '50%'; // 수평 중앙
+                modalElement.style.transform = 'translateX(-50%)'; // 수평 중앙 정렬
+            }
+        }
+    }, [showVideoModal]);
 
     // 시간 지남에 따른 자동 이미지 변경을 위한 useEffect
     useEffect(() => {
@@ -167,8 +187,6 @@ const MainPage = () => {
         // 컴포넌트 언마운트 시, interval 정리
         return () => clearInterval(interval);
     }, [currentIndex]);
-    
-    // 이미지 슬라이더 관련 End -------------------------------------
 
     // 자주 찾는 서비스 관련 Start ----------------------------------
     const sliderRef = useRef(null);
@@ -213,9 +231,6 @@ const MainPage = () => {
         }
     };
     // 자주 찾는 서비스 관련 End ------------------------------------
-    
-    // 영상 자료 관련 Start ----------------------------------------
-    // 영상 자료 관련 End ------------------------------------------
 
     // 유관 기관 관련 Start ----------------------------------------
     const [animate, setAnimate] = useState(true);
@@ -225,15 +240,6 @@ const MainPage = () => {
 
     return (
         <div className="main-container">
-            {/* 팝업 모달 */}
-            {showModal && (
-                <div className="modal-overlay" onClick={closeModal}>
-                    <div className="modal-content">
-                        <button className="modal-close-btn" onClick={closeModal}>X</button>
-                        <img src={modalImage} alt="Selected Image" className="modal-image"></img>
-                    </div>
-                </div>
-            )}
             <section className="top-section">
                 <div className="slider-container">
                 <h2>한 눈의 소식</h2>
@@ -244,11 +250,11 @@ const MainPage = () => {
                         {/* 이미지들 */}
                         {images.map((image, index) => (
                             <img
-                                key={image.id} // id를 key로 사용.
-                                src={image.url} // 서버서 전달받은 url 사용.
-                                alt={image.name || `슬라이드 이미지 ${index + 1}`}
-                                className={index === currentIndex ? "visible" : ""}
-                                onClick={() => openModal(index)} // 클릭 시 팝업 열기.
+                            key={image.id} // id를 key로 사용.
+                            src={image.url} // 서버서 전달받은 url 사용.
+                            alt={image.name || `슬라이드 이미지 ${index + 1}`}
+                            className={index === currentIndex ? "visible" : ""}
+                            onClick={() => openModal(index)} // 클릭 시 팝업 열기.
                             />
                         ))}
 
@@ -256,6 +262,15 @@ const MainPage = () => {
                         <button onClick={() => handleImageChange("next")} className="slider-btn next-btn">▶</button>
                     </div>
                 </div>
+                {/* 이미지 팝업 모달 */}
+                {showModal && (
+                    <div className="modal-overlay" onClick={closeModal}>
+                        <div className="modal-content">
+                            <button className="modal-close-btn" onClick={closeModal}>X</button>
+                            <img src={modalImage} alt="Selected Image" className="modal-image"></img>
+                        </div>
+                    </div>
+                )}
 
                 <div className="notice-container">
                     <h2>공지사항</h2>
@@ -267,25 +282,12 @@ const MainPage = () => {
                 </div>
 
                 <div className="resource-container">
-                    <h2>급식 자료실</h2>
-                    {loading ? (
-                        <p>로딩 중...</p> // 로딩 중일 때 표시될 메시지
-                    ) : (
-                        <ul>
-                            {resources.length > 0 ? (
-                                // 처음 5개만 보여주기 위해 slice(0, 5) 사용
-                                resources.slice().reverse().slice(0, 5).map((resource) => (
-                                    <li key={resource.id}>
-                                        <Link to={`/mealResource/meal-policy-operation/${resource.id}`}>
-                                            {resource.title} {/* title을 올바르게 출력 */}
-                                        </Link>
-                                    </li>
-                                ))
-                            ) : (
-                                <p>자료가 없습니다.</p> // 데이터가 없을 때 표시될 메시지
-                            )}
-                        </ul>
-                    )}
+                    <h2>자료실</h2>
+                    <ul>
+                        <li><Link to="/resources/1">자료 테스트용 기이이이이이이이이이이이이이이이이이이이이이이이이이이이이인 글</Link></li>
+                        <li><Link to="/resources/2">자료 제목 2</Link></li>
+                        <li><Link to="/resources/3">자료 제목 3</Link></li>
+                    </ul>
                 </div>
             </section>
 
@@ -323,12 +325,18 @@ const MainPage = () => {
                     {videos.length > 0 ? (
                         videos.map((video, index) => (
                             <div key={video.id || index} className="video-box">
-                                <Link to={`/videos/${video.id}`}>
                                     <div className="video-input">
                                         {/* 비디오 썸네일 */}
-                                        <img src={video.thumbnailUrl || "default-thumbnail.jpg"} alt={`영상 배너 ${index + 1}`} />
+                                        <video
+                                            width="100%"
+                                            height="100%"
+                                            controls
+                                            onClick={() => openVideoModal(video.url)} // 클릭 시 팝업 열기.
+                                        >
+                                            <source src={video.url} type="video/mp4" />
+                                            Your browser does not support the video tag.
+                                        </video>
                                     </div>
-                                </Link>
                             </div>
                         ))
                     ) : (
@@ -336,6 +344,22 @@ const MainPage = () => {
                     )}
                 </div>
             </section>
+            {showVideoModal && (
+                <div className="modal-overlay" onClick={closeVideoModal}>
+                    <div className="video-modal-content">
+                            <video
+                                width="90%"
+                                height="90%"
+                                controls
+                                autoPlay
+                            >
+                            <source src={modalVideoUrl} type="video/mp4" />
+                            </video>
+                        <button className="modal-close-btn" onClick={closeVideoModal}>X
+                        </button>
+                    </div>
+                </div>
+            )}
 
             <section className="related-agencies-section">
                 <div className="wrapper">

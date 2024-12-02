@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SERVER_URL } from "../../Constants";
 import { Stack, TextField, Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import '../../css/sign/Signup.css'; // Signup 스타일을 위한 CSS 파일 import
 
-const Signup = () => {
+const ProfileUpdate = () => {
     const [member, setMember] = useState({
         memberName: '',
         memberId: '',
@@ -14,17 +14,11 @@ const Signup = () => {
         phone: ''
     });
 
-    // 중복 검사 상태 추가.
-    const [idCheckResult, setIdCheckResult] = useState({
-        isAvailable: null, // true, false, null.
-        message: '' // 상태에 따른 메세지 출력.
-    });
-
     // 비밀번호 확인 상태 추가.
     const [passwordCheck, setPasswordCheck] = useState('');
 
-    // 가입 실패 상태 추가.
-    const [signupCheck, setSignupCheck] = useState('');
+    // 업데이트 확인 상태 추가.
+    const [updateCheck, setUpdateCheck] = useState('');
 
     // 각 필드 길이수 상태 추가.
     const [fieldLength, setFieldLength] = useState({
@@ -47,6 +41,41 @@ const Signup = () => {
 
     const navigator = useNavigate();
 
+    const token = sessionStorage.getItem('jwt');
+
+    const createHeaders = () => ({
+        'Content-Type': 'application/json',
+        'Authorization': token
+    });
+
+    // 로그인된 멤버 정보 불러오기.
+    useEffect(() => {
+        fetch(SERVER_URL + "members/me", {
+            method: "GET",
+            headers: createHeaders(),
+        })
+        .then((res) => {
+            if (!res.ok) {
+                throw new Error("Failed to fetch member information.");
+            }
+            return res.json();
+        })
+        .then((data) => {
+            setMember({
+                memberName: data.memberName || '',
+                memberId: data.memberId || '',
+                password: '', // 비밀번호는 빈 값으로 유지.
+                confirmPassword: '', // 비밀번호 확인도 빈 값으로 유지.
+                email: data.email || '',
+                phone: data.phone || '',
+            });
+        })
+        .catch((err) => {
+            console.error(err.message);
+            setUpdateCheck("회원 정보를 불러오는 데 실패했습니다.");
+        })
+    }, []); // 의존성 배열을 비워, 한 번만 실행.
+
     const validate = () => {
         let tempErrors = {};
         let isValid = true;
@@ -67,15 +96,6 @@ const Signup = () => {
             isValid = false;
         } else if (specialCharacters.test(member.memberName)) {
             tempErrors.memberName = "회원명에 특수문자를 사용할 수 없습니다.";
-            isValid = false;
-        }
-
-        // 회원 아이디 유효성 검사 ---------------------------------------------------------
-        if (!member.memberId) {
-            tempErrors.memberId = "회원 아이디는 필수입니다."
-            isValid = false;
-        } else if (/\s/.test(member.memberId)) { // 공백 검사
-            tempErrors.memberId = "회원 아이디에 공백을 포함할 수 없습니다.";
             isValid = false;
         }
 
@@ -122,47 +142,33 @@ const Signup = () => {
         return isValid;
     };
 
-    const signup = () => {
-        setPasswordCheck(''); // 비번확인 초기화.
-        setSignupCheck(''); // 가입확인 초기화.
-
-        // 가입확인 전, 중복 검사 결과 확인
-        if (!idCheckResult.isAvailable) {
-            setSignupCheck("아이디 중복 검사를 완료해야 합니다.");
+    // 회원정보 수정 ---------------------------------------------------------------------
+    const updateProfile = () => {
+        if (!validate()) {
             return;
         }
 
-        // 유효성 검사
-        if (!validate()) {
-            return; // 유효성 검사가 실패하면 종료
-        }
-
-        fetch(SERVER_URL + 'signup', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+        fetch(SERVER_URL + "members/me", {
+            method: "PUT",
+            headers: createHeaders(),
             body: JSON.stringify(member)
         })
-        .then(res => {
+        .then((res) => {
             if (!res.ok) {
-                return res.json().then(data => {
-                    throw new Error(data.messages ? data.messages.join(", ") : "회원가입 실패");
-                });
+                throw new Error("Failed to update profile.");
             }
             return res.json();
         })
-        .then(data => {
-            if (data.success) {
-                alert("가입이 완료되었습니다.\n로그인 후 이용해 주세요.");
-                navigator("/main");
-            } else {
-                setSignupCheck(data.message || "회원가입 실패.");
-            }
+        .then(() => {
+            setUpdateCheck("회원정보가 성공적으로 수정되었습니다.");
+            alert("수정이 완료되었습니다.");
         })
-        .catch(err => {
-            console.error(err);
-            setSignupCheck(err.message);
+        .catch((err) => {
+            console.error(err.message);
+            setUpdateCheck("회원정보 수정에 실패했습니다.");
         });
-    }
+    };
+
 
     // 중복 검사 초기화 함수 Start -----------------------------------------------------
     const handleInputChange = (e) => {
@@ -177,14 +183,6 @@ const Signup = () => {
             ...member,
             [name]: value
         });
-
-        // 회원 아이디가 변경될 때 중복 확인 상태 초기화
-        if (name === 'memberId') { 
-            setIdCheckResult({
-                isAvailable: null,
-                message: ""
-            });
-        }
 
         // 오류 메시지 초기화
         setErrors({
@@ -217,66 +215,12 @@ const Signup = () => {
             [name]: value
         });
 
-        // 회원 아이디가 변경될 때 중복 확인 상태 초기화
-        if (name === 'memberId') { 
-            setIdCheckResult({
-                isAvailable: null,
-                message: ""
-            });
-        }
-
         // 오류 메시지 초기화
         setErrors({
             ...errors,
             [name]: ''
         });
     };
-    // 아이디 숫자와 영어 대,소문자만 허용하는 함수 End --------------------------------
-
-    // 아이디 중복 체크 함수 Start ---------------------------------------------------
-    const checkDuplicateId = () => {
-        // 공백 검사
-        if (!member.memberId || /\s/.test(member.memberId)) { 
-            setIdCheckResult({
-                isAvailable: false,
-                message: "회원 아이디로 공백은 입력이 불가능합니다."
-            });
-            return; // 공백이 포함된 경우 함수 종료
-        }
-
-        // 글자 수 검사
-        if (member.memberId.length < 3 || member.memberId.length > 20) {
-            setIdCheckResult({
-                isAvailable: false,
-                message: "회원 아이디는 3자 이상, 20자 이하로 설정해 주세요."
-            });
-            return;
-        }
-
-        fetch(SERVER_URL + 'check-duplicate-id', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ memberId: member.memberId })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.isAvailable) {
-                setIdCheckResult({
-                    isAvailable: true,
-                    message: "사용 가능한 아이디입니다."
-                });
-            } else {
-                setIdCheckResult({
-                    isAvailable: false,
-                    message: "이미 사용 중인 아이디입니다."
-                });
-            }
-        })
-        .catch(err => {
-            alert("중복 검사 중 문제가 발생했습니다!");
-        });
-    };
-    // 아이디 중복 체크 함수 End -----------------------------------------------------
 
     // 전화번호 숫자만 허용하는 함수 Start --------------------------------------------
     const handlePhoneInputChange = (e) => {
@@ -325,10 +269,10 @@ const Signup = () => {
     return (
         <div className="signup-form">
             <Typography variant="h5" align="center" gutterBottom>
-                회원가입
+                회원정보수정
             </Typography>
 
-            <form onSubmit={(e) => { e.preventDefault(); signup(); }}>
+            <form onSubmit={(e) => { e.preventDefault(); updateProfile(); }}>
                 <Stack spacing={2} alignItems='center' mt={2}>
                     <TextField
                         label="회원명"
@@ -350,27 +294,10 @@ const Signup = () => {
                         fullWidth
                         required
                         error={!!errors.memberId}
-                        inputProps={{minLength:3, maxLength:20}}
-                        helperText={errors.memberId || getHelperText("memberId",3, 20)}
+                        disabled={true} // 비활성화 상태로 설정
                     />
-                    <Button
-                        variant="outlined"
-                        color="primary"
-                         // 중복 검사 버튼
-                        onClick={checkDuplicateId}
-                    >
-                        중복 검사
-                    </Button>
-                    {idCheckResult.isAvailable !== null && (
-                        <Typography
-                            variant="body2"
-                            color={idCheckResult.isAvailable ? "green" : "red"}
-                        >
-                            {idCheckResult.message}
-                        </Typography>
-                    )}
                     <TextField
-                        label="비밀번호"
+                        label="비밀번호(미변경 시, 기존 비밀번호 입력)"
                         name="password"
                         type="password"
                         value={member.password}
@@ -420,11 +347,11 @@ const Signup = () => {
                         type="submit"
                         fullWidth
                     >
-                        가입하기
+                        수정하기
                     </Button>
-                    {signupCheck && ( // 가입 관련 오류 표시
+                    {updateCheck && ( // 가입 관련 오류 표시
                         <Typography variant="body2" color="red">
-                            {signupCheck}
+                            {updateCheck}
                         </Typography>
                     )}
                 </Stack>
@@ -433,4 +360,4 @@ const Signup = () => {
     );
 }
 
-export default Signup;
+export default ProfileUpdate;
