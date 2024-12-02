@@ -46,7 +46,6 @@ function MealPolicyOperationEdit() {
             });
     }, [id]);
 
-
     const handleChange = (e) => {
         if (e.target.name === "file") {
             const file = e.target.files[0];

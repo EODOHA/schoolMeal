@@ -63,4 +63,5 @@ public class NutritionDietEducationController {
         ntritionDietEducationService.ntritionDietEducationUpdate(ntritionDietEducation); // 교육자료 수정
         return "redirect:/ntritionDietEducation/list"; 
     }
+
 }

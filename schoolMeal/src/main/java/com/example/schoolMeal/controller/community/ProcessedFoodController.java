@@ -47,5 +47,4 @@ public class ProcessedFoodController {
         processedFoodService.deleteProcessedFood(id);
         return ResponseEntity.ok().build();
     }
-    
 }

@@ -26,7 +26,7 @@ public class CounselHistoryController {
     public CounselHistoryController(CounselHistoryService service) {
         this.service = service;
     }
-    
+
     // 상담 기록 조회 (전체 조회 및 검색 기능 통합)
     @GetMapping
     @PreAuthorize("hasRole('ADMIN') or hasRole('LINKAGE')")
@@ -113,5 +113,4 @@ public class CounselHistoryController {
         dto.setCounselDate(counselHistory.getCounselDate());
         return dto;
     }
-    
 }

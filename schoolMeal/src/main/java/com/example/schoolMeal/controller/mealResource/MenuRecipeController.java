@@ -170,5 +170,4 @@ public class MenuRecipeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-    
 }

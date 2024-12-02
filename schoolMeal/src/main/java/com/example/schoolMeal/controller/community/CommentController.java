@@ -55,5 +55,4 @@ public class CommentController {
         commentService.deleteComment(id);
         return ResponseEntity.ok().build();
     }
-    
 }

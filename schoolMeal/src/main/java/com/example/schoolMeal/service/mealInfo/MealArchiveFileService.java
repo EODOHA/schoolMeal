@@ -43,7 +43,7 @@ public class MealArchiveFileService extends PathResolver {
 		fileStoragePath = buildPath("MealArchive");
 		logger.info("fileStoragePath: {}", fileStoragePath);
 
-//		 디렉토리가 존재하지 않으면 생성
+		// 디렉토리가 존재하지 않으면 생성
 		File directory = new File(fileStoragePath);
 		if (!directory.exists()) {
 			boolean created = directory.mkdirs(); // 폴더 생성

@@ -16,5 +16,4 @@ public class CounselController {
         String externalUrl = "https://www.foodsafetykorea.go.kr/portal/exhealthyfoodlife/index.html";
         return new RedirectView(externalUrl);
     }
-    
 }

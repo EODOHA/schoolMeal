@@ -24,18 +24,16 @@ function VideoEducationEdit() {
             .get(`${SERVER_URL}videoEducation/${id}`)
             .then((response) => {
                 const data = response.data;
-                console.log("API 응답 데이터:", data); // 응답 데이터 확인용
                 setTitle(data.title);
                 setWriter(data.writer);
                 setContent(data.content);
-                // fullImageUrl이 있는 경우 이를 사용
-                setExistingThumbnail(data.fullImageUrl || `${SERVER_URL}${data.imageUrl}`);
+                setExistingThumbnail(data.imageUrl); // 기존 썸네일 URL 설정
             })
             .catch((err) => {
                 console.error("데이터 로드 중 오류가 발생했습니다.", err);
                 setError("게시판 데이터를 불러오는 데 실패했습니다.");
             });
-    }, [id]);    
+    }, [id]);
 
     // 썸네일 파일 입력 변경 핸들러
     const handleThumbnailFileChange = (e) => {
@@ -133,15 +131,6 @@ function VideoEducationEdit() {
                         </div>
 
                         <div className="form-group">
-                            <label>영상 파일:</label>
-                            <input
-                                type="file"
-                                accept="video/*"
-                                onChange={handleVideoFileChange}
-                            />
-                        </div>
-
-                        <div className="form-group">
                             <label>썸네일 이미지:</label>
                             <input
                                 type="file"
@@ -161,11 +150,20 @@ function VideoEducationEdit() {
                                 <div>
                                     <img
                                         src={existingThumbnail}
-                                        alt="이미지가 없습니다."
+                                        alt="Existing Thumbnail"
                                         style={{ maxWidth: "200px", maxHeight: "200px" }}
                                     />
                                 </div>
                             )}
+                        </div>
+
+                        <div className="form-group">
+                            <label>영상 파일:</label>
+                            <input
+                                type="file"
+                                accept="video/*"
+                                onChange={handleVideoFileChange}
+                            />
                         </div>
 
                         <div className="button-group">

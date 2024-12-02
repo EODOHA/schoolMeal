@@ -46,5 +46,4 @@ public class RegionalCommunityController {
         regionalCommunityService.deletePost(id);
         return ResponseEntity.ok().build();
     }
-    
 }

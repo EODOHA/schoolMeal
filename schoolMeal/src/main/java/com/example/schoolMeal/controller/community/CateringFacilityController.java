@@ -46,6 +46,5 @@ public class CateringFacilityController {
     public ResponseEntity<Void> deleteCateringFacility(@PathVariable Long id) {
         cateringFacilityService.deleteCateringFacility(id);
         return ResponseEntity.ok().build();
-        
     }
 }
