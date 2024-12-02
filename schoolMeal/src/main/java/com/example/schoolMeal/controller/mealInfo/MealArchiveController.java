@@ -90,14 +90,17 @@ public class MealArchiveController {
 		Resource resource = fileData.getFirst();
 		String contentType = fileData.getSecond();
 		
-		// contentType에 따라 미리보기 또는 다운로드를 결정
-		String dipositionType = contentType.startsWith("image/")|| contentType.equals("application/pdf")
-				? "inline"	// 이미지 또는 pdf는 미리보기
-				: "attachment";	// 다운로드
+//		// contentType에 따라 미리보기 또는 다운로드를 결정
+//		String dispositionType = contentType.startsWith("image/")|| contentType.equals("application/pdf")
+//				? "inline"	// 이미지 또는 pdf는 미리보기
+//				: "attachment";	// 다운로드
+		
+		//파일을 다운로드 처리
+		String dispositionType = "attachment";
 		
 		return ResponseEntity.ok()
 				.contentType(MediaType.parseMediaType(contentType))
-				.header(HttpHeaders.CONTENT_DISPOSITION, dipositionType+"; filename=\"" + resource.getFilename() + "\"")
+				.header(HttpHeaders.CONTENT_DISPOSITION, dispositionType+"; filename=\"" + resource.getFilename() + "\"")
 				.body(resource);
 	}
 }

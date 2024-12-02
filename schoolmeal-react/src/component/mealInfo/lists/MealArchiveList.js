@@ -1,83 +1,78 @@
-// import React, { useEffect, useState } from 'react';
-// import axios from 'axios';
-// import { SERVER_URL } from '../../../Constants';
-// import { useNavigate, useParams } from "react-router-dom";
-// import { Link } from 'react-router-dom';
-// import Button from '@mui/material';
-// import { MdAttachFile } from "react-icons/md";
-// import { BsFileExcel } from "react-icons/bs";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+import { SERVER_URL } from '../../../Constants';
 
+function MealArchiveList() {
+    const [archives, setArchives] = useState([]);
+    const [loading, setLoading] = useState(true);
+   
 
-// function MealArchiveList() {
-//     const [archives, setArchives] = useState([]);
+    useEffect(() => {
+        axios.get(`${SERVER_URL}mealArchive`)
+            .then(response => {
+                console.log("불러온 archive 데이터 : ", response.data);
+                setArchives(response.data);
+                setLoading(false);
+            })
+            .catch(error => {
+                console.error(error);
+                setLoading(false);
+            });
+    }, []);
 
-//     useEffect(() => {
-//         axios.get(`${SERVER_URL}MealArchive`)
-//             .then(response => setArchives(response.data))
-//             .catch(error => console.error(error));
-//     }, []);
+    return (
 
-//     return (
-//         <div className="meal-list-container">
-//             <h1 className="title">학교급식 과거와 현재</h1>
-//             <div className="button-group">
-//                 <Button variant="outlined" onClick={() => navigate(" ")} style={{ marginLeft: "auto" }}>
-//                     새 글 쓰기
-//                 </Button>
-//             </div>
-//             <table>
-//                 <thead>
-//                     <tr>
-//                         <th>번호</th>
-//                         <th>제목</th>
-//                         <th>등록일</th>
-//                         <th>작성자</th>
-//                         <th>첨부파일</th>
-//                     </tr>
-//                 </thead>
-//                 <tbody>
-//                     {(archives && archives.length === 0) ? (
-//                         <tr>
-//                             <td colSpan="5">데이터가 없습니다.</td>
-//                         </tr>
-//                     ) : (
-//                         archives && archives.map((archives, index) => {
-//                             const isSelected = id && archives.id && id === archives.id.toString();
+        <div className='meal-archive-list'>
+            {loading ? (
+                <p>데이터를 불러오는 중...</p>
+            ) : (
+                <>
+                    <h2 style={{ textAlign: "center"}}>학교 급식 과거과 현재</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>번호</th>
+                                <th>제목</th>
+                                <th>등록일</th>
+                                <th>작성자</th>
+                                <th>첨부파일</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {archives.map((archive, index) => (
+                                <tr key={archive.arc_id}>
+                                    <td>{index + 1}</td>
+                                    <td>
+                                        <Link to={`${SERVER_URL}mealArchive/${archive.arc_id}`}>
+                                            {archive.arc_title}
+                                        </Link>
+                                    </td>
+                                    <td>{new Date(archive.createdDate).toLocaleDateString()}</td>
+                                    <td>{archive.arc_author || '관리자'}</td>
+                                    <td>
+                                        {archive.arc_files.map(file => {
+                                            const encodedFilename = encodeURIComponent(file.arc_storedFilename);
+                                            return(
+                                            
+                                            <a
+                                                key={file.arc_file_id}
+                                                href={`${SERVER_URL}mealArchive/download/${encodedFilename}`}
+                                                download
+                                            >
+                                                📂 {file.arc_originalFilename}
+                                            </a>
+                                            );
+                                        })}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </>
+            )}
+        </div>
+    );
+}
 
-//                             // fileUrl은 fileId가 존재할 때만 유효한 것으로 처리
-//                             // const fileUrl = archives.fileId ? archives._links?.fileUrl?.href : null;
-
-//                             return (
-//                                 <tr
-//                                     key={archives.id || `archives-${index}`}
-//                                     onClick={() => goToDetailPage(archives)}
-//                                     style={{
-//                                         cursor: "pointer",
-//                                         backgroundColor: isSelected ? "#e0f7fa" : "white",
-//                                     }}
-//                                 >
-//                                     <td>{index + 1}</td>
-//                                     <td>{archives.title}</td>
-//                                     <td>{formatDate(archives.createdDate)}</td>
-//                                     <td>{archives.writer}</td>
-//                                     <td>
-//                                         {fileUrl ? (
-//                                             <a href={fileUrl} target="_blank" rel="noopener noreferrer">
-//                                                 <span className="attachment-icon"><MdAttachFile /></span>
-//                                             </a>
-//                                         ) : (
-//                                             <span className="attachment-icon"><BsFileExcel /></span>
-//                                         )}
-//                                     </td>
-//                                 </tr>
-//                             );
-//                         })
-//                     )}
-//                 </tbody>
-//             </table>
-//         </div>
-//     );
-
-// }
-
-// export default MealArchiveList;
+export default MealArchiveList;

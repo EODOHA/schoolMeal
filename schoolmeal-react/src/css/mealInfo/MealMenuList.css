@@ -1,5 +1,5 @@
 /* 전체 테이블 스타일 */
-.meal-table {
+.meal-menu-table {
     width: 100%;
     border-collapse: collapse;
     margin: 20px 0;
@@ -7,7 +7,7 @@
 }
 
 /* 테이블 헤더 */
-.meal-table th {
+.meal-menu-table th {
     padding: 10px;
     border: 1px solid #ccc;
     background-color: #f0f0f0;
@@ -15,25 +15,25 @@
 }
 
 /* 테이블 데이터 셀 */
-.meal-table td {
+.meal-menu-table td {
     padding: 10px;
     border: 1px solid #ccc;
     width: 100px; /* 모든 데이터 셀의 너비를 동일하게 설정 */
     word-wrap: break-word; /* 텍스트가 길어지면 자동으로 줄 바꿈 */
 }
 
-.meal-table th:nth-child(2), /* 일요일 */
-.meal-table td:nth-child(2) { /* 일요일 */
+.meal-menu-table th:nth-child(2), /* 일요일 */
+.meal-menu-table td:nth-child(2) { /* 일요일 */
     background-color: #f8d7da; 
 }
 
-.meal-table th:nth-child(8), /* 토요일 */
-.meal-table td:nth-child(8) { /* 토요일 */
+.meal-menu-table th:nth-child(8), /* 토요일 */
+.meal-menu-table td:nth-child(8) { /* 토요일 */
     background-color: #d1ecf1;
 }
 
 /* 급식 항목 (조식, 중식, 석식) 스타일 */
-.meal-table td div {
+.meal-menu-table td div {
     margin-bottom: 5px;
     padding: 5px 0;
 }

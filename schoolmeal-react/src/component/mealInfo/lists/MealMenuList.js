@@ -88,7 +88,7 @@ const MealMenuList = ({ meals, selectedMonth, monthStart }) => {
 
         return (
             <div>
-                <table className="meal-table">
+                <table className="meal-menu-table">
                     <thead>
                         <tr>
                             <th>구분</th>

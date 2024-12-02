@@ -123,30 +123,30 @@ function MealExpertList() {
                 ) : (
                 experts.map((expert, index) => (
                     <div key={index} className="expert-card">
-                        <div className="profile-text">
+                        <div className="expert-profile-text">
                             <div style={{ textAlign: "center" }}>{expert.exp_id}</div>
-                            <div className="profile-info">
-                                <span className="info-label">이름:</span> {expert.exp_name}
+                            <div className="expert-profile-info">
+                                <span className="expert-info-label">이름:</span> {expert.exp_name}
                             </div>
-                            <div className="profile-info">
-                                <span className="info-label">소속:</span> {expert.exp_department}
+                            <div className="expert-profile-info">
+                                <span className="expert-info-label">소속:</span> {expert.exp_department}
                             </div>
-                            <div className="profile-info">
-                                <span className="info-label">직급:</span> {expert.exp_position}
+                            <div className="expert-profile-info">
+                                <span className="expert-info-label">직급:</span> {expert.exp_position}
                             </div>
-                            <div className="profile-info">
-                                <span className="info-label">이메일:</span> {expert.exp_email}
+                            <div className="expert-profile-info">
+                                <span className="expert-info-label">이메일:</span> {expert.exp_email}
                             </div>
-                            <div className="profile-info">
-                                <span className="info-label">보유자격:</span>
+                            <div className="expert-profile-info">
+                                <span className="expert-info-label">보유자격:</span>
                                 <ul>
                                     {expert.qualifications.map((qualification, qIndex) => (
                                         <li key={qIndex}>{qualification.exp_qual_description}</li>
                                     ))}
                                 </ul>
                             </div>
-                            <div className="profile-info">
-                                <span className="info-label">경력사항:</span>
+                            <div className="expert-profile-info">
+                                <span className="expert-info-label">경력사항:</span>
                                 <ul>
                                     {expert.histories.map((history, hIndex) => (
                                         <li key={hIndex}>{history.exp_hist_description}</li>
@@ -157,7 +157,7 @@ function MealExpertList() {
                             <button>상세보기</button>
 
                             {/* 삭제 및 수정 버튼 */}
-                            <div className="buttons-container">
+                            <div className="expert-buttons-container">
                                 <MealExpertEdit data={expert} updateExpert={updateExpert} />
                                 <IconButton onClick={() => onDelClick(`${SERVER_URL}mealInfo/experts/${expert.exp_id}`)}>
                                     <DeleteIcon color="white" />
