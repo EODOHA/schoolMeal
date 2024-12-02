@@ -8,7 +8,7 @@ import com.example.schoolMeal.domain.entity.member.Member;
 import com.example.schoolMeal.domain.repository.member.MemberRepository;
 
 @RestController
-public class MemberController {
+public class MemberController { // 관리자용.
 
 	@Autowired
 	MemberRepository memberRepository;
@@ -17,4 +17,5 @@ public class MemberController {
 	public Iterable<Member> getUsers() {
 		return memberRepository.findAll();
 	}
+	
 }
