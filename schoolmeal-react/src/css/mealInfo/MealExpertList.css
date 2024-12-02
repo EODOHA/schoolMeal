@@ -1,0 +1,74 @@
+/* ExpertList.css  */
+
+ .expert-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    justify-items: center;
+    box-sizing: border-box;
+}
+
+.expert-card {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 15px;
+    width: 100%;
+    background-color: #f9f9f9;
+    box-sizing: border-box;
+    max-width: 500px;
+    max-height: 800px;
+    position: relative;
+}
+
+.profile-text {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    margin-right: 15px; 
+}
+
+
+/* 프로필 정보 스타일 */
+ /* .profile-info {
+    font-size: 0.9em;
+    color: #333;
+    margin-bottom: 8px;
+    line-height: 1.5;
+    display: flex;
+    align-items: center;
+} */
+
+.info-label {
+    display: inline-block;
+    width: 70px; /* 라벨 간격을 일정하게 유지하기 위한 넓이 조절 */
+    font-weight: bold;
+    color: #666;
+    white-space: nowrap;
+}
+
+.profile-info ul {
+    margin: 0;
+    padding-left: 18px;
+    list-style-type: disc;
+}
+
+/* 버튼 스타일 */
+.expert-card button {
+    align-self: flex-end;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+.buttons-container {
+    display: flex;
+    justify-content: space-between; /* 수정하기 버튼과 삭제하기 버튼을 양쪽 끝으로 배치 */
+    width: 100%;
+    margin-top: 10px;
+}

@@ -3,16 +3,19 @@ import React, { createContext, useState, useContext } from 'react';
 
 // navLinks 초기 값 설정
 const navLinksInitial = [
-    { path: "/test1", label: "급식 정보",
+    { path: "/mealInfo", label: "급식 정보",
         subLinks: [
-            { path: "/test1/sub1", label: "테스트1-서브1" }, 
-            { path: "/test1/sub2", label: "테스트1-서브2" }
+            { path: "/mealInfo/meal-menu", label: "학교별 급식 식단 정보" }, 
+            { path: "/mealInfo/meal-archive", label: "학교급식 과거와 현재" },
+            { path: "/mealInfo/meal-expert", label: "학교급식 전문가 인력관리" }
+
         ] 
     },
-    { path: "/test2", label: "식재료 정보",
+    { path: "/ingedientInfo", label: "식재료 정보",
         subLinks: [
-            { path: "/test2/sub1", label: "테스트2-서브1" },
-            { path: "/test2/sub2", label: "테스트2-서브2" }
+            { path: "/ingedientInfo/ingredient-price", label: "식재료 가격 정보" },
+            { path: "/ingedientInfo/ingredient-safety", label: "식품 안정성 조사결과 정보" },
+            { path: "/ingedientInfo/haccp-info", label: "식재료 안정성 인증 정보" },
         ]
     },
     { path: "/mealResource", label: "급식 자료실",

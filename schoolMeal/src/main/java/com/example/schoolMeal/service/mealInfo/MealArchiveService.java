@@ -15,8 +15,6 @@ import com.example.schoolMeal.domain.repository.mealInfo.MealArchiveRepository;
 import com.example.schoolMeal.dto.mealInfo.MealArchiveDto;
 import com.example.schoolMeal.dto.mealInfo.MealArchiveFileDto;
 
-import jakarta.persistence.EntityManager;
-
 @Service
 public class MealArchiveService {
 
@@ -64,7 +62,6 @@ public class MealArchiveService {
             
             // 게시글에 파일 추가
             savedMealArchive.getArc_files().add(fileEntity); // 파일을 게시글에 추가
-//            archiveRepository.save(savedMealArchive);  // 게시글과 파일을 저장
             // 영속성 컨텍스트 플러시
             archiveRepository.flush();  // 세션 동기화
             }

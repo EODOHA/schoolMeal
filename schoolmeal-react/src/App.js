@@ -22,6 +22,12 @@ import MealResourceRoutes from './component/mealResource/routes/MealResourceRout
 // 교육자료
 import EduDataRoutes from './component/eduData/routes/EduDataRoutes';
 
+//급식정보
+import MealInfoMain from './component/mealInfo/main/MealInfoMain';
+import MealMenuMain from './component/mealInfo/main/MealMenuMain';
+import MealExpertList from  './component/mealInfo/lists/MealExpertList';
+import MealArchiveList from  './component/mealInfo/lists/MealArchiveList';
+
 function App() {
   return (
     // AuthProvider와 NavLinksProvider를 중첩하여 감싸기
@@ -48,7 +54,14 @@ function App() {
               {/* 기능별 Routes 파일 연결 */}
               {MealResourceRoutes.props.children}
               {EduDataRoutes.props.children}
-            
+
+              {/* 급식정보 메인 */}
+              <Route path="mealInfo" element={<MealInfoMain />} />
+                {/* 급식정보 하위 게시판 */}
+                <Route path="mealInfo/meal-menu" element={<MealMenuMain />} />
+                <Route path="mealInfo/meal-archive" element={<MealArchiveList />} />
+                <Route path="mealInfo/meal-expert" element={<MealExpertList />} />
+              
             </Route>
 
             {/* 권한 없음 페이지 */}
