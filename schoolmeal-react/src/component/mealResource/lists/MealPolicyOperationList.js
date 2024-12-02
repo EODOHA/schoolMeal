@@ -16,7 +16,8 @@ function MealPolicyOperationList() {
         fetch(SERVER_URL + "mealPolicyOperations")
             .then(response => response.json())
             .then(data => {
-                setMealPolicyOperation(data._embedded.mealPolicyOperations);
+                // 데이터를 역순으로 정렬하여 setState
+                setMealPolicyOperation(data._embedded.mealPolicyOperations.reverse());
             })
             .catch(err => console.error("Error fetching data:", err));
     }, []);
@@ -42,6 +43,9 @@ function MealPolicyOperationList() {
         const parts = href.split('/');
         return parts[parts.length - 1];
     };
+
+    // 목록 길이
+    const totalLength = mealPolicyOperation.length;
 
     return (
         <div className="meal-list-container">
@@ -75,7 +79,10 @@ function MealPolicyOperationList() {
                         
                             // fileUrl은 fileId가 존재할 때만 유효한 것으로 처리
                             const fileUrl = mealPolicyOperation.fileId ? mealPolicyOperation._links?.fileUrl?.href : null;
-                        
+
+                            // 역순으로 번호 표시
+                            const reversedIndex = totalLength - index;
+
                             return (
                                 <tr
                                     key={mealPolicyOperation.id || `mealPolicyOperation-${index}`}
@@ -85,7 +92,7 @@ function MealPolicyOperationList() {
                                         backgroundColor: isSelected ? "#e0f7fa" : "white",
                                     }}
                                 >
-                                    <td>{index + 1}</td>
+                                    <td>{reversedIndex}</td>
                                     <td>{mealPolicyOperation.title}</td>
                                     <td>{formatDate(mealPolicyOperation.createdDate)}</td>
                                     <td>{mealPolicyOperation.writer}</td>

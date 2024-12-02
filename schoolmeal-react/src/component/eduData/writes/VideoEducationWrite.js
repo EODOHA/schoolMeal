@@ -115,6 +115,16 @@ function VideoEducationWrite() {
                             />
                         </div>
 
+                        {/* 비디오 파일 업로드 */}
+                        <div className="form-group">
+                            <label>영상 파일:</label>
+                            <input
+                                type="file"
+                                accept="video/*" // 비디오 파일만 허용
+                                onChange={handleVideoFileChange}
+                            />
+                        </div>
+
                         {/* 썸네일 미리보기 */}
                         <div className="form-group">
                             <label>썸네일 이미지:</label>
@@ -133,16 +143,6 @@ function VideoEducationWrite() {
                                     />
                                 </div>
                             )}
-                        </div>
-
-                        {/* 비디오 파일 업로드 */}
-                        <div className="form-group">
-                            <label>영상 파일:</label>
-                            <input
-                                type="file"
-                                accept="video/*" // 비디오 파일만 허용
-                                onChange={handleVideoFileChange}
-                            />
                         </div>
 
                         <div className="button-group">

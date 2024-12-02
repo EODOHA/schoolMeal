@@ -29,7 +29,7 @@ function MenuRecipeList() {
     
                 // menuRecipes 배열이 _embedded에 포함되어 있어야 함
                 if (data._embedded && data._embedded.menuRecipes) {
-                    setMenuRecipe(data._embedded.menuRecipes); // menuRecipes 배열을 설정
+                    setMenuRecipe(data._embedded.menuRecipes.reverse()); // menuRecipes 배열을 설정
                 } else {
                     setMenuRecipe([]); // menuRecipes가 없다면 빈 배열 설정
                 }
@@ -61,6 +61,9 @@ function MenuRecipeList() {
         const parts = href.split('/');
         return parts[parts.length - 1]; 
     };
+
+    // 목록 길이
+    const totalLength = menuRecipe.length;
 
     // 새 글 쓰기 후 목록을 다시 가져오는 함수
     const handleWriteNew = () => {
@@ -114,6 +117,9 @@ function MenuRecipeList() {
                             // menuRecipe에서 ID를 추출
                             const menuRecipeId = extractIdFromHref(menuRecipe._links?.self?.href);
 
+                            // 역순으로 번호 표시
+                            const reversedIndex = totalLength - index;
+
                             return (
                                 <tr
                                     key={menuRecipeId || `menuRecipe-${index}`}
@@ -123,7 +129,7 @@ function MenuRecipeList() {
                                         backgroundColor: isSelected ? "#e0f7fa" : "white",
                                     }}
                                 >
-                                    <td>{index + 1}</td>
+                                    <td>{reversedIndex}</td>
                                     <td>{menuRecipe.title}</td>
                                     <td>{formatDate(menuRecipe.createdDate)}</td>
                                     <td>{menuRecipe.writer}</td>

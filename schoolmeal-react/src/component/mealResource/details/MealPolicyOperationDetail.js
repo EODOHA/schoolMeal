@@ -117,7 +117,6 @@ function MealPolicyOperationDetail() {
                                 className="form-control"
                             />
                         </div><br />
-
                         <div className="button-group">
                             <Button
                                 variant="outlined"

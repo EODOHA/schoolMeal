@@ -16,6 +16,12 @@ import Memberlist from './component/memManage/Memberlist';
 import MainManager from './component/mainManage/MainManager';
 import ProfileUpdate from './component/profile/ProfileUpdate';
 
+// 급식자료실
+import MealResourceRoutes from './component/mealResource/routes/MealResourceRoutes'; 
+
+// 교육자료
+import EduDataRoutes from './component/eduData/routes/EduDataRoutes';
+
 function App() {
   return (
     // AuthProvider와 NavLinksProvider를 중첩하여 감싸기
@@ -38,6 +44,11 @@ function App() {
               {/* 권한으로 보호된 페이지 */}
               <Route path="memberlist" element={<AdminRoute element={<Memberlist />} />} />
               <Route path="mainManager" element={<AdminRoute element={<MainManager />} />} />
+
+              {/* 기능별 Routes 파일 연결 */}
+              {MealResourceRoutes.props.children}
+              {EduDataRoutes.props.children}
+            
             </Route>
 
             {/* 권한 없음 페이지 */}
