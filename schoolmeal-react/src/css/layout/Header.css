@@ -147,6 +147,7 @@
   gap: 1rem;
   margin: 0 auto;
   width: fit-content; /* 요소 크기만큼만 너비 설정 */
+  pointer-events: auto;
 }
   
 /* 검색창을 헤더에 추가 */

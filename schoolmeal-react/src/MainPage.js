@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import "./css/main/MainPage.css";
 import { SERVER_URL } from "./Constants";
 import axios from 'axios';
+import LoadingSpinner from "./component/common/LoadingSpinner";
 
 const MainPage = () => {
     const [images, setImages] = useState([]);
@@ -11,7 +12,12 @@ const MainPage = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [imageKey, setImageKey] = useState(0); // 이미지 키값 변경용
     const [resources, setResources] = useState([]); // 급식 자료실 목록
-    const [loading, setLoading] = useState(true); // 로딩 상태
+    
+    // 각각의 로딩 상태 추가
+    const [isImagesLoading, setIsImagesLoading] = useState(true);
+    const [isAgenciesLoading, setIsAgenciesLoading] = useState(true);
+    const [isVideosLoading, setIsVideosLoading] = useState(true);
+    const [isResourcesLoading, setIsResourcesLoading] = useState(true); // 로딩 상태
 
     const token = sessionStorage.getItem("jwt");
 
@@ -22,6 +28,7 @@ const MainPage = () => {
 
     // 한 눈의 소식 정보 불러오기 -----------------------------------------------------------
     useEffect(() => {
+        setIsImagesLoading(true); // 로딩 시작.
         fetch(SERVER_URL + 'imageManage/slider', {
             method: 'GET',
             headers: createHeaders(),
@@ -37,9 +44,8 @@ const MainPage = () => {
                 console.log("Fetched images:", data); // 확인용 로그
                 setImages(data); // 데이터를 그대로 저장
             })
-            .catch(error => {
-                console.error("Error fetching images:", error.message);
-            });
+            .catch((error) => console.error("Error fetching images:", error))
+            .finally(() => setIsImagesLoading(false)); // 로딩 끝.
     }, []); // 컴포넌트 마운트 시 한 번만 실행.
 
     // 이 코드 없으면 자동 슬라이드 시, 이미지 없어짐.
@@ -52,6 +58,7 @@ const MainPage = () => {
 
     // 유관 기관 정보 불러오기 ---------------------------------------------------------------
     useEffect(() => {
+        setIsAgenciesLoading(true);
         fetch(SERVER_URL + 'imageManage/agency', {
             method: 'GET',
             headers: createHeaders(),
@@ -67,13 +74,13 @@ const MainPage = () => {
                 console.log("Fetched agencies:", data); // 확인용 로그
                 setAgencies(data); // 데이터를 그대로 저장
             })
-            .catch(error => {
-                console.error("Error fetching agencies:", error.message);
-            });
+            .catch((error) => console.error("Error fetching agencies:", error))
+            .finally(() => setIsAgenciesLoading(false));
     }, []); // 컴포넌트 마운트 시 한 번만 실행.
 
     // 영상 자료 정보 불러오기 --------------------------------------------------------------
     useEffect(() => {
+        setIsVideosLoading(true);
         fetch(SERVER_URL + 'imageManage/video', {
             method: 'GET',
             headers: createHeaders(),
@@ -89,9 +96,8 @@ const MainPage = () => {
                 console.log("Fetched videos:", data); // 확인용 로그
                 setVideos(data); // 데이터를 그대로 저장
             })
-            .catch(error => {
-                console.error("Error fetching videos:", error.message);
-            });
+            .catch((error) => console.error("Error fetching videos:", error))
+            .finally(() => setIsVideosLoading(false));
     }, []); // 컴포넌트 마운트 시 한 번만 실행.
 
     // 한 눈의 소식 이미지 팝업 관련 상태. --------------------------------------------------
@@ -193,16 +199,15 @@ const MainPage = () => {
 
     // 급식자료실 목록을 가져오기 ------------------------------------
     useEffect(() => {
+        setIsResourcesLoading(true);
         axios.get(`${SERVER_URL}mealPolicyOperations`) // 급식 자료 API 엔드포인트
             .then(response => {
                 // 실제 자료는 response.data._embedded.mealPolicyOperations에 있음
                 setResources(response.data._embedded.mealPolicyOperations); // 급식 자료 목록 업데이트
-                setLoading(false); // 데이터 로딩 완료
+                setIsResourcesLoading(false); // 데이터 로딩 완료
             })
-            .catch(error => {
-                console.error('급식 자료 로딩 실패', error);
-                setLoading(false); // 에러가 나도 로딩 상태 끝냄
-            });
+            .catch((error) => console.error("급식 자료 로딩 실패", error))
+            .finally(() => setIsResourcesLoading(false));
     }, []);
 
     // 자주 찾는 서비스 관련 Start ----------------------------------
@@ -260,6 +265,9 @@ const MainPage = () => {
             <section className="top-section">
                 <div className="slider-container">
                 <h2>한 눈의 소식</h2>
+                {isImagesLoading ? (
+                    <p>로딩 중입니다... ⏳</p>
+                    ): (
                     <div className="single-image-slider">
                         {/* 좌측 버튼 */}
                         <button onClick={() => handleImageChange("prev")} className="slider-btn prev-btn">◀</button>
@@ -278,7 +286,9 @@ const MainPage = () => {
                         {/* 우측 버튼 */}
                         <button onClick={() => handleImageChange("next")} className="slider-btn next-btn">▶</button>
                     </div>
+                    )}
                 </div>
+                    
                 {/* 이미지 팝업 모달 */}
                 {showModal && (
                     <div className="modal-overlay" onClick={closeModal}>
@@ -300,8 +310,8 @@ const MainPage = () => {
 
                 <div className="resource-container">
                     <h2>급식 자료실</h2>
-                    {loading ? (
-                        <p>로딩 중...</p> // 로딩 중일 때 표시될 메시지
+                    {isResourcesLoading ? (
+                        <p>로딩 중입니다... ⏳</p>
                     ) : (
                         <ul>
                             {resources.length > 0 ? (
@@ -351,26 +361,27 @@ const MainPage = () => {
             <section className="video-root-box">
                 <h2>영상 자료</h2>
                 <div className="video-banner">
-                    {/* 영상 자료 데이터가 있을 경우에만 표시 */}
-                    {videos.length > 0 ? (
+                    {isVideosLoading ? ( // 로딩 중 상태
+                        <p>로딩 중입니다... ⏳</p>
+                    ) : videos.length > 0 ? ( // 영상 자료가 있을 경우
                         videos.map((video, index) => (
                             <div key={video.id || index} className="video-box">
-                                    <div className="video-input">
-                                        {/* 비디오 썸네일 */}
-                                        <video
-                                            width="100%"
-                                            height="100%"
-                                            controls
-                                            onClick={() => openVideoModal(video.url)} // 클릭 시 팝업 열기.
-                                        >
-                                            <source src={video.url} type="video/mp4" />
-                                            Your browser does not support the video tag.
-                                        </video>
-                                    </div>
+                                <div className="video-input">
+                                    {/* 비디오 썸네일 */}
+                                    <video
+                                        width="100%"
+                                        height="100%"
+                                        controls
+                                        onClick={() => openVideoModal(video.url)} // 클릭 시 팝업 열기
+                                    >
+                                        <source src={video.url} type="video/mp4" />
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </div>
                             </div>
                         ))
-                    ) : (
-                        <p>영상 자료가 없습니다.</p> // 영상 자료가 없을 경우 처리
+                    ) : ( // 영상 자료가 없을 경우
+                        <p>영상 자료가 없습니다. 🧐</p>
                     )}
                 </div>
             </section>
@@ -410,8 +421,10 @@ const MainPage = () => {
                                                 src={s.url || "#"}  // 이미지 경로가 없다면 대체 이미지 또는 빈 값
                                                 alt={s.name || `Agency ${i}`}
                                                 style={{
-                                                    width: "150px",
-                                                    height: "50px",
+                                                    width: "200px",
+                                                    height: "80px",
+                                                    objectFit: "cover",
+                                                    borderRadius: "8px",
                                                 }}
                                             />
                                         </div>
@@ -430,8 +443,10 @@ const MainPage = () => {
                                                 src={s.url || "#"}
                                                 alt={s.name || `Agency Clone ${i}`}
                                                 style={{
-                                                    width: "150px",
-                                                    height: "50px",
+                                                    width: "200px",
+                                                    height: "80px",
+                                                    objectFit: "cover",
+                                                    borderRadius: "8px",
                                                 }}
                                             />
                                         </div>

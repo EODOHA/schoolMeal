@@ -362,7 +362,6 @@ li {
         .agency_wrapper {
             display: flex;
             flex-wrap: nowrap;
-            
             border-top: 1px solid #bbb;
             border-bottom: 1px solid #bbb;
         }
@@ -392,23 +391,6 @@ li {
                 z-index: 2;
                 transition: 0.5s;
                 transform: scale(1);
-                /* &.big {
-                    width: 280px;
-                    height: 280px;
-                }
-                &.small {
-                    width: 200px;
-                    height: 200px;
-                } */
-                &.image {
-                    width: 100px;
-                    height: 50px;
-                }
-
-                .item {
-                    width: 100px;
-                    height: 50px;
-                }
             }
         }
     }

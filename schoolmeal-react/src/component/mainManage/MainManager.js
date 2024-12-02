@@ -101,6 +101,8 @@ const MainManager = () => {
 
         if (!newImage) {
             alert("업로드할 파일을 선택하세요!");
+            setNewImage(null); // 선택된 파일명 초기화.
+            resetFileInput(); // 입력 상자 초기화.
             return;
         }
         
@@ -108,6 +110,8 @@ const MainManager = () => {
         const maxSize = 50 * 1024 * 1024; // 50MB를 바이트로 변환.
         if (newImage.size > maxSize) {
             alert("파일 크기가 50MB를 초과할 수 없습니다.");
+            setNewImage(null); // 선택된 파일명 초기화.
+            resetFileInput(); // 입력 상자 초기화.
             return;
         }
         
@@ -117,24 +121,32 @@ const MainManager = () => {
         // 카테고리가 "video"가 아닌 경우, 이미지 파일만 업로드 가능.
         if (selectedCategory !== "video" && !mimeType.startsWith("image/")) {
             alert("해당 카테고리는 이미지 파일만 업로드 가능합니다.");
+            setNewImage(null); // 선택된 파일명 초기화.
+            resetFileInput(); // 입력 상자 초기화.
             return;
         }
         
         // 카테고리가 "video"인 경우, 영상 파일만 업로드 가능.
         if (selectedCategory === "video" && !mimeType.startsWith("video/")) {
             alert("해당 카테고리는 영상 파일만 업로드 가능합니다.");
+            setNewImage(null); // 선택된 파일명 초기화.
+            resetFileInput(); // 입력 상자 초기화.
             return;
         }
 
         // 카테고리가 "header"인 경우, 1개까지만 업로드 가능.
         if (selectedCategory === "header" && checkHeaderLimit()) {
             alert("헤더 파일은 최대 1개까지만 등록할 수 있습니다.")
+            setNewImage(null); // 선택된 파일명 초기화.
+            resetFileInput(); // 입력 상자 초기화.
             return;
         }
         
         // 카테고리가 "video"인 경우, 3개까지만 업로드 가능.
         if (selectedCategory === "video" && checkVideoLimit()) {
             alert("영상 파일은 최대 3개까지만 등록할 수 있습니다.")
+            setNewImage(null); // 선택된 파일명 초기화.
+            resetFileInput(); // 입력 상자 초기화.
             return;
         }
         
@@ -167,7 +179,8 @@ const MainManager = () => {
         } catch (error) {
             console.error(`${categoryNameMapping[selectedCategory]} 파일 업로드 실패:`, error);
         } finally {
-            setNewImage(null);
+            setNewImage(null); // 선택된 파일명 초기화.
+            resetFileInput(); // 입력 상자 초기화.
             setLoading(false); // 업로드 후 로딩 해제.
         }
     };
@@ -185,12 +198,18 @@ const MainManager = () => {
         
         fileInput.onchange = async (e) => {
             const newImageFile = e.target.files[0];
-            if (!newImageFile) return;
+            if (!newImageFile) {
+                setNewImage(null); // 선택된 파일명 초기화.
+                resetFileInput(); // 입력 상자 초기화.
+                return;
+            }
 
             // 파일 크기 확인 (50MB)
             const maxSize = 50 * 1024 * 1024;
             if (newImageFile.size > maxSize) {
                 alert("파일 크기가 50MB를 초과할 수 없습니다.");
+                setNewImage(null); // 선택된 파일명 초기화.
+                resetFileInput(); // 입력 상자 초기화.
                 return;
             }
 
@@ -200,12 +219,16 @@ const MainManager = () => {
             // 카테고리가 "video"가 아닌 경우, 이미지 파일만 업로드 가능.
             if (selectedCategory !== "video" && !mimeType.startsWith("image/")) {
                 alert("해당 카테고리는 이미지 파일로만 수정 가능합니다.");
+                setNewImage(null); // 선택된 파일명 초기화.
+                resetFileInput(); // 입력 상자 초기화.
                 return;
             }
             
             // 카테고리가 "video"인 경우, 영상 파일만 업로드 가능.
             if (selectedCategory === "video" && !mimeType.startsWith("video/")) {
                 alert("해당 카테고리는 영상 파일로만 수정 가능합니다.");
+                setNewImage(null); // 선택된 파일명 초기화.
+                resetFileInput(); // 입력 상자 초기화.
                 return;
             }
 
@@ -237,6 +260,8 @@ const MainManager = () => {
             } catch (error) {
                 console.error(`${categoryNameMapping[selectedCategory]} 파일 수정 실패:`, error);
             } finally {
+                setNewImage(null); // 선택된 파일명 초기화.
+                resetFileInput(); // 입력 상자 초기화.
                 setLoading(false);
             }
         };
@@ -278,9 +303,14 @@ const MainManager = () => {
                 }
             } catch (error) {
                 console.error(`${categoryNameMapping[selectedCategory]} 파일 삭제 실패:`, error);
+            } finally {
+                setNewImage(null); // 선택된 파일명 초기화.
+                resetFileInput(); // 입력 상자 초기화.
             }
         } else {
             alert(`${categoryNameMapping[selectedCategory]} 파일 삭제 취소!`);
+            setNewImage(null); // 선택된 파일명 초기화.
+            resetFileInput(); // 입력 상자 초기화.
         }
     };
 
@@ -361,6 +391,12 @@ const MainManager = () => {
                 />;
     };
 
+    // 파일 입력 상자 초기화 함수
+    const resetFileInput = () => {
+        const fileInput = document.querySelector('input[type="file"]');
+        if (fileInput) fileInput.value = "";
+    }
+
     return (
         <div className="main-manager">
             <h1>메인 페이지 관리</h1>
@@ -406,7 +442,7 @@ const MainManager = () => {
                             accept={selectedCategory === "video" ? "video/*" : "image/*"}
                             onChange={(e) => setNewImage(e.target.files[0])}
                         />
-                        <button onClick={handleUpload}>업로드</button>
+                        <button onClick={handleUpload}>업로드하기</button>
                     </div>
 
 

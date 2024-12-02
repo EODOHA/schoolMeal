@@ -200,7 +200,10 @@ const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setI
                 <div key={link.path}>
                   <Button
                     color="inherit"
-                    onClick={() => handleSelectParent(link)} // 부모 게시판 클릭 시 setSelectedParent 호출
+                    onClick={(event) => {
+                      handleSelectParent(link);
+                      if (link.subLinks) handleMenuOpen(event, index);
+                    }} // 부모 게시판 클릭 시 setSelectedParent 호출
                   >
                     {link.label}
                   </Button>
@@ -210,6 +213,7 @@ const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setI
                       anchorEl={anchorEl}
                       open={openMenuIndex === index}
                       onClose={handleMenuClose}
+                      disableScrollLock // 스크롤 락 해제.
                       anchorOrigin={{
                         vertical: 'bottom',
                         horizontal: 'left',
@@ -279,6 +283,7 @@ const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setI
             anchor="right"
             open={drawerOpen}
             onClose={() => toggleDrawer(false)}
+            disableScrollLock // 스크롤 락 해제.
             sx={{
               zIndex: 1301, // Drawer의 z-index를 조정하여 Drawer가 페이지 위에 나타나도록 함
             }}
