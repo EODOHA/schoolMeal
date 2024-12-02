@@ -76,21 +76,21 @@ function MenuRecipeDetail() {
     };
 
     return (
-        <div className="meal-detail-container">
-            <div className="meal-card">
-                <div className="meal-card-body">
+        <div className="meal-resource-detail-container">
+            <div className="meal-resource-card">
+                <div className="meal-resource-card-body">
                     <h2>{menuRecipe.title}</h2>
                     <hr />
-                    <div className="meal-header">
-                        <div className="meal-id">ID: {menuRecipe.id}</div>
-                        <div className="meal-date">작성일: {formatDate(menuRecipe.createdDate)}</div>
+                    <div className="meal-resource-header">
+                        <div className="meal-resource-id">ID: {menuRecipe.id}</div>
+                        <div className="meal-resource-date">작성일: {formatDate(menuRecipe.createdDate)}</div>
                     </div>
-                    <div className="meal-attachment">
+                    <div className="meal-resource-attachment">
                         {menuRecipe.fileId ? (
                             <a
                                 href={`${SERVER_URL}menuRecipe/download/${menuRecipe.fileId}`}
                                 download
-                                className="meal-attachment-link"
+                                className="meal-resource-attachment-link"
                             >
                                 첨부파일 &nbsp; <MdOutlineFileDownload />
                             </a>
@@ -99,26 +99,26 @@ function MenuRecipeDetail() {
                         )}
                     </div><br />
                     <form>
-                        <div className="meal-form-group">
+                        <div className="meal-resource-form-group">
                             <label>작성자:</label>
                             <input
                                 type="text"
                                 value={menuRecipe.writer}
                                 readOnly
-                                className="meal-form-control"
+                                className="meal-resource-form-control"
                             />
                         </div><br />
-                        <div className="meal-form-group">
+                        <div className="meal-resource-form-group">
                             <label>내용:</label>
                             <textarea
                                 rows={5}
                                 value={menuRecipe.content}
                                 readOnly
-                                className="meal-form-control"
+                                className="meal-resource-form-control"
                             />
                         </div><br />
 
-                        <div className="meal-button-group">
+                        <div className="meal-resource-button-group">
                             <Button
                                 variant="outlined"
                                 color="success"

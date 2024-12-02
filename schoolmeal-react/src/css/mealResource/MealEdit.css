@@ -1,5 +1,5 @@
 /* 컨테이너 스타일 */
-.meal-edit-container {
+.meal-resource-edit-container {
     max-width: 1000px; /* 최대 폭 설정 */
     width: 100%; /* 100% 너비로 확장 가능 */
     margin: 0 auto; /* 중앙 정렬 */
@@ -13,7 +13,7 @@
 }
 
 /* 카드 스타일 (Edite 페이지) */
-.meal-card {
+.meal-resource-card {
     width: 100%; /* 카드가 컨테이너의 폭에 맞게 채워짐 */
     padding: 20px;
     border: 1px solid #ddd;
@@ -22,13 +22,13 @@
 }
 
 /* 카드 본문 스타일 */
-.meal-card-body {
+.meal-resource-card-body {
     padding: 20px;
     text-align: center; /* 본문 내용을 중앙 정렬 */
 }
 
 /* 제목 스타일 */
-.meal-card h2 {
+.meal-resource-card h2 {
     margin-bottom: 20px;
     font-size: 26px;
     font-weight: bold;
@@ -36,12 +36,12 @@
 }
 
 /* 입력 폼 그룹 */
-.meal-form-group {
+.meal-resource-form-group {
     margin-bottom: 20px;
 }
 
-.meal-form-group input,
-.meal-form-group textarea {
+.meal-resource-form-group input,
+.meal-resource-form-group textarea {
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
@@ -49,19 +49,19 @@
     font-size: 16px;
 }
 
-textarea.meal-form-control {
+textarea.meal-resource-form-control {
     resize: vertical;
 }
 
 /* 버튼 그룹 스타일 */
-.meal-button-group {
+.meal-resource-button-group {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
 }
 
 /* 에러 메시지 스타일 */
-.meal-error-message {
+.meal-resource-error-message {
     color: red;
     margin-bottom: 20px;
     text-align: center;

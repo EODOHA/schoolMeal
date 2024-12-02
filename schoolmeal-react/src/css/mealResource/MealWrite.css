@@ -1,5 +1,5 @@
 /* 컨테이너 스타일 */
-.meal-write-container {
+.meal-resource-write-container {
     display: flex;
     justify-content: center;
     align-items: center; /* 세로 정렬 */
@@ -11,7 +11,7 @@
     margin-top: 40px; /* 기존 여백 유지 */
 }
 
-.meal-card {
+.meal-resource-card {
     width: 100%; /* 카드가 컨테이너의 폭에 맞게 채워짐 */
     padding: 20px;
     border: 1px solid #ddd;
@@ -19,28 +19,28 @@
     background-color: #fff;
 }
 
-.meal-card-body {
+.meal-resource-card-body {
     font-family: Arial, sans-serif;
 }
 
-.meal-card h2 {
+.meal-resource-card h2 {
     font-size: 1.5rem;
     margin-bottom: 15px;
     text-align: center;
 }
 
-.meal-form-group {
+.meal-resource-form-group {
     margin-bottom: 15px;
     text-align: center;  /* 텍스트와 이미지를 중앙 정렬 */
 }
 
-.meal-button-group {
+.meal-resource-button-group {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
 }
 
-.meal-error-message {
+.meal-resource-error-message {
     color: red;
     margin-bottom: 15px;
 }

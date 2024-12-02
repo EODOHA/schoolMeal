@@ -25,7 +25,7 @@ function FilterButton({ onFilterChange }) {
         <Stack direction="row" spacing={2} justifyContent="flex-end" alignItems="center">
             <Button
                 variant="contained"
-                className="meal-filter-button" // 클래스 추가
+                className="meal-resource-filter-button" // 클래스 추가
                 onClick={handleClick}
                 endIcon={<ArrowDropDownIcon />}
             >
@@ -35,23 +35,23 @@ function FilterButton({ onFilterChange }) {
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
-                className="meal-filter-menu" // 드롭다운 메뉴에 클래스 추가
+                className="meal-resource-filter-menu" // 드롭다운 메뉴에 클래스 추가
             >
                 <MenuItem 
                     onClick={() => handleSelectFilter('연령별')} 
-                    className="meal-filter-menu-item" // 각 메뉴 항목에 클래스 추가
+                    className="meal-resource-filter-menu-item" // 각 메뉴 항목에 클래스 추가
                 >
                     연령별
                 </MenuItem>
                 <MenuItem 
                     onClick={() => handleSelectFilter('시기별')} 
-                    className="meal-filter-menu-item"
+                    className="meal-resource-filter-menu-item"
                 >
                     시기별
                 </MenuItem>
                 <MenuItem 
                     onClick={() => handleSelectFilter('전체')} 
-                    className="meal-filter-menu-item"
+                    className="meal-resource-filter-menu-item"
                 >
                     전체
                 </MenuItem>
