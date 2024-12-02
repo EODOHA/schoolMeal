@@ -100,4 +100,5 @@ public class MealArchiveController {
 				.header(HttpHeaders.CONTENT_DISPOSITION, dipositionType+"; filename=\"" + resource.getFilename() + "\"")
 				.body(resource);
 	}
+	
 }

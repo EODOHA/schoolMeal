@@ -61,5 +61,4 @@ public class ImageManageController {
 		imageManageService.deleteImageManage(id);
 		return ResponseEntity.noContent().build();
 	}
-
 }

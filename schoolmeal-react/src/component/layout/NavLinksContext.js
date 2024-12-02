@@ -19,7 +19,7 @@ const navLinksInitial = [
         subLinks: [
             { path: "/mealResource/meal-policy-operation", label: "급식 정책 및 운영" },
             { path: "/mealResource/menu-recipe", label: "식단 및 레시피" },
-            { path: "/mealResource/nutritionM-mnage", label: "영양 관리" },
+            { path: "/mealResource/nutrition-manage", label: "영양 관리" },
             { path: "/mealResource/meal-hygiene", label: "급식 위생" },
             { path: "/mealResource/meal-facility-equipment", label: "급식 시설 및 설비" },
             { path: "/mealResource/school-meal-cases", label: "학교급식 우수사례" },

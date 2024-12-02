@@ -9,7 +9,7 @@ import com.example.schoolMeal.domain.entity.eduData.NutritionDietEducation;
 import com.example.schoolMeal.domain.entity.eduData.VideoEducation;
 import com.example.schoolMeal.domain.entity.mealResource.MealPolicyOperation;
 import com.example.schoolMeal.domain.entity.mealResource.MenuRecipe;
-
+/**/
 @Configuration
 public class RestConfig {
 

@@ -40,30 +40,30 @@ public class SecurityConfig {
 	public SecurityFilterChain sercurityFilterChain(HttpSecurity http) 
 		throws Exception {
 		
-//		http.csrf().disable().cors().and()
-//		.authorizeHttpRequests().anyRequest().permitAll();
-//			// 테스트를 위해 모든 권한 사용자가 엔드 포인트 접속 가능
+		http.csrf().disable().cors().and()
+		.authorizeHttpRequests().anyRequest().permitAll();
+			// 테스트를 위해 모든 권한 사용자가 엔드 포인트 접속 가능
 		
-		http.csrf().disable()
-		.cors().configurationSource(corsConfigurationSource()).and()
-		.sessionManagement()
-		.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-			// JWT 사용 시, 상태 없는 세션 정책
-		.and()
-		.authorizeHttpRequests()
-		.requestMatchers(HttpMethod.POST, "/login").permitAll()
-		.requestMatchers(HttpMethod.POST, "/signup").permitAll()
-		.requestMatchers(HttpMethod.POST, "/check-duplicate-id").permitAll()
-			// 해당 엔드포인트는 인증 필요 없음.
-		.anyRequest().authenticated()
-			// 그 외 모든 요청은 인증 필요
-		.and()
-		.exceptionHandling()
-		.authenticationEntryPoint(exceptionHandler)
-			// 인증 실패 시, 예외 처리
-		.and()
-		.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
-			// JWT 필터 추가
+//		http.csrf().disable()
+//		.cors().configurationSource(corsConfigurationSource()).and()
+//		.sessionManagement()
+//		.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//			// JWT 사용 시, 상태 없는 세션 정책
+//		.and()
+//		.authorizeHttpRequests()
+//		.requestMatchers(HttpMethod.POST, "/login").permitAll()
+//		.requestMatchers(HttpMethod.POST, "/signup").permitAll()
+//		.requestMatchers(HttpMethod.POST, "/check-duplicate-id").permitAll()
+//			// 해당 엔드포인트는 인증 필요 없음.
+//		.anyRequest().authenticated()
+//			// 그 외 모든 요청은 인증 필요
+//		.and()
+//		.exceptionHandling()
+//		.authenticationEntryPoint(exceptionHandler)
+//			// 인증 실패 시, 예외 처리
+//		.and()
+//		.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
+//			// JWT 필터 추가
 	
 	return http.build();
 	}

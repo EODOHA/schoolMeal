@@ -129,6 +129,7 @@ function MenuRecipeEdit() {
                                 disabled // 제목 필드를 비활성화
                             />
                         </div>
+                        
                         <div className="form-group">
                             <label>작성자</label>
                             <input

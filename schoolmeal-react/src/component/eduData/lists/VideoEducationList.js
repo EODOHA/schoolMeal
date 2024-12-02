@@ -16,7 +16,7 @@ function VideoEducationList() {
         fetch(SERVER_URL + "videoEducations")
             .then(response => response.json())
             .then(data => {
-                setVideoEducation(data._embedded.videoEducations);
+                setVideoEducation(data._embedded.videoEducations.reverse());
             })
             .catch(err => console.error("Error fetching data:", err));
     }, []);
@@ -42,6 +42,9 @@ function VideoEducationList() {
         const parts = href.split('/');
         return parts[parts.length - 1];
     };
+
+    // 목록 길이
+    const totalLength = videoEducation.length;
 
     return (
         <div className="edu-list-container">
@@ -74,6 +77,9 @@ function VideoEducationList() {
                             const isSelected = id && videoEducation.id && id === videoEducation.id.toString();
                             const videoUrl = SERVER_URL + videoEducation.videoUrl; // 상대 URL을 절대 URL로 변환
 
+                            // 역순으로 번호 표시
+                            const reversedIndex = totalLength - index;
+
                             return (
                                 <tr
                                     key={videoEducation.id || `videoEducation-${index}`}
@@ -83,7 +89,7 @@ function VideoEducationList() {
                                         backgroundColor: isSelected ? "#e0f7fa" : "white",
                                     }}
                                 >
-                                    <td>{index + 1}</td>
+                                    <td>{reversedIndex}</td>
                                     <td>{videoEducation.title}</td>
                                     <td>{formatDate(videoEducation.createdDate)}</td>
                                     <td>{videoEducation.writer}</td>

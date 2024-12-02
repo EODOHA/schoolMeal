@@ -118,7 +118,7 @@ public class VideoEducationController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        // videoUrl에서 경로 수정, 해당 경로를 uploadPath와 합침
+        // videoUrl에서 경로 수정
         String videoUrl = videoEducation.getVideoUrl().replaceFirst("^/videos/videoEducation/", "");
         Path filePath = Paths.get("C:/Video/videos/videoEducation/", videoUrl).normalize();  // 경로 수정
 
