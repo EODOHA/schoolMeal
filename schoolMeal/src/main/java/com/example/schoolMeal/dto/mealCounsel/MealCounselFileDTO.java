@@ -32,4 +32,5 @@ public class MealCounselFileDTO {
                 .fileUrl(file.getFileUrl())
                 .build();
     }
+    
 }

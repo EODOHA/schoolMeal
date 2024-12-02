@@ -14,4 +14,5 @@ public class ImageManageDto {
 	private String category;
 	private String mimeType;
 
+	
 }

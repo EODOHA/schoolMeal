@@ -9,7 +9,6 @@ import com.example.schoolMeal.domain.entity.eduData.VideoEducation;
 
 @Repository
 public interface VideoEducationRepository extends JpaRepository<VideoEducation, Long> {
-
     // 제목으로 중복 확인 (중복된 제목이 있으면 반환)
     Optional<VideoEducation> findByTitle(String title);
 

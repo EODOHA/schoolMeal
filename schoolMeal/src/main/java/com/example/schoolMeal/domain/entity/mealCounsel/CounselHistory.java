@@ -58,5 +58,6 @@ public class CounselHistory {
         this.studentHistory = studentHistory;
         this.counselDate = counselDate;
     }
+    
 }
 

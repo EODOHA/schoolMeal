@@ -28,5 +28,6 @@ public class ProcessedFoodRequestDTO {
         this.imagePath = imagePath;
         this.description = description;
     }
+    
 
 }

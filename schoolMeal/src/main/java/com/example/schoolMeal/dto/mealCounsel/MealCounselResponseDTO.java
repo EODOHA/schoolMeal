@@ -56,4 +56,5 @@ public class MealCounselResponseDTO {
                         .collect(Collectors.toList()))
                 .build();
     }
+    
 }

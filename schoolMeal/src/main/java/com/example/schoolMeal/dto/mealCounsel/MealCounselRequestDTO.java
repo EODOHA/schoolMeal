@@ -33,6 +33,7 @@ public class MealCounselRequestDTO {
     @NotEmpty(message = "게시판 이름은 필수 입력 값입니다.")
     private String boardName; // 게시판 이름
 
+    
     // 작성자 정보는 서버에서 인증된 사용자 정보로 설정하므로, 클라이언트에서 받지 않는다.
 }
 

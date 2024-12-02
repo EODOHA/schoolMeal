@@ -29,6 +29,7 @@ public class CounselHistoryDTO {
 
     @PastOrPresent(message = "상담일은 과거 또는 현재여야 합니다.")
     private LocalDate counselDate; //상담 일자
+    
 }
 
 

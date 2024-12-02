@@ -51,4 +51,5 @@ public class RegionalCommunity {
         this.author = author;
         this.createdDate = LocalDateTime.now();
     }
+    
 }

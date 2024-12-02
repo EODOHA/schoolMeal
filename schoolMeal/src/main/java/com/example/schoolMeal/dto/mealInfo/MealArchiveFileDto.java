@@ -24,4 +24,5 @@ public class MealArchiveFileDto {
 
 	private Long arc_file_size;
 
+	
 }

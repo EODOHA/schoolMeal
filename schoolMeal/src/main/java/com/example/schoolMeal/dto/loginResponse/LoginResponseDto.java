@@ -10,4 +10,5 @@ public class LoginResponseDto {
 	private String token;
 	private String error;
 	private String role;
+	
 }

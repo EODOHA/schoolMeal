@@ -27,4 +27,5 @@ public class MealCounselSpecifications {
     public static Specification<MealCounsel> createdAtEquals(LocalDate createdAt) {
         return (root, query, builder) -> builder.equal(root.get("createdAt").as(LocalDate.class), createdAt);
     }
+    
 }

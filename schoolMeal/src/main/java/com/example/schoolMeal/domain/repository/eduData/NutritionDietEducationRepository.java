@@ -8,4 +8,5 @@ import com.example.schoolMeal.domain.entity.eduData.NutritionDietEducation;
 @Repository
 public interface NutritionDietEducationRepository extends JpaRepository<NutritionDietEducation, Long> {
 
+	
 }

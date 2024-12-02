@@ -7,5 +7,6 @@ import com.example.schoolMeal.domain.entity.mealResource.MenuRecipe;
 
 @Repository
 public interface MenuRecipeRepository extends JpaRepository<MenuRecipe, Long> {
+	
 
 }

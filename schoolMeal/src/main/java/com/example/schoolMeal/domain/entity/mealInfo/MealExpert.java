@@ -74,6 +74,4 @@ public class MealExpert extends BaseEntity {
 		this.exp_email = exp_email;
 	}
     
-    
-    
 }

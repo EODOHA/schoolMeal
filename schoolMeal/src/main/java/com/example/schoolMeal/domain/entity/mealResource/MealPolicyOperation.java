@@ -52,5 +52,6 @@ public class MealPolicyOperation {
 	@OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "file_id", referencedColumnName = "id", insertable = false, updatable = false)
     private FileUrl fileUrl;
+	
 
 }

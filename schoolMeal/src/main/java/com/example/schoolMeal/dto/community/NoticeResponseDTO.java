@@ -26,4 +26,5 @@ public class NoticeResponseDTO {
         this.createdDate = createdDate;
         this.updatedDate = updatedDate;
     }
+    
 }

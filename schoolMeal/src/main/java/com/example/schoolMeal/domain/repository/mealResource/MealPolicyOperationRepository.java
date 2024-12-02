@@ -7,5 +7,6 @@ import com.example.schoolMeal.domain.entity.mealResource.MealPolicyOperation;
 
 @Repository
 public interface MealPolicyOperationRepository extends JpaRepository<MealPolicyOperation, Long> {
+	
 }
 

@@ -30,4 +30,5 @@ public class ImageManage {
 	@Column(nullable = true)
 	private byte[] data;
 	
+	
 }

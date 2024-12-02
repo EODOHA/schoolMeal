@@ -8,5 +8,6 @@ import com.example.schoolMeal.domain.entity.mealInfo.ExpertHistory;
 @RepositoryRestResource(exported = false)
 public interface ExpertHistoryRepository extends JpaRepository<ExpertHistory, Long> {
 	
+	
 }
 

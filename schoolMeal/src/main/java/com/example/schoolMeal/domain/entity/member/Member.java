@@ -121,4 +121,5 @@ public class Member {
 	        this.status = "banned"; // 상태도 banned로 변경
 	    }
 	}
+	
 }

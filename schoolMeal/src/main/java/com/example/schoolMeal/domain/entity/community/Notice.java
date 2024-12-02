@@ -57,4 +57,5 @@ public class Notice {
         this.createdDate = LocalDateTime.now();
         this.viewCount = 0;
     }
+    
 }

@@ -8,5 +8,6 @@ import org.springframework.stereotype.Repository;
 //MealCounselFile에 대한 repositroy
 @Repository
 public interface MealCounselFileRepository extends JpaRepository<MealCounselFile, Long> {
+	
 }
 

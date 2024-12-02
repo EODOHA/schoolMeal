@@ -17,4 +17,5 @@ public interface CounselHistoryRepository extends JpaRepository<CounselHistory, 
 //    List<CounselHistory> findBySchoolAndCounselDateBetween(School school, LocalDate startDate, LocalDate endDate);
 //
 //    int countBySchoolInAndCounselDateBetween(List<School> schools, LocalDate startDate, LocalDate endDate);
+	
 }

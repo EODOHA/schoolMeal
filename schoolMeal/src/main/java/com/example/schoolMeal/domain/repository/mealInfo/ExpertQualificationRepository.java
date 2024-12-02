@@ -7,4 +7,5 @@ import com.example.schoolMeal.domain.entity.mealInfo.ExpertQualification;
 
 @RepositoryRestResource(exported = false)
 public interface ExpertQualificationRepository extends JpaRepository<ExpertQualification, Long> {
+	
 }

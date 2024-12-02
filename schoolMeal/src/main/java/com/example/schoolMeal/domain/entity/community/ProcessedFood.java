@@ -66,4 +66,5 @@ public class ProcessedFood {
         this.description = description;
         this.createdDate = LocalDateTime.now();
     }
+    
 }

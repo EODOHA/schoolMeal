@@ -36,5 +36,4 @@ public class MealArchiveDto extends BaseEntity {
 	
 	private List<MealArchiveFileDto> arc_files = new ArrayList<>();
 
-	
 }

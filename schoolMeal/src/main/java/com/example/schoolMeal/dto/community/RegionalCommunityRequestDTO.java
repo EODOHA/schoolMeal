@@ -19,4 +19,5 @@ public class RegionalCommunityRequestDTO {
         this.content = content;
         this.author = author;
     }
+    
 }

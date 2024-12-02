@@ -8,4 +8,5 @@ import com.example.schoolMeal.domain.entity.FileUrl;
 @Repository
 public interface FileUrlRepository extends JpaRepository<FileUrl, Long> {
 
+	
 }

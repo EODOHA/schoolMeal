@@ -14,5 +14,4 @@ public class ExpertQualificationDto {
 	private Long exp_qual_id;
 	private String exp_qual_description;	//보유 자격증
 
-	
 }

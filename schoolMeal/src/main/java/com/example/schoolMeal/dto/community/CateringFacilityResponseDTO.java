@@ -30,4 +30,5 @@ public class CateringFacilityResponseDTO {
         this.createdDate = createdDate;
         this.updatedDate = updatedDate;
     }
+    
 }

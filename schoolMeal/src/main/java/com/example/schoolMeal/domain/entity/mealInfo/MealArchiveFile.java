@@ -56,4 +56,5 @@ public class MealArchiveFile extends BaseEntity{
 		this.arc_file_size = arc_file_size;
 		this.mealArchive = mealArchive;
 	}
+	
 }

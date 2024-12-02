@@ -11,6 +11,7 @@ import com.example.schoolMeal.domain.entity.mealCounsel.MealCounsel;
 //JpaSpecificationExecutor을 이용하여 동적 쿼리(MealCounselSpecifications)를 지원하도록 수정
 @Repository
 public interface MealCounselRepository extends JpaRepository<MealCounsel, Long>, JpaSpecificationExecutor<MealCounsel> {
+	
 
 }
 

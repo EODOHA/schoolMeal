@@ -30,4 +30,5 @@ public class CommentDTO {
         this.cateringFacilityId = cateringFacilityId;
         this.createdDate = createdDate;
     }
+    
 }

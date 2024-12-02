@@ -32,4 +32,5 @@ public class ProcessedFoodResponseDTO {
         this.createdDate = createdDate;
         this.updatedDate = updatedDate;
     }
+    
 }

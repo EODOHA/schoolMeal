@@ -26,4 +26,5 @@ public class RegionalCommunityResponseDTO {
         this.createdDate = createdDate;
         this.updatedDate = updatedDate;
     }
+    
 }

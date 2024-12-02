@@ -7,4 +7,5 @@ import com.example.schoolMeal.domain.entity.mealInfo.MealArchiveFile;
 
 @Repository
 public interface MealArchiveFileRepository extends JpaRepository<MealArchiveFile, Long> {
+	
 }

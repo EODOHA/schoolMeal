@@ -27,4 +27,5 @@ public class CounselHistorySpecifications {
         return (root, query, criteriaBuilder) ->
                 criteriaBuilder.equal(root.get("counselDate"), date);
     }
+    
 }

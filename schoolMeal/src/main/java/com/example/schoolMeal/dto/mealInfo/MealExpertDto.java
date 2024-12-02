@@ -38,4 +38,5 @@ public class MealExpertDto {
 	private List<ExpertHistoryDto> histories; // 경력사항
 	private List<ExpertQualificationDto> qualifications; // 보유 자격증
 
+	
 }

@@ -25,4 +25,5 @@ public class CateringFacilityRequestDTO {
         this.imagePath = imagePath;
         this.description = description;
     }
+    
 }

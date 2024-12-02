@@ -7,4 +7,5 @@ import com.example.schoolMeal.domain.entity.mealInfo.MealExpert;
 
 @RepositoryRestResource(exported = false)
 public interface MealExpertRepository extends JpaRepository<MealExpert, Long> {
+	
 }

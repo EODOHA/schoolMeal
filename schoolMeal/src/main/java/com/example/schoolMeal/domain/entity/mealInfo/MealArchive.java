@@ -46,4 +46,5 @@ public class MealArchive extends BaseEntity {
 	@Builder.Default
 	private List<MealArchiveFile> arc_files = new ArrayList<>();
 
+	
 }

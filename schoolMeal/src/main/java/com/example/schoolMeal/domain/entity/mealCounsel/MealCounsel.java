@@ -107,4 +107,5 @@ public class MealCounsel {
         this.content = content;
         this.youtubeHtml = youtubeHtml;
     }
+    
 }
