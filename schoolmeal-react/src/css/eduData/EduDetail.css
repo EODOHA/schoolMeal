@@ -1,4 +1,4 @@
-/* edu-detail-container */
+/* 컨테이너 스타일 */
 .edu-detail-container {
     max-width: 1000px; /* 최대 폭 설정 */
     width: 100%; /* 100% 너비로 확장 가능 */
@@ -12,7 +12,7 @@
     margin-top: 40px;
 }
 
-/* edu-card */
+/* 카드 스타일 */
 .edu-card {
     width: 100%; /* 카드가 컨테이너의 폭에 맞게 채워짐 */
     padding: 20px;
@@ -21,15 +21,16 @@
     background-color: #fff;
 }
 
-/* edu-card-body */
+/* 카드 본문 스타일 */
 .edu-card-body {
     font-family: Arial, sans-serif;
 }
 
 /* 제목 */
-h2 {
+.edu-card-body h2 {
     font-size: 1.5rem;
     margin-bottom: 15px;
+    text-align: center;
 }
 
 /* 헤더 */
@@ -46,11 +47,11 @@ h2 {
 }
 
 /* 폼 그룹 */
-.form-group {
+.edu-form-group {
     margin-bottom: 1rem;
 }
 
-.form-control {
+.edu-form-control {
     width: 100%;
     padding: 10px;
     font-size: 1rem;
@@ -59,58 +60,30 @@ h2 {
 }
 
 /* 텍스트 영역 */
-textarea.form-control {
+textarea.edu-form-control {
     resize: vertical;
 }
 
 /* 첨부파일 링크 */
-.attachment-link {
+.edu-attachment-link {
     color: #007bff;
     text-decoration: none;
 }
 
-.attachment-link:hover {
+.edu-attachment-link:hover {
     text-decoration: underline;
+}
+
+/* 첨부파일 아이콘과 텍스트 간 간격 설정 */
+.edu-attachment-link svg {
+    margin-right: 5px;
 }
 
 /* 버튼 그룹 */
-.button-group {
+.edu-button-group {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
-}
-
-/* 이미지 표시 */
-.thumbnail-container {
-    display: flex;
-    justify-content: center;  /* 가로 중앙 정렬 */
-    align-items: center;  /* 세로 중앙 정렬 */
-    width: 100%;
-    margin-top: 10px;
-}
-
-/* 썸네일 이미지가 포함된 컨테이너의 스타일 수정 */
-.form-group img.edu-video-thumbnail {
-    display: block;  /* 인라인 요소가 아닌 블록 요소로 설정 */
-    margin-left: auto;  /* 왼쪽 여백을 자동으로 설정 */
-    margin-right: auto; /* 오른쪽 여백을 자동으로 설정 */
-    max-width: 100%;  /* 부모 요소의 100%로 크기 조정 */
-    height: auto;  /* 비율을 유지하며 자동으로 높이 조정 */
-    object-fit: contain; /* 이미지 비율 유지 */
-}
-
-/* 첨부파일 링크 스타일 */
-.attachment-link {
-    color: #007bff;
-    text-decoration: none;
-}
-
-.attachment-link:hover {
-    text-decoration: underline;
-}
-
-.attachment-link svg {
-    margin-right: 5px;
 }
 
 /* 동영상 섹션 스타일 */
@@ -121,7 +94,7 @@ textarea.form-control {
 }
 
 /* 동영상 다운로드 링크 스타일 */
-.attachment-link {
+.edu-attachment-link {
     text-decoration: none; /* 밑줄 제거 */
     color: #1976d2;
     font-weight: bold;
@@ -136,3 +109,23 @@ textarea.form-control {
     color: #888;
     font-style: italic;
 }
+
+/* 썸네일 이미지가 포함된 컨테이너의 스타일 수정 */
+.edu-form-group img.edu-thumbnail-container {
+    display: block;  /* 인라인 요소가 아닌 블록 요소로 설정 */
+    margin-left: auto;  /* 왼쪽 여백을 자동으로 설정 */
+    margin-right: auto; /* 오른쪽 여백을 자동으로 설정 */
+    max-width: 100%;  /* 부모 요소의 100%로 크기 조정 */
+    height: auto;  /* 비율을 유지하며 자동으로 높이 조정 */
+    object-fit: contain; /* 이미지 비율 유지 */
+}
+
+/* 이미지 표시 */
+.edu-thumbnail-container {
+    display: flex;
+    justify-content: center;  /* 가로 중앙 정렬 */
+    align-items: center;  /* 세로 중앙 정렬 */
+    width: 100%;
+    margin-top: 10px;
+}
+

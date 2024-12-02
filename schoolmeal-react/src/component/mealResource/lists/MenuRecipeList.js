@@ -74,14 +74,16 @@ function MenuRecipeList() {
 
     return (
         <div className="meal-list-container">
-            <h1 className="title">식단 및 레시피</h1>
-            <div className="button-group">
+            <h1 className="meal-title">식단 및 레시피</h1>
+            <div className="meal-button-group">
                 <Button variant="outlined" onClick={() => navigate("/mealResource")}>
                     이전으로
                 </Button>
 
-                {/* 필터 컴포넌트 */}
-                <FilterButton onFilterChange={setSelectedFilter} />
+                {/* 필터 버튼 그룹 */}
+                <div className="meal-filter-button-group">
+                    <FilterButton onFilterChange={setSelectedFilter} />
+                </div>
 
                 <Button 
                     variant="outlined" 
@@ -90,10 +92,9 @@ function MenuRecipeList() {
                 >
                     새 글 쓰기
                 </Button>
-
             </div>
-            <table>
-                <thead>
+            <table className="meal-table">
+                <thead className="meal-thead">
                     <tr>
                         <th>번호</th>
                         <th>제목</th>
@@ -137,10 +138,10 @@ function MenuRecipeList() {
                                     <td>
                                         {fileUrl ? (
                                             <a href={fileUrl} target="_blank" rel="noopener noreferrer">
-                                                <span className="attachment-icon"><MdAttachFile /></span>
+                                                <span className="meal-attachment-icon"><MdAttachFile /></span>
                                             </a>
                                         ) : (
-                                            <span className="attachment-icon"><BsFileExcel /></span>
+                                            <span className="meal-attachment-icon"><BsFileExcel /></span>
                                         )}
                                     </td>
                                 </tr>

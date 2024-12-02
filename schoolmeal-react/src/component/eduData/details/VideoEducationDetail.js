@@ -72,7 +72,7 @@ function VideoEducationDetail() {
             })
             .catch((err) => {
                 window.alert("삭제 중 오류가 발생했습니다.");
-            });
+            }); 
     };
 
     const imageUrl = videoEducation.imageUrl; // 서버에서 받은 imageUrl
@@ -98,7 +98,7 @@ function VideoEducationDetail() {
                             <a
                                 href={`${SERVER_URL}videoEducation/download/${videoEducation.id}`}
                                 download
-                                className="attachment-link"
+                                className="edu-attachment-link"
                             >
                                 동영상 다운로드 &nbsp; <RiVideoDownloadFill />
                             </a>
@@ -107,38 +107,38 @@ function VideoEducationDetail() {
                         )}
                     </div><br />
                     <form>
-                        <div className="form-group">
+                        <div className="edu-form-group">
                             <label>작성자:</label>
                             <input
                                 type="text"
                                 value={videoEducation.writer}
                                 readOnly
-                                className="form-control"
+                                className="edu-form-control"
                             />
                         </div>
-                        <div className="form-group">
+                        <div className="edu-form-group">
                             <label>내용:</label>
                             <textarea
                                 rows={5}
                                 value={videoEducation.content}
                                 readOnly
-                                className="form-control"
+                                className="edu-form-control"
                             />
                         </div>
 
                         {/* 이미지가 있으면 이미지 표시 */}
                         {imageUrl && (
-                            <div className="form-group">
+                            <div className="edu-form-group">
                                 <label></label>
                                 <img
                                     src={fullImageUrl}
                                     alt="교육자료 이미지"
-                                    className="video-education-thumbnail"
+                                    className="edu-thumbnail-container"
                                 />
                             </div>
                         )}
 
-                        <div className="button-group">
+                        <div className="edu-button-group">
                             <Button variant="outlined" color="success" onClick={update} className="me-2">
                                 수정
                             </Button>

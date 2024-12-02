@@ -49,8 +49,8 @@ function MealPolicyOperationList() {
 
     return (
         <div className="meal-list-container">
-            <h1 className="title">급식 정책 및 운영</h1>
-            <div className="button-group">
+            <h1 className="meal-title">급식 정책 및 운영</h1>
+            <div className="meal-button-group">
                 <Button variant="outlined" onClick={() => navigate("/mealResource")}>
                     이전으로
                 </Button>
@@ -58,8 +58,8 @@ function MealPolicyOperationList() {
                     새 글 쓰기
                 </Button>
             </div>
-            <table>
-                <thead>
+            <table className="meal-table">
+                <thead className="meal-thead">
                     <tr>
                         <th>번호</th>
                         <th>제목</th>
@@ -98,9 +98,9 @@ function MealPolicyOperationList() {
                                     <td>{mealPolicyOperation.writer}</td>
                                     <td>
                                         {fileUrl ? (
-                                            <span className="attachment-icon"><MdAttachFile /></span>
+                                            <span className="meal-attachment-icon"><MdAttachFile /></span>
                                         ) : (
-                                            <span className="attachment-icon"><BsFileExcel /></span>
+                                            <span className="meal-attachment-icon"><BsFileExcel /></span>
                                         )}
                                     </td>
                                 </tr>

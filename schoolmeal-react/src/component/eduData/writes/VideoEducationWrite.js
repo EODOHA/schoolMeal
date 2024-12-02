@@ -80,10 +80,10 @@ function VideoEducationWrite() {
             <div className="edu-card">
                 <div className="edu-card-body">
                     <h2>새 게시판 작성</h2>
-                    {error && <div className="error-message">{error}</div>}
+                    {error && <div className="edu-error-message">{error}</div>}
 
                     <form onSubmit={handleSubmit}>
-                        <div className="form-group">
+                        <div className="edu-form-group">
                             <TextField
                                 label="제목"
                                 fullWidth
@@ -93,7 +93,7 @@ function VideoEducationWrite() {
                             />
                         </div>
 
-                        <div className="form-group">
+                        <div className="edu-form-group">
                             <TextField
                                 label="작성자"
                                 fullWidth
@@ -103,7 +103,7 @@ function VideoEducationWrite() {
                             />
                         </div>
 
-                        <div className="form-group">
+                        <div className="edu-form-group">
                             <TextField
                                 label="내용"
                                 fullWidth
@@ -116,7 +116,7 @@ function VideoEducationWrite() {
                         </div>
 
                         {/* 비디오 파일 업로드 */}
-                        <div className="form-group">
+                        <div className="edu-form-group">
                             <label>영상 파일:</label>
                             <input
                                 type="file"
@@ -126,7 +126,7 @@ function VideoEducationWrite() {
                         </div>
 
                         {/* 썸네일 미리보기 */}
-                        <div className="form-group">
+                        <div className="edu-form-group">
                             <label>썸네일 이미지:</label>
                             <input
                                 type="file"
@@ -134,18 +134,17 @@ function VideoEducationWrite() {
                                 onChange={handleThumbnailFileChange}
                             />
                             {thumbnailPreview && (
-                                <div>
+                                <div className="edu-writer-thumbnail-container img">
                                     <h4>미리보기:</h4>
                                     <img
                                         src={thumbnailPreview}
                                         alt="썸네일 미리보기"
-                                        style={{ maxWidth: "200px", maxHeight: "200px" }}
                                     />
                                 </div>
                             )}
                         </div>
 
-                        <div className="button-group">
+                        <div className="edu-button-group">
                             <Button
                                 variant="contained"
                                 color="primary"

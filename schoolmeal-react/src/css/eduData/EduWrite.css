@@ -1,50 +1,58 @@
+/* 컨테이너 스타일 */
 .edu-write-container {
+    max-width: 1000px; /* 최대 폭 설정 */
+    width: 100%; /* 100% 너비로 확장 가능 */
+    margin: 0 auto; /* 중앙 정렬 */
+    padding: 20px;
+    box-sizing: border-box; /* padding과 border를 크기 안에 포함 */
     display: flex;
-    justify-content: center;
-    margin-top: 20px;
+    flex-direction: column; /* 내용은 세로로 정렬 */
+    justify-content: center; /* 세로 중앙 정렬 */
+    align-items: center; /* 가로 중앙 정렬 */
+    margin-top: 40px;
 }
 
 .edu-card {
-    width: 100%;
-    max-width: 600px;
+    width: 100%; /* 카드가 컨테이너의 폭에 맞게 채워짐 */
     padding: 20px;
     border: 1px solid #ddd;
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
 }
 
 .edu-card-body {
-    padding: 20px;
+    font-family: Arial, sans-serif;
 }
 
 .edu-card h2 {
-    margin-bottom: 20px;
-    font-size: 24px;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    text-align: center;
 }
 
-.form-group {
+.edu-form-group {
     margin-bottom: 15px;
     text-align: center;  /* 텍스트와 이미지를 중앙 정렬 */
 }
 
-.button-group {
+.edu-button-group {
     display: flex;
     justify-content: space-between;
+    margin-top: 20px;
 }
 
-.error-message {
+.edu-error-message {
     color: red;
     margin-bottom: 15px;
 }
 
 /* 썸네일 미리보기 컨테이너 스타일 */
-.form-group img {
-    display: block;  /* 이미지가 인라인 요소가 아닌 블록 요소로 표시되도록 설정 */
-    margin-left: auto;  /* 왼쪽 여백 자동 */
-    margin-right: auto; /* 오른쪽 여백 자동 */
-    max-width: 100%;  /* 부모 컨테이너에 맞춰 크기 조정 */
-    height: auto;  /* 이미지 비율을 유지하며 높이 자동 조정 */
-    margin-top: 10px; /* 위쪽 여백 추가 */
+.edu-writer-thumbnail-container img {
+    max-width: 250px; /* 이미지의 너비가 컨테이너 너비를 초과하지 않게 제한 */
+    max-height: 300px; /* 최대 높이를 400px로 제한 */
+    object-fit: cover; /* 이미지가 잘리지 않게 비율을 유지하면서 크기를 맞춤 */
+    margin-top: 10px;
+    border-radius: 8px;
 }
 
 

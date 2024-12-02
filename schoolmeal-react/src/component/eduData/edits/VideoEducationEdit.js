@@ -96,10 +96,10 @@ function VideoEducationEdit() {
             <div className="edu-card">
                 <div className="edu-card-body">
                     <h2>게시판 수정</h2>
-                    {error && <div className="error-message">{error}</div>}
+                    {error && <div className="edu-error-message">{error}</div>}
 
                     <form onSubmit={handleSubmit}>
-                        <div className="form-group">
+                        <div className="edu-form-group">
                             <TextField
                                 label="제목"
                                 fullWidth
@@ -110,7 +110,7 @@ function VideoEducationEdit() {
                             />
                         </div>
 
-                        <div className="form-group">
+                        <div className="eduform-group">
                             <TextField
                                 label="작성자"
                                 fullWidth
@@ -120,7 +120,7 @@ function VideoEducationEdit() {
                             />
                         </div>
 
-                        <div className="form-group">
+                        <div className="edu-form-group">
                             <TextField
                                 label="내용"
                                 fullWidth
@@ -132,7 +132,7 @@ function VideoEducationEdit() {
                             />
                         </div>
 
-                        <div className="form-group">
+                        <div className="edu-form-group">
                             <label>영상 파일:</label>
                             <input
                                 type="file"
@@ -141,7 +141,7 @@ function VideoEducationEdit() {
                             />
                         </div>
 
-                        <div className="form-group">
+                        <div className="edu-form-group">
                             <label>썸네일 이미지:</label>
                             <input
                                 type="file"
@@ -149,26 +149,23 @@ function VideoEducationEdit() {
                                 onChange={handleThumbnailFileChange}
                             />
                             {thumbnailPreview && (
-                                <div>
+                                <div className="edu-edit-thumbnail-container">
                                     <img
                                         src={thumbnailPreview}
                                         alt="Thumbnail Preview"
-                                        style={{ maxWidth: "200px", maxHeight: "200px" }}
                                     />
                                 </div>
                             )}
                             {existingThumbnail && !thumbnailFile && (
-                                <div>
+                                <div className="edu-edit-thumbnail-container">
                                     <img
                                         src={existingThumbnail}
                                         alt="이미지가 없습니다."
-                                        style={{ maxWidth: "200px", maxHeight: "200px" }}
                                     />
                                 </div>
                             )}
                         </div>
-
-                        <div className="button-group">
+                        <div className="edu-button-group">
                             <Button
                                 variant="outlined"
                                 color="success"

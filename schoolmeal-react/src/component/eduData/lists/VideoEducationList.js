@@ -48,7 +48,7 @@ function VideoEducationList() {
 
     return (
         <div className="edu-list-container">
-            <h1 className="title">영상 교육자료</h1>
+            <h1 className="edu-title">영상 교육자료</h1>
             <div className="button-group">
                 <Button variant="outlined" onClick={() => navigate("/eduData")}>
                     이전으로
@@ -57,8 +57,8 @@ function VideoEducationList() {
                     새 글 쓰기
                 </Button>
             </div>
-            <table>
-                <thead>
+            <table className="edu-table">
+                <thead className="edu-thead">
                     <tr>
                         <th>번호</th>
                         <th>제목</th>
@@ -67,7 +67,7 @@ function VideoEducationList() {
                         <th>영상</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody className="edu-tbody">
                     {videoEducation.length === 0 ? (
                         <tr>
                             <td colSpan="5">데이터가 없습니다.</td>
@@ -95,9 +95,9 @@ function VideoEducationList() {
                                     <td>{videoEducation.writer}</td>
                                     <td>
                                         {videoUrl && videoUrl.trim() !== "" ? (
-                                            <span className="attachment-icon"><TfiVideoClapper /></span>
+                                            <span className="edu-attachment-icon"><TfiVideoClapper /></span>
                                         ) : (
-                                            <span className="attachment-icon"><BsFileExcel /></span>
+                                            <span className="edu-attachment-icon"><BsFileExcel /></span>
                                         )}
                                     </td>
                                 </tr>

@@ -8,102 +8,77 @@
 }
 
 /* 제목 스타일 */
-.title {
+.edu-title {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 15px;
 }
 
+/* 버튼 그룹 스타일 */
+.edu-button-group {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px; /* 버튼들 간 간격 */
+    margin-bottom: 30px; /* 버튼과 테이블 사이 간격 */
+}
+
 /* 테이블 스타일 */
-table {
-    caption-side: bottom;
-    border-collapse: collapse;
-}
-
-table {
+.edu-table {
     width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-}
-
-table {
-    border-collapse: separate;
-    text-indent: initial;
-    border-spacing: 2px;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-    table-layout: fixed;
-    margin-left: auto;
-    margin-right: auto;
+    border-collapse: collapse; /* 셀 간 경계를 합침 */
+    margin-top: 20px; /* 테이블 위쪽 여백 추가 */
 }
 
 /* 테이블 헤더 스타일 */
-thead {
+.edu-thead {
     background-color: #f2f2f2;
     border-bottom: 2px solid #ccc;
 }
 
 /* 셀 스타일 */
-th, td {
-    padding: 10px;
-    text-align: left;
-    border: 1px solid #ccc;
+.edu-table td, .edu-table th {
+    padding: 10px; /* 셀 안쪽 여백 */
+    text-align: center; /* 셀 내 글자 가운데 정렬 */
 }
 
-th, td {
-    padding: 12px 10px;
-    border: 1px solid #ccc;
-    text-align: center;
-    vertical-align: middle;
+/* 각 열 너비 설정 */
+.edu-table th:nth-child(1), .edu-table td:nth-child(1) {
+    width: 10%; /* 번호 열의 너비 */
 }
 
-td {
-    display: table-cell;
-    vertical-align: inherit;
-    unicode-bidi: isolate;
+.edu-table th:nth-child(2), .edu-table td:nth-child(2) {
+    width: 40%; /* 제목 열의 너비 (가장 넓게 설정) */
 }
 
-tr {
-    display: table-row;
-    vertical-align: inherit;
-    unicode-bidi: isolate;
-    border-color: inherit;
+.edu-table th:nth-child(3), .edu-table td:nth-child(3) {
+    width: 20%; /* 등록일 열의 너비 */
 }
 
-/* 공지 스타일 */
-.notice-row {
-    font-weight: bold;
-    background-color: #e0f7fa;
+.edu-table th:nth-child(4), .edu-table td:nth-child(4) {
+    width: 15%; /* 작성자 열의 너비 */
 }
 
-.notice-title {
-    color: #007bff;
+.edu-table th:nth-child(5), .edu-table td:nth-child(5) {
+    width: 15%; /* 첨부파일 열의 너비 */
 }
 
 /* 행 스타일 */
-tbody tr:nth-child(even) {
+.edu-tbody tr:nth-child(even) {
     background-color: #f9f9f9;
 }
 
-tbody tr:hover {
+.edu-tbody tr:hover {
     background-color: #f1f1f1;
 }
 
+/* 행 간격을 늘리기 위해 tr에 margin-bottom 추가 */
+.edu-tbody tr {
+    margin-bottom: 10px; /* 행 간격 */
+}
+
 /* 첨부파일 아이콘 스타일 */
-.attachment-icon {
+.edu-attachment-icon {
     font-size: 18px;
     color: #007bff;
     cursor: pointer;
 }
-
-/* 영상 링크 비활성화 스타일 */
-.disabled-link {
-    pointer-events: none;  /* 클릭 불가 */
-    color: #999;           /* 색상 변경 */
-    cursor: not-allowed;   /* 커서 변경 */
-}
-

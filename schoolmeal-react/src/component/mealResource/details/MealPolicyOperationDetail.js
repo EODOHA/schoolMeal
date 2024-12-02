@@ -77,20 +77,20 @@ function MealPolicyOperationDetail() {
 
     return (
         <div className="meal-detail-container">
-            <div className="meal-detail-card">
-                <div className="meal-detail-card-body">
+            <div className="meal-card">
+                <div className="meal-card-body">
                     <h2>{mealPolicyOperation.title}</h2>
                     <hr />
-                    <div className="meal-detail-header">
-                        <div className="meal-detail-id">ID: {mealPolicyOperation.id}</div>
-                        <div className="meal-detail-date">작성일: {formatDate(mealPolicyOperation.createdDate)}</div>
+                    <div className="meal-header">
+                        <div className="meal-id">ID: {mealPolicyOperation.id}</div>
+                        <div className="meal-date">작성일: {formatDate(mealPolicyOperation.createdDate)}</div>
                     </div>
-                    <div className="meal-detail-attachment">
+                    <div className="meal-attachment">
                         {mealPolicyOperation.fileId ? (
                             <a
                                 href={`${SERVER_URL}mealPolicyOperation/download/${mealPolicyOperation.fileId}`}
                                 download
-                                className="attachment-link"
+                                className="meal-attachment-link"
                             >
                                 첨부파일 &nbsp; <MdOutlineFileDownload />
                             </a>
@@ -99,25 +99,25 @@ function MealPolicyOperationDetail() {
                         )}
                     </div><br />
                     <form>
-                        <div className="form-group">
+                        <div className="meal-form-group">
                             <label>작성자:</label>
                             <input
                                 type="text"
                                 value={mealPolicyOperation.writer}
                                 readOnly
-                                className="form-control"
+                                className="meal-form-control"
                             />
                         </div><br />
-                        <div className="form-group">
+                        <div className="meal-form-group">
                             <label>내용:</label>
                             <textarea
                                 rows={5}
                                 value={mealPolicyOperation.content}
                                 readOnly
-                                className="form-control"
+                                className="meal-form-control"
                             />
                         </div><br />
-                        <div className="button-group">
+                        <div className="meal-button-group">
                             <Button
                                 variant="outlined"
                                 color="success"

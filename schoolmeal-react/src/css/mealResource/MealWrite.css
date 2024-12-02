@@ -1,4 +1,4 @@
-/* Write 페이지 컨테이너 스타일 */
+/* 컨테이너 스타일 */
 .meal-write-container {
     display: flex;
     justify-content: center;
@@ -11,34 +11,37 @@
     margin-top: 40px; /* 기존 여백 유지 */
 }
 
-.meal-write-card {
-    width: 100%;
-    max-width: 600px;
+.meal-card {
+    width: 100%; /* 카드가 컨테이너의 폭에 맞게 채워짐 */
     padding: 20px;
     border: 1px solid #ddd;
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
 }
 
-.meal-write-card-body {
-    padding: 20px;
+.meal-card-body {
+    font-family: Arial, sans-serif;
 }
 
-.meal-write-card h2 {
-    margin-bottom: 20px;
-    font-size: 24px;
-}
-
-.form-group {
+.meal-card h2 {
+    font-size: 1.5rem;
     margin-bottom: 15px;
+    text-align: center;
 }
 
-.button-group {
+.meal-form-group {
+    margin-bottom: 15px;
+    text-align: center;  /* 텍스트와 이미지를 중앙 정렬 */
+}
+
+.meal-button-group {
     display: flex;
     justify-content: space-between;
+    margin-top: 20px;
 }
 
-.error-message {
+.meal-error-message {
     color: red;
     margin-bottom: 15px;
 }
+

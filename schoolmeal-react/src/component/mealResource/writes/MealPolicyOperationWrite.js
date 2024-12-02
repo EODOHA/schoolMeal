@@ -55,13 +55,13 @@ function MealPolicyOperationWrite() {
 
     return (
         <div className="meal-write-container">
-            <div className="meal-write-card">
-                <div className="meal-write-card-body">
+            <div className="meal-card">
+                <div className="meal-card-body">
                     <h2>새 게시판 작성</h2>
-                    {error && <div className="error-message">{error}</div>}
+                    {error && <div className="meal-error-message">{error}</div>}
 
                     <form onSubmit={handleSubmit}>
-                        <div className="form-group">
+                        <div className="meal-form-group">
                             <TextField
                                 label="제목"
                                 fullWidth
@@ -71,7 +71,7 @@ function MealPolicyOperationWrite() {
                             />
                         </div>
 
-                        <div className="form-group">
+                        <div className="meal-form-group">
                             <TextField
                                 label="작성자"
                                 fullWidth
@@ -81,7 +81,7 @@ function MealPolicyOperationWrite() {
                             />
                         </div>
 
-                        <div className="form-group">
+                        <div className="meal-form-group">
                             <TextField
                                 label="내용"
                                 fullWidth
@@ -92,7 +92,7 @@ function MealPolicyOperationWrite() {
                                 required
                             />
                         </div>
-                        <div className="form-group">
+                        <div className="meal-form-group">
                             <label>첨부파일:</label>
                             <input
                                 type="file"
@@ -101,7 +101,7 @@ function MealPolicyOperationWrite() {
                             />
                         </div>
 
-                        <div className="button-group">
+                        <div className="meal-button-group">
                             <Button
                                 variant="contained"
                                 color="success"
