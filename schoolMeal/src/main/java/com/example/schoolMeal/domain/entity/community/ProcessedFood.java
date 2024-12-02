@@ -33,9 +33,6 @@ public class ProcessedFood {
     // 주소 링크 (회사의 상세 페이지 또는 제품 링크)
     private String addressLink;
 
-    // 사진 업로드를 위한 경로 또는 파일 이름
-    private String imagePath;
-
     // 상세 소개 (긴 텍스트)
     @Column(columnDefinition = "TEXT")
     private String description;
@@ -45,6 +42,11 @@ public class ProcessedFood {
 
     // 수정 날짜
     private LocalDateTime updatedDate;
+
+    // CommunityFile과의 일대일 관계 설정 (이미지 파일)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "file_id", referencedColumnName = "id")
+    private CommunityFile image;
 
     // 댓글과의 연관 관계 설정 (일대다 관계)
     @OneToMany(mappedBy = "processedFood", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -56,15 +58,13 @@ public class ProcessedFood {
     }
 
     // 파라미터를 받는 생성자
-    public ProcessedFood(String productName, Double price, Double consumerPrice, String companyName, String addressLink, String imagePath, String description) {
+    public ProcessedFood(String productName, Double price, Double consumerPrice, String companyName, String addressLink, String description) {
         this.productName = productName;
         this.price = price;
         this.consumerPrice = consumerPrice;
         this.companyName = companyName;
         this.addressLink = addressLink;
-        this.imagePath = imagePath;
         this.description = description;
         this.createdDate = LocalDateTime.now();
     }
-    
 }

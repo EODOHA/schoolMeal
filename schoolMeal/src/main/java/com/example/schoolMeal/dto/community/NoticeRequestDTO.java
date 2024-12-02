@@ -20,5 +20,4 @@ public class NoticeRequestDTO {
         this.content = content;
         this.author = author;
     }
-    
 }

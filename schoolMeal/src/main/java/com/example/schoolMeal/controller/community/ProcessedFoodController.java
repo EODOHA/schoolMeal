@@ -6,7 +6,9 @@ import com.example.schoolMeal.service.community.ProcessedFoodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -16,16 +18,12 @@ public class ProcessedFoodController {
     @Autowired
     private ProcessedFoodService processedFoodService;
 
-    // 가공식품 정보 생성
+    // 가공식품 정보 생성 (이미지 파일 포함)
     @PostMapping
-    public ResponseEntity<ProcessedFoodResponseDTO> createProcessedFood(@RequestBody ProcessedFoodRequestDTO dto) {
-        return ResponseEntity.ok(processedFoodService.createProcessedFood(dto));
-    }
-
-    // 특정 가공식품 정보 조회
-    @GetMapping("/{id}")
-    public ResponseEntity<ProcessedFoodResponseDTO> getProcessedFood(@PathVariable Long id) {
-        return ResponseEntity.ok(processedFoodService.getProcessedFood(id));
+    public ResponseEntity<ProcessedFoodResponseDTO> createProcessedFood(
+            @RequestPart("data") ProcessedFoodRequestDTO dto,
+            @RequestPart(value = "image", required = false) MultipartFile imageFile) throws IOException {
+        return ResponseEntity.ok(processedFoodService.createProcessedFood(dto, imageFile));
     }
 
     // 모든 가공식품 정보 조회
@@ -34,10 +32,19 @@ public class ProcessedFoodController {
         return ResponseEntity.ok(processedFoodService.getAllProcessedFoods());
     }
 
-    // 가공식품 정보 수정
+    // 특정 가공식품 정보 조회
+    @GetMapping("/{id}")
+    public ResponseEntity<ProcessedFoodResponseDTO> getProcessedFood(@PathVariable Long id) {
+        return ResponseEntity.ok(processedFoodService.getProcessedFood(id));
+    }
+
+    // 가공식품 정보 수정 (이미지 파일 포함)
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateProcessedFood(@PathVariable Long id, @RequestBody ProcessedFoodRequestDTO dto) {
-        processedFoodService.updateProcessedFood(id, dto);
+    public ResponseEntity<Void> updateProcessedFood(
+            @PathVariable Long id,
+            @RequestPart("data") ProcessedFoodRequestDTO dto,
+            @RequestPart(value = "image", required = false) MultipartFile imageFile) throws IOException {
+        processedFoodService.updateProcessedFood(id, dto, imageFile);
         return ResponseEntity.ok().build();
     }
 

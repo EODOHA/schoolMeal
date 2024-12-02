@@ -16,8 +16,14 @@ public class NoticeResponseDTO {
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;
 
-    // 파라미터를 받는 생성자
-    public NoticeResponseDTO(Long id, String title, String content, String author, int viewCount, LocalDateTime createdDate, LocalDateTime updatedDate) {
+    // 파일 정보 필드 추가
+    private Long fileId;           // 파일 ID
+    private String origFileName;   // 원본 파일 이름
+
+    // 생성자
+    public NoticeResponseDTO(Long id, String title, String content, String author, int viewCount,
+                             LocalDateTime createdDate, LocalDateTime updatedDate,
+                             Long fileId, String origFileName) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -25,6 +31,7 @@ public class NoticeResponseDTO {
         this.viewCount = viewCount;
         this.createdDate = createdDate;
         this.updatedDate = updatedDate;
+        this.fileId = fileId;
+        this.origFileName = origFileName;
     }
-    
 }
