@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 @RestController  // JSON 데이터를 반환하도록 설정
-@RequestMapping("/community")  // /community 기본 경로 설정
+@RequestMapping("/crawling")  // /community 기본 경로 설정
 public class CommunityCrawlingController {
 
     @Autowired
