@@ -3,6 +3,7 @@ package com.example.schoolMeal.controller.community;
 import com.example.schoolMeal.dto.community.RegionalCommunityRequestDTO;
 import com.example.schoolMeal.dto.community.RegionalCommunityResponseDTO;
 import com.example.schoolMeal.service.community.RegionalCommunityService;
+import com.example.schoolMeal.domain.entity.community.RegionCategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +32,13 @@ public class RegionalCommunityController {
     @GetMapping
     public ResponseEntity<List<RegionalCommunityResponseDTO>> getAllPosts() {
         return ResponseEntity.ok(regionalCommunityService.getAllPosts());
+    }
+
+    // 특정 지역 게시글 조회 요청 처리 메서드 (추가된 메서드)
+    @GetMapping("/category/{region}")
+    public ResponseEntity<List<RegionalCommunityResponseDTO>> getPostsByRegion(@PathVariable RegionCategory region) {
+        List<RegionalCommunityResponseDTO> posts = regionalCommunityService.getPostsByRegion(region);
+        return ResponseEntity.ok(posts);
     }
 
     // 게시글 수정 요청 처리 메서드
