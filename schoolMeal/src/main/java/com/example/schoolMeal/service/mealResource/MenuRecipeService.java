@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import org.hibernate.validator.internal.util.logging.LoggerFactory;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -108,14 +110,23 @@ public class MenuRecipeService extends PathResolver {
 		 return savedFileUrl;
 	 }
 	 
-	 // 게시글 리스트 반환
-	 public List<MenuRecipe> menuRecipeList() {
-		 try {
-			 return menuRecipeRepository.findAll();
-		 } catch (Exception e) {
-			 throw new RuntimeException("게시글 목록 조회 중 오류가 발생했습니다. 다시 시도해 주세요.", e);
-		 }
-	 }
+
+	// 연령대별 게시글 조회
+	public List<MenuRecipe> menuRecipeListByAgeGroup(String ageGroup) {
+		return menuRecipeRepository.findByAgeGroup(ageGroup);
+	}
+	
+	// 시기별 게시글 조회
+	public List<MenuRecipe> menuRecipeListBySeason(String season) {
+	    return menuRecipeRepository.findBySeason(season);
+	}
+
+
+
+	// 게시글 리스트 반환
+	public List<MenuRecipe> menuRecipeList() {
+	    return menuRecipeRepository.findAll();
+	}
 	 
 	 // 특정 파일 정보 조회
 	 public FileUrl getFileUrlByMenuRecipeId(Long id) {

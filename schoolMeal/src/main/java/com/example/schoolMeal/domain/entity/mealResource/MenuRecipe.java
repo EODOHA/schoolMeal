@@ -40,6 +40,14 @@ public class MenuRecipe {
 	@Column(nullable = false)
 	private String writer;
 	
+	// 연령대 필드 (10대, 20대, 30대, 40대 이상)
+	@Column(nullable = false)
+	private String ageGroup;
+	
+	// 시기별 필드 (봄, 여름, 가을, 겨울, 기타(사계절)
+	@Column(nullable = false)
+	private String season;
+	
 	// 생성 날짜와 시간을 저장하는 필드
 	@Column(nullable = false)
 	private LocalDateTime createdDate = LocalDateTime.now();  // 기본값을 현재 시간으로 설정

@@ -126,7 +126,7 @@ function MenuRecipeEdit() {
                                 name="title"
                                 value={menuRecipe.title}
                                 onChange={handleChange}
-                                disabled // 제목 필드를 비활성화
+                                required
                             />
                         </div>
                         

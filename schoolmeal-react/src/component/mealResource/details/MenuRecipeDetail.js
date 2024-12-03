@@ -123,7 +123,6 @@ function MenuRecipeDetail() {
                                 variant="outlined"
                                 color="success"
                                 onClick={update}
-                                className="me-2"
                             >
                                 수정
                             </Button>
@@ -138,7 +137,6 @@ function MenuRecipeDetail() {
                                 variant="contained"
                                 color="error"
                                 onClick={deleteForm}
-                                className="me-2"
                             >
                                 삭제
                             </Button>
