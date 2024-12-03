@@ -58,17 +58,12 @@ function VideoEducationWrite() {
                 },
             })
             .then((response) => {
-                window.alert("게시판이 성공적으로 등록되었습니다.");
+                window.alert("게시글이 성공적으로 등록되었습니다.");
                 navigate("/eduData/video-education"); // 성공 시 목록 페이지로 이동
             })
             .catch((err) => {
-                if (err.response && err.response.status === 409) {
-                    // 409 Conflict 상태 코드 예시
-                    setError("제목이나 작성자가 중복되었습니다.");
-                } else {
-                    console.error("게시판 등록 중 오류가 발생했습니다.", err);
-                    setError("게시판 등록 중 문제가 발생했습니다. 다시 시도해주세요.");
-                }
+                console.error("게시글 등록 중 오류가 발생했습니다.", err);
+                setError("게시글 등록 중 문제가 발생했습니다. 다시 시도해주세요.");
             })
             .finally(() => {
                 setLoading(false); // 로딩 상태 종료
@@ -79,7 +74,7 @@ function VideoEducationWrite() {
         <div className="edu-write-container">
             <div className="edu-card">
                 <div className="edu-card-body">
-                    <h2>새 게시판 작성</h2>
+                    <h2>새 게시글 작성</h2>
                     {error && <div className="edu-error-message">{error}</div>}
 
                     <form onSubmit={handleSubmit}>
@@ -157,7 +152,6 @@ function VideoEducationWrite() {
                                 variant="outlined"
                                 color="secondary"
                                 onClick={() => navigate("/eduData/video-education")}
-                                className="me-2"
                             >
                                 목록
                             </Button>

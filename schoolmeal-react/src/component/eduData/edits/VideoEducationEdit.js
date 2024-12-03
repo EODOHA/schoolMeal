@@ -33,7 +33,7 @@ function VideoEducationEdit() {
             })
             .catch((err) => {
                 console.error("데이터 로드 중 오류가 발생했습니다.", err);
-                setError("게시판 데이터를 불러오는 데 실패했습니다.");
+                setError("게시글 데이터를 불러오는 데 실패했습니다.");
             });
     }, [id]);    
 
@@ -79,12 +79,12 @@ function VideoEducationEdit() {
         axios
             .put(`${SERVER_URL}videoEducation/update/${id}`, formData)
             .then((response) => {
-                window.alert("게시판이 성공적으로 수정되었습니다.");
+                window.alert("게시글이 성공적으로 수정되었습니다.");
                 navigate("/eduData/video-education"); // 성공 시 목록 페이지로 이동
             })
             .catch((err) => {
-                console.error("게시판 수정 중 오류가 발생했습니다.", err);
-                setError("게시판 수정 중 문제가 발생했습니다. 다시 시도해주세요.");
+                console.error("게시글 수정 중 오류가 발생했습니다.", err);
+                setError("게시글 수정 중 문제가 발생했습니다. 다시 시도해주세요.");
             })
             .finally(() => {
                 setLoading(false); // 로딩 상태 종료
@@ -95,7 +95,7 @@ function VideoEducationEdit() {
         <div className="edu-edit-container">
             <div className="edu-card">
                 <div className="edu-card-body">
-                    <h2>게시판 수정</h2>
+                    <h2>게시글 수정</h2>
                     {error && <div className="edu-error-message">{error}</div>}
 
                     <form onSubmit={handleSubmit}>
@@ -178,7 +178,6 @@ function VideoEducationEdit() {
                                 variant="outlined"
                                 color="secondary"
                                 onClick={() => navigate("/eduData/video-education")}
-                                className="me-2"
                             >
                                 목록
                             </Button>

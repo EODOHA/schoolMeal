@@ -139,13 +139,13 @@ function VideoEducationDetail() {
                         )}
 
                         <div className="edu-button-group">
-                            <Button variant="outlined" color="success" onClick={update} className="me-2">
+                            <Button variant="outlined" color="success" onClick={update}>
                                 수정
                             </Button>
                             <Button variant="outlined" color="primary" onClick={() => navigate("/eduData/video-education")}>
                                 목록
                             </Button>
-                            <Button variant="contained" color="error" onClick={deleteForm} className="me-2">
+                            <Button variant="contained" color="error" onClick={deleteForm}>
                                 삭제
                             </Button>
                         </div>
