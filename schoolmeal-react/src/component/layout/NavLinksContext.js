@@ -1,4 +1,3 @@
-// context/NavLinksContext.js
 import React, { createContext, useState, useContext } from 'react';
 
 // navLinks 초기 값 설정
@@ -45,12 +44,16 @@ const navLinksInitial = [
         ],
         showSearch: true  // 검색창을 보여줄 항목
     },
-    { path: "/test6", label: "커뮤니티",
+    
+    { path: "/community", label: "커뮤니티",
         subLinks: [
-            { path: "/test6/sub1", label: "테스트6-서브1" },
-            { path: "/test6/sub2", label: "테스트6-서브2" }
+            { path: "/community/notices", label: "공지사항" },
+            { path: "/community/processed-foods", label: "가공식품정보" },
+            { path: "/community/regions", label: "지역별 커뮤니티" },
+            { path: "/community/crawling/school-news", label: "급식 뉴스" },
+            { path: "/community/crawling/materials", label: "학술 정보" }
         ],
-        showSearch: true  // 검색창을 보여줄 항목
+        showSearch: true
     },
     { path: "/test7", label: "테스트7",
         subLinks: [
@@ -59,6 +62,7 @@ const navLinksInitial = [
         ],
         showSearch: true  // 검색창을 보여줄 항목
     },
+   
 ];
 
 // NavLinksContext를 createContext로 생성합니다.

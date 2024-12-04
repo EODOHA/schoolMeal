@@ -25,6 +25,26 @@ import EduDataRoutes from './component/eduData/routes/EduDataRoutes';
 //급식정보
 import MealInfoRoutes from './component/mealInfo/routes/MealInfoRoutes';
 
+// 커뮤니티-공지사항 관련 라우팅
+import NoticeList from './component/community/notice/NoticeList';
+import CreateNotice from './component/community/notice/CreateNotice';
+import NoticeDetail from './component/community/notice/NoticeDetail';
+
+// 커뮤니티-가공식품 관련 컴포넌트 추가
+import ProcessedFoodList from './component/community/processedFood/ProcessedFoodList';
+import CreateProcessedFood from './component/community/processedFood/CreateProcessedFood';
+import ProcessedFoodDetail from './component/community/processedFood/ProcessedFoodDetail';
+
+// 커뮤니티-지역별 커뮤니티 관련 컴포넌트 추가
+import RegionalCommunityList from './component/community/regionalCommunity/RegionalCommunityList';
+import CreateRegionalCommunity from './component/community/regionalCommunity/CreateRegionalCommunity';
+import RegionalCommunityDetail from './component/community/regionalCommunity/RegionalCommunityDetail';
+
+// 커뮤니티-급식 뉴스와 학술 자료 컴포넌트 추가
+import SchoolMealNewsList from './component/community/schoolNews/SchoolMealNewsList';
+import AcademicMaterialsList from './component/community/materials/AcademicMaterialsList';
+
+
 function App() {
   return (
     // AuthProvider와 NavLinksProvider를 중첩하여 감싸기
@@ -53,6 +73,28 @@ function App() {
               {EduDataRoutes.props.children}
               {MealInfoRoutes.props.children}
               {/* {IngredientInfoRoutes.props.chidren} */}
+
+               {/* 커뮤니티-공지사항 관련 라우팅 추가 */}
+               <Route path="community/notices" element={<NoticeList />} />
+              <Route path="community/notices/create" element={<CreateNotice />} />
+              <Route path="community/notices/:id" element={<NoticeDetail />} />
+              <Route path="community/notices/edit/:id" element={<CreateNotice />} />
+
+              {/* 커뮤니티-가공식품 관련 라우팅 추가 */}
+              <Route path="community/processed-foods" element={<ProcessedFoodList />} />
+              <Route path="community/processed-foods/create" element={<CreateProcessedFood />} />
+              <Route path="community/processed-foods/:id" element={<ProcessedFoodDetail />} />
+              <Route path="community/processed-foods/edit/:id" element={<CreateProcessedFood />} />
+
+              {/* 커뮤니티-지역별 커뮤니티 관련 라우팅 추가 */}
+              <Route path="community/regions" element={<RegionalCommunityList />} />
+              <Route path="community/regions/create" element={<CreateRegionalCommunity />} />
+              <Route path="community/regions/:id" element={<RegionalCommunityDetail />} />
+              <Route path="community/regions/edit/:id" element={<CreateRegionalCommunity />} />
+
+              {/* 커뮤니티-급식 뉴스 및 학술 자료 관련 라우팅 추가 */}
+              <Route path="community/crawling/school-news" element={<SchoolMealNewsList />} />
+              <Route path="community/crawling/academic-materials" element={<AcademicMaterialsList />} />
 
            
              
