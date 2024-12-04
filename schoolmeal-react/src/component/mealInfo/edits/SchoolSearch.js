@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { fetchSchoolCode } from '../../../api';
+import { fetchSchoolCode } from '../../../FetchApi';
 import { TextField, Button, List, ListItem } from '@mui/material';
 
 const SchoolSearch = ({ onSchoolSelect }) => {
@@ -36,7 +36,6 @@ const SchoolSearch = ({ onSchoolSelect }) => {
         const schoolName = school.SCHUL_NM;
         const startDate = school.MLSV_FROM_YMD;
         const endDate = school.MLSV_TO_YMD;
-        // const region = school.LCTN_SC_NM;
 
         onSchoolSelect({
             schoolCode: schoolCode,

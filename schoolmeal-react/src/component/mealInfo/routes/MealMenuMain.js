@@ -8,8 +8,9 @@ function MealMenuMain() {
 
 
   return (
-    <div>
-      <h1 style={{ textAlign: "center" }}>학교 급식 조회</h1>
+    <div className="meal-archive-list-container">
+      <h1 className='meal-archive-title'>학교별 급식 식단 정보</h1>
+      <br />
       {/* 학교 선택 */}
       <SchoolSearch onSchoolSelect={setSelectedSchool} />
       {/* 학교 선택 후 선택된 학교에 대한 급식 정보 조회 */}
