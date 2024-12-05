@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { SERVER_URL } from "../../Constants";
-import { Stack, TextField, Button, Typography } from "@mui/material";
+import { Stack, TextField, Button, Typography, CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import '../../css/sign/Signup.css'; // Signup 스타일을 위한 CSS 파일 import
 
@@ -8,16 +8,22 @@ const Signup = () => {
     const [member, setMember] = useState({
         memberName: '',
         memberId: '',
+        email: '',
         password: '',
         confirmPassword: '', // 비밀번호 확인 추가
-        email: '',
-        phone: ''
+        phone: '',
     });
 
-    // 중복 검사 상태 추가.
+    // 아이디 중복 검사 상태 추가.
     const [idCheckResult, setIdCheckResult] = useState({
         isAvailable: null, // true, false, null.
         message: '' // 상태에 따른 메세지 출력.
+    });
+
+    // 이메일 중복 검사 상태 추가.
+    const [emailCheckResult, setEmailCheckResult] = useState({
+        isAvailable: null,
+        message: ''
     });
 
     // 비밀번호 확인 상태 추가.
@@ -39,11 +45,13 @@ const Signup = () => {
     const [errors, setErrors] = useState({
         memberName: '',
         memberId: '',
+        email: '',
         password: '',
         confirmPassword: '',
-        email: '',
         phone: '',
     });
+    
+    const [loading, setLoading] = useState('');
 
     const navigator = useNavigate();
 
@@ -122,18 +130,29 @@ const Signup = () => {
         return isValid;
     };
 
+    // 회원가입 함수.
     const signup = () => {
         setPasswordCheck(''); // 비번확인 초기화.
         setSignupCheck(''); // 가입확인 초기화.
+        setLoading(true);
 
-        // 가입확인 전, 중복 검사 결과 확인
+        // 가입 확인 전, 중복 검사 결과 확인
         if (!idCheckResult.isAvailable) {
             setSignupCheck("아이디 중복 검사를 완료해야 합니다.");
+            setLoading(false); // 로딩 종료
+            return;
+        }
+
+        // 가입 확인 전, 이메일 토큰 확인
+        if (!emailCheckResult.isAvailable) {
+            setSignupCheck("이메일 인증을 완료해야 합니다.");
+            setLoading(false); // 로딩 종료
             return;
         }
 
         // 유효성 검사
         if (!validate()) {
+            setLoading(false); // 로딩 종료
             return; // 유효성 검사가 실패하면 종료
         }
 
@@ -145,22 +164,24 @@ const Signup = () => {
         .then(res => {
             if (!res.ok) {
                 return res.json().then(data => {
-                    throw new Error(data.messages ? data.messages.join(", ") : "회원가입 실패");
+                    throw new Error(data.messages ? data.messages.join(", ") : "회원정보 등록 실패");
+                    setLoading(false); // 로딩 종료
                 });
             }
             return res.json();
         })
         .then(data => {
             if (data.success) {
-                alert("가입이 완료되었습니다.\n로그인 후 이용해 주세요.");
-                navigator("/main");
+                alert("회원정보 등록이 완료되었습니다.\n이메일 인증 페이지로 이동합니다.");
+                navigator("/emailVerification", { state: { member }});
             } else {
-                setSignupCheck(data.message || "회원가입 실패.");
+                setSignupCheck(data.message || "회원정보 등록 실패.");
             }
         })
         .catch(err => {
             console.error(err);
             setSignupCheck(err.message);
+            setLoading(false); // 로딩 종료
         });
     }
 
@@ -206,7 +227,7 @@ const Signup = () => {
             if (!englishPattern.test(value)) {
                 setErrors({
                     ...errors,
-                    memberId: "혼합된 숫자와 영어 대소문자만 입력 가능합니다."
+                    memberId: "아이디는 숫자와 영어 대소문자만 입력 가능합니다."
                 });
                 return; // 영어가 아닌 문자가 포함되면 입력 무시
             }
@@ -278,6 +299,42 @@ const Signup = () => {
     };
     // 아이디 중복 체크 함수 End -----------------------------------------------------
 
+    // 이메일 중복 체크 함수 Start ---------------------------------------------------
+    const checkDuplicateEmail = () => {
+        // 공백 검사
+        if (!member.email || /\s/.test(member.email)) {
+            setEmailCheckResult({
+                isAvailable: false,
+                message: "이메일로 공백은 입력이 불가능합니다."
+            });
+            return;
+        }
+
+        fetch(SERVER_URL + 'check-duplicate-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: member.email })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.isAvailable) {
+                setEmailCheckResult({
+                    isAvailable: true,
+                    message: "사용 가능한 이메일입니다."
+                });
+            } else {
+                setEmailCheckResult({
+                    isAvailable: false,
+                    message: "이미 사용 중인 이메일입니다."
+                });
+            }
+        })
+        .catch(err => {
+            alert("중복 검사 중 문제가 발생했습니다!");
+        });
+    };
+    // 이메일 중복 체크 함수 End -----------------------------------------------------
+
     // 전화번호 숫자만 허용하는 함수 Start --------------------------------------------
     const handlePhoneInputChange = (e) => {
         const { name, value } = e.target;
@@ -291,11 +348,19 @@ const Signup = () => {
             [name]: numericValue,
         });
     
-        // 오류 메시지 초기화
-        setErrors({
-            ...errors,
-            phone: "전화번호는 숫자만 입력이 가능합니다.",
-        });
+        // 숫자만 입력된 경우 오류 메시지 초기화
+        if (numericValue === value) {
+            setErrors({
+                ...errors,
+                phone: "",
+            });
+        } else {
+            // 숫자가 아닌 값이 포함된 경우 오류 메시지 설정
+            setErrors({
+                ...errors,
+                phone: "전화번호는 숫자만 입력이 가능합니다.",
+            });
+        }
     };
     // 전화번호 숫자만 허용하는 함수 End -----------------------------------------------
 
@@ -359,7 +424,7 @@ const Signup = () => {
                          // 중복 검사 버튼
                         onClick={checkDuplicateId}
                     >
-                        중복 검사
+                        아이디 중복 검사
                     </Button>
                     {idCheckResult.isAvailable !== null && (
                         <Typography
@@ -367,6 +432,32 @@ const Signup = () => {
                             color={idCheckResult.isAvailable ? "green" : "red"}
                         >
                             {idCheckResult.message}
+                        </Typography>
+                    )}
+                    <TextField
+                        label="이메일"
+                        name="email"
+                        value={member.email}
+                        onChange={handleInputChange}
+                        fullWidth
+                        required
+                        error={!!errors.email}
+                        helperText={errors.email}
+                    />
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                         // 중복 검사 버튼
+                        onClick={checkDuplicateEmail}
+                    >
+                        이메일 중복 검사
+                    </Button>
+                    {emailCheckResult.isAvailable !== null && (
+                        <Typography
+                            variant="body2"
+                            color={emailCheckResult.isAvailable ? "green" : "red"}
+                        >
+                            {emailCheckResult.message}
                         </Typography>
                     )}
                     <TextField
@@ -393,16 +484,6 @@ const Signup = () => {
                         helperText={errors.confirmPassword || getHelperText("confirmPassword")}
                     />
                     <TextField
-                        label="이메일"
-                        name="email"
-                        value={member.email}
-                        onChange={handleInputChange}
-                        fullWidth
-                        required
-                        error={!!errors.email}
-                        helperText={errors.email}
-                    />
-                    <TextField
                         label="전화번호"
                         name="phone"
                         value={member.phone}
@@ -420,8 +501,12 @@ const Signup = () => {
                         type="submit"
                         fullWidth
                     >
-                        가입하기
+                        이메일 인증하기
                     </Button>
+                    {/* 로딩 표시 */}
+                    {loading && (
+                        <CircularProgress />
+                    )}
                     {signupCheck && ( // 가입 관련 오류 표시
                         <Typography variant="body2" color="red">
                             {signupCheck}

@@ -118,6 +118,7 @@ const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setI
       setSelectedParent(null);
       setTimeout(() => setSelectedParent(parent), 0); // 선택된 부모를 상태에 저장
       setIsMemberManageOpen(false); // 부모 게시판 선택 시 유저 관리 메뉴 닫기
+      setIsProfileUpdateOpen(false); // 부모 게시판 선택 시 마이 페이지 메뉴 닫기
     };
 
     // 화면 크기에 따라 표시할 navLinks의 수를 제한
@@ -149,13 +150,17 @@ const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setI
           </Link>
           <div className='header-innerImage-box'>
             {/* <img src="./layout/layout-header-image.jpg" alt="헤더_이미지"></img> */}
-            {headerImages.map((image,index) => (
-              <img
-                key={image.id || index} // 고유 key 추가.
-                src={image.url}
-                alt={image.name || "헤더_이미지"}
-              />
-            ))}
+            {headerImages.length > 0 ? (
+                headerImages.map((image, index) => (
+                    <img
+                        key={image.id || index} // 고유 key 추가.
+                        src={image.url}
+                        alt={image.name || "헤더_이미지"}
+                    />
+                ))
+            ) : (
+                <p>헤더 이미지가 없습니다. 🧐</p>
+            )}
           </div>
           <Box className="auth-buttons">
             {isAuth && (
@@ -173,6 +178,9 @@ const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setI
                   <Button className="sign-btn" color="inherit" onClick={handleSignup}>
                     회원가입
                   </Button>
+                  <Button className="findAccount-btn" color="inherit" onClick={handleSignup}>
+                    계정찾기
+                  </Button>
                 </>
               ) : (
                 <>
@@ -184,7 +192,7 @@ const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setI
                   <Button className="logout-btn" color="inherit" onClick={handleLogout}>
                     로그아웃
                   </Button>
-                  <Button className="logout-btn" color="inherit" onClick={handleProfileUpdateClick}>
+                  <Button className="mypage-btn" color="inherit" onClick={handleProfileUpdateClick}>
                     마이페이지
                   </Button>
                 </>
@@ -201,8 +209,9 @@ const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setI
                   <Button
                     color="inherit"
                     onClick={(event) => {
-                      handleSelectParent(link);
-                      if (link.subLinks) handleMenuOpen(event, index);
+                      if (link.subLinks) {
+                        handleMenuOpen(event, index); // 자식 게시판 메뉴 열기.
+                      }
                     }} // 부모 게시판 클릭 시 setSelectedParent 호출
                   >
                     {link.label}
@@ -228,7 +237,15 @@ const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setI
                           key={subLink.path}
                           component={Link}
                           to={subLink.path}
-                          onClick={handleMenuClose}
+                          onClick={() => {
+                            // 자식 게시판 선택 시 부모 게시판을 사이드바에 담기.
+                            handleSelectParent(link); 
+                            handleMenuClose(); // 메뉴 닫기
+                          }}
+                          sx= {{
+                            width: 'fit-content',
+                            height: "50px"
+                          }}
                         >
                           {subLink.label}
                         </MenuItem>
@@ -301,6 +318,7 @@ const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setI
                   to={link.path}
                   fullWidth
                   sx={{ padding: 2 }}
+                  onClick={() => handleSelectParent(link)} // 클릭 시 부모 선택 함수 호출.
                 >
                   {link.label}
                 </Button>

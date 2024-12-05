@@ -23,6 +23,7 @@
 .header-innerImage-box {
   width: 100%;
   overflow: hidden;
+  text-align: center;
 }
 
 .header-innerImage-box img {
@@ -125,6 +126,13 @@
   .button-group .sign-btn:hover {
     background-color: #52a8ff;
   }
+
+.button-group .findAccount-btn {
+  background-color: #1976d2;
+}
+  .button-group .findAccount-btn:hover {
+    background-color: #52a8ff;
+  }
   
 .button-group .mng-btn {
   background-color: #1976d2;
@@ -139,6 +147,14 @@
   .button-group .logout-btn:hover {
     background-color: #52a8ff;
   }
+
+.button-group .mypage-btn {
+  background-color: #1976d2;
+}
+  .button-group .mypage-btn:hover {
+    background-color: #52a8ff;
+  }  
+  
     
   
 /* 네비게이션 링크 스타일 */

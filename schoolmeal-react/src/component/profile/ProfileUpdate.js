@@ -328,6 +328,7 @@ const ProfileUpdate = () => {
                         required
                         error={!!errors.email}
                         helperText={errors.email}
+                        disabled={true} // 비활성화 상태로 설정
                     />
                     <TextField
                         label="전화번호"

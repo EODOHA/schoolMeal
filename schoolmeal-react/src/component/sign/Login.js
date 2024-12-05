@@ -72,6 +72,16 @@ function Login() {
                 const jwtToken = `Bearer ${data.token}`;
                 sessionStorage.setItem("jwt", jwtToken);
                 authLogin(jwtToken);
+                console.log(data);
+
+                // 이메일 인증 여부 확인(권한이 'ADMIN'인 경우 제외).
+                if (data.role !== 'ADMIN' && !data.emailVerified) {
+                    // 이메일 인증이 FALSE인 경우, 인증 페이지로 리다이렉트.
+                    alert("이메일 인증이 필요합니다.")
+                    navigate("/ReEmailVerification", { state: { email: member.memberId }});
+                } else {
+                    navigate("/main")
+                }
 
                 return fetch(SERVER_URL + 'members', {
                     method: 'GET',
@@ -87,9 +97,6 @@ function Login() {
             }
             return res.json();
         })
-        .then(() => {
-            navigate("/main");
-        })
         .catch(err => {
             // console.error(err);
             setErrorMessage(err.message);
@@ -99,7 +106,7 @@ function Login() {
 
     // 로그인 성공 후 메인 페이지로 이동
     if (isAuth) {
-        return <MainPage />;
+        // return <MainPage />;
     } else {
         return (
             <div className="login-form"> {/* 폼을 감싸는 div에 클래스 추가 */}

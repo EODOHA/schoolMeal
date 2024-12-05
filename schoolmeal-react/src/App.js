@@ -11,6 +11,8 @@ import MainPage from './MainPage';
 import SelectLogAndMain from './component/sign/SelectLogAndMain';
 import Login from './component/sign/Login';
 import Signup from './component/sign/Signup';
+import EmailVerification from './component/sign/EmailVerification';
+import ReEmailVerification from './component/sign/ReEmailVerification';
 import UnauthorizedPage from './component/sign/UnauthorizedPage';
 import Memberlist from './component/memManage/Memberlist';
 import MainManager from './component/mainManage/MainManager';
@@ -45,6 +47,8 @@ function App() {
               <Route path="main" element={<MainPage />} />
               <Route path="login" element={<Login />} />
               <Route path="signup" element={<Signup />} />
+              <Route path="emailVerification" element={<EmailVerification />} />
+              <Route path="ReEmailVerification" element={<ReEmailVerification />} />
               <Route path="profileUpdate" element={<ProfileUpdate />} />
 
               {/* 권한으로 보호된 페이지 */}

@@ -14,7 +14,9 @@ const Layout = ({ hideHeaderFooter }) => {
     location.pathname === "/*" ||
     location.pathname === "/main" ||
     location.pathname === "/login" ||
-    location.pathname === "/signup";
+    location.pathname === "/signup" ||
+    location.pathname === "/emailVerification" ||
+    location.pathname === "/ReEmailVerification";
 
   // 유저 관리 메뉴 표시 여부를 관리하는 상태 추가.
   const [isMemberManageOpen, setIsMemberManageOpen] = useState(false);

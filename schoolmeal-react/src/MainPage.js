@@ -267,22 +267,25 @@ const MainPage = () => {
                 <h2>한 눈의 소식</h2>
                 {isImagesLoading ? (
                     <p>로딩 중입니다... ⏳</p>
-                    ): (
-                    <div className="single-image-slider">
-                        {/* 좌측 버튼 */}
-                        <button onClick={() => handleImageChange("prev")} className="slider-btn prev-btn">◀</button>
+                    ) : (
+                        <div className="single-image-slider">
+                            {/* 좌측 버튼 */}
+                            <button onClick={() => handleImageChange("prev")} className="slider-btn prev-btn">◀</button>
 
-                        {/* 이미지들 */}
-                        {images.map((image, index) => (
-                            <img
-                            key={image.id} // id를 key로 사용.
-                            src={image.url} // 서버서 전달받은 url 사용.
-                            alt={image.name || `슬라이드 이미지 ${index + 1}`}
-                            className={index === currentIndex ? "visible" : ""}
-                            onClick={() => openModal(index)} // 클릭 시 팝업 열기.
-                            />
-                        ))}
-
+                            {/* 이미지 표시 또는 자료 없음 메시지 */}
+                            {images.length > 0 ? (
+                                images.map((image, index) => (
+                                    <img
+                                        key={image.id} // id를 key로 사용.
+                                        src={image.url} // 서버서 전달받은 url 사용.
+                                        alt={image.name || `슬라이드 이미지 ${index + 1}`}
+                                        className={index === currentIndex ? "visible" : ""}
+                                        onClick={() => openModal(index)} // 클릭 시 팝업 열기.
+                                    />
+                                ))
+                            ) : (
+                                <p>이미지 자료가 없습니다. 🧐</p> // 데이터가 없을 때 표시될 메시지
+                            )}
                         {/* 우측 버튼 */}
                         <button onClick={() => handleImageChange("next")} className="slider-btn next-btn">▶</button>
                     </div>
@@ -324,7 +327,7 @@ const MainPage = () => {
                                     </li>
                                 ))
                             ) : (
-                                <p>자료가 없습니다.</p> // 데이터가 없을 때 표시될 메시지
+                                <p>자료가 없습니다. 🧐</p> // 데이터가 없을 때 표시될 메시지
                             )}
                         </ul>
                     )}
