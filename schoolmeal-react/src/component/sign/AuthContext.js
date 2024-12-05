@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
         const jwtToken = sessionStorage.getItem('jwt');
         if (jwtToken) {
             const decoded = jwtDecode(jwtToken);
-            // console.log(decoded);
+            console.log(decoded);
             const member = decoded.sub;  // memberId
             setMemberId(member);
             setToken(jwtToken);  // 토큰 상태 설정

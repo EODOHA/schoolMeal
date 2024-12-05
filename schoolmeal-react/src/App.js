@@ -11,6 +11,7 @@ import MainPage from './MainPage';
 import SelectLogAndMain from './component/sign/SelectLogAndMain';
 import Login from './component/sign/Login';
 import Signup from './component/sign/Signup';
+import FindAccount from './component/sign/FindAccount';
 import EmailVerification from './component/sign/EmailVerification';
 import ReEmailVerification from './component/sign/ReEmailVerification';
 import UnauthorizedPage from './component/sign/UnauthorizedPage';
@@ -64,6 +65,7 @@ function App() {
               <Route path="main" element={<MainPage />} />
               <Route path="login" element={<Login />} />
               <Route path="signup" element={<Signup />} />
+              <Route path="findAccount" element={<FindAccount />} />
               <Route path="emailVerification" element={<EmailVerification />} />
               <Route path="ReEmailVerification" element={<ReEmailVerification />} />
               <Route path="profileUpdate" element={<ProfileUpdate />} />

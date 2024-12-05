@@ -165,7 +165,6 @@ const Signup = () => {
             if (!res.ok) {
                 return res.json().then(data => {
                     throw new Error(data.messages ? data.messages.join(", ") : "회원정보 등록 실패");
-                    setLoading(false); // 로딩 종료
                 });
             }
             return res.json();

@@ -64,7 +64,10 @@ const EmailVerification = () => {
                 이메일 인증
             </Typography>
             <Typography variant="h6" gutterBottom sx={{ color: "#666" }}>
-                인증을 위해 이메일 토큰을 입력해 주세요.
+                토큰이 발송되었습니다.
+            </Typography>
+            <Typography variant="h6" gutterBottom sx={{ color: "#666" }}>
+                이메일을 확인하여 토큰을 입력해 주세요.
             </Typography>
             <Stack spacing={2} alignItems="center">
                 <TextField

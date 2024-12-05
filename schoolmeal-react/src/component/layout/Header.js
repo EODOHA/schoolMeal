@@ -82,6 +82,10 @@ const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setI
       navigate("/signup");
     };
 
+    const handleFindAccount = () => {
+      navigate("/findAccount");
+    }
+
     const handleLogout = () => {
       const confirmed = 
         window.confirm("로그아웃 하시겠습니까?\n세션이 종료되며, 메인페이지로 이동합니다.");
@@ -178,7 +182,7 @@ const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setI
                   <Button className="sign-btn" color="inherit" onClick={handleSignup}>
                     회원가입
                   </Button>
-                  <Button className="findAccount-btn" color="inherit" onClick={handleSignup}>
+                  <Button className="findAccount-btn" color="inherit" onClick={handleFindAccount}>
                     계정찾기
                   </Button>
                 </>

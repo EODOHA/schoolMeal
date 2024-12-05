@@ -403,6 +403,8 @@ function Memberlist() {
         const updatedData = {
             ...existingMember, // 기존 데이터 유지.
             banUntil: ban.banUntil,
+            failedAttempts: ban.banUntil === null ? 0 : existingMember.failedAttempts,
+            locked: ban.banUntil === null ? 0 : 1,
             status: ban.banUntil ? "banned" : "active"
         };
         
