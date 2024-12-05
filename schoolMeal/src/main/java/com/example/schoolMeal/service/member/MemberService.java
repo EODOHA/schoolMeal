@@ -152,6 +152,7 @@ public class MemberService {
 		sendVerificationEmail(email, verificationToken);
 	}
 	
+	// 토큰 재발급용.
 	public void resendVerificationToken(String email) {
 		// 이메일에 해당하는 사용자가 있는지 확인.
 		Optional<Member> memberOpt = memberRepository.findByEmail(email);
@@ -171,6 +172,27 @@ public class MemberService {
 		
 		// 새로 생성된 인증 토큰을 이메일로 전송.
 		sendVerificationEmail(email, verificationToken);
+	}
+	
+	// 계정 찾기용 토큰 생성
+	public void findAccountToken(String email) {
+		// 이메일에 해당하는 사용자가 있는지 확인.
+		Optional<Member> memberOpt = memberRepository.findByEmail(email);
+			
+		if (!memberOpt.isPresent()) {
+			throw new UserNotFoundException("이메일에 해당하는 사용자가 없습니다.");
+		}
+			
+		// 새로운 인증 토큰 생성(기존 토큰과 같은 방식)
+		String verificationToken = UUID.randomUUID().toString().substring(0, 6);
+			
+		// 사용자 이메일 인증 토큰을 새로 갱신
+		Member member = memberOpt.get();
+		member.setEmailVerificationToken(verificationToken);
+		memberRepository.save(member);
+			
+		// 새로 생성된 인증 토큰을 이메일로 전송.
+		sendfindAccountTokenEmail(email, verificationToken);
 	}
 	
 	// 이메일 인증 토큰 전송 메서드(생성 메서드에서 사용).
@@ -214,6 +236,53 @@ public class MemberService {
 
 	        // 이메일 발송
 	        mailSender.send(message);
+		} catch (Exception e) {
+			throw new RuntimeException("이메일 발송 실패: " + e.getMessage());
+		}
+	}
+	
+	// 계정 찾기 인증 토큰 전송 메서드(생성 메서드에서 사용).
+	private void sendfindAccountTokenEmail(String email, String token) {
+		try {
+			MimeMessage message = mailSender.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(message, true);
+				
+			// 이메일 수신자와 제목 설정
+		    helper.setTo(email);
+		    helper.setSubject("스쿨밀 계정 찾기 이메일 인증");
+
+		    // HTML 이메일 본문 설정.
+		    // (Gmail SMTP는 인라인 스타일만 지원. 모든 스타일을 인라인으로 적용)
+		    String htmlContent = "<html>" +
+		        "<body style='font-family: Arial, sans-serif; background-color: #f4f7fc; color: #333; margin: 0; padding: 0;'>" +
+		        "<div style='width: 100%; max-width: 600px; margin: 20px auto; background-color: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);'>" +
+		        "<div style='text-align: center; color: #4CAF50;'>" +
+		        "<h2>이메일 인증 토큰 안내</h2>" +
+		        "</div>" +
+		        "<div style='text-align: center; margin-top: 20px; font-size: 16px; line-height: 1.5;'>" +
+		        "<p>안녕하세요. 계정 찾기 요청에 대한 메일입니다.</p>" +
+		        "<p>아래의 인증 토큰을 입력하여 이메일 인증을 완료해 주세요.</p>" +
+		        "<br></br>"+
+		        "<br></br>"+
+		        "<div style='background-color: #f0f0f0; border-radius: 8px; padding: 15px; margin-top: 20px;'>" +
+		        "<p><strong>인증 토큰</strong></p>" +
+		        "<br></br>" +
+		        "<p style='font-weight: bold; font-size: 18px; color: #333;'>" + token + "</p>" +
+		        "</div>" +
+		        "</div>" +
+		        "<div style='margin-top: 30px; font-size: 12px; text-align: center; color: #777;'>" +
+		        "<p>본인이 요청하신 게 아니라면, 이 이메일을 무시하셔도 됩니다.</p>" +
+		        "</div>" +
+		        "</div>" +
+		        "</body>" +
+		        "</html>";
+		    
+		    // 이메일 본문을 HTML로 설정
+		    helper.setText(htmlContent, true);
+
+		    // 이메일 발송
+		    mailSender.send(message);
+		    
 		} catch (Exception e) {
 			throw new RuntimeException("이메일 발송 실패: " + e.getMessage());
 		}
