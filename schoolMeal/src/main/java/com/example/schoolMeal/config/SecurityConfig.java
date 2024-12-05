@@ -54,6 +54,9 @@ public class SecurityConfig {
 		.requestMatchers(HttpMethod.POST, "/login").permitAll()
 		.requestMatchers(HttpMethod.POST, "/signup").permitAll()
 		.requestMatchers(HttpMethod.POST, "/check-duplicate-id").permitAll()
+		.requestMatchers(HttpMethod.POST, "/check-duplicate-email").permitAll()
+		.requestMatchers(HttpMethod.POST, "/send-verification-token").permitAll()
+		.requestMatchers(HttpMethod.POST, "/verify-token").permitAll()
 		.requestMatchers(HttpMethod.GET, "/imageManage/{category}").permitAll()
 			// 해당 엔드포인트는 인증 필요 없음.
 		.anyRequest().authenticated()

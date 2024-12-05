@@ -1,5 +1,7 @@
 package com.example.schoolMeal.security.filters;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,6 +40,13 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 			filterChain.doFilter(request, response);
 			return;
 		}
+//		Logger logger = LoggerFactory.getLogger(getClass());
+//		logger.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+request.getRequestURI());
+		// "/verify-token" 경로는 인증 필터를 건너뛰도록 추가
+	    if (request.getRequestURI().equals("/verify-token")) {
+	        filterChain.doFilter(request, response);
+	        return;
+	    }
 		
 		// 메인 페이지 "GET" 요청만 인증없도록 필터.
 		if (request.getRequestURI().startsWith("/imageManage") && 

@@ -20,4 +20,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 	// banUntil이 현재 시간보다 이전인 회원들 찾는 메서드
 	List<Member> findByBanUntilBefore(LocalDateTime now);
 	
+	// 이메일 인증 토큰으로 회원 찾기
+	Optional<Member> findByEmailVerificationToken(String verificationToken);
+	
+	Optional<Member> findByEmail(String email);
 }

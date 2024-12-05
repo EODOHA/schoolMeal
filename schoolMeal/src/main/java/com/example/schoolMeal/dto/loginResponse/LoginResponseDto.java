@@ -10,5 +10,6 @@ public class LoginResponseDto {
 	private String token;
 	private String error;
 	private String role;
+	private boolean isEmailVerified;
 	
 }

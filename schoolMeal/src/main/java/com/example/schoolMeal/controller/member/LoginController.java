@@ -55,9 +55,13 @@ public class LoginController {
 				// 사용자 role 가져오기
 				Role role = memberService.getMemberRole(credentials.getMemberId());
 				
+				// 이메일 인증 여부 확인
+	            boolean isEmailVerified = memberService.isEmailVerified(credentials.getMemberId());
+				
 				response.setSuccess(true);
 				response.setToken(jwts);
 				response.setRole(role.name());
+				response.setEmailVerified(isEmailVerified);
 				return ResponseEntity.ok(response);
 			} else {
 				response.setSuccess(false);

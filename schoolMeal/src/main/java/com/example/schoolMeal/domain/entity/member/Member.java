@@ -40,7 +40,7 @@ public class Member {
 	private String password;
 	
 	// 회원 이메일
-	@Column(nullable=false)
+	@Column(nullable=false, unique=true)
 	private String email;
 	
 	// 회원 전화번호
@@ -52,6 +52,15 @@ public class Member {
 	@Column(nullable=false)
 	private Role role;
 	
+	// 이메일 인증을 위한 필드들 -----------------------
+
+	// 이메일 인증 여부. 기본값 false
+	@Column(nullable=false)
+	private boolean isEmailVerified = false;
+	
+	// 인증에 사용할 토큰
+	@Column
+	private String emailVerificationToken;
 	
 	// ---------------------------
 	
