@@ -12,8 +12,8 @@ public class CommentDTO {
     private String author;
     private Long noticeId;
     private Long regionalCommunityId;
-    private Long processedFoodId;       // 가공식품 ID 추가
-    private Long cateringFacilityId;    // 급식시설·가구 ID 추가
+    private Long processedFoodId;
+    private Long cateringFacilityId;
     private LocalDateTime createdDate;
 
     // 기본 생성자

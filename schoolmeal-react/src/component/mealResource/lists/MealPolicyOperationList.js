@@ -68,7 +68,7 @@ function MealPolicyOperationList() {
                         <th>첨부파일</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody className="meal-resource-tbody">
                     { (mealPolicyOperation && mealPolicyOperation.length === 0) ? (
                         <tr>
                             <td colSpan="5">데이터가 없습니다.</td>

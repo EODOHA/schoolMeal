@@ -68,7 +68,7 @@
 }
 
 .edu-tbody tr:hover {
-    background-color: #f1f1f1;
+    background-color: #f1f1f1 !important;
 }
 
 /* 행 간격을 늘리기 위해 tr에 margin-bottom 추가 */

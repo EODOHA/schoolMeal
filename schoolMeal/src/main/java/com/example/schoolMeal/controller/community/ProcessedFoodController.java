@@ -19,7 +19,7 @@ public class ProcessedFoodController {
     private ProcessedFoodService processedFoodService;
 
     // 가공식품 정보 생성 (이미지 파일 포함)
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<ProcessedFoodResponseDTO> createProcessedFood(
             @RequestPart("data") ProcessedFoodRequestDTO dto,
             @RequestPart(value = "image", required = false) MultipartFile imageFile) throws IOException {
@@ -27,19 +27,19 @@ public class ProcessedFoodController {
     }
 
     // 모든 가공식품 정보 조회
-    @GetMapping
+    @GetMapping("/list")
     public ResponseEntity<List<ProcessedFoodResponseDTO>> getAllProcessedFoods() {
         return ResponseEntity.ok(processedFoodService.getAllProcessedFoods());
     }
 
     // 특정 가공식품 정보 조회
-    @GetMapping("/{id}")
+    @GetMapping("/list/{id}")
     public ResponseEntity<ProcessedFoodResponseDTO> getProcessedFood(@PathVariable Long id) {
         return ResponseEntity.ok(processedFoodService.getProcessedFood(id));
     }
 
     // 가공식품 정보 수정 (이미지 파일 포함)
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<Void> updateProcessedFood(
             @PathVariable Long id,
             @RequestPart("data") ProcessedFoodRequestDTO dto,
@@ -49,7 +49,7 @@ public class ProcessedFoodController {
     }
 
     // 가공식품 정보 삭제
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteProcessedFood(@PathVariable Long id) {
         processedFoodService.deleteProcessedFood(id);
         return ResponseEntity.ok().build();

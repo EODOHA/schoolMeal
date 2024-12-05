@@ -23,7 +23,7 @@
     position: relative;
 }
 
-.profile-text {
+.expert-profile-text {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
@@ -41,7 +41,7 @@
     align-items: center;
 } */
 
-.info-label {
+.expert-info-label {
     display: inline-block;
     width: 70px; /* 라벨 간격을 일정하게 유지하기 위한 넓이 조절 */
     font-weight: bold;
@@ -49,7 +49,7 @@
     white-space: nowrap;
 }
 
-.profile-info ul {
+.expert-profile-info ul {
     margin: 0;
     padding-left: 18px;
     list-style-type: disc;
@@ -66,7 +66,7 @@
     border-radius: 5px;
     margin-top: 10px;
 }
-.buttons-container {
+.expert-buttons-container {
     display: flex;
     justify-content: space-between; /* 수정하기 버튼과 삭제하기 버튼을 양쪽 끝으로 배치 */
     width: 100%;

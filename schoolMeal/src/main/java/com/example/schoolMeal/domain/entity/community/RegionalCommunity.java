@@ -16,40 +16,36 @@ public class RegionalCommunity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    // 고유 식별자 필드, 자동 증가되는 기본 키
-    private Long id;
+    private Long id;  // 고유 식별자 필드
 
-    // 게시글의 제목을 나타내는 필드
-    private String title;
+    private String title;  // 게시글 제목
 
-    // 게시글의 내용을 나타내는 필드 (긴 텍스트 지원)
     @Column(columnDefinition = "TEXT")
-    private String content;
+    private String content;  // 게시글 내용 (긴 텍스트 지원)
 
-    // 게시글 작성자의 이름을 나타내는 필드
-    private String author;
+    private String author;  // 게시글 작성자 이름
 
-    // 게시글이 생성된 날짜 및 시간을 나타내는 필드
-    private LocalDateTime createdDate;
+    private LocalDateTime createdDate;  // 게시글 생성 날짜 및 시간
 
-    // 게시글이 수정된 날짜 및 시간을 나타내는 필드 (수정 시 갱신됨)
-    private LocalDateTime updatedDate;
+    private LocalDateTime updatedDate;  // 게시글 수정 날짜 및 시간
 
-    // 해당 게시글에 달린 모든 댓글을 나타내는 필드 (일대다 관계)
     @OneToMany(mappedBy = "regionalCommunity", cascade = CascadeType.ALL)
-    private List<Comment> comments = new ArrayList<>();
+    private List<Comment> comments = new ArrayList<>();  // 게시글에 달린 모든 댓글
+
+    @Enumerated(EnumType.STRING)
+    private RegionCategory region;  // 게시글 지역 카테고리 (추가된 필드)
 
     // 기본 생성자
     public RegionalCommunity() {
-        this.createdDate = LocalDateTime.now();
+        this.createdDate = LocalDateTime.now();  // 생성 시점 기록
     }
 
-    // 파라미터를 받는 생성자
-    public RegionalCommunity(String title, String content, String author) {
+    // 파라미터를 받는 생성자 (지역 필드를 추가)
+    public RegionalCommunity(String title, String content, String author, RegionCategory region) {
         this.title = title;
         this.content = content;
         this.author = author;
-        this.createdDate = LocalDateTime.now();
+        this.region = region;
+        this.createdDate = LocalDateTime.now();  // 생성 시점 기록
     }
-    
 }

@@ -10,7 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +24,8 @@ public class ProcessedFoodService {
 
     @Autowired
     private ProcessedFoodRepository processedFoodRepository;
+
+    private final String uploadDir = "C:/uploadTest/가공식품"; // 이미지 저장 경로
 
     // 가공식품 정보 생성 메서드 (이미지 파일 포함)
     public ProcessedFoodResponseDTO createProcessedFood(ProcessedFoodRequestDTO dto, MultipartFile imageFile) throws IOException {
@@ -78,17 +84,37 @@ public class ProcessedFoodService {
         processedFoodRepository.deleteById(id);
     }
 
-    // 파일 저장 메서드
+    // 파일 저장 메서드 - 이미지 파일을 디스크에 저장하고, Base64 인코딩한 데이터를 데이터베이스에 저장
     private CommunityFile saveFile(MultipartFile file) throws IOException {
         String origFilename = file.getOriginalFilename();
-        String fileType = file.getContentType();
-        byte[] fileBytes = file.getBytes();
-        String base64Data = Base64.getEncoder().encodeToString(fileBytes);
+        if (origFilename == null || origFilename.isEmpty()) {
+            throw new IOException("파일 이름이 유효하지 않습니다.");
+        }
 
+        // 디스크에 저장할 파일 이름 생성
+        String filename = System.currentTimeMillis() + "_" + origFilename;
+        String filePath = uploadDir + File.separator + filename;
+
+        // 저장 디렉터리 확인 및 생성
+        File saveDir = new File(uploadDir);
+        if (!saveDir.exists() && !saveDir.mkdirs()) {
+            throw new IOException("파일 저장 디렉터리를 생성하지 못했습니다: " + uploadDir);
+        }
+
+        // 파일을 디스크에 저장
+        Path savePath = Paths.get(filePath);
+        Files.copy(file.getInputStream(), savePath);
+
+        // 파일을 InputStream으로 읽고 Base64로 인코딩
+        byte[] bytes = Files.readAllBytes(savePath);
+        String base64Data = Base64.getEncoder().encodeToString(bytes);
+        String mimeType = file.getContentType();
+
+        // 파일 엔티티 생성 및 데이터베이스에 저장
         return CommunityFile.builder()
-                .origFileName(origFilename)
+                .origFileName(filename)
                 .base64Data(base64Data)
-                .fileType(fileType)
+                .fileType(mimeType)
                 .build();
     }
 

@@ -1,0 +1,79 @@
+.processedFoodcomments-section {
+    margin-top: 30px;
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
+}
+
+.processedFoodcomments-section h3 {
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+.processedFoodcomments-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.processedFoodcomment-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+}
+
+.processedFoodcomment-content {
+    flex-grow: 1;
+    font-size: 16px;
+    color: #444;
+}
+
+.processedFoodCommentdelete-comment-btn {
+    margin-left: 20px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.processedFoodCommentdelete-comment-btn:hover {
+    background-color: #c82333;
+}
+
+.processedFoodCommentadd-comment-section {
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px;
+}
+
+.processedFoodCommentadd-comment-section textarea {
+    flex-grow: 1;
+    margin-right: 10px;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    resize: vertical;
+}
+
+.processedFoodCommentadd-comment-section button {
+    padding: 10px 20px;
+    font-size: 14px;
+    border: none;
+    border-radius: 4px;
+    background-color: #28a745;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.processedFoodCommentadd-comment-section button:hover {
+    background-color: #218838;
+}

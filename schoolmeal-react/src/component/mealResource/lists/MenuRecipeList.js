@@ -1,52 +1,54 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { SERVER_URL } from "../../../Constants";
 import "../../../css/mealResource/MealList.css";
 import Button from "@mui/material/Button";
-import FilterButton from "../FilterButton";
+import FilterButton from "../filter/FilterButton";
 import { MdAttachFile } from "react-icons/md";
 import { BsFileExcel } from "react-icons/bs";
+import { seasonTypeEnglish } from "../filter/seasonUtils";
 
 function MenuRecipeList() {
-    const [menuRecipe, setMenuRecipe] = useState([]);
-    const [selectedFilter, setSelectedFilter] = useState('');
+    const [filteredRecipes, setFilteredRecipes] = useState([]);
+    const [selectedFilter, setSelectedFilter] = useState('전체');
+    const [selectedAgeGroup, setSelectedAgeGroup] = useState('');
+    const [selectedSeason, setSelectedSeason] = useState('');
     const navigate = useNavigate();
     const { id } = useParams();
 
-    // 컴포넌트가 마운트되면 목록을 가져옴
-    useEffect(() => {
+    const applyFilter = useCallback(() => {
         let url = SERVER_URL + "menuRecipes";
-        if (selectedFilter === 'age') {
-            url += '?filter=age';
-        } else if (selectedFilter === 'season') {
-            url += '?filter=season';
+        
+        if (selectedFilter === '연령별' && selectedAgeGroup) {
+            url = `${SERVER_URL}menuRecipe/byAgeGroup?ageGroup=${encodeURIComponent(selectedAgeGroup)}`;
+        }
+    
+        if (selectedFilter === '시기별' && selectedSeason) {
+            const seasonType = seasonTypeEnglish(selectedSeason);
+            url = `${SERVER_URL}menuRecipe/bySeason?season=${encodeURIComponent(seasonType)}`;
+
         }
     
         fetch(url)
             .then(response => response.json())
             .then(data => {
-                console.log("Fetched data:", data); // 응답 데이터 확인
-    
-                // menuRecipes 배열이 _embedded에 포함되어 있어야 함
-                if (data._embedded && data._embedded.menuRecipes) {
-                    setMenuRecipe(data._embedded.menuRecipes.reverse()); // menuRecipes 배열을 설정
-                } else {
-                    setMenuRecipe([]); // menuRecipes가 없다면 빈 배열 설정
-                }
-            })
-            .catch(err => {
-                console.error("Error fetching data:", err);
-                setMenuRecipe([]); // 에러 발생 시 빈 배열로 설정
+                const recipes = data._embedded ? data._embedded.menuRecipes : [];
+                setFilteredRecipes(recipes);
+            })            
+            .catch(error => {
+                console.error('Error fetching data:', error);
             });
-    }, [selectedFilter]);    
+    }, [selectedFilter, selectedAgeGroup, selectedSeason]);
 
-    // 날짜 포맷팅 함수
+    useEffect(() => {
+        applyFilter();
+    }, [applyFilter]);
+
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
     };
 
-    // 상세 페이지로 이동하는 함수
     const goToDetailPage = (menuRecipe) => {
         const menuRecipeId = menuRecipe.id || (menuRecipe._links?.self?.href ? extractIdFromHref(menuRecipe._links.self.href) : null);
         if (!menuRecipeId) {
@@ -56,20 +58,24 @@ function MenuRecipeList() {
         navigate(`/mealResource/menu-recipe/${menuRecipeId}`);
     };
 
-    // URL에서 ID를 추출하는 함수
     const extractIdFromHref = (href) => {
+        if (!href) {
+            console.error("Invalid href:", href);
+            return null;
+        }
         const parts = href.split('/');
-        return parts[parts.length - 1]; 
+        return parts[parts.length - 1];
     };
 
-    // 목록 길이
-    const totalLength = menuRecipe.length;
-
-    // 새 글 쓰기 후 목록을 다시 가져오는 함수
     const handleWriteNew = () => {
-        // 새 글 작성 후 목록을 다시 로드
-        setSelectedFilter(selectedFilter === 'age' ? 'season' : 'age');  // 필터를 토글하여 목록을 갱신
+        setSelectedFilter('전체');
         navigate("/mealResource/menu-recipe/write");
+    };
+
+    const handleFilterChange = (filter, ageGroup, season) => {
+        setSelectedFilter(filter);
+        setSelectedAgeGroup(ageGroup);
+        setSelectedSeason(season);
     };
 
     return (
@@ -79,12 +85,13 @@ function MenuRecipeList() {
                 <Button variant="outlined" onClick={() => navigate("/mealResource")}>
                     이전으로
                 </Button>
-
-                {/* 필터 버튼 그룹 */}
-                <div className="meal-resource-filter-button-group">
-                    <FilterButton onFilterChange={setSelectedFilter} />
-                </div>
-
+    
+                <FilterButton 
+                    variant="contained"
+                    onFilterChange={handleFilterChange} 
+                    selectedFilter={selectedFilter} 
+                />
+    
                 <Button 
                     variant="outlined" 
                     onClick={handleWriteNew} 
@@ -103,23 +110,18 @@ function MenuRecipeList() {
                         <th>첨부파일</th>
                     </tr>
                 </thead>
-                <tbody>
-                    { (menuRecipe && menuRecipe.length === 0) ? (
+                <tbody className="meal-resource-tbody">
+                    {filteredRecipes.length === 0 ? (
                         <tr>
                             <td colSpan="6">데이터가 없습니다.</td>
                         </tr>
                     ) : (
-                        menuRecipe && menuRecipe.map((menuRecipe, index) => {
+                        filteredRecipes.map((menuRecipe, index) => {
                             const isSelected = id && menuRecipe.id && id === menuRecipe.id.toString();
-
-                            // fileUrl은 fileId가 존재할 때만 유효한 것으로 처리
+                            const href = menuRecipe._links?.self?.href;
+                            const menuRecipeId = href ? extractIdFromHref(href) : menuRecipe.id;
                             const fileUrl = menuRecipe.fileId ? menuRecipe._links?.fileUrl?.href : null;
-
-                            // menuRecipe에서 ID를 추출
-                            const menuRecipeId = extractIdFromHref(menuRecipe._links?.self?.href);
-
-                            // 역순으로 번호 표시
-                            const reversedIndex = totalLength - index;
+                            const reversedIndex = filteredRecipes.length - index;
 
                             return (
                                 <tr
@@ -134,7 +136,6 @@ function MenuRecipeList() {
                                     <td>{menuRecipe.title}</td>
                                     <td>{formatDate(menuRecipe.createdDate)}</td>
                                     <td>{menuRecipe.writer}</td>
-                                    <td>{menuRecipeId}</td> {/* 추출된 ID 출력 */}
                                     <td>
                                         {fileUrl ? (
                                             <a href={fileUrl} target="_blank" rel="noopener noreferrer">
@@ -151,7 +152,7 @@ function MenuRecipeList() {
                 </tbody>
             </table>
         </div>
-    );
+    );    
 }
 
 export default MenuRecipeList;

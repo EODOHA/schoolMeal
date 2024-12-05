@@ -1,0 +1,111 @@
+/* 컨테이너 스타일 */
+.meal-info-detail-container {
+    max-width: 1000px; /* 최대 폭 설정 */
+    width: 100%; /* 100% 너비로 확장 가능 */
+    margin: 0 auto; /* 중앙 정렬 */
+    padding: 20px;
+    box-sizing: border-box; /* padding과 border를 크기 안에 포함 */
+    display: flex;
+    flex-direction: column; /* 내용은 세로로 정렬 */
+    justify-content: center; /* 세로 중앙 정렬 */
+    align-items: center; /* 가로 중앙 정렬 */
+    margin-top: 40px;
+}
+
+/* 카드 스타일 */
+.meal-info-card {
+    width: 100%; /* 카드가 컨테이너의 폭에 맞게 채워짐 */
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+/* 카드 본문 스타일 */
+.meal-info-card-body {
+    font-family: Arial, sans-serif;
+}
+
+/* 제목 */
+.meal-info-card-body h2 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+/* 헤더 */
+.meal-info-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.meal-info-id, 
+.meal-info-date {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+/* 폼 그룹 */
+.meal-info-form-group {
+    margin-bottom: 1rem;
+}
+
+.meal-info-form-control {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+/* 텍스트 영역 */
+textarea.meal-info-form-control {
+    resize: vertical;
+}
+
+/* 첨부파일 링크 */
+.meal-info-attachment-link {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.meal-info-attachment-link:hover {
+    text-decoration: underline;
+}
+
+/* 첨부파일 아이콘과 텍스트 간 간격 설정 */
+.meal-info-attachment-link svg {
+    margin-right: 5px;
+}
+
+/* 버튼 그룹 */
+.meal-info-button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+/* 첨부파일 섹션 스타일 */
+.meal-info-attachment {
+    text-align: right; /* 오른쪽 정렬 */
+    margin-top: 10px; /* 작성일과의 간격 */
+    margin-bottom: 10px; /* 작성자와의 간격 */
+}
+
+/* 첨부파일 다운로드 링크 스타일 */
+.meal-info-attachment-link {
+    text-decoration: none; /* 밑줄 제거 */
+    color: #1976d2;
+    font-weight: bold;
+    display: inline-flex; /* 아이콘과 텍스트 한 줄 표시 */
+    align-items: center;
+}
+
+/* 첨부파일 없음 아이콘 스타일 */
+.meal-info-attachment span {
+    display: inline-flex;
+    align-items: center;
+    color: #888;
+    font-style: italic;
+}

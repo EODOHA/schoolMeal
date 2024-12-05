@@ -1,0 +1,117 @@
+/* 전체 레이아웃 스타일 */
+.regioncommunitydetail-container {
+    width: 60%;
+    margin: 30px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ececec;
+    
+}
+
+
+
+/* 제목 스타일 */
+h2 {
+    text-align: center;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 28px;
+}
+
+/* 지역 커뮤니티 상세 테이블 스타일 */
+.regioncommunity-detail-table {
+    width: 100%;
+    border-collapse: collapse; /* 테이블 셀 간의 간격을 없앰 */
+    margin-bottom: 20px;
+}
+
+.regioncommunity-detail-table th, .regioncommunity-detail-table td {
+    padding: 15px;
+    text-align: left;
+    border-radius: 16px;
+    background-color: #ffffff;
+    font-weight: normal;
+    border: 2px solid #000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    height: 60px; /* 고정된 높이 설정 */
+    box-sizing: border-box;
+}
+
+.regioncommunity-detail-table th {
+    font-weight: bold;
+    background-color: #ececec;
+    width: 25%; 
+}
+
+.regioncommunity-detail-table td {
+    background-color: #f9f9f9;
+    width: 75%; 
+}
+
+/* 글의 내용 부분 스타일 */
+.regionCommunitypost-content {
+    font-size: 18px;
+    line-height: 1.8;
+    margin: 30px 0;
+    color: #444;
+    text-align: left;
+    padding: 20px;
+    border: 2px solid #000;
+    border-radius: 16px;
+    background-color: #f9f9f9;
+    min-height: 480px; /* 최소 높이 설정 */
+    box-sizing: border-box;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    white-space: pre-wrap; /* 줄바꿈을 보이게 유지 */
+    overflow: visible; /* 스크롤 대신 높이가 늘어나도록 설정 */
+}
+
+/* 버튼 스타일 */
+.regionCommunityDetailbutton-group {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.regionCommunityDetailbutton-group button {
+    margin: 0 12px;
+    padding: 12px 28px;
+    font-size: 18px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.regionCommunityDetailbutton-group .regionCommunityDetailedit-btn {
+    background-color: #2ceeb7;
+    color: #fff;
+}
+
+.regionCommunityDetailbutton-group .regionCommunityDetailedit-btn:hover {
+    background-color: #e0a800;
+    box-shadow: 0 6px 16px rgba(224, 168, 0, 0.3);
+}
+
+.regionCommunityDetailbutton-group .regionCommunityDetailback-btn {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.regionCommunityDetailbutton-group .regionCommunityDetailback-btn:hover {
+    background-color: #0056b3;
+    box-shadow: 0 6px 16px rgba(0, 86, 179, 0.3);
+}
+
+.regionCommunityDetailbutton-group .regionCommunityDetaildelete-btn {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.regionCommunityDetailbutton-group .regionCommunityDetaildelete-btn:hover {
+    background-color: #c82333;
+    box-shadow: 0 6px 16px rgba(200, 35, 51, 0.3);
+}

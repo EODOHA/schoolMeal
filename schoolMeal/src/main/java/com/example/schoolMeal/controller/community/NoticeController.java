@@ -16,8 +16,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/notices")
+
 public class NoticeController {
 
     @Autowired
@@ -27,7 +29,7 @@ public class NoticeController {
     private CommunityFileRepository communityFileRepository;
 
     // 공지사항 생성 (파일 첨부 포함)
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<NoticeResponseDTO> createNotice(
             @RequestPart("data") NoticeRequestDTO dto,
             @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
@@ -35,19 +37,19 @@ public class NoticeController {
     }
 
     // 특정 공지사항 조회
-    @GetMapping("/{id}")
+    @GetMapping("/list/{id}")
     public ResponseEntity<NoticeResponseDTO> getNotice(@PathVariable Long id) {
         return ResponseEntity.ok(noticeService.getNotice(id));
     }
 
     // 모든 공지사항 조회
-    @GetMapping
+    @GetMapping("/list")
     public ResponseEntity<List<NoticeResponseDTO>> getAllNotices() {
         return ResponseEntity.ok(noticeService.getAllNotices());
     }
 
     // 공지사항 수정 (파일 첨부 포함)
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<Void> updateNotice(
             @PathVariable Long id,
             @RequestPart("data") NoticeRequestDTO dto,
@@ -57,7 +59,7 @@ public class NoticeController {
     }
 
     // 공지사항 삭제
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteNotice(@PathVariable Long id) {
         noticeService.deleteNotice(id);
         return ResponseEntity.ok().build();

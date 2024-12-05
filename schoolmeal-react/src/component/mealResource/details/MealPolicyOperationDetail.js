@@ -122,7 +122,6 @@ function MealPolicyOperationDetail() {
                                 variant="outlined"
                                 color="success"
                                 onClick={update}
-                                className="me-2"
                             >
                                 수정
                             </Button>
@@ -137,7 +136,6 @@ function MealPolicyOperationDetail() {
                                 variant="contained"
                                 color="error"
                                 onClick={deleteForm}
-                                className="me-2"
                             >
                                 삭제
                             </Button>

@@ -45,8 +45,8 @@ function MealPolicyOperationWrite() {
                 navigate("/mealResource/meal-policy-operation"); // 성공 시 목록 페이지로 이동
             })
             .catch((err) => {
-                console.error("게시판 등록 중 오류가 발생했습니다.", err);
-                setError("게시판 등록 중 문제가 발생했습니다. 다시 시도해주세요.");
+                console.error("게시글 등록 중 오류가 발생했습니다.", err);
+                setError("게시글 등록 중 문제가 발생했습니다. 다시 시도해주세요.");
             })
             .finally(() => {
                 setLoading(false); // 로딩 상태 종료
@@ -57,7 +57,7 @@ function MealPolicyOperationWrite() {
         <div className="meal-resource-write-container">
             <div className="meal-resource-card">
                 <div className="meal-resource-card-body">
-                    <h2>새 게시판 작성</h2>
+                    <h2>새 게시글 작성</h2>
                     {error && <div className="meal-resource-error-message">{error}</div>}
 
                     <form onSubmit={handleSubmit}>
@@ -114,7 +114,6 @@ function MealPolicyOperationWrite() {
                                 variant="outlined"
                                 color="primary"
                                 onClick={() => navigate("/mealResource/meal-policy-operation")}
-                                className="me-2"
                             >
                                 목록
                             </Button>

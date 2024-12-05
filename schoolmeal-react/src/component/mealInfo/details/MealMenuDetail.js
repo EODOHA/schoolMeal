@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { fetchMealData } from '../../../api'; 
+import { fetchMealData } from '../../../FetchApi';
 import MealMenuList from '../lists/MealMenuList';
 import moment from 'moment';
-import '../../../css/mealInfo/MealMenuDetail.css';
 import { TextField, Box, Typography, CircularProgress } from '@mui/material';
 
 
@@ -39,7 +38,7 @@ const MealMenuDetail = ({ school }) => {
 
                 // API 호출
                 const meals = await fetchMealData(school.schoolCode, school.eduOfficeCode, monthStart, monthEnd);
-                console.log('mealBoard데이터:', meals);
+                // console.log('mealBoard데이터:', meals);
                 setMealData(meals);
             } catch (err) {
                 setError('급식 정보를 불러오는 데 실패했습니다.');
@@ -66,6 +65,7 @@ const MealMenuDetail = ({ school }) => {
     return (
         <Box sx={{ padding: 2 }}>
             <Typography variant='h5' align='center'>{school.schoolName} 식단표</Typography>
+            <br />
             <Box sx={{ marginBottom: 2 }}>
                 <TextField
                     label="선택 월"

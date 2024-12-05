@@ -6,7 +6,10 @@ import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -40,11 +43,56 @@ public class MenuRecipeController {
 	@Autowired
     private MenuRecipeService menuRecipeService;
 
-    // 목록을 반환
+	// 목록을 반환
     @GetMapping("/list")
-    public ResponseEntity<List<MenuRecipe>> menuRecipeList() {
-        List<MenuRecipe> menuRecipes = menuRecipeService.menuRecipeList();
+    public ResponseEntity<List<MenuRecipe>> menuRecipeList(
+            @RequestParam(value = "ageGroup", required = false) String ageGroup,
+            @RequestParam(value = "season", required = false) String season) {
+
+        List<MenuRecipe> menuRecipes;
+
+        if (ageGroup != null && !ageGroup.isEmpty()) {
+            // 연령대별 필터링
+            menuRecipes = menuRecipeService.menuRecipeListByAgeGroup(ageGroup);
+        } else if (season != null && !season.isEmpty()) {
+            // 시기별 필터링
+            menuRecipes = menuRecipeService.menuRecipeListBySeason(season);
+        } else {
+            // 연령대 및 시기 필터링 없이 모든 게시글 반환
+            menuRecipes = menuRecipeService.menuRecipeList();
+        }
+
         return ResponseEntity.ok(menuRecipes);
+    }
+	
+ // 연령대별 게시글 조회
+    @GetMapping("/byAgeGroup")
+    public ResponseEntity<Map<String, Object>> getMenuRecipesByAgeGroup(@RequestParam String ageGroup) {
+        System.out.println("Received ageGroup parameter: " + ageGroup);
+        
+        // MenuRecipeService에서 연령대별 게시글 조회
+        List<MenuRecipe> menuRecipes = menuRecipeService.menuRecipeListByAgeGroup(ageGroup);
+
+        // 응답 구조 생성
+        Map<String, Object> response = new HashMap<>();
+        response.put("_embedded", Collections.singletonMap("menuRecipes", menuRecipes));
+        
+        return ResponseEntity.ok(response);
+    }
+
+    // 시기별 게시글 조회
+    @GetMapping("/bySeason")
+    public ResponseEntity<Map<String, Object>> getMenuRecipesBySeason(@RequestParam String season) {
+        System.out.println("Received season parameter: " + season);
+        
+        // MenuRecipeService에서 시기별 게시글 조회
+        List<MenuRecipe> menuRecipes = menuRecipeService.menuRecipeListBySeason(season);
+
+        // 응답 구조 생성
+        Map<String, Object> response = new HashMap<>();
+        response.put("_embedded", Collections.singletonMap("menuRecipes", menuRecipes));
+        
+        return ResponseEntity.ok(response);
     }
 
     // 작성 처리
@@ -52,12 +100,16 @@ public class MenuRecipeController {
     public String menuRecipeWritePro(@RequestParam("title") String title,
                                       @RequestParam("writer") String writer,
                                       @RequestParam("content") String content,
+                                      @RequestParam("ageGroup") String ageGroup,
+                                      @RequestParam("season") String season,
                                       @RequestParam(value = "file", required = false) MultipartFile file,
                                       RedirectAttributes redirectAttributes) throws IOException {
         MenuRecipe menuRecipe = new MenuRecipe();
         menuRecipe.setTitle(title);
         menuRecipe.setWriter(writer);
         menuRecipe.setContent(content);
+        menuRecipe.setAgeGroup(ageGroup);
+        menuRecipe.setSeason(season);
 
         // 파일 디버깅 출력
         if (file != null && !file.isEmpty()) {
@@ -128,7 +180,7 @@ public class MenuRecipeController {
         }
     }
     
- // 파일 다운로드
+    // 파일 다운로드
     @GetMapping("/download/{id}")
     public ResponseEntity<InputStreamResource> downloadMenuRecipeFile(@PathVariable Long id) {
         // 해당 ID의 게시글 조회
