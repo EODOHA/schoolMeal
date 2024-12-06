@@ -3,6 +3,7 @@ package com.example.schoolMeal.controller.eduData;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,7 +18,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -25,172 +25,200 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.schoolMeal.domain.entity.FileUrl;
 import com.example.schoolMeal.domain.entity.eduData.VideoEducation;
+import com.example.schoolMeal.domain.repository.eduData.VideoEducationRepository;
 import com.example.schoolMeal.service.eduData.VideoEducationService;
 
 @RestController
 @RequestMapping("/videoEducation")
 public class VideoEducationController {
 
+	@Autowired
+    private VideoEducationRepository videoEducationRepository;
+	
     @Autowired
     private VideoEducationService videoEducationService;
 
-    // 모든 영상 교육자료 조회
+    // 목록을 반환
     @GetMapping("/list")
-    public ResponseEntity<List<VideoEducation>> getAllVideoEducations() {
-        return ResponseEntity.ok(videoEducationService.getAllVideoEducations());
+    public ResponseEntity<List<VideoEducation>> videoEducationList() {
+        List<VideoEducation> mealPolicies = videoEducationService.videoEducationList();
+        return ResponseEntity.ok(mealPolicies);
     }
 
-    // 영상 교육자료 작성 (영상 및 이미지 업로드)
+    // 작성 처리
     @PostMapping("/writepro")
-    public ResponseEntity<String> videoEducationWritePro(
-            @RequestParam("video") MultipartFile videoFile,
-            @RequestParam("thumbnail") MultipartFile imageFile,
-            @ModelAttribute VideoEducation videoEducation) {
-        try {
-            // 영상 업로드 처리 및 URL 설정
-            String videoUrl = videoEducationService.uploadVideo(videoFile);
-            videoEducation.setVideoUrl(videoUrl);
+    public String videoEducationWritePro(@RequestParam("title") String title,
+                                         @RequestParam("writer") String writer,
+                                         @RequestParam("content") String content,
+                                         @RequestParam(value = "file", required = false) MultipartFile file,
+                                         RedirectAttributes redirectAttributes) throws IOException {
+        VideoEducation videoEducation = new VideoEducation();
+        videoEducation.setTitle(title);
+        videoEducation.setWriter(writer);
+        videoEducation.setContent(content);
 
-            // 이미지 업로드 처리 및 URL 설정
-            String imageUrl = videoEducationService.uploadImage(imageFile);
-            videoEducation.setImageUrl(imageUrl);
+        videoEducationService.write(videoEducation, file);
 
-            // 데이터베이스에 저장
-            videoEducationService.write(videoEducation);
-
-            return ResponseEntity.ok("영상 및 이미지가 업로드되었습니다. 영상 URL: " + videoUrl + ", 이미지 URL: " + imageUrl);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 업로드 실패: " + e.getMessage());
-        }
+        redirectAttributes.addFlashAttribute("message", "게시글이 성공적으로 작성되었습니다.");
+        return "redirect:/videoEducation/list";
     }
 
-    // 개별 영상 교육자료 조회
+    // 특정 id 조회
     @GetMapping("/{id}")
     public ResponseEntity<VideoEducation> getVideoEducationById(@PathVariable Long id) {
-        VideoEducation videoEducation = videoEducationService.getVideoEducationById(id);
-
-        String imageUrl = videoEducation.getImageUrl();
-        if (imageUrl != null && !imageUrl.startsWith("/videoEducation/images/")) {
-            imageUrl = "/videoEducation/images/" + imageUrl;
-        }
-
-        imageUrl = imageUrl.replaceAll("/+/","/");
-        videoEducation.setImageUrl(imageUrl);
-
-        return ResponseEntity.ok(videoEducation);
+        VideoEducation videoEducation = videoEducationService.getPostWithFileDetails(id);
+        return videoEducation != null ? ResponseEntity.ok(videoEducation) : ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
-    // 영상 교육자료 삭제
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> videoEducationDelete(@PathVariable("id") Long id) {
-        try {
-            videoEducationService.videoEducationDelete(id); // 삭제 서비스 호출
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("삭제 중 오류 발생");
-        }
-    }
-
-    // 영상 교육자료 수정
+    // 수정 처리하는 PUT 요청
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateVideoEducation(
-            @PathVariable Long id,
-            @RequestParam("title") String title,
-            @RequestParam("writer") String writer,
-            @RequestParam("content") String content,
-            @RequestParam(value = "thumbnail", required = false) MultipartFile thumbnail,
-            @RequestParam(value = "videoFile", required = false) MultipartFile videoFile) {
+    public ResponseEntity<String> updateVideoEducation(@PathVariable Long id,
+                                                       @RequestParam(value = "title", required = false) String title,
+                                                       @RequestParam(value = "content", required = false) String content,
+                                                       @RequestParam(value = "writer", required = false) String writer,
+                                                       @RequestParam(value = "file", required = false) MultipartFile file) {
         try {
-            videoEducationService.updateVideoEducation(id, title, writer, content, thumbnail, videoFile);
-            return ResponseEntity.ok("수정 완료");
+            VideoEducation existingVideoEducation = videoEducationService.getPostWithFileDetails(id);
+            if (existingVideoEducation == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("게시글이 존재하지 않습니다.");
+            }
+
+            if (title != null) existingVideoEducation.setTitle(title);
+            if (content != null) existingVideoEducation.setContent(content);
+            if (writer != null) existingVideoEducation.setWriter(writer);
+
+            videoEducationService.videoEducationUpdate(existingVideoEducation, file);
+
+            return ResponseEntity.ok("수정되었습니다.");
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("수정 중 오류: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("수정 실패: " + e.getMessage());
         }
     }
 
-    // 영상 다운로드
+    // 게시글 삭제
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteVideoEducation(@PathVariable Long id) {
+        try {
+            videoEducationService.videoEducationDelete(id);
+            return ResponseEntity.ok("게시글이 삭제되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("삭제 실패: " + e.getMessage());
+        }
+    }
+    
+    // 파일 다운로드
     @GetMapping("/download/{id}")
-    public ResponseEntity<Resource> downloadVideo(@PathVariable Long id) {
-        VideoEducation videoEducation = videoEducationService.getVideoEducationById(id);
-        if (videoEducation == null || videoEducation.getVideoUrl() == null) {
+    public ResponseEntity<InputStreamResource> downloadVideoEducation(@PathVariable Long id) {
+        // 해당 ID의 게시글 조회
+    	VideoEducation videoEducation = videoEducationRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 게시글이 존재하지 않습니다: " + id));
+
+        // 게시글에 첨부된 파일이 있는지 확인
+        if (videoEducation.getFileUrl() == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        // videoUrl에서 경로 수정, 해당 경로를 uploadPath와 합침
-        String videoUrl = videoEducation.getVideoUrl().replaceFirst("^/videos/videoEducation/", "");
-        Path filePath = Paths.get("C:/Video/videos/videoEducation/", videoUrl).normalize();  // 경로 수정
+        FileUrl fileUrl = videoEducation.getFileUrl();
+        Path filePath = Paths.get(fileUrl.getFilePath()).normalize();  // 파일 경로 얻기
 
+        // 파일 존재 여부 확인
         if (!Files.exists(filePath)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
         try {
             InputStreamResource resource = new InputStreamResource(new FileInputStream(filePath.toFile()));
-            String contentType = "video/mp4"; // 기본 컨텐츠 타입 설정 (필요 시 추가 처리)
+
+            // 파일의 MIME 타입을 설정. 기본적으로 파일 확장자에 맞는 컨텐츠 타입을 설정
+            String contentType = Files.probeContentType(filePath);
+            if (contentType == null) {
+                contentType = "application/octet-stream"; // 기본 타입 설정
+            }
+
+            // 파일 이름 인코딩 (UTF-8로 인코딩 후 URL-safe 형식으로 변환)
+            String encodedFileName = URLEncoder.encode(filePath.getFileName().toString(), "UTF-8").replaceAll("\\+", "%20");
+
+            // 파일 다운로드 응답
             return ResponseEntity.ok()
                     .contentType(MediaType.parseMediaType(contentType))
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filePath.getFileName().toString() + "\"")
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=utf-8''" + encodedFileName)
                     .body(resource);
+
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
-    // 이미지 반환
-    @GetMapping("/images/videos/eduImg/{filename:.+}")
-    public ResponseEntity<byte[]> getImage(@PathVariable String filename) {
+    
+    // 영상 데이터 Base64로 반환
+    @GetMapping("/video/{id}")
+    public ResponseEntity<Resource> getVideo(@PathVariable Long id) {
         try {
-            // 경로를 C:/Video/videos/eduImg/로 수정
-            Path filePath = Paths.get("C:/Video/videos/eduImg/").resolve(filename).normalize();
-            File file = filePath.toFile();
-            if (!file.exists()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            VideoEducation videoEducation = videoEducationService.getPostWithFileDetails(id);
+
+            if (videoEducation == null || videoEducation.getFileUrl() == null) {
+                throw new IllegalArgumentException("해당 영상이 존재하지 않습니다.");
             }
 
-            byte[] imageBytes = Files.readAllBytes(filePath);
-            String contentType = Files.probeContentType(filePath);
-            if (contentType == null) {
-                contentType = "application/octet-stream";
-            }
+            String videoUrl = videoEducation.getFileUrl().getFilePath();
+            Path path = Paths.get(videoUrl);  // 실제 경로로 변경
 
-            return ResponseEntity.ok()
-                    .contentType(MediaType.parseMediaType(contentType))
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"")
-                    .body(imageBytes);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
-    }
-
-    // 비디오 반환 (스트리밍 방식으로 처리)
-    @GetMapping("/videos/{filename:.+}")
-    public ResponseEntity<Resource> getVideo(@PathVariable String filename) {
-        try {
-            // 비디오 파일 경로 설정
-            Path filePath = Paths.get("C:/Video/videos/videoEducation/").resolve(filename).normalize();
-            
-            // 파일이 존재하는지 확인
-            File file = filePath.toFile();
-            if (!file.exists()) {
+            if (!Files.exists(path)) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
 
-            // 비디오 스트리밍을 위한 InputStreamResource 생성
-            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-            String contentType = Files.probeContentType(filePath);
-            if (contentType == null) {
-                contentType = "video/mp4"; // 기본 비디오 형식 설정
-            }
+            Resource resource = new InputStreamResource(Files.newInputStream(path)); // IOException 발생 가능
+            String contentType = Files.probeContentType(path); // IOException 발생 가능
 
-            // ResponseEntity로 비디오 파일 반환
             return ResponseEntity.ok()
                     .contentType(MediaType.parseMediaType(contentType))
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"")
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + path.getFileName().toString() + "\"")
                     .body(resource);
+
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            // IOException이 발생하면 500 Internal Server Error를 반환
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null); // 또는 적절한 오류 메시지를 반환할 수 있습니다.
+        } catch (IllegalArgumentException e) {
+            // 영상이 존재하지 않는 경우 404 Not Found 반환
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+    
+    // 영상 파일 스트리밍
+    @GetMapping("/videos/{id}")
+    public ResponseEntity<byte[]> streamVideo(@PathVariable Long id) {
+        try {
+            String videoPath = videoEducationService.getPostWithFileDetails(id).getFileUrl().getFilePath();
+
+            // 파일이 저장된 디렉터리와 실제 파일 경로를 결합
+            Path path = Paths.get(videoPath);
+            File videoFile = path.toFile();
+
+            if (!videoFile.exists()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(null);
+            }
+
+            // 파일의 MIME 타입을 자동으로 결정
+            String mimeType = Files.probeContentType(path);
+            byte[] videoBytes = Files.readAllBytes(path);
+
+            // Content-Type 헤더 설정 (파일의 MIME 타입)
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Type", mimeType);
+            headers.add("Content-Length", String.valueOf(videoFile.length()));
+
+            return new ResponseEntity<>(videoBytes, headers, HttpStatus.OK);
+
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null);
+        }
+    }
+
 }

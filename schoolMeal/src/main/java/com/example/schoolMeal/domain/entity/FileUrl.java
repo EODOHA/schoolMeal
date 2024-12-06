@@ -40,5 +40,4 @@ public class FileUrl {
         this.filePath = filePath;
         this.fileSize = fileSize;
     }
-    
 }

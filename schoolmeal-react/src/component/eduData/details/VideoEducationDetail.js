@@ -22,7 +22,7 @@ function VideoEducationDetail() {
         }
 
         axios
-            .get(`${SERVER_URL}videoEducation/${id}`) // API URL
+            .get(`${SERVER_URL}videoEducations/${id}`) // API URL
             .then((response) => {
                 setVideoEducation(response.data);  
                 setLoading(false);
@@ -61,7 +61,7 @@ function VideoEducationDetail() {
         if (!window.confirm("삭제하시겠습니까?")) return;
     
         axios
-            .delete(`${SERVER_URL}videoEducation/delete/${id}`) // 수정된 URL로 요청
+            .delete(`${SERVER_URL}videoEducations/${id}`) // 수정된 URL로 요청
             .then((response) => {
                 if (response.status === 200) {
                     window.alert("삭제 성공");
@@ -75,13 +75,14 @@ function VideoEducationDetail() {
             }); 
     };
 
-    const imageUrl = videoEducation.imageUrl; // 서버에서 받은 imageUrl
+    // 비디오 URL 처리
+    const videoUrl = videoEducation.fileId;  // videoEducation 객체에서 fileId를 사용
 
-    const fullImageUrl = imageUrl.startsWith('/videoEducation/images') 
-        ? `http://localhost:8090${imageUrl}` 
-        : imageUrl;  // 시작하지 않으면 그냥 그대로 사용
+    const fullVideoUrl = videoUrl
+        ? `http://localhost:8090/videoEducation/video/${videoUrl}`  // 백엔드에서 제공하는 URL로 수정
+        : null;
 
-    console.log(fullImageUrl);  // 확인용 로그
+    console.log("비디오 URL:", fullVideoUrl); // 전체 비디오 URL 확인
 
     return (
         <div className="edu-detail-container">
@@ -94,9 +95,9 @@ function VideoEducationDetail() {
                         <div className="edu-date">작성일: {formatDate(videoEducation.createdDate)}</div>
                     </div>
                     <div className="edu-attachment">
-                        {videoEducation.videoUrl ? (
+                        {videoEducation.fileId ? (
                             <a
-                                href={`${SERVER_URL}videoEducation/download/${videoEducation.id}`}
+                                href={`${SERVER_URL}videoEducation/download/${videoEducation.fileId}`}
                                 download
                                 className="edu-attachment-link"
                             >
@@ -126,15 +127,16 @@ function VideoEducationDetail() {
                             />
                         </div>
 
-                        {/* 이미지가 있으면 이미지 표시 */}
-                        {imageUrl && (
-                            <div className="edu-form-group">
-                                <label></label>
-                                <img
-                                    src={fullImageUrl}
-                                    alt="교육자료 이미지"
-                                    className="edu-thumbnail-container"
-                                />
+                        {/* 영상 재생 (업로드된 비디오 파일이 있을 경우) */}
+                        {fullVideoUrl && (
+                            <div className="edu-video-play">
+                                <h4>영상 재생:</h4>
+                                <video
+                                    controls
+                                    src={fullVideoUrl} // 백엔드에서 제공하는 비디오 URL
+                                >
+                                    브라우저가 비디오 태그를 지원하지 않습니다.
+                                </video>
                             </div>
                         )}
 

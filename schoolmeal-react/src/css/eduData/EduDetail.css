@@ -110,22 +110,18 @@ textarea.edu-form-control {
     font-style: italic;
 }
 
-/* 썸네일 이미지가 포함된 컨테이너의 스타일 수정 */
-.edu-form-group img.edu-thumbnail-container {
-    display: block;  /* 인라인 요소가 아닌 블록 요소로 설정 */
-    margin-left: auto;  /* 왼쪽 여백을 자동으로 설정 */
-    margin-right: auto; /* 오른쪽 여백을 자동으로 설정 */
-    max-width: 100%;  /* 부모 요소의 100%로 크기 조정 */
-    height: auto;  /* 비율을 유지하며 자동으로 높이 조정 */
-    object-fit: contain; /* 이미지 비율 유지 */
+/* 영상 컨테이너 스타일 */
+.edu-video-play {
+    text-align: center; /* 영상 중앙 정렬 */
+    margin-top: 20px;
+
 }
 
-/* 이미지 표시 */
-.edu-thumbnail-container {
-    display: flex;
-    justify-content: center;  /* 가로 중앙 정렬 */
-    align-items: center;  /* 세로 중앙 정렬 */
-    width: 100%;
+.edu-video-play video {
+    max-width: 100%; /* 영상 너비를 부모 컨테이너에 맞게 100%로 설정 */
+    max-height: 360px; 
+    object-fit: cover; /* 비율을 유지하면서 크기를 맞춤 */
+    border-radius: 8px; /* 영상 모서리 둥글게 처리 */
     margin-top: 10px;
 }
 
