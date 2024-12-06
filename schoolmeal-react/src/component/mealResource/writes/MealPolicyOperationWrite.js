@@ -86,7 +86,7 @@ function MealPolicyOperationWrite() {
                                 label="내용"
                                 fullWidth
                                 multiline
-                                rows={5}
+                                rows={1}
                                 value={content}
                                 onChange={(e) => setContent(e.target.value)}
                                 required

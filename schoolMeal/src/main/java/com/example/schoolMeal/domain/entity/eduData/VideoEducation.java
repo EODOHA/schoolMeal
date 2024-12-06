@@ -2,11 +2,16 @@ package com.example.schoolMeal.domain.entity.eduData;
 
 import java.time.LocalDateTime;
 
+import com.example.schoolMeal.domain.entity.FileUrl;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,25 +39,18 @@ public class VideoEducation {
     // 작성자 필드
     @Column(nullable = false)
     private String writer;
-    
-    // 영상 파일 URL (영상 파일을 저장한 경로)
-    @Column(nullable = true)
-    private String videoUrl;
-    
-    // 썸네일 이미지 URL (영상과 관련된 이미지 파일 경로)
-    @Column(nullable = true)
-    private String imageUrl;
 
     // 생성 날짜와 시간을 저장하는 필드
     @Column(nullable = false)
     private LocalDateTime createdDate = LocalDateTime.now();  // 기본값을 현재 시간으로 설정
+    
+    // 첨부파일 외래키
+ 	@Column(name = "file_id")
+     private Long fileId;
 
-    // 이미지 URL을 서버에 맞게 반환하는 메서드 (예시로 추가)
-    public String getFullImageUrl() {
-        if (imageUrl != null && !imageUrl.isEmpty()) {
-            return "http://localhost:8090" + imageUrl; // 이미지 URL을 풀 경로로 반환
-        }
-        return null;
-    }
+    // 파일 정보와의 1:1 관계 (MealPolicy와 FileUrl)
+ 	@OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "file_id", referencedColumnName = "id", insertable = false, updatable = false)
+    private FileUrl fileUrl;
     
 }

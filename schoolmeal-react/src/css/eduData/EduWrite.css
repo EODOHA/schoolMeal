@@ -46,13 +46,16 @@
     margin-bottom: 15px;
 }
 
-/* 썸네일 미리보기 컨테이너 스타일 */
-.edu-writer-thumbnail-container img {
-    max-width: 250px; /* 이미지의 너비가 컨테이너 너비를 초과하지 않게 제한 */
-    max-height: 300px; /* 최대 높이를 400px로 제한 */
-    object-fit: cover; /* 이미지가 잘리지 않게 비율을 유지하면서 크기를 맞춤 */
-    margin-top: 10px;
-    border-radius: 8px;
+/* 영상 미리보기 컨테이너 스타일 */
+.edu-video-preview {
+    text-align: center; /* 영상 중앙 정렬 */
+    margin-top: 20px;
 }
 
-
+.edu-video-preview video {
+    max-width: 250px; /* 영상 최대 너비 */
+    max-height: 300px; /* 영상 최대 높이 */
+    object-fit: cover; /* 비율 유지하면서 크기 맞추기 */
+    border-radius: 8px; /* 영상 모서리 둥글게 처리 */
+    margin-top: 10px;
+}
