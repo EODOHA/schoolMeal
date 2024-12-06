@@ -88,7 +88,12 @@ function FilterButton({ onFilterChange }) {
         onClose={handleAgeGroupClose}
         anchorOrigin={{
           vertical: "bottom",
-          horizontal: "center",
+          horizontal: "right",
+        }}
+        PaperProps={{
+            style: {
+                marginTop: -36, // Popover가 버튼 기준 위쪽으로 이동
+            },
         }}
       >
         {ageGroups.map((ageGroup) => (
@@ -100,13 +105,22 @@ function FilterButton({ onFilterChange }) {
 
       {/* 시기별 선택 Popover */}
       <Popover
-        open={Boolean(seasonAnchorEl)}
-        anchorEl={seasonAnchorEl}
-        onClose={handleSeasonClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "center",
-        }}
+          open={Boolean(seasonAnchorEl)}
+          anchorEl={seasonAnchorEl}
+          onClose={handleSeasonClose}
+          anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "left",
+          }}
+          PaperProps={{
+              style: {
+                  marginTop: -36, // Popover가 버튼 기준 위쪽으로 이동
+              },
+          }}
       >
         {seasons.map((season) => (
           <MenuItem key={season} onClick={() => handleSeasonClick(season)}>
