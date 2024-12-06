@@ -7,14 +7,14 @@ import lombok.Setter;
 @Getter
 @Setter
 public class NoticeRequestDTO {
-    private String title;
-    private String content;
-    private String author;
+    private String title;       //공지사항 제목
+    private String content;     // 내용
+    private String author;      // 작성자이름
 
-    // 기본 생성자
+    // 기본 생성자 , 프레임워크에서 객체 생성 시 사용
     public NoticeRequestDTO() {}
 
-    // 파라미터를 받는 생성자
+    // 파라미터를 받는 생성자 , DTO를 생성할 때 필드 초기화
     public NoticeRequestDTO(String title, String content, String author) {
         this.title = title;
         this.content = content;

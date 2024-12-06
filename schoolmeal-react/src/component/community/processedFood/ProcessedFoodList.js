@@ -40,6 +40,7 @@ const ProcessedFoodList = () => {
         <thead>
           <tr>
             <th>번호</th>
+            <th>상품 이미지</th>
             <th>상품명</th>
             <th>회사명</th>
             <th>가격</th>
@@ -51,6 +52,21 @@ const ProcessedFoodList = () => {
             foods.map((food, index) => (
               <tr key={food.id} onClick={() => navigate(`/community/processed-foods/${food.id}`)}>
                 <td>{foods.length - index}</td>
+                <td>
+                  {food.imagePath ? (
+                    <img
+                      src={`data:image/jpeg;base64,${food.imagePath}`}
+                      alt={food.productName}
+                      className="food-thumbnail"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "https://via.placeholder.com/100"; // 이미지 로드 실패 시 기본 이미지 표시
+                      }}
+                    />
+                  ) : (
+                    <div className="no-image-placeholder">-</div> // 이미지가 없을 경우 빈 칸 혹은 대체 요소 표시
+                  )}
+                </td>
                 <td>{food.productName}</td>
                 <td>{food.companyName}</td>
                 <td>{food.price.toLocaleString()}₩</td>
@@ -59,7 +75,7 @@ const ProcessedFoodList = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="5">가공식품 정보가 없습니다.</td>
+              <td colSpan="6">가공식품 정보가 없습니다.</td>
             </tr>
           )}
         </tbody>

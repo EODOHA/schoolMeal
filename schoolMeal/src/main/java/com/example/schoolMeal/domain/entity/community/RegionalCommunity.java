@@ -37,7 +37,7 @@ public class RegionalCommunity {
 
     // 기본 생성자
     public RegionalCommunity() {
-        this.createdDate = LocalDateTime.now();  // 생성 시점 기록
+        this.createdDate = LocalDateTime.now();  // 생성 시점 기록 /
     }
 
     // 파라미터를 받는 생성자 (지역 필드를 추가)

@@ -16,8 +16,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:3000")
-@RestController
+@CrossOrigin(origins = "http://localhost:3000")  // 오류가 고치기위해서 React와 통신을 위한 Cross-Origin설정
+@RestController                                      // 없어도 이제 오류가없습니다
 @RequestMapping("/notices")
 
 public class NoticeController {
@@ -33,12 +33,14 @@ public class NoticeController {
     public ResponseEntity<NoticeResponseDTO> createNotice(
             @RequestPart("data") NoticeRequestDTO dto,
             @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
+       // NOticeService를 이용해 공지사항을 생성하고 응답DTO를 반환합니다.
         return ResponseEntity.ok(noticeService.createNotice(dto, file));
     }
 
     // 특정 공지사항 조회
     @GetMapping("/list/{id}")
     public ResponseEntity<NoticeResponseDTO> getNotice(@PathVariable Long id) {
+        // ID로 공지사항을 조회하고 조회수도 증가
         return ResponseEntity.ok(noticeService.getNotice(id));
     }
 
@@ -54,6 +56,7 @@ public class NoticeController {
             @PathVariable Long id,
             @RequestPart("data") NoticeRequestDTO dto,
             @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
+
         noticeService.updateNotice(id, dto, file);
         return ResponseEntity.ok().build();
     }
@@ -70,6 +73,7 @@ public class NoticeController {
     public ResponseEntity<byte[]> downloadFile(@PathVariable Long id) {
         NoticeResponseDTO notice = noticeService.getNotice(id);
 
+        // 공지사항에 파일이 첨부되어 있는지 확인
         if (notice.getFileId() != null) {
             CommunityFile file = communityFileRepository.findById(notice.getFileId())
                     .orElseThrow(() -> new EntityNotFoundException("File not found"));
@@ -77,7 +81,7 @@ public class NoticeController {
             String filePath = "C:/uploadTest/공지사항/" + file.getOrigFileName(); // 저장된 파일 경로
             File downloadFile = new File(filePath);
 
-            // 파일 경로 출력
+            // 디버깅
             System.out.println("다운로드 요청 파일 경로: " + filePath);
 
             if (!downloadFile.exists()) {
@@ -89,7 +93,7 @@ public class NoticeController {
             try {
                 byte[] fileContent = Files.readAllBytes(downloadFile.toPath());
 
-                // 파일의 MIME 타입을 설정
+                // 파일의 MIME 타입을 설정 없으면 기본타입
                 String mimeType = file.getFileType();
                 if (mimeType == null) {
                     mimeType = "application/octet-stream"; // 기본 MIME 타입 설정
@@ -100,6 +104,7 @@ public class NoticeController {
                 headers.setContentDispositionFormData("attachment", file.getOrigFileName());
                 headers.setContentLength(fileContent.length);
 
+                // 파일을 바이트 배열로 반환하고 HTTP 상태 코드를 설정
                 return new ResponseEntity<>(fileContent, headers, HttpStatus.OK);
             } catch (IOException e) {
                 System.out.println("파일을 읽는 중 오류가 발생했습니다: " + filePath);
