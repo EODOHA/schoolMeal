@@ -81,7 +81,7 @@ function App() {
               {MealResourceRoutes.props.children}
               {EduDataRoutes.props.children}
               {MealInfoRoutes.props.children}
-              {IngredientInfoRoutes.props.chidren}
+              {IngredientInfoRoutes.props.children}
 
                {/* 커뮤니티-공지사항 관련 라우팅 추가 */}
                <Route path="community/notices" element={<NoticeList />} />

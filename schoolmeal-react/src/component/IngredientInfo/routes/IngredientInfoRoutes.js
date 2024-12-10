@@ -6,10 +6,9 @@ import IngredientInfoMain from '../routes/IngredientInfoMain';
 // import IngredientPriceList from '../lists/IngredientPriceList';
 // import ProductSafetyList from '../lists/ProductSafetyList';
 import HaccpInfoList from '../lists/HaccpInfoList';
-import HaccpInfoEdit from '../edits/HaccpInfoEdit';
 import HaccpInfoWrite from '../writes/HaccpInfoWrite';
+import HaccpInfoEdit from '../edits/HaccpInfoEdit';
 import WriteFileUpload from '../writes/WriteFileUpload';
-
 
 
 

@@ -10,11 +10,11 @@ const navLinksInitial = [
 
         ] 
     },
-    { path: "/ingedientInfo", label: "식재료 정보",
+    { path: "/ingredientInfo", label: "식재료 정보",
         subLinks: [
-            { path: "/ingedientInfo/ingredient-price", label: "식재료 가격 정보" },
-            { path: "/ingedientInfo/ingredient-safety", label: "식품 안정성 조사결과 정보" },
-            { path: "/ingedientInfo/haccp-info", label: "식재료 안정성 인증 정보" },
+            { path: "/ingredientInfo/ingredient-price", label: "식재료 가격 정보" },
+            { path: "/ingredientInfo/ingredient-safety", label: "식품 안정성 조사결과 정보" },
+            { path: "/ingredientInfo/haccp-info", label: "식재료 안정성 인증 정보" },
         ]
     },
     { path: "/mealResource", label: "급식 자료실",
