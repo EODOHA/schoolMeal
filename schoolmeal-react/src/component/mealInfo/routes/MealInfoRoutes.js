@@ -7,6 +7,7 @@ import MealMenuMain from './MealMenuMain';
 import MealArchiveList from '../lists/MealArchiveList';
 import MealExpertList from '../lists/MealExpertList';
 import MealArchiveDetail from '../details/MealArchiveDetail';
+import MealExpertDetail from '../details/MealExpertDetail';
 
 const MealInfoRoutes = (
   <>
@@ -14,6 +15,7 @@ const MealInfoRoutes = (
     <Route path="mealInfo/meal-menu" element={<MealMenuMain />} />
     <Route path="mealInfo/meal-archive" element={<MealArchiveList />} />
     <Route path="mealInfo/meal-expert" element={<MealExpertList />}/>
+    <Route path="mealInfo/meal-expert/:exp_id" element={<MealExpertDetail/>} />
     <Route path="mealInfo/meal-archive/:id" element={<MealArchiveDetail />} />
   </>
 );

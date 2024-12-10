@@ -7,6 +7,9 @@ import { MdOutlineFileDownload } from "react-icons/md";
 import { RiFileUnknowFill } from "react-icons/ri";
 import { Button } from "@mui/material";
 import MealArchiveEdit from '../edits/MealArchiveEdit';
+import { useAuth } from '../../sign/AuthContext';
+import LoadingSpinner from '../../common/LoadingSpinner';
+
 
 function MealArchiveDetails() {
     const { id } = useParams(); // arc_id URL 파라미터로 가져오기
@@ -15,6 +18,9 @@ function MealArchiveDetails() {
     const [editMode, setEditMode] = useState(false); // 수정모드 상태
     const [error, setError] = useState(null); // 오류 상태
     const navigate = useNavigate();
+
+    // 권한설정 -> useAuth에서 token과 isAdmin을 가져옴
+    const { token, isAdmin } = useAuth();
 
     // console.log("URL에서 추출한 arc_id", id);
 
@@ -26,7 +32,9 @@ function MealArchiveDetails() {
             return;
         }
         // 상세페이지 조회 api 호출
-        axios.get(`${SERVER_URL}mealArchive/${id}`)
+        axios.get(`${SERVER_URL}mealArchive/${id}`, {
+            headers: token ? { "Authorization": token } : {},
+        })
             .then(response => {
                 setArchive(response.data); // 데이터를 받아서 상태에 저장
                 // console.log("상세 페이지 정보", response.data);
@@ -41,7 +49,7 @@ function MealArchiveDetails() {
 
     // 로딩 중일 때 화면 표시
     if (loading) {
-        return <div>데이터 로딩 중...</div>;
+        return <div><LoadingSpinner /></div>;
     }
 
     // 아카이브 데이터가 없을 경우 처리
@@ -58,13 +66,18 @@ function MealArchiveDetails() {
     const handleDelete = () => {
         if (!window.confirm("삭제하시겠습니까?")) return;
 
-        axios.delete(`${SERVER_URL}mealArchive/${id}`)
+        axios.delete(`${SERVER_URL}mealArchive/${id}`, {
+            headers: {
+                "Authorization": token,
+            }
+        })
             .then(() => {
-                navigate("/mealInfo/meal-archive")
+                alert("게시글이 삭제되었습니다.");
+                navigate("/mealInfo/meal-archive");
             })
             .catch((error) => {
-                console.error("삭제 실패: ", error)
-                alert("삭제 중 오류가 발생하였습니다.")
+                console.error("삭제 실패: ", error);
+                alert("삭제 중 오류가 발생하였습니다.");
             })
     }
 
@@ -112,33 +125,40 @@ function MealArchiveDetails() {
                             <div className="meal-info-form-group">
                                 <label>내용:</label>
                                 <textarea
-                                    rows={5}
+                                    rows={1}
                                     value={archive.arc_content}
                                     readOnly
                                     className="meal-info-form-control"
                                 />
                             </div><br />
                             <div className="meal-info-button-group">
-                                <Button
-                                    variant="outlined"
-                                    color="success"
-                                    onClick={handleUpdate}
-                                >
-                                    수정
-                                </Button>
+                                {/* 수정과 삭제버튼은 isAdmin일 경우에만 표시 */}
+                                {isAdmin && (
+                                    <>
+                                        <Button
+                                            variant="outlined"
+                                            color="success"
+                                            onClick={handleUpdate}
+                                            disabled={!isAdmin}
+                                        >
+                                            수정
+                                        </Button>
+                                        <Button
+                                            variant="contained"
+                                            color="error"
+                                            onClick={handleDelete}
+                                            disabled={!isAdmin}
+                                        >
+                                            삭제
+                                        </Button>
+                                    </>
+                                )}
                                 <Button
                                     variant="outlined"
                                     color="primary"
                                     onClick={() => navigate("/mealInfo/meal-archive")}
                                 >
                                     목록
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    color="error"
-                                    onClick={handleDelete}
-                                >
-                                    삭제
                                 </Button>
                             </div>
                         </form>

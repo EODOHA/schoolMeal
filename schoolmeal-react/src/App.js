@@ -28,6 +28,9 @@ import EduDataRoutes from './component/eduData/routes/EduDataRoutes';
 //급식정보
 import MealInfoRoutes from './component/mealInfo/routes/MealInfoRoutes';
 
+//식재료정보
+import IngredientInfoRoutes from './component/IngredientInfo/routes/IngredientInfoRoutes';
+
 // 커뮤니티-공지사항 관련 라우팅
 import NoticeList from './component/community/notice/NoticeList';
 import CreateNotice from './component/community/notice/CreateNotice';
@@ -78,7 +81,7 @@ function App() {
               {MealResourceRoutes.props.children}
               {EduDataRoutes.props.children}
               {MealInfoRoutes.props.children}
-              {/* {IngredientInfoRoutes.props.chidren} */}
+              {IngredientInfoRoutes.props.chidren}
 
                {/* 커뮤니티-공지사항 관련 라우팅 추가 */}
                <Route path="community/notices" element={<NoticeList />} />
