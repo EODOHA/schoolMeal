@@ -55,6 +55,13 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 			return;
 		}
 		
+        //"/mealInfo" "GET" 요청만 인증 없도록 필터
+        if (request.getRequestURI().startsWith("/mealInfo") && 
+				request.getMethod().equals("GET")) {
+			filterChain.doFilter(request, response);
+			return;
+		}
+		
 		String jws = request.getHeader(HttpHeaders.AUTHORIZATION);
 			// Authorization 헤더에서 토큰을 가져옴.
 		

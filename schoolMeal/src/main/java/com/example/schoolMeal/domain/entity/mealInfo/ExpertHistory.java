@@ -21,10 +21,10 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Builder
+//@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExpertHistory extends BaseEntity {
+public class ExpertHistory {
 
 	public ExpertHistory(String exp_hist_description, MealExpert expert) {
 	}

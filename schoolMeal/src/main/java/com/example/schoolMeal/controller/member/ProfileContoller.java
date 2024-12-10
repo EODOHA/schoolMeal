@@ -1,6 +1,9 @@
 package com.example.schoolMeal.controller.member;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ProfileController;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +19,9 @@ import com.example.schoolMeal.domain.repository.member.MemberRepository;
 @RestController
 @RequestMapping("/members")
 public class ProfileContoller { // 회원 본인 정보.
+	
+	private static final Logger logger = LoggerFactory.getLogger(ProfileController.class);
+
 	@Autowired
 	private MemberRepository memberRepository;
 	
@@ -25,6 +31,7 @@ public class ProfileContoller { // 회원 본인 정보.
 	// 본인 정보 조회.
 	@GetMapping("/me")
 	public Member getMyProfile(Authentication authentication) {
+		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@authentication: {}", authentication);
 		String currentMemberId = authentication.getName();
 		return memberRepository.findByMemberId(currentMemberId)
 				.orElseThrow(() -> new RuntimeException("Member not found"));
