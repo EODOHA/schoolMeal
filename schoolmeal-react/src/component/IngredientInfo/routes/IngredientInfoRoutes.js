@@ -2,7 +2,7 @@ import React from 'react';
 import { Route } from "react-router-dom";
 
 // 식재료 정보 관련 컴포넌트 임포트
-import IngredientInfoMain from '../routes/IngredientInfoMain'
+import IngredientInfoMain from '../routes/IngredientInfoMain';
 import IngredientPriceList from '../lists/IngredientPriceList';
 import ProductSafetyList from '../lists/ProductSafetyList';
 import HaccpInfoList from '../lists/HaccpInfoList';

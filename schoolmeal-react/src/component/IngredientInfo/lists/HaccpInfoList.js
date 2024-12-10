@@ -92,6 +92,11 @@ const HaccpInfoList = () => {
                     setEditMode={setEditMode}
                     setHaccpList={setHaccpList}
                 />
+            ) : haccpList.length === 0 ? (
+                <div>
+                    <p>등록된 HACCP 인증 정보가 없습니다.</p>
+                    <p>새로운 정보를 등록해 주세요.</p>
+                </div>
             ) : (
                 <table border="1">
                     <thead>
