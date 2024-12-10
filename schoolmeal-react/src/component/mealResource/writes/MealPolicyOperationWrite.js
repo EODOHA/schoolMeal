@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, TextField } from "@mui/material";
 import axios from "axios";
 import { SERVER_URL } from "../../../Constants";
-import "../../../css/mealResource/MealWrite.css"; // 스타일시트 적용
+import { useAuth } from "../../sign/AuthContext";
+import "../../../css/mealResource/MealWrite.css";
 
 function MealPolicyOperationWrite() {
     const [title, setTitle] = useState("");
@@ -12,7 +13,30 @@ function MealPolicyOperationWrite() {
     const [file, setFile] = useState(null); // 파일 상태
     const [loading, setLoading] = useState(false); // 로딩 상태
     const [error, setError] = useState(null); // 오류 상태
+    const [isLoadingAuth, setIsLoadingAuth] = useState(true); // 인증 상태 로딩
     const navigate = useNavigate();
+
+    // AuthContext에서 인증 상태와 권한 정보 가져오기
+    const { isAuth, isAdmin, token } = useAuth();
+
+    useEffect(() => {
+        // 인증 상태와 권한 정보가 변경될 때마다 실행
+        if (isAuth !== undefined && isAdmin !== undefined) {
+            setIsLoadingAuth(false); // 인증 상태가 로드된 후 로딩 상태를 false로 설정
+        }
+    }, [isAuth, isAdmin]);
+
+    useEffect(() => {
+        // `isAuth`와 `isAdmin` 값이 `false`로 설정된 이후에만 실행되도록 체크
+        if (!isLoadingAuth && (isAuth === false || isAdmin === false)) {
+            navigate("/unauthorized");
+        }
+    }, [isAuth, isAdmin, navigate, isLoadingAuth]);
+
+    // 로그인하지 않았거나 관리자가 아닌 경우에는 화면 렌더링을 하지 않음
+    if (isLoadingAuth || !isAuth || !isAdmin) {
+        return <div>로딩 중...</div>; // 로딩 상태일 경우 화면을 띄우지 않음
+    }
 
     // 파일 입력 변경 핸들러
     const handleFileChange = (e) => {
@@ -28,29 +52,26 @@ function MealPolicyOperationWrite() {
         formData.append("writer", writer);
         formData.append("content", content);
 
-        // 파일이 있을 때만 formData에 파일 추가
         if (file) {
             formData.append("file", file);
         }
 
-        // POST 요청
-        axios
-            .post(`${SERVER_URL}mealPolicyOperation/writepro`, formData, {
-                headers: {
-                    // 'Content-Type'은 Axios가 자동으로 처리함
-                },
-            })
-            .then((response) => {
-                window.alert("게시글이 성공적으로 등록되었습니다.");
-                navigate("/mealResource/meal-policy-operation"); // 성공 시 목록 페이지로 이동
-            })
-            .catch((err) => {
-                console.error("게시글 등록 중 오류가 발생했습니다.", err);
-                setError("게시글 등록 중 문제가 발생했습니다. 다시 시도해주세요.");
-            })
-            .finally(() => {
-                setLoading(false); // 로딩 상태 종료
-            });
+        axios.post(`${SERVER_URL}mealPolicyOperation/writepro`, formData, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        .then((response) => {
+            window.alert("게시글이 성공적으로 등록되었습니다.");
+            navigate("/mealResource/meal-policy-operation");
+        })
+        .catch((err) => {
+            console.error("게시글 등록 중 오류가 발생했습니다.", err);
+            setError("게시글 등록 중 문제가 발생했습니다. 다시 시도해주세요.");
+        })
+        .finally(() => {
+            setLoading(false);
+        });
     };
 
     return (

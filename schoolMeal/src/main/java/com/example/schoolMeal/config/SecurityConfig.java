@@ -66,6 +66,11 @@ public class SecurityConfig {
 		.requestMatchers(HttpMethod.GET, "/mealInfo/experts", "/mealInfo/experts/{exp_id}").permitAll()
 		.requestMatchers(HttpMethod.GET, "/haccp","/haccp/{haccp_id}").permitAll()
 		.requestMatchers(HttpMethod.GET, "/mealInfo/experts/{exp_id}/profile/{id}").permitAll()
+		// 급식자료실
+	    .requestMatchers(HttpMethod.GET, "/mealPolicyOperations/**", "/mealPolicyOperation/download/**").permitAll()
+	    .requestMatchers(HttpMethod.POST, "/mealPolicyOperations/**").hasRole("ADMIN")
+	    .requestMatchers(HttpMethod.PUT, "/mealPolicyOperations/**").hasRole("ADMIN")
+	    .requestMatchers(HttpMethod.DELETE, "/mealPolicyOperations/**").hasRole("ADMIN")
 			// 해당 엔드포인트는 인증 필요 없음.
 		.anyRequest().authenticated()
 			// 그 외 모든 요청은 인증 필요
