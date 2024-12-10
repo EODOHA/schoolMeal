@@ -6,12 +6,14 @@ import { SERVER_URL } from "../../../Constants";
 import "../../../css/mealResource/MealDetail.css"; // 스타일시트 적용
 import { MdOutlineFileDownload } from "react-icons/md";
 import { RiFileUnknowFill } from "react-icons/ri";
+import { useAuth } from "../../sign/AuthContext";  // 권한설정
 
 function MealPolicyOperationDetail() {
     const { id } = useParams(); // URL에서 id 값을 받아옴
     const [mealPolicyOperation, setMealPolicyOperation] = useState(null);
     const [loading, setLoading] = useState(true); // 로딩 상태
     const [error, setError] = useState(null); // 오류 상태
+    const { isAdmin } = useAuth();  // 로그인 상태 확인
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -32,7 +34,7 @@ function MealPolicyOperationDetail() {
                 setLoading(false);
             });
     }, [id]);
-
+   
     if (loading) {
         return <div>데이터 로딩 중...</div>;
     }
@@ -60,17 +62,24 @@ function MealPolicyOperationDetail() {
     const deleteForm = () => {
         if (!window.confirm("삭제하시겠습니까?")) return;
 
+        const token = sessionStorage.getItem('jwt'); // Bearer 포함된 토큰
+
         axios
-            .delete(`${SERVER_URL}mealPolicyOperations/${id}`)
+            .delete(`${SERVER_URL}mealPolicyOperation/delete/${id}`, {
+                headers: {
+                    Authorization: token, // Bearer 포함된 토큰 그대로 전달
+                },
+            })
             .then((response) => {
-                if (response.status === 200) { // 상태 코드 확인
+                if (response.status === 200) {
                     window.alert("삭제 성공");
-                    navigate("/mealResource/meal-policy-operation"); // 목록으로 돌아가기
+                    navigate("/mealResource/meal-policy-operation");
                 } else {
                     window.alert("삭제 실패");
                 }
             })
             .catch((err) => {
+                console.error("Delete error:", err);
                 window.alert("삭제 중 오류가 발생했습니다.");
             });
     };
@@ -88,7 +97,7 @@ function MealPolicyOperationDetail() {
                     <div className="meal-resource-attachment">
                         {mealPolicyOperation.fileId ? (
                             <a
-                                href={`${SERVER_URL}mealPolicyOperation/download/${mealPolicyOperation.fileId}`}
+                                href={`${SERVER_URL}mealPolicyOperation/download/${mealPolicyOperation.id}`}
                                 download
                                 className="meal-resource-attachment-link"
                             >
@@ -118,6 +127,7 @@ function MealPolicyOperationDetail() {
                             />
                         </div><br />
                         <div className="meal-resource-button-group">
+                        {isAdmin && (
                             <Button
                                 variant="outlined"
                                 color="success"
@@ -125,6 +135,7 @@ function MealPolicyOperationDetail() {
                             >
                                 수정
                             </Button>
+                        )}
                             <Button
                                 variant="outlined"
                                 color="primary"
@@ -132,6 +143,7 @@ function MealPolicyOperationDetail() {
                             >
                                 목록
                             </Button>
+                        {isAdmin && (
                             <Button
                                 variant="contained"
                                 color="error"
@@ -139,6 +151,7 @@ function MealPolicyOperationDetail() {
                             >
                                 삭제
                             </Button>
+                        )}
                         </div>
                     </form>
                 </div>
