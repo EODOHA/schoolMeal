@@ -1,0 +1,62 @@
+/* 페이지네이션 전체 컨테이너 */
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+/* 페이지 숫자 버튼 기본 스타일 */
+.MuiButton-root.pagination-number {
+    background-color: #fff; /* 배경 색 */
+    color: #007BFF; /* 텍스트 색 */
+    width: 15px;  /* 너비 */
+    height: 25px; /* 높이 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 500;
+    border: 1px solid #007BFF;
+    cursor: pointer;
+}
+
+/* 숫자 버튼에 마우스를 올렸을 때 */
+.pagination .pagination-number:hover {
+    background-color: #007BFF; /* 배경색 파란색 */
+    color: white; /* 텍스트 색상 흰색 */
+}
+
+/* 선택된 페이지의 스타일 */
+.MuiButton-root.pagination-number.selected {
+    background-color: #007BFF; /* 선택된 버튼의 배경 색 */
+    color: white; /* 선택된 버튼의 텍스트 색 */
+}
+
+/* '<<', '<', '>', '>>' 버튼 스타일 */
+.pagination .pagination-nav-button {
+    background-color: #fff; /* 기본 배경색 */
+    color: #333; /* 기본 텍스트 색상 */
+    padding: 6px 12px; /* 충분한 여백 */
+    border-radius: 4px; /* 둥근 모서리 */
+    font-size: 14px; /* 글자 크기 */
+}
+
+/* '<<', '<', '>', '>>' 버튼에 마우스를 올렸을 때 텍스트 색상만 변경 */
+.pagination .pagination-nav-button:hover {
+    color: #007BFF; /* 파란색으로 변경 */
+}
+
+/* 비활성화된 버튼 스타일 */
+.pagination .pagination-button:disabled {
+    background-color: #f0f0f0;
+    color: #ccc;
+    cursor: not-allowed;
+}
+
+/* 비활성화된 '<<', '<', '>', '>>' 버튼 스타일 */
+.pagination .pagination-nav-button:disabled {
+    background-color: #fff;
+    color: #ccc;
+}
