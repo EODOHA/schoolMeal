@@ -36,6 +36,9 @@ const Sidebar = ({ isMemberManageOpen, isProfileUpdateOpen }) => {
                         <li>
                             <Link to="/mainManager">메인 페이지 관리</Link>
                         </li>
+                        <li>
+                            <Link to="/adminNoticeManager">메인 공지사항 관리</Link>
+                        </li>
                     </ul>
                 </div>
             )}

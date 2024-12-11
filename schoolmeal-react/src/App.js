@@ -18,6 +18,7 @@ import UnauthorizedPage from './component/sign/UnauthorizedPage';
 import Memberlist from './component/memManage/Memberlist';
 import MainManager from './component/mainManage/MainManager';
 import ProfileUpdate from './component/profile/ProfileUpdate';
+import AdminNoticeManagerRoutes from './component/mainManage/adminNoticeManager/routes/AdminNoticeManagerRoutes';
 
 // 급식자료실
 import MealResourceRoutes from './component/mealResource/routes/MealResourceRoutes'; 
@@ -46,6 +47,9 @@ import RegionalCommunityDetail from './component/community/regionalCommunity/Reg
 // 커뮤니티-급식 뉴스와 학술 자료 컴포넌트 추가
 import SchoolMealNewsList from './component/community/schoolNews/SchoolMealNewsList';
 import AcademicMaterialsList from './component/community/materials/AcademicMaterialsList';
+import AdminNoticeManagerWrite from './component/mainManage/adminNoticeManager/writes/AdminNoticeManagerWrite';
+import AdminNoticeManagerEdit from './component/mainManage/adminNoticeManager/edits/AdminNoticeManagerEdit';
+
 
 
 function App() {
@@ -73,6 +77,8 @@ function App() {
               {/* 권한으로 보호된 페이지 */}
               <Route path="memberlist" element={<AdminRoute element={<Memberlist />} />} />
               <Route path="mainManager" element={<AdminRoute element={<MainManager />} />} />
+              
+              {AdminNoticeManagerRoutes.props.children}
 
               {/* 기능별 Routes 파일 연결 */}
               {MealResourceRoutes.props.children}

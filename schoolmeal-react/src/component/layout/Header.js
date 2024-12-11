@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AppBar, Button, Toolbar, Typography, Box, Menu, MenuItem, Drawer, IconButton } from '@mui/material';
+import { AppBar, Button, Toolbar, Typography, Box, Menu, MenuItem, Drawer, IconButton, DialogContent, DialogActions, Dialog, DialogTitle, TextField } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../sign/AuthContext';
 import { useNavLinks } from './NavLinksContext'; // NavLinksContext import
@@ -24,6 +24,54 @@ const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setI
     const [searchQuery, setSearchQuery] = useState("");  // 검색어 상태 추가
     const [drawerOpen, setDrawerOpen] = useState(false); // Drawer 열고 닫기 상태 추가
     const [screenWidth, setScreenWidth] = useState(window.innerWidth); // 화면 너비 상태
+
+    // 비밀번호 관련 상태
+    const [password, setPassword] = useState("");
+    const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+
+    // 비밀번호 입력 모달 열기.
+    const openPasswordModal = () => {
+      setPassword(""); // 초기화.
+      setErrorMessage(""); // 초기화.
+      setIsPasswordModalOpen(true);
+    };
+
+    // 비밀번호 입력 모달 닫기.
+    const closePasswordModal = () => {
+      setIsPasswordModalOpen(false);
+    };
+
+    // 비밀번호 입력 핸들러.
+    const handlePasswordChange = (e) => {
+      setPassword(e.target.value);
+    };
+
+    const handlePasswordSubmit = async () => {
+      try {
+        const res = await fetch(SERVER_URL + 'members/validatePassword', {
+          method: "POST",
+          headers: createHeaders(),
+          body: JSON.stringify({
+            memberId,
+            password,
+          }),
+        });
+
+        if (res.ok) {
+          setIsPasswordModalOpen(false);
+          setSelectedParent(null);
+          setIsProfileUpdateOpen(true);
+          setIsMemberManageOpen(false);
+          navigate("/profileUpdate");
+        } else {
+          setErrorMessage("비밀번호가 일치하지 않습니다. 다시 시도해 주세요.");
+        }
+      } catch (err) {
+        console.err("Password validation failed:", err);
+        setErrorMessage("오류가 발생했습니다. 다시 시도해 주세요.");
+      }
+    };
 
     const token = sessionStorage.getItem("jwt");
 
@@ -101,13 +149,6 @@ const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setI
       setIsProfileUpdateOpen(false);
       navigate("/memberlist");     // 유저관리 페이지로 이동
     };
-
-    const handleProfileUpdateClick = () => {
-      setSelectedParent(null);
-      setIsProfileUpdateOpen(true);
-      setIsMemberManageOpen(false);
-      navigate("/profileUpdate");
-    }
 
     const handleSearchChange = (e) => {
       setSearchQuery(e.target.value);  // 검색어 변경 처리
@@ -196,7 +237,7 @@ const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setI
                   <Button className="logout-btn" color="inherit" onClick={handleLogout}>
                     로그아웃
                   </Button>
-                  <Button className="mypage-btn" color="inherit" onClick={handleProfileUpdateClick}>
+                  <Button className="mypage-btn" color="inherit" onClick={openPasswordModal}>
                     마이페이지
                   </Button>
                 </>
@@ -329,6 +370,33 @@ const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setI
               ))}
             </Box>
           </Drawer>
+
+          <Dialog open={isPasswordModalOpen} onClose={closePasswordModal}>
+            <DialogTitle>비밀번호 확인</DialogTitle>
+            <DialogContent
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handlePasswordSubmit(); // Enter 키 입력 시 함수 실행
+                }
+              }}
+            >
+              <TextField
+                type="password"
+                label="비밀번호를 입력해 주세요."
+                fullWidth
+                value={password}
+                onChange={handlePasswordChange}
+                error={!!errorMessage}
+                helperText={errorMessage}
+                variant="outlined" // or "standard" or "filled"
+                margin="normal" // 여백 추가
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={closePasswordModal} color='secondary'>취소</Button>
+              <Button onClick={handlePasswordSubmit} color='primary'>확인</Button>
+            </DialogActions>
+          </Dialog>
         </AppBar>
       </div>
     );

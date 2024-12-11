@@ -1,0 +1,92 @@
+/* admin-notice-list-container 스타일 */
+.amdin-notice-list-container {
+    padding: 20px;
+    margin: 0 auto;
+    max-width: 1200px;
+    font-family: Arial, sans-serif;
+    text-align: center; /* 컨테이너 내 내용 가로 가운데 정렬 */
+}
+
+/* admin-notice-title 스타일 */
+.admin-notice-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* admin-notice-button-group 스타일 */
+.admin-notice-button-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* 버튼들 간 간격 */
+    margin-bottom: 30px; /* 버튼과 테이블 사이 간격 */
+}
+
+/* admin-notice-table 스타일 */
+.amdin-notice-table {
+    width: 100%;
+    border-collapse: collapse; /* 셀 간 경계를 합침 */
+    margin-top: 20px; /* 테이블 위쪽 여백 추가 */
+}
+
+/* admin-notice-thead 스타일 */
+.amdin-notice-thead {
+    background-color: #f2f2f2;
+    border-bottom: 2px solid #ccc;
+}
+
+/* admin-notice-table td, th 스타일 */
+.amdin-notice-table td, .amdin-notice-table th {
+    padding: 10px; /* 셀 안쪽 여백 */
+    text-align: center; /* 셀 내 글자 가운데 정렬 */
+}
+
+/* 각 열 너비 설정 */
+.amdin-notice-table th:nth-child(1), .amdin-notice-table td:nth-child(1) {
+    width: 10%; /* 번호 열의 너비 */
+}
+
+.amdin-notice-table th:nth-child(2), .amdin-notice-table td:nth-child(2) {
+    width: 35%; /* 제목 열의 너비 (가장 넓게 설정) */
+}
+
+.amdin-notice-table th:nth-child(3), .amdin-notice-table td:nth-child(3) {
+    width: 25%; /* 등록일 열의 너비 */
+}
+
+.amdin-notice-table th:nth-child(4), .amdin-notice-table td:nth-child(4) {
+    width: 15%; /* 작성자 열의 너비 */
+}
+
+.amdin-notice-table th:nth-child(5), .amdin-notice-table td:nth-child(5) {
+    width: 15%; /* 첨부파일 열의 너비 */
+}
+
+/* admin-notice-tbody tr:nth-child(even) 스타일 */
+.admin-notice-tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.admin-notice-tbody tr:hover {
+    background-color: #f1f1f1 !important;
+    cursor: pointer;
+}
+
+/* admin-notice-table tbody tr.selected 스타일 */
+.amdin-notice-table tbody tr.selected {
+    background-color: #d1eaff;
+}
+
+/* admin-notice-attachment-icon 스타일 */
+.admin-notice-attachment-icon {
+    font-size: 18px;
+    color: #007bff;
+    cursor: pointer;
+}
+
+.admin-notice-functionButton {
+    display: flex;
+    justify-content: flex-start;
+    gap: 5px;
+    z-index: 10;
+}

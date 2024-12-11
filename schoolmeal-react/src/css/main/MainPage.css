@@ -221,7 +221,7 @@ h2 {
 /* 각 서비스 항목 */
 .service-item {
     flex: 0 0 auto; /* 항목들이 기본 크기를 유지하며 가로로 배치되도록 설정 */
-    width: 250px; /* 각 항목의 고정 너비 */
+    width: 100px; /* 각 항목의 고정 너비 */
     border: 1px solid #ddd;
     padding: 10px;
     border-radius: 8px;

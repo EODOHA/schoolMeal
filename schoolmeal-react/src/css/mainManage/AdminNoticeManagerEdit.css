@@ -1,0 +1,28 @@
+/* 기존 첨부파일 섹션 스타일 */
+.existing-file-section {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.file-display {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.file-link {
+    text-decoration: none;
+    color: #3f51b5;
+}
+
+/* 새 파일 첨부 섹션 스타일 */
+.new-file-section {
+    background-color: #fdfdfd;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 8px;
+}

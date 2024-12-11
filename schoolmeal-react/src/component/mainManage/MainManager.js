@@ -357,6 +357,7 @@ const MainManager = () => {
         if (image.url && image.url.includes("video")) {
             return (
                 <video
+                    key={image.url}
                     controls // 영상 컨트롤 바(내장 기능)
                     style={{
                         width: "200px",

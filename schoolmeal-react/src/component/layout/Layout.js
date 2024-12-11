@@ -3,12 +3,15 @@ import { Outlet, useLocation } from "react-router-dom"; // useLocation을 import
 import Header from "./Header";
 import Footer from "./Footer";
 import Sidebar from "./Sidebar"; // 새로 추가한 Sidebar 컴포넌트
+import { useAuth } from '../sign/AuthContext';
 import "../../css/layout/Layout.css"; // 스타일을 적용할 CSS 파일 import
 
 const Layout = ({ hideHeaderFooter }) => {
   const location = useLocation(); // 현재 경로 정보 가져오기
 
-  // 로그인 선택, 메인 화면, 로그인, 회원가입 페이지에서는 Sidebar를 숨깁니다.
+  const { isAdmin } = useAuth();
+
+  // 아래 URL 이름일 시, Sidebar를 숨깁니다.
   const isNoSidebarPage =
     location.pathname === "/" ||
     location.pathname === "/*" ||
@@ -17,7 +20,8 @@ const Layout = ({ hideHeaderFooter }) => {
     location.pathname === "/signup" ||
     location.pathname === "/emailVerification" ||
     location.pathname === "/ReEmailVerification" ||
-    location.pathname === "/findAccount";
+    location.pathname === "/findAccount" ||
+    (!isAdmin && location.pathname.startsWith("/adminNoticeManager"));
 
   // 유저 관리 메뉴 표시 여부를 관리하는 상태 추가.
   const [isMemberManageOpen, setIsMemberManageOpen] = useState(false);

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import "./css/main/MainPage.css";
 import { SERVER_URL } from "./Constants";
 import axios from 'axios';
-import LoadingSpinner from "./component/common/LoadingSpinner";
+import { useNavLinks } from "./component/layout/NavLinksContext";
 
 const MainPage = () => {
     const [images, setImages] = useState([]);
@@ -11,15 +11,19 @@ const MainPage = () => {
     const [videos, setVideos] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [imageKey, setImageKey] = useState(0); // 이미지 키값 변경용
+    const [adminNotices, setAdminNotices] = useState([]);
     const [resources, setResources] = useState([]); // 급식 자료실 목록
     
     // 각각의 로딩 상태 추가
     const [isImagesLoading, setIsImagesLoading] = useState(true);
     const [isAgenciesLoading, setIsAgenciesLoading] = useState(true);
     const [isVideosLoading, setIsVideosLoading] = useState(true);
+    const [isAdminNoticeLoading, setIsAdminNoticeLoading] = useState(true);
     const [isResourcesLoading, setIsResourcesLoading] = useState(true); // 로딩 상태
 
     const token = sessionStorage.getItem("jwt");
+
+    const { selectedParent } = useNavLinks();
 
     const createHeaders = () => ({
         'Content-Type': 'application/json',
@@ -197,6 +201,29 @@ const MainPage = () => {
         return () => clearInterval(interval);
     }, [currentIndex]);
 
+    // 메인 공지사항 목록 가져오기 ----------------------------------------
+    useEffect(() => {
+        setIsAdminNoticeLoading(true);
+        fetch(SERVER_URL + 'adminNotice', {
+            method: 'GET',
+            headers: createHeaders(),
+        })
+        .then(response => {
+            // 응답 상태 코드가 200번이 아니면, 에러 던짐.
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json(); // JSON으로 응답을 파싱.
+        })
+        .then(data => {
+            console.log("Fetched adminNotices:", data); // 확인용 로그
+            setAdminNotices(data); // 데이터를 그대로 저장
+            setIsAdminNoticeLoading(false);
+        })
+        .catch((error) => console.error("Error fetching adminNotices:", error))
+        .finally(() => setIsAdminNoticeLoading(false));
+    }, []); // 컴포넌트 마운트 시 한 번만 실행.
+
     // 급식자료실 목록을 가져오기 ------------------------------------
     useEffect(() => {
         setIsResourcesLoading(true);
@@ -213,17 +240,43 @@ const MainPage = () => {
     // 자주 찾는 서비스 관련 Start ----------------------------------
     const sliderRef = useRef(null);
     const [position, setPosition] = useState(0);
-    const itemWidth = 270;
-    const [items, setItems] = useState([
-        { id: 1, name: "서비스 1", description: "서비스 1 설명" },
-        { id: 2, name: "서비스 2", description: "서비스 2 설명" },
-        { id: 3, name: "서비스 3", description: "서비스 3 설명" },
-        { id: 4, name: "서비스 4", description: "서비스 4 설명" },
-        { id: 5, name: "서비스 5", description: "서비스 5 설명" },
-        { id: 6, name: "서비스 6", description: "서비스 6 설명" },
-        { id: 7, name: "서비스 7", description: "서비스 7 설명" },
-        { id: 8, name: "서비스 8", description: "서비스 8 설명" },
-    ]);
+    const itemWidth = 100;
+    const [items, setItems] = useState([]);
+
+    // 로컬 스토리지에서 항목 불러오기
+    useEffect(() => {
+        const savedItems = sessionStorage.getItem('favoriteServices');
+        if (savedItems) {
+            setItems(JSON.parse(savedItems));
+        }
+    }, []);
+
+    // selectedParent가 변경될 때마다 실행
+    useEffect(() => {
+        if (selectedParent && selectedParent.label) {
+            setItems((prevItems) => {
+                // 중복된 항목이 없으면 추가
+                if (!prevItems.some((item) => item.name === selectedParent.label)) {
+                    const newItems = [
+                        ...prevItems,
+                        { 
+                            id: prevItems.length + 1, 
+                            name: selectedParent.label, 
+                            description: `${selectedParent.label} 관련 페이지`,
+                            path: selectedParent.path || '#', // selectedParent.path를 item에 추가
+                        }
+                    ];
+
+                    // 새로운 항목을 로컬 스토리지에 저장
+                    sessionStorage.setItem('favoriteServices', JSON.stringify(newItems));
+                    return newItems;
+                }
+                return prevItems;  // 중복된 항목은 그대로 유지
+            });
+        }
+    }, [selectedParent]);  // selectedParent만 의존성에 추가
+
+    
 
     // 무한 루프 효과를 위한 useEffect
     useEffect(() => {
@@ -303,11 +356,30 @@ const MainPage = () => {
                 )}
 
                 <div className="notice-container">
-                    <h2>공지사항</h2>
+                    <Link to={'/adminNoticeManager'}>
+                        <h2>공지사항</h2>
+                    </Link>
                     <ul>
-                        <li><Link to="/notice/1">공지사항 테스트용 기이이이이이이이이이이이이이이이이이이이이이이이이이이이이인 글</Link></li>
-                        <li><Link to="/notice/2">공지사항 제목 2</Link></li>
-                        <li><Link to="/notice/3">공지사항 제목 3</Link></li>
+                        {isAdminNoticeLoading ? (
+                        <p>로딩 중입니다... ⏳</p>
+                    ) : (
+                        <ul>
+                            {adminNotices.length > 0 ? (
+                                // 역순 출력 위해 .reverse() 사용.
+                                // 복사본을 생성한 뒤 reverse() 사용
+                                // 개수 제한 .slice(x, y) 사용
+                                [...adminNotices].reverse().slice(0, 10).map((adminNotices) => (
+                                    <li key={adminNotices.id}>
+                                        <Link to={`/adminNoticeManager/detail/${adminNotices.id}`}>
+                                            {adminNotices.title} {/* title을 올바르게 출력 */}
+                                        </Link>
+                                    </li>
+                                ))
+                            ) : (
+                                <p>자료가 없습니다. 🧐</p> // 데이터가 없을 때 표시될 메시지
+                            )}
+                        </ul>
+                    )}
                     </ul>
                 </div>
 
@@ -350,8 +422,11 @@ const MainPage = () => {
                     >
                         {items.map((item, index) => (
                             <div key={`${item.id}-${index}`} className="service-item">
-                                <h3>{item.name}</h3>
-                                <p>{item.description}</p>
+                                {/* react-router-dom의 Link 컴포넌트를 사용하여 href 대신 path로 이동 */}
+                                <Link to={item.path || '#'} className="service-link">
+                                    <h3>{item.name}</h3>
+                                    <p>{item.description}</p>
+                                </Link>
                             </div>
                         ))}
                     </div>
@@ -405,61 +480,71 @@ const MainPage = () => {
                 </div>
             )}
 
-            <section className="related-agencies-section">
-                <div className="wrapper">
-                    <div className="agency_container">
-                        <ul
-                            className="agency_wrapper"
-                            onMouseEnter={onStop}
-                            onMouseLeave={onRun}
-                        >
-                            {/* 원본 리스트 */}
-                            <li
-                                className={`agency original${animate ? "" : " stop"}`}
-                            >
-                                {agencies.map((s, i) => (
-                                    <ul key={s.id || i}>
-                                        <div className="item">
-                                            <img
-                                                src={s.url || "#"}  // 이미지 경로가 없다면 대체 이미지 또는 빈 값
-                                                alt={s.name || `Agency ${i}`}
-                                                style={{
-                                                    width: "200px",
-                                                    height: "80px",
-                                                    objectFit: "cover",
-                                                    borderRadius: "8px",
-                                                }}
-                                            />
-                                        </div>
-                                    </ul>
-                                ))}
-                            </li>
+<section className="related-agencies-section">
+    <div className="wrapper">
+        <div className="agency_container">
+            <ul
+                className="agency_wrapper"
+                onMouseEnter={onStop}
+                onMouseLeave={onRun}
+            >
+                {/* 로딩 중일 때 */}
+                {isAgenciesLoading ? (
+                    <p>로딩 중입니다... ⏳</p>
+                ) : (
+                    <>
+                        {/* 자료가 없을 때 */}
+                        {agencies.length === 0 ? (
+                            <p>유관기관 자료가 없습니다. 🧐</p>
+                        ) : (
+                            <>
+                                {/* 원본 리스트 */}
+                                <li className={`agency original${animate ? "" : " stop"}`}>
+                                    {agencies.map((s, i) => (
+                                        <ul key={s.id || i}>
+                                            <div className="item">
+                                                <img
+                                                    src={s.url || "#"} // 이미지 경로가 없다면 대체 이미지 또는 빈 값
+                                                    alt={s.name || `Agency ${i}`}
+                                                    style={{
+                                                        width: "200px",
+                                                        height: "80px",
+                                                        objectFit: "cover",
+                                                        borderRadius: "8px",
+                                                    }}
+                                                />
+                                            </div>
+                                        </ul>
+                                    ))}
+                                </li>
 
-                            {/* 복제된 리스트 (애니메이션 용도) */}
-                            <li
-                                className={`agency clone${animate ? "" : " stop"}`}
-                            >
-                                {agencies.map((s, i) => (
-                                    <ul key={`${s.id || i}-clone`}>
-                                        <div className="item">
-                                            <img
-                                                src={s.url || "#"}
-                                                alt={s.name || `Agency Clone ${i}`}
-                                                style={{
-                                                    width: "200px",
-                                                    height: "80px",
-                                                    objectFit: "cover",
-                                                    borderRadius: "8px",
-                                                }}
-                                            />
-                                        </div>
-                                    </ul>
-                                ))}
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
+                                {/* 복제된 리스트 (애니메이션 용도) */}
+                                <li className={`agency clone${animate ? "" : " stop"}`}>
+                                    {agencies.map((s, i) => (
+                                        <ul key={`${s.id || i}-clone`}>
+                                            <div className="item">
+                                                <img
+                                                    src={s.url || "#"}
+                                                    alt={s.name || `Agency Clone ${i}`}
+                                                    style={{
+                                                        width: "200px",
+                                                        height: "80px",
+                                                        objectFit: "cover",
+                                                        borderRadius: "8px",
+                                                    }}
+                                                />
+                                            </div>
+                                        </ul>
+                                    ))}
+                                </li>
+                            </>
+                        )}
+                    </>
+                )}
+            </ul>
+        </div>
+    </div>
+</section>
         </div>
     );
 };
