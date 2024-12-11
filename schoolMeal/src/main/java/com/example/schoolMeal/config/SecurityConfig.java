@@ -62,6 +62,7 @@ public class SecurityConfig {
 		.requestMatchers(HttpMethod.POST, "/change-password").permitAll()
 		.requestMatchers(HttpMethod.POST, "/verify-token").permitAll()
 		.requestMatchers(HttpMethod.GET, "/imageManage/{category}").permitAll()
+		.requestMatchers(HttpMethod.GET, "/adminNotice/**").permitAll()
 			// 해당 엔드포인트는 인증 필요 없음.
 		.anyRequest().authenticated()
 			// 그 외 모든 요청은 인증 필요
