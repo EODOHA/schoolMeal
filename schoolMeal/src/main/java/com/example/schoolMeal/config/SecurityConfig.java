@@ -37,9 +37,9 @@ public class SecurityConfig {
 	private AuthEntryPoint exceptionHandler;
 	
 	@Bean	// HTTP 요청 들오일 시, 이를 처리할 여러 필터들의 체인을 빌더 패턴으로 정의.
-	public SecurityFilterChain sercurityFilterChain(HttpSecurity http) 
+	public SecurityFilterChain sercurityFilterChain(HttpSecurity http)
 		throws Exception {
-		
+
 //		http.csrf().disable().cors().and()
 //		.authorizeHttpRequests().anyRequest().permitAll();
 //			// 테스트를 위해 모든 권한 사용자가 엔드 포인트 접속 가능
@@ -62,7 +62,6 @@ public class SecurityConfig {
 		.requestMatchers(HttpMethod.POST, "/change-password").permitAll()
 		.requestMatchers(HttpMethod.POST, "/verify-token").permitAll()
 		.requestMatchers(HttpMethod.GET, "/imageManage/{category}").permitAll()
-		.requestMatchers(HttpMethod.GET, "/adminNotice/**").permitAll()
 		.requestMatchers(HttpMethod.GET, "/mealArchive", "/mealArchive/{arc_id}").permitAll()
 		.requestMatchers(HttpMethod.GET, "/mealInfo/experts", "/mealInfo/experts/{exp_id}").permitAll()
 		.requestMatchers(HttpMethod.GET, "/haccp","/haccp/{haccp_id}").permitAll()
@@ -72,6 +71,30 @@ public class SecurityConfig {
 	    .requestMatchers(HttpMethod.POST, "/mealPolicyOperations/**").hasRole("ADMIN")
 	    .requestMatchers(HttpMethod.PUT, "/mealPolicyOperations/**").hasRole("ADMIN")
 	    .requestMatchers(HttpMethod.DELETE, "/mealPolicyOperations/**").hasRole("ADMIN")
+				// 커뮤니티 - 공지사항
+				.requestMatchers(HttpMethod.GET, "/notices/**", "/notices/download/**").permitAll()
+				.requestMatchers(HttpMethod.POST, "/notices/**").permitAll()
+				.requestMatchers(HttpMethod.PUT, "/notices/**").permitAll()
+				.requestMatchers(HttpMethod.DELETE, "/notices/**").permitAll()
+				// 커뮤니티 - 가공식품정보
+				.requestMatchers(HttpMethod.GET, "/processed-foods/**").permitAll()
+				.requestMatchers(HttpMethod.POST, "/processed-foods/**").permitAll()
+				.requestMatchers(HttpMethod.PUT, "/processed-foods/**").permitAll()
+				.requestMatchers(HttpMethod.DELETE, "/processed-foods/**").permitAll()
+				// 커뮤니티 - 지역별커뮤니티
+				.requestMatchers(HttpMethod.GET, "/regions/**").permitAll()
+				.requestMatchers(HttpMethod.POST, "/regions/**").permitAll()
+				.requestMatchers(HttpMethod.PUT, "/regions/**").permitAll()
+				.requestMatchers(HttpMethod.DELETE, "/regions/**").permitAll()
+				// 커뮤니티 - 급식뉴스 , 학술뉴스
+				.requestMatchers(HttpMethod.GET, "/crawling/**").permitAll()
+				// 커뮤니티 - 댓글기능
+				.requestMatchers(HttpMethod.GET, "/comments/**").permitAll()
+				.requestMatchers(HttpMethod.POST, "/comments/**").permitAll()
+				.requestMatchers(HttpMethod.PUT, "/comments/**").permitAll()
+				.requestMatchers(HttpMethod.DELETE, "/comments/**").permitAll()
+				
+
 			// 해당 엔드포인트는 인증 필요 없음.
 		.anyRequest().authenticated()
 			// 그 외 모든 요청은 인증 필요
