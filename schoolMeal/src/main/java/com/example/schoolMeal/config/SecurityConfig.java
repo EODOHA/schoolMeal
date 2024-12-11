@@ -62,6 +62,7 @@ public class SecurityConfig {
 		.requestMatchers(HttpMethod.POST, "/change-password").permitAll()
 		.requestMatchers(HttpMethod.POST, "/verify-token").permitAll()
 		.requestMatchers(HttpMethod.GET, "/imageManage/{category}").permitAll()
+		.requestMatchers(HttpMethod.GET, "/adminNotice/**").permitAll()
 		.requestMatchers(HttpMethod.GET, "/mealArchive", "/mealArchive/{arc_id}").permitAll()
 		.requestMatchers(HttpMethod.GET, "/mealInfo/experts", "/mealInfo/experts/{exp_id}").permitAll()
 		.requestMatchers(HttpMethod.GET, "/haccp","/haccp/{haccp_id}").permitAll()

@@ -55,6 +55,13 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 			return;
 		}
 		
+		// 메인 페이지 "GET" 요청만 인증없도록 필터.
+		if (request.getRequestURI().startsWith("/adminNotice") && 
+				request.getMethod().equals("GET")) {
+			filterChain.doFilter(request, response);
+			return;
+		}
+		
         //"/mealInfo" "GET" 요청만 인증 없도록 필터
         if (request.getRequestURI().startsWith("/mealInfo") && 
 				request.getMethod().equals("GET")) {
