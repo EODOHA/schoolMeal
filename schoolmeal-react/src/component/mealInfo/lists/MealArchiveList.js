@@ -7,6 +7,7 @@ import { MdAttachFile } from "react-icons/md";
 import { BsFileExcel } from "react-icons/bs";
 import { useNavigate } from 'react-router-dom';
 import MealArchiveWrite from '../writes/MealArchiveWrite';
+import { useAuth } from '../../sign/AuthContext';
 
 
 function MealArchiveList() {
@@ -16,8 +17,10 @@ function MealArchiveList() {
     const [selectedId, setSelectedId] = useState(null);  //선택된 게시글의 ID 저장 상태
     const navigate = useNavigate(); // useNavigate 훅을 사용하여 페이지 이동
 
+    // 게시판 권한 설정 - AuthContext에서 token과 isAdmin을 가져옴
+    const { token, isAdmin } = useAuth();
 
-    // 페이지네이션 관련
+    // ------------------------------------------------- 페이지네이션  ------------------------------------------------- //
     const [currentPage, setCurrentPage] = useState(1);  //현재 페이지 상태(기본값:1)
     const [postsPerPage] = useState(5); // 페이지당 게시글 수
     const [pageNumbersPerBlock] = useState(4) // 한 블록당 표시할 페이지 번호 수
@@ -41,16 +44,24 @@ function MealArchiveList() {
         setCurrentPage(pageNumber);
     };
 
-    // 이전 블록으로 이동
+    // 이전 페이지로 이동
     const handlePrevBlock = () => {
-        if (currentBlock > 1) setCurrentPage(startPage - 1);    //이전 블록의 마지막 페이지로 이동
-    };
+        if (currentBlock > 1) {
+            setCurrentPage(startPage - 1);
+        } else {
+            setCurrentPage(currentPage - 1);
+        }
+    }
 
-    // 다음 블록으로 이동
+    // 다음 페이지으로 이동
     const handleNextBlock = () => {
-        if (currentBlock < totalBlocks) setCurrentPage(endPage + 1); // 다음 블록의 첫 페이지로 이동
+        if (currentBlock < totalBlocks) {
+            setCurrentPage(endPage + 1);
+        } else {
+            setCurrentPage(currentPage + 1);
+        }
     };
-
+  // ------------------------------------------------- 페이지네이션  끝 ------------------------------------------------- //
 
     // 새 글 쓰기 버튼 클릭 시 상태 변경
     const handleNewPostClick = () => {
@@ -76,6 +87,7 @@ function MealArchiveList() {
         axios.post(`${SERVER_URL}mealArchive`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
+                'Authorization': token //토큰 추가
             },
         })
             .then(response => {
@@ -98,6 +110,7 @@ function MealArchiveList() {
         navigate(`/mealInfo/meal-archive/${id}`);  // 상대 경로로 상세 페이지 이동
     }
 
+    // 게시글 목록 불러오기
     useEffect(() => {
         axios.get(`${SERVER_URL}mealArchive`)
             .then(response => {
@@ -119,10 +132,13 @@ function MealArchiveList() {
             ) : (
                 <div className="meal-info-list-container">
                     <h1 className='meal-info-title'>학교 급식 과거와 현재</h1>
-                    <div className='meal-info-button-group'>
-                        {/* 새 글 쓰기 버튼을 누르면 isWriting을 true로 세팅 -> MealArchiveWrite 컴포넌트 렌더링 */}
-                        <Button variant='outlined' onClick={handleNewPostClick}>새 글 쓰기</Button>
-                    </div>
+                    {/* isAdmin이 true일 때만 새 글 쓰기 버튼 표시 */}
+                    {isAdmin && (
+                        <div className='meal-info-button-group'>
+                            {/* 새 글 쓰기 버튼을 누르면 isWriting을 true로 세팅 -> MealArchiveWrite 컴포넌트 렌더링 */}
+                            < Button variant='outlined' onClick={handleNewPostClick}>새 글 쓰기</Button>
+                        </div>
+                    )}
                     <table className='meal-info-table'>
                         <thead className='meal-info-thead'>
                             <tr>
@@ -179,9 +195,10 @@ function MealArchiveList() {
                             )}
                         </tbody>
                     </table>
+                    {/* 페이지네이션 버튼 */}
                     <div className="pagination">
                         <Button onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>{"<<"}</Button>
-                        <Button onClick={handlePrevBlock} disabled={currentBlock === 1}>{"<"}</Button>
+                        <Button onClick={handlePrevBlock} disabled={currentPage === 1}>{"<"}</Button>
                         {Array.from({ length: endPage - startPage + 1 }, (_, idx) => (
                             <Button
                                 key={startPage + idx}
@@ -191,12 +208,13 @@ function MealArchiveList() {
                                 {startPage + idx}
                             </Button>
                         ))}
-                        <Button onClick={handleNextBlock} disabled={currentBlock === totalBlocks}>{">"}</Button>
+                        <Button onClick={handleNextBlock} disabled={currentPage === totalPages}>{">"}</Button>
                         <Button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages}>{">>"}</Button>
                     </div>
                 </div>
-            )}
-        </div>
+            )
+            }
+        </div >
     );
 }
 

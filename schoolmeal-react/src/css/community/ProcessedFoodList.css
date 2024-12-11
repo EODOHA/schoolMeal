@@ -68,3 +68,12 @@ h2 {
 .processedfoodlistcreate-button:hover {
     background-color: #218838;
 }
+
+/* 썸네일 이미지 스타일 */
+.food-thumbnail {
+    width: 80px; /* 이미지 너비를 제한 */
+    height: 80px; /* 이미지 높이를 제한 */
+    object-fit: cover; /* 이미지를 비율 유지하면서 셀 크기에 맞추어 자름 */
+    border-radius: 8px; /* 이미지 모서리를 둥글게 */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* 약간의 그림자 추가로 강조 */
+}

@@ -50,13 +50,14 @@ public class NoticeService extends PathResolver {
     public NoticeResponseDTO createNotice(NoticeRequestDTO dto, MultipartFile file) throws IOException {
         Notice notice = new Notice(dto.getTitle(), dto.getContent(), dto.getAuthor());
 
+        // 파일이 첨부된 경우 파일 저장을 처리
         if (file != null && !file.isEmpty()) {
             CommunityFile communityFile = saveFile(file);
             notice.setFile(communityFile);
         }
 
-        Notice savedNotice = noticeRepository.save(notice);
-        return mapToResponseDTO(savedNotice);
+        Notice savedNotice = noticeRepository.save(notice); //공지사항 저장
+        return mapToResponseDTO(savedNotice);               // 저장된 공지사항을 DTO로 변환 후 반환
     }
 
     // 공지사항 조회 메서드 (조회수 증가 포함)
@@ -64,15 +65,15 @@ public class NoticeService extends PathResolver {
         Notice notice = noticeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Notice not found"));
         notice.setViewCount(notice.getViewCount() + 1); // 조회수 증가
-        noticeRepository.save(notice);
-        return mapToResponseDTO(notice);
+        noticeRepository.save(notice);  // 업데이트된 조회수를 반영하에 저장
+        return mapToResponseDTO(notice);    // 조회된 공지사항을 DTO로 변환 후 반환
     }
 
     // 모든 공지사항 조회 메서드
     public List<NoticeResponseDTO> getAllNotices() {
         return noticeRepository.findAll().stream()
-                .map(this::mapToResponseDTO)
-                .collect(Collectors.toList());
+                .map(this::mapToResponseDTO)    // NOTICE엔터티를 ResponseDTO로 변환
+                .collect(Collectors.toList());  // 반환
     }
 
     // 공지사항 수정 메서드 (파일 첨부 포함)
@@ -80,16 +81,18 @@ public class NoticeService extends PathResolver {
         Notice notice = noticeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Notice not found"));
 
+        // 기존 필드 업데이트
         notice.setTitle(dto.getTitle());
         notice.setContent(dto.getContent());
         notice.setAuthor(dto.getAuthor());
         notice.setUpdatedDate(LocalDateTime.now());
 
+        // 파일이 첨부된 경우 기존 파일 삭제 후 새로운 파일 저장
         if (file != null && !file.isEmpty()) {
             // 기존 파일 삭제
             if (notice.getFile() != null) {
-                deleteFileFromSystem(notice.getFile());
-                communityFileRepository.delete(notice.getFile());
+                deleteFileFromSystem(notice.getFile()); //기존 파일 삭제
+                communityFileRepository.delete(notice.getFile()); // 기존 파일 엔터티 삭제
             }
 
             // 새로운 파일 저장
@@ -97,7 +100,7 @@ public class NoticeService extends PathResolver {
             notice.setFile(newFile);
         }
 
-        noticeRepository.save(notice);
+        noticeRepository.save(notice);  // 저장
     }
 
     // 공지사항 삭제 메서드 (파일 삭제 포함)
@@ -105,10 +108,10 @@ public class NoticeService extends PathResolver {
         Notice notice = noticeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Notice not found"));
 
-        // 파일 삭제
+        // 파일이 첨부된 경우 파일을 삭제
         if (notice.getFile() != null) {
-            deleteFileFromSystem(notice.getFile());
-            communityFileRepository.delete(notice.getFile());
+            deleteFileFromSystem(notice.getFile()); // 파일 시스템에서 파일 삭제
+            communityFileRepository.delete(notice.getFile()); // 파일 엔터티 삭제
         }
 
         noticeRepository.deleteById(id);
@@ -138,8 +141,8 @@ public class NoticeService extends PathResolver {
 
         return communityFileRepository.save(CommunityFile.builder()
                 .origFileName(filename)  // 디스크에 저장된 파일명으로 설정
-                .base64Data(base64Data)
-                .fileType(mimeType)
+                .base64Data(base64Data)  // 파일의 Base64인코딩 데이터
+                .fileType(mimeType)      // 파일의 MIME 타입
                 .build());
     }
 
@@ -177,6 +180,7 @@ public class NoticeService extends PathResolver {
             origFileName = notice.getFile().getOrigFileName();
         }
 
+        // NoticeResponseDTO 생성 후 반환
         return new NoticeResponseDTO(
                 notice.getId(),
                 notice.getTitle(),

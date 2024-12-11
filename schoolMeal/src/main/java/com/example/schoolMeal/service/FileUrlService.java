@@ -23,11 +23,14 @@ public class FileUrlService extends PathResolver {
     private String mealPolicyOperationPath;
     
     private String menuRecipePath;
+    
+    private String videoEduPath;
 
     @PostConstruct
     public void init() {
     	mealPolicyOperationPath = buildPath("급식 정책 자료실");
         menuRecipePath = buildPath("메뉴 및 레시피 자료실");
+        videoEduPath = buildPath("교육영상 자료실");
     }
 
     @Transactional
@@ -84,6 +87,8 @@ public class FileUrlService extends PathResolver {
             return mealPolicyOperationPath;
         } else if ("service2".equals(serviceType)) {
             return menuRecipePath;
+        } else if ("service3".equals(serviceType)) {
+            return videoEduPath;
         }
         throw new IllegalArgumentException("지원하지 않는 서비스 유형: " + serviceType);
     }

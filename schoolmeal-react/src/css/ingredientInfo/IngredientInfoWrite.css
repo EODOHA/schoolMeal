@@ -1,0 +1,47 @@
+/* 컨테이너 스타일 */
+.ingredient-info-write-container {
+    display: flex;
+    justify-content: center;
+    align-items: center; /* 세로 정렬 */
+    max-width: 800px; /* Detail과 일치하는 폭 설정 */
+    width: 100%;
+    margin: 0 auto; /* 중앙 정렬 */
+    padding: 20px;
+    box-sizing: border-box;
+    margin-top: 40px; /* 기존 여백 유지 */
+}
+
+.ingredient-info-card {
+    width: 100%; /* 카드가 컨테이너의 폭에 맞게 채워짐 */
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+.ingredient-info-card-body {
+    font-family: Arial, sans-serif;
+}
+
+.ingredient-info-card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.ingredient-info-form-group {
+    margin-bottom: 15px;
+    text-align: center;  /* 텍스트와 이미지를 중앙 정렬 */
+}
+
+.ingredient-info-button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.ingredient-info-error-message {
+    color: red;
+    margin-bottom: 15px;
+}
+

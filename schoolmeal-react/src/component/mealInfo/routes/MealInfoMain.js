@@ -6,7 +6,7 @@ function MealInfoMain() {
     const navigate = useNavigate();
 
     return (
-        <div className="home-container">
+        <div className="home-container" style={{ marginBottom: "50px" }}>
             <h2 style={{ textAlign: "center" }}>급식정보 Main</h2>
             <div className="button-container" style={{ display: "flex", justifyContent: "center", gap: "20px" }}>
                 <Button

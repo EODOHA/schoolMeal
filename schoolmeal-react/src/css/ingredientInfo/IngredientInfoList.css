@@ -1,0 +1,106 @@
+/* 컨테이너 스타일 */
+.ingredient-info-list-container {
+    padding: 20px;
+    margin: 0 auto;
+    max-width: 1200px;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    /* 컨테이너 내 내용 가로 가운데 정렬 */
+}
+/* 제목 스타일 */
+.ingredient-info-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* 제목 스타일 */
+.ingredient-info-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* 버튼 그룹 스타일 */
+.ingredient-info-button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+/* 테이블 스타일 */
+.ingredient-info-table {
+    width: 100%;
+    border-collapse: collapse;
+    /* 셀 간 경계를 합침 */
+    margin-top: 20px;
+    /* 테이블 위쪽 여백 추가 */
+}
+
+/* 테이블 헤더 스타일 */
+.ingredient-info-thead {
+    background-color: #f2f2f2;
+    border-bottom: 2px solid #ccc;
+}
+
+/* 셀 스타일 */
+.ingredient-info-table td,
+.ingredient-info-table th {
+    padding: 10px;
+    /* 셀 안쪽 여백 */
+    text-align: center;
+    /* 셀 내 글자 가운데 정렬 */
+}
+
+/* 각 열 너비 설정 */
+.ingredient-info-table th:nth-child(1),
+.ingredient-info-table td:nth-child(1) {
+    width: 10%;
+    /* 번호 열의 너비 */
+}
+
+.ingredient-info-table th:nth-child(2),
+.ingredient-info-table td:nth-child(2) {
+    width: 40%;
+    /* 제목 열의 너비 (가장 넓게 설정) */
+}
+
+.ingredient-info-table th:nth-child(3),
+.ingredient-info-table td:nth-child(3) {
+    width: 20%;
+    /* 등록일 열의 너비 */
+}
+
+.ingredient-info-table th:nth-child(4),
+.ingredient-info-table td:nth-child(4) {
+    width: 15%;
+    /* 작성자 열의 너비 */
+}
+
+.ingredient-info-table th:nth-child(5),
+.ingredient-info-table td:nth-child(5) {
+    width: 15%;
+    /* 첨부파일 열의 너비 */
+}
+
+/* 행 스타일 */
+.ingredient-info-tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.ingredient-info-tbody tr:hover {
+    background-color: #f1f1f1 !important;
+}
+
+/* 행 간격을 늘리기 위해 tr에 margin-bottom 추가 */
+.ingredient-info-tbody tr {
+    margin-bottom: 10px;
+    /* 행 간격 */
+}
+
+/* 첨부파일 아이콘 스타일 */
+.ingredient-info-attachment-icon {
+    font-size: 18px;
+    color: #007bff;
+    cursor: pointer;
+}

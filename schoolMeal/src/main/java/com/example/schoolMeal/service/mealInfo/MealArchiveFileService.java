@@ -65,20 +65,29 @@ public class MealArchiveFileService extends PathResolver {
 			String storedFilename = UUID.randomUUID().toString() + "_" + originalFilename;
 			Path targetPath = Paths.get(fileStoragePath, storedFilename);
 
-			logger.info("파일 저장 시작: 원본 파일명={}, 저장 파일명={}", originalFilename, storedFilename);
+//			logger.info("파일 저장 시작: 원본 파일명={}, 저장 파일명={}", originalFilename, storedFilename);
 			Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
 
 			// MealArchiveFile 객체 생성
-			MealArchiveFile fileEntity = MealArchiveFile.builder().arc_originalFilename(originalFilename)
-					.arc_storedFilename(storedFilename).arc_file_url(targetPath.toString())
-					.arc_file_size(file.getSize()).arc_file_type(file.getContentType()).mealArchive(mealArchive)
+			MealArchiveFile fileEntity = MealArchiveFile.builder()
+					.arc_originalFilename(originalFilename)
+					.arc_storedFilename(storedFilename)
+					.arc_file_url(targetPath.toString())
+					.arc_file_size(file.getSize())
+					.arc_file_type(file.getContentType())
+					.mealArchive(mealArchive)
 					.build();
 
 			logger.info("파일 저장 완료: 저장된 주소={}", targetPath.toString());
 
-			return new MealArchiveFileDto(fileEntity.getArc_file_id(), fileEntity.getArc_originalFilename(),
-					fileEntity.getArc_storedFilename(), fileEntity.getArc_file_url(), fileEntity.getArc_file_type(),
-					fileEntity.getArc_file_size());
+			return new MealArchiveFileDto(
+					fileEntity.getArc_file_id(),
+					fileEntity.getArc_originalFilename(),
+					fileEntity.getArc_storedFilename(),
+					fileEntity.getArc_file_url(),
+					fileEntity.getArc_file_type(),
+					fileEntity.getArc_file_size()
+					);
 		} catch (Exception e) {
 			logger.error("파일 업로드 중 오류 발생: {}", e.getMessage(), e);
 			throw new FileUploadException("파일 업로드 중 오류가 발생했습니다.", e);
@@ -120,10 +129,12 @@ public class MealArchiveFileService extends PathResolver {
 			MealArchiveFile existingFile = fileRepository.findById(file_id)
 					.orElseThrow(() -> new RuntimeException("파일을 찾을 수 없습니다"));
 
-			// 기존 파일 삭제
+			// 기존 파일 삭제(파일이 존재할 경우)
 			Path oldFilePath = Paths.get(existingFile.getArc_file_url());
+			if(Files.exists(oldFilePath)) {
 			Files.deleteIfExists(oldFilePath);
-
+			}
+			
 			// 새로운 파일 저장
 			String originalFilename = newFile.getOriginalFilename();
 			String storedFilename = UUID.randomUUID().toString() + "_" + originalFilename;
@@ -140,9 +151,14 @@ public class MealArchiveFileService extends PathResolver {
 			// 파일 업데이트
 			MealArchiveFile updatedFile = fileRepository.save(existingFile);
 
-			return new MealArchiveFileDto(updatedFile.getArc_file_id(), updatedFile.getArc_originalFilename(),
-					updatedFile.getArc_storedFilename(), updatedFile.getArc_file_url(), updatedFile.getArc_file_type(),
-					updatedFile.getArc_file_size());
+			return new MealArchiveFileDto(
+					updatedFile.getArc_file_id(),
+					updatedFile.getArc_originalFilename(),
+					updatedFile.getArc_storedFilename(),
+					updatedFile.getArc_file_url(),
+					updatedFile.getArc_file_type(),
+					updatedFile.getArc_file_size()
+					);
 
 		} catch (IOException e) {
 			throw new RuntimeException("파일 수정 중 오류가 발생했습니다.", e);
