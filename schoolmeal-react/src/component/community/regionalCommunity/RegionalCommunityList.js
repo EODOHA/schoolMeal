@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { SERVER_URL } from "../../../Constants";
+import { useAuth } from "../../sign/AuthContext";  // 권한설정
 import "../../../css/community/RegionalCommunityList.css"; 
 
 const RegionalCommunityList = () => {
@@ -9,6 +10,9 @@ const RegionalCommunityList = () => {
   const [loading, setLoading] = useState(true);
   const [selectedRegion, setSelectedRegion] = useState('ALL'); // 기본값은 전체 조회
   const navigate = useNavigate();
+ 
+  // AuthContext에서 인증 상태와 권한 정보 가져오기
+  const { isAuth, isAdmin, token } = useAuth();
 
   // 지역별 커뮤니티 게시글 목록을 서버에서 불러오는 함수
   const loadPosts = async (region) => {
@@ -88,7 +92,10 @@ const RegionalCommunityList = () => {
           )}
         </tbody>
       </table>
-      <button onClick={() => navigate('/community/regions/create')} className="regionCommunitylistcreate-button">커뮤니티 글 작성</button>
+      {isAuth && (
+        <button onClick={() => navigate('/community/regions/create')} className="regionCommunitylistcreate-button">커뮤니티 글 작성</button>
+      )}
+      
     </div>
   );
 };

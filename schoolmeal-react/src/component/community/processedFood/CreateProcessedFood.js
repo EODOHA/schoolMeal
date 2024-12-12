@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { SERVER_URL } from "../../../Constants";
+import { useAuth } from "../../sign/AuthContext";
 import "../../../css/community/CreateProcessedFood.css";
 
 const CreateProcessedFood = () => {
@@ -14,6 +15,9 @@ const CreateProcessedFood = () => {
   const [addressLink, setAddressLink] = useState('');
   const [description, setDescription] = useState('');
   const [imageFile, setImageFile] = useState(null);
+
+  // AuthContext에서 인증 상태와 권한 정보 가져오기
+  const { isAuth, isAdmin, token } = useAuth();
 
   useEffect(() => {
     if (id) {
@@ -54,6 +58,7 @@ const CreateProcessedFood = () => {
       if (id) {
         await axios.put(`${SERVER_URL}processed-foods/update/${id}`, formData, {
           headers: {
+            Authorization: `${token}`,
             'Content-Type': 'multipart/form-data',
           },
         });
@@ -61,6 +66,7 @@ const CreateProcessedFood = () => {
       } else {
         await axios.post(`${SERVER_URL}processed-foods/create`, formData, {
           headers: {
+            Authorization: `${token}`,
             'Content-Type': 'multipart/form-data',
           },
         });

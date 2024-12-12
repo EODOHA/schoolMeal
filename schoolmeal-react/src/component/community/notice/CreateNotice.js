@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { SERVER_URL } from '../../../Constants';
+import { useAuth } from "../../sign/AuthContext";
 import '../../../css/community/CreateNotice.css';
 
 const CreateNotice = () => {
@@ -9,8 +10,11 @@ const CreateNotice = () => {
   const { id } = useParams(); // 수정할 게시글의 ID를 가져옵니다.
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [author] = useState('테스트 사용자'); // 고정된 작성자 정보
+  const [author] = useState(''); // 
   const [file, setFile] = useState(null);
+
+      // AuthContext에서 인증 상태와 권한 정보 가져오기
+      const { isAuth, isAdmin, token } = useAuth();
 
   useEffect(() => {
     if (id) {
@@ -52,11 +56,19 @@ const CreateNotice = () => {
     try {
       if (id) {
         // 수정 모드일 때 PUT 요청으로 공지사항 업데이트
-        await axios.put(`${SERVER_URL}notices/update/${id}`, formData);
+        await axios.put(`${SERVER_URL}notices/update/${id}`, formData, {
+          headers: {
+            Authorization: `${token}`,
+          },
+        });
         alert('공지사항이 수정되었습니다.');
       } else {
         // 작성 모드일 때 POST 요청으로 새로운 공지사항 작성
-        await axios.post(`${SERVER_URL}notices/create`, formData);
+        await axios.post(`${SERVER_URL}notices/create`, formData, {
+          headers: {
+            Authorization: `${token}`,
+          },
+        });
         alert('공지사항이 작성되었습니다.');
       }
       navigate('/community/notices'); // 수정 또는 작성 후 공지사항 목록으로 이동

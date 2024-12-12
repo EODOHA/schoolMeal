@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { SERVER_URL } from "../../../Constants";
+import { useAuth } from "../../sign/AuthContext";  // 권한설정
 import "../../../css/community/ProcessedFoodList.css";
 
 const ProcessedFoodList = () => {
   const [foods, setFoods] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { isAdmin , isAuth} = useAuth();  // 로그인 상태 확인
 
   const loadFoods = async () => {
     setLoading(true);
@@ -33,9 +35,12 @@ const ProcessedFoodList = () => {
   return (
     <div className="processed-food-list-container">
       <h2>가공식품 정보 목록</h2>
-      <button onClick={() => navigate('/community/processed-foods/create')} className="processedfoodlistcreate-button">
+      {isAuth && (
+        <button onClick={() => navigate('/community/processed-foods/create')} className="processedfoodlistcreate-button">
         가공식품 작성
       </button>
+      )}
+      
       <table className="food-table">
         <thead>
           <tr>

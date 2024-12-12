@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { SERVER_URL } from '../../../Constants';
+import { useAuth } from "../../sign/AuthContext";  // 권한설정
 import '../../../css/community/NoticeList.css'; // 스타일 파일 경로
 
 const NoticeList = () => {
@@ -11,6 +12,7 @@ const NoticeList = () => {
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 번호
   const noticesPerPage = 8; // 한 페이지에 표시할 공지사항 수
   const navigate = useNavigate(); // 페이지 이동을 위한 네비게이터
+  const { isAdmin } = useAuth();  // 로그인 상태 확인
 
   // 공지사항 목록을 서버에서 불러오는 함수
   const loadNotices = async () => {
@@ -59,12 +61,15 @@ const NoticeList = () => {
       <h2>공지사항 목록</h2>
 
       {/* 글 작성 버튼 */}
-      <button
+      {isAdmin && (
+        <button
         onClick={() => navigate('/community/notices/create')}
         className="communitycreate-button"
       >
         글 작성
       </button>
+    )}
+      
 
       {/* 공지사항 목록 테이블 */}
       <table className="communitynotice-table">

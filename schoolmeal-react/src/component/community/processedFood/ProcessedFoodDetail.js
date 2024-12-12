@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom'; // useParams, useNavigate 추가
 import { SERVER_URL } from "../../../Constants";
 import "../../../css/community/ProcessedFoodDetail.css"; 
+import { useAuth } from "../../sign/AuthContext";  // 권한설정
 import ProcessedFoodComments from './ProcessedFoodComments'; // 댓글 컴포넌트 임포트
 
 const ProcessedFoodDetail = () => {
@@ -10,6 +11,7 @@ const ProcessedFoodDetail = () => {
   const navigate = useNavigate();
   const [food, setFood] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { isAuth } = useAuth();  // 로그인 상태 확인
 
   useEffect(() => {
     // 가공식품 정보 조회 요청
@@ -109,8 +111,16 @@ const ProcessedFoodDetail = () => {
       </table>
 
       <div className="processedFoodDetailbutton-group">
-        <button onClick={() => navigate(`/community/processed-foods/edit/${foodId}`)} className="processedFoodDetailedit-btn">수정</button>
-        <button onClick={handleDelete} className="processedFoodDetaildelete-btn">삭제</button>
+        {isAuth && (
+          <button onClick={() => navigate(`/community/processed-foods/edit/${foodId}`)} className="processedFoodDetailedit-btn">수정</button>
+        )}
+
+        {isAuth && (
+          <button onClick={handleDelete} className="processedFoodDetaildelete-btn">삭제</button>
+        )}
+
+        
+        
         <button onClick={() => navigate('/community/processed-foods')} className="processedFoodDetailback-btn">뒤로 가기</button>
       </div>
 

@@ -4,12 +4,16 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { SERVER_URL } from "../../../Constants";
 import RegionalCommunityComments from './RegionalCommunityComments'; // 댓글 컴포넌트 추가
 import "../../../css/community/RegionalCommunityDetail.css"; 
+import { useAuth } from "../../sign/AuthContext";  
 
 const RegionalCommunityDetail = () => {
   const { id: postId } = useParams(); // URL에서 postId를 가져옵니다.
   const navigate = useNavigate();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
+  
+  // AuthContext에서 인증 상태와 권한 정보 가져오기
+  const { isAuth, isAdmin, token } = useAuth();
 
   useEffect(() => {
     // 지역 커뮤니티 게시글 상세 조회 요청
@@ -27,7 +31,11 @@ const RegionalCommunityDetail = () => {
   // 게시글 삭제 처리
   const handleDelete = () => {
     if (window.confirm('정말 이 게시글을 삭제하시겠습니까?')) {
-      axios.delete(`${SERVER_URL}regions/delete/${postId}`)
+      axios.delete(`${SERVER_URL}regions/delete/${postId}` , {
+        headers: {
+          Authorization: `${token}`,
+        }
+      })
         .then(() => {
           alert('게시글이 삭제되었습니다.');
           // 삭제 후 전체 게시물 조회 페이지로 이동
@@ -72,14 +80,18 @@ const RegionalCommunityDetail = () => {
       </table>
       <div className="regionCommunityDetailbutton-group">
         {/* 수정 버튼 */}
-        <button onClick={() => navigate(`/community/regions/edit/${post.id}`)} className="regionCommunityDetailedit-btn">
+      {isAuth && (
+          <button onClick={() => navigate(`/community/regions/edit/${post.id}`)} className="regionCommunityDetailedit-btn">
           수정
         </button>
-
-        {/* 삭제 버튼 */}
+      )}
+      {/* 삭제 버튼 */}
+      {isAuth && (
         <button onClick={handleDelete} className="regionCommunityDetaildelete-btn">
-          삭제
-        </button>
+        삭제
+      </button>
+      )}
+
 
         {/* 뒤로 가기 버튼 */}
         <button onClick={() => navigate('/community/regions')} className="regionCommunityDetailback-btn">

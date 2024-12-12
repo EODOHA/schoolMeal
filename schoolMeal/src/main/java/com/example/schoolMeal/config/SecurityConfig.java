@@ -75,28 +75,22 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.GET, "/videoEducations/**").permitAll()
 				.requestMatchers(HttpMethod.GET, "/videoEducation/**").permitAll()
 				.requestMatchers(HttpMethod.GET, "/videoEducation/download/**").permitAll()
+
+
 				// 커뮤니티 - 공지사항
 				.requestMatchers(HttpMethod.GET, "/notices/**", "/notices/download/**").permitAll()
-				.requestMatchers(HttpMethod.POST, "/notices/**").permitAll()
-				.requestMatchers(HttpMethod.PUT, "/notices/**").permitAll()
-				.requestMatchers(HttpMethod.DELETE, "/notices/**").permitAll()
+
 				// 커뮤니티 - 가공식품정보
 				.requestMatchers(HttpMethod.GET, "/processed-foods/**").permitAll()
-				.requestMatchers(HttpMethod.POST, "/processed-foods/**").permitAll()
-				.requestMatchers(HttpMethod.PUT, "/processed-foods/**").permitAll()
-				.requestMatchers(HttpMethod.DELETE, "/processed-foods/**").permitAll()
+
 				// 커뮤니티 - 지역별커뮤니티
 				.requestMatchers(HttpMethod.GET, "/regions/**").permitAll()
-				.requestMatchers(HttpMethod.POST, "/regions/**").permitAll()
-				.requestMatchers(HttpMethod.PUT, "/regions/**").permitAll()
-				.requestMatchers(HttpMethod.DELETE, "/regions/**").permitAll()
+
 				// 커뮤니티 - 급식뉴스 , 학술뉴스
 				.requestMatchers(HttpMethod.GET, "/crawling/**").permitAll()
 				// 커뮤니티 - 댓글기능
 				.requestMatchers(HttpMethod.GET, "/comments/**").permitAll()
-				.requestMatchers(HttpMethod.POST, "/comments/**").permitAll()
-				.requestMatchers(HttpMethod.PUT, "/comments/**").permitAll()
-				.requestMatchers(HttpMethod.DELETE, "/comments/**").permitAll()
+
 
 				// 해당 엔드포인트는 인증 필요 없음.
 				.anyRequest().authenticated()
@@ -116,7 +110,7 @@ public class SecurityConfig {
 	}
 
 	@Bean // 사용자 인증 책임지는 핵심 구성 요소.
-			// 보통 userDetailsService, passwordEncoder를 설정해 사용.
+	// 보통 userDetailsService, passwordEncoder를 설정해 사용.
 	public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
 
 		AuthenticationManagerBuilder authenticationManagerBuilder = http
