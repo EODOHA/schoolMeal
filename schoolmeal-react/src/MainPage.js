@@ -227,15 +227,27 @@ const MainPage = () => {
     // 급식자료실 목록을 가져오기 ------------------------------------
     useEffect(() => {
         setIsResourcesLoading(true);
-        axios.get(`${SERVER_URL}mealPolicyOperations`) // 급식 자료 API 엔드포인트
-            .then(response => {
-                // 실제 자료는 response.data._embedded.mealPolicyOperations에 있음
-                setResources(response.data._embedded.mealPolicyOperations); // 급식 자료 목록 업데이트
-                setIsResourcesLoading(false); // 데이터 로딩 완료
-            })
-            .catch((error) => console.error("급식 자료 로딩 실패", error))
-            .finally(() => setIsResourcesLoading(false));
-    }, []);
+        fetch(SERVER_URL + 'mealPolicyOperations', {
+            method: 'GET',
+            headers: createHeaders(),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Fetched Resource:", data);
+            setResources(data._embedded?.mealPolicyOperations || []);  // 데이터가 없으면 빈 배열로 설정
+            setIsResourcesLoading(false);  // 로딩 완료 상태로 설정
+        })
+        .catch((error) => {
+            console.error("Error fetching Resources:", error);
+            setIsResourcesLoading(false);  // 로딩 실패 상태로 설정
+        });
+    }, []); // 컴포넌트가 마운트될 때 한 번만 실행
+
 
     // 자주 찾는 서비스 관련 Start ----------------------------------
     const sliderRef = useRef(null);
@@ -424,25 +436,31 @@ const MainPage = () => {
                 </div>
 
                 <div className="resource-container">
-                    <h2>급식 자료실</h2>
-                    {isResourcesLoading ? (
-                        <p>로딩 중입니다... ⏳</p>
-                    ) : (
-                        <ul>
-                            {resources.length > 0 ? (
-                                // 처음 5개만 보여주기 위해 slice(0, 5) 사용
-                                resources.slice(0, 5).map((resource) => (
-                                    <li key={resource.id}>
-                                        <Link to={`/mealResource/meal-policy-operation/${resource.id}`}>
-                                            {resource.title} {/* title을 올바르게 출력 */}
-                                        </Link>
-                                    </li>
-                                ))
-                            ) : (
-                                <p>자료가 없습니다. 🧐</p> // 데이터가 없을 때 표시될 메시지
-                            )}
-                        </ul>
-                    )}
+                    <Link to={'/mealResource/meal-policy-operation'}>
+                        <h2>급식자료실</h2>
+                    </Link>
+                    <ul>
+                        {isResourcesLoading ? (
+                            <p>로딩 중입니다... ⏳</p>
+                        ) : (
+                            <ul>
+                                {resources.length > 0 ? (
+                                    // 역순 출력 위해 .reverse() 사용.
+                                    // 복사본을 생성한 뒤 reverse() 사용
+                                    // 개수 제한 .slice(x, y) 사용
+                                    [...resources].reverse().slice(0, 10).map((resource) => ( // 변수 이름 변경
+                                        <li key={resource.id}>
+                                            <Link to={`/mealResource/meal-policy-operation/${resource.id}`}>
+                                                {resource.title} {/* title을 올바르게 출력 */}
+                                            </Link>
+                                        </li>
+                                    ))
+                                ) : (
+                                    <p>자료가 없습니다. 🧐</p> // 데이터가 없을 때 표시될 메시지
+                                )}
+                            </ul>
+                        )}
+                    </ul>
                 </div>
             </section>
 
