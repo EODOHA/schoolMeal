@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { SERVER_URL } from "../../../Constants";
+import { useAuth } from "../../sign/AuthContext";
 import "../../../css/community/CreateRegionalCommunity.css"; 
 
 const CreateRegionalCommunity = () => {
@@ -11,6 +12,9 @@ const CreateRegionalCommunity = () => {
   const [content, setContent] = useState('');
   const [region, setRegion] = useState('SEOUL'); // 지역 선택 기본값
   const [author] = useState('테스트 사용자'); // 고정된 작성자 정보
+
+  // AuthContext에서 인증 상태와 권한 정보 가져오기
+  const { isAuth, isAdmin, token } = useAuth();
 
   // 수정 모드일 경우 기존 데이터 설정
   useEffect(() => {
@@ -46,11 +50,19 @@ const CreateRegionalCommunity = () => {
     try {
       if (id) {
         // 지역별 커뮤니티 게시글 수정 요청
-        await axios.put(`${SERVER_URL}regions/update/${id}`, postData); // 서버 매핑 주소에 맞춤
+        await axios.put(`${SERVER_URL}regions/update/${id}`, postData ,{
+          headers: {
+            Authorization: `${token}`,
+          },
+        }); // 서버 매핑 주소에 맞춤
         alert('지역별 커뮤니티 게시글이 수정되었습니다.');
       } else {
         // 지역별 커뮤니티 게시글 작성 요청
-        await axios.post(`${SERVER_URL}regions/create`, postData); // 서버 매핑 주소에 맞춤
+        await axios.post(`${SERVER_URL}regions/create`, postData, {
+          headers: {
+            Authorization: `${token}`,
+          },
+        }); // 서버 매핑 주소에 맞춤
         alert('지역별 커뮤니티 게시글이 작성되었습니다.');
       }
       navigate('/community/regions'); // 작성 또는 수정 후 전체 목록으로 이동

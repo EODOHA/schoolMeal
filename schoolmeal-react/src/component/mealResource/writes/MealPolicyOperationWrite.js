@@ -58,7 +58,7 @@ function MealPolicyOperationWrite() {
 
         axios.post(`${SERVER_URL}mealPolicyOperation/writepro`, formData, {
             headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `${token}`,
             },
         })
         .then((response) => {

@@ -1,143 +1,179 @@
 import React, { useEffect, useState } from "react";
 import { SERVER_URL } from "../../../Constants";
 import { useAuth } from "../../sign/AuthContext";
+import '../../../css/ingredientInfo/IngredientInfoEdit.css';
+import { Button } from "@mui/material";
+import { useParams, useNavigate } from "react-router-dom";
+import LoadingSpinner from "../../common/LoadingSpinner";
 
-const HaccpInfoEdit = ({ haccp, setEditMode, setHaccpList }) => {
+const HaccpInfoEdit = () => {
     const [categories] = useState(["농산물", "축산물", "수산물", "공산품"]);
+    const [businessStatus] = useState(["영업중", "휴업중", "폐업"]);
     const { token } = useAuth();
+    const { haccpId } = useParams();
+    const navigate = useNavigate();
+    const [haccp, setHaccp] = useState(null);
 
-    const [formData, setFormData] = useState({
+    const [form, setForm] = useState({
         haccpDesignationNumber: "",
-        category: "",
+        category: categories[0], // 기본값 설정
         businessName: "",
         address: "",
         productName: "",
-        businessStatus: "",
+        businessStatus: businessStatus[0],
         certificationEndDate: "",
     });
 
     useEffect(() => {
-        if (haccp) {
-            setFormData({
-                haccpDesignationNumber: haccp.haccpDesignationNumber,
-                category: haccp.category || categories[0], // 카테고리 기본값 설정
-                businessName: haccp.businessName,
-                address: haccp.address,
-                productName: haccp.productName,
-                businessStatus: haccp.businessStatus,
-                certificationEndDate: haccp.certificationEndDate,
-            });
-        }
-    }, [haccp]);
+        // 데이터 가져오기
+        fetch(`${SERVER_URL}haccp/${haccpId}`)
+            .then((response) => response.json())
+            .then((data) => {
+                setHaccp(data); // 받아온 데이터를 haccp에 저장
+                setForm({
+                    haccpDesignationNumber: data.haccpDesignationNumber,
+                    category: data.category || categories[0],
+                    businessName: data.businessName,
+                    address: data.address,
+                    productName: data.productName,
+                    businessStatus: data.businessStatus || businessStatus[0],
+                    certificationEndDate: data.certificationEndDate,
+                });
+            })
+            .catch((error) => console.error("Error fetching data:", error));
+    }, [businessStatus, categories, haccpId]);
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData((prevData) => ({ ...prevData, [name]: value }));
+        setForm({ ...form, [name]: value });
+    };
+
+    const handleCancel = () => {
+        navigate("/ingredientInfo/haccp-info"); // 취소 시 목록 페이지로 이동
     };
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        fetch(`${SERVER_URL}haccp/${haccp._links.self.href.split("/").pop()}`, {
+        fetch(`${SERVER_URL}haccp/${haccpId}`, {
             method: "PUT",
             headers: {
                 "Authorization": token,
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(formData),
+            body: JSON.stringify(form),
         })
             .then((response) => {
-                // 응답 상태 코드확인
                 if (!response.ok) {
                     throw new Error(`HTTP 오류: ${response.status}`);
                 }
-                return response.json(); // 응답을 JSON으로 변환
+                return response.json();
             })
-            .then((updatedData) => {
-                // 수정된 데이터를 목록에 반영
-                setHaccpList((prevList) =>
-                    prevList.map((item) =>
-                        item._links.self.href === haccp._links.self.href ? updatedData : item
-                    )
-                );
-                alert("HACCP 인증 정보가 수정되었습니다.")
-                setEditMode(false); // 수정 모드 종료
+            .then(() => {
+                alert("HACCP 인증 정보가 수정되었습니다.");
+                navigate("/ingredientInfo/haccp-info"); // 수정 후 목록 페이지로 이동
             })
             .catch((error) => {
-                console.error("수정오류:", error);
-                alert("수정 중 오류가 발생하였습니다.")
+                console.error("수정 오류:", error);
+                alert("수정 중 오류가 발생하였습니다.");
             });
     };
-
+    if (!haccp) {
+        return <div><LoadingSpinner /></div>
+    }
     return (
-        <div>
-            <h1>인증정보 수정</h1>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>HACCP 지정번호</label>
-                    <input type="text" name="haccpDesignationNumber" value={formData.haccpDesignationNumber} readOnly />
-                </div>
-                <div>
-                    <label>카테고리</label>
-                    <select
-                        name="category"
-                        value={formData.category}
-                        onChange={handleChange}
-                    >
-                        {categories.map((categoryOption)=>(
-                            <option key={categoryOption} value={categoryOption}>
-                                {categoryOption}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                <div>
-                    <label>업소명</label>
-                    <input
-                        type="text"
-                        name="businessName"
-                        value={formData.businessName}
-                        onChange={handleChange}
-                    />
-                </div>
-                <div>
-                    <label>주소</label>
-                    <input
-                        type="text"
-                        name="address"
-                        value={formData.address}
-                        onChange={handleChange}
-                    />
-                </div>
-                <div>
-                    <label>품목명</label>
-                    <input
-                        type="text"
-                        name="productName"
-                        value={formData.productName}
-                        onChange={handleChange}
-                    />
-                </div>
-                <div>
-                    <label>영업상태</label>
-                    <input
-                        type="text"
-                        name="businessStatus"
-                        value={formData.businessStatus}
-                        onChange={handleChange}
-                    />
-                </div>
-                <div>
-                    <label>인증종료일자</label>
-                    <input
-                        type="date"
-                        name="certificationEndDate"
-                        value={formData.certificationEndDate}
-                        onChange={handleChange}
-                    />
-                </div>
-                <button type="submit">수정하기</button>
-            </form>
-            <button onClick={() => setEditMode(false)}>취소</button>
+        <div className="ingredient-info-edit-container">
+            <div className="ingredient-info-card">
+                <h2>HACCP 인증 정보 수정</h2>
+                <form onSubmit={handleSubmit}>
+                    <div className="ingredient-info-form-group">
+                        <label>HACCP 지정번호</label>
+                        <input
+                            type="text"
+                            name="haccpDesignationNumber"
+                            value={form.haccpDesignationNumber}
+                            readOnly
+                            disabled
+                        />
+                    </div>
+                    <div className="ingredient-info-form-group">
+                        <label>카테고리</label>
+                        <select
+                            name="category"
+                            value={form.category}
+                            onChange={handleChange}
+                        >
+                            {categories.map((categoryOption) => (
+                                <option key={categoryOption} value={categoryOption}>
+                                    {categoryOption}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="ingredient-info-form-group">
+                        <label>업소명</label>
+                        <input
+                            type="text"
+                            name="businessName"
+                            value={form.businessName}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className="ingredient-info-form-group">
+                        <label>주소</label>
+                        <input
+                            type="text"
+                            name="address"
+                            value={form.address}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className="ingredient-info-form-group">
+                        <label>품목명</label>
+                        <input
+                            type="text"
+                            name="productName"
+                            value={form.productName}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className="ingredient-info-form-group">
+                        <label>영업상태</label>
+                        <select
+                            name="businessStatus"
+                            value={form.businessStatus}
+                            onChange={handleChange}
+                        >
+                            {businessStatus.map((statusOption) => (
+                                <option key={statusOption} value={statusOption}>
+                                    {statusOption}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="ingredient-info-form-group">
+                        <label>인증 종료일자</label>
+                        <input
+                            type="date"
+                            name="certificationEndDate"
+                            value={form.certificationEndDate}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className="ingredient-info-button-group">
+                        <Button type="submit" className="ingredient-info-button submit">
+                            수정하기
+                        </Button>
+                        <Button
+                            type="button"
+                            onClick={handleCancel}
+                            className="ingredient-info-button cancel"
+                        >
+                            뒤로가기
+                        </Button>
+                    </div>
+                </form>
+            </div>
         </div>
     );
 };

@@ -6,12 +6,15 @@ import { SERVER_URL } from "../../../Constants";
 import "../../../css/eduData/EduDetail.css";
 import { RiVideoDownloadFill } from "react-icons/ri";
 import { FaVideoSlash } from "react-icons/fa";
+import { useAuth } from "../../sign/AuthContext";
+import LoadingSpinner from '../../common/LoadingSpinner';
 
 function VideoEducationDetail() {
     const { id } = useParams();  // URL에서 id 값을 받아옴
     const [videoEducation, setVideoEducation] = useState(null);
     const [loading, setLoading] = useState(true); // 로딩 상태
     const [error, setError] = useState(null); // 오류 상태
+    const { isAdmin } = useAuth();  // 로그인 상태 확인
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -24,7 +27,7 @@ function VideoEducationDetail() {
         axios
             .get(`${SERVER_URL}videoEducations/${id}`) // API URL
             .then((response) => {
-                setVideoEducation(response.data);  
+                setVideoEducation(response.data);
                 setLoading(false);
             })
             .catch((err) => {
@@ -34,7 +37,7 @@ function VideoEducationDetail() {
     }, [id]);
 
     if (loading) {
-        return <div>데이터를 로딩 중...</div>;
+        return <div><LoadingSpinner /></div>;
     }
 
     if (error) {
@@ -57,11 +60,18 @@ function VideoEducationDetail() {
         navigate(`/eduData/video-education/update/${id}`); // 수정 페이지로 이동
     };
 
+    const token = sessionStorage.getItem('jwt'); // JWT 토큰 가져오기
+    console.log(token);
+
     const deleteForm = () => {
         if (!window.confirm("삭제하시겠습니까?")) return;
-    
+
         axios
-            .delete(`${SERVER_URL}videoEducations/${id}`) // 수정된 URL로 요청
+            .delete(`${SERVER_URL}videoEducations/${id}`, {
+                headers: {
+                    Authorization: `${token}`,
+                },
+            }) // 수정된 URL로 요청
             .then((response) => {
                 if (response.status === 200) {
                     window.alert("삭제 성공");
@@ -72,17 +82,19 @@ function VideoEducationDetail() {
             })
             .catch((err) => {
                 window.alert("삭제 중 오류가 발생했습니다.");
-            }); 
+            });
     };
 
     // 비디오 URL 처리
-    const videoUrl = videoEducation.fileId;  // videoEducation 객체에서 fileId를 사용
+    const videoUrl = videoEducation?.id;  // videoEducation 객체에서 id 사용
 
     const fullVideoUrl = videoUrl
-        ? `http://localhost:8090/videoEducation/video/${videoUrl}`  // 백엔드에서 제공하는 URL로 수정
+        ? `${SERVER_URL}videoEducation/video/${videoUrl}`  // videoEducation의 ID를 URL에 추가
         : null;
 
-    console.log("비디오 URL:", fullVideoUrl); // 전체 비디오 URL 확인
+    console.log("비디오 URL:", fullVideoUrl);  // 전체 비디오 URL 확인
+
+
 
     return (
         <div className="edu-detail-container">
@@ -95,9 +107,9 @@ function VideoEducationDetail() {
                         <div className="edu-date">작성일: {formatDate(videoEducation.createdDate)}</div>
                     </div>
                     <div className="edu-attachment">
-                        {videoEducation.fileId ? (
+                        {videoEducation?._links?.fileUrl?.href ? (
                             <a
-                                href={`${SERVER_URL}videoEducation/download/${videoEducation.fileId}`}
+                                href={`${SERVER_URL}videoEducation/download/${videoEducation.id}`}
                                 download
                                 className="edu-attachment-link"
                             >
@@ -141,15 +153,30 @@ function VideoEducationDetail() {
                         )}
 
                         <div className="edu-button-group">
-                            <Button variant="outlined" color="success" onClick={update}>
-                                수정
-                            </Button>
-                            <Button variant="outlined" color="primary" onClick={() => navigate("/eduData/video-education")}>
+                            {isAdmin && (
+                                <Button
+                                    variant="outlined"
+                                    color="success"
+                                    onClick={update}
+                                >
+                                    수정
+                                </Button>
+                            )}
+                            <Button
+                                variant="outlined"
+                                color="primary" onClick={() => navigate("/eduData/video-education")}
+                            >
                                 목록
                             </Button>
-                            <Button variant="contained" color="error" onClick={deleteForm}>
-                                삭제
-                            </Button>
+                            {isAdmin && (
+                                <Button
+                                    variant="contained"
+                                    color="error"
+                                    onClick={deleteForm}
+                                >
+                                    삭제
+                                </Button>
+                            )}
                         </div>
                     </form>
                 </div>

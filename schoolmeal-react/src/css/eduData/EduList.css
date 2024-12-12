@@ -71,9 +71,9 @@
     background-color: #f1f1f1 !important;
 }
 
-/* 행 간격을 늘리기 위해 tr에 margin-bottom 추가 */
-.edu-tbody tr {
-    margin-bottom: 10px; /* 행 간격 */
+/* 선택된 행 강조 스타일 */
+.edu-table tbody tr.selected {
+    background-color: #d1eaff;
 }
 
 /* 첨부파일 아이콘 스타일 */

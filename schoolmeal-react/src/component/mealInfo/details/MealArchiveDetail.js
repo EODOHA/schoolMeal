@@ -33,7 +33,9 @@ function MealArchiveDetails() {
         }
         // 상세페이지 조회 api 호출
         axios.get(`${SERVER_URL}mealArchive/${id}`, {
-            headers: token ? { "Authorization": token } : {},
+            headers: {
+                "Authorization": token
+            },
         })
             .then(response => {
                 setArchive(response.data); // 데이터를 받아서 상태에 저장

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import com.example.schoolMeal.domain.entity.FileUrl;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -19,38 +20,42 @@ import lombok.Setter;
 
 @Table(name = "VideoEdu") // 테이블 명
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 public class VideoEducation {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, updatable = false)
-    private Long id;
-    
-    // 내용 필드, 최대 500자
-    @Column(length = 500)
-    private String content;
-    
-    // 제목 필드
-    @Column(nullable = false)
-    private String title;
-    
-    // 작성자 필드
-    @Column(nullable = false)
-    private String writer;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(nullable = false, updatable = false)
+	private Long id;
 
-    // 생성 날짜와 시간을 저장하는 필드
-    @Column(nullable = false)
-    private LocalDateTime createdDate = LocalDateTime.now();  // 기본값을 현재 시간으로 설정
-    
-    // 첨부파일 외래키
- 	@Column(name = "file_id")
-     private Long fileId;
+	// 내용 필드, 최대 500자
+	@Column(length = 500)
+	private String content;
 
-    // 파일 정보와의 1:1 관계 (MealPolicy와 FileUrl)
- 	@OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "file_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private FileUrl fileUrl;
-    
+	// 제목 필드
+	@Column(nullable = false)
+	private String title;
+
+	// 작성자 필드
+	@Column(nullable = false)
+	private String writer;
+
+	// 생성 날짜와 시간을 저장하는 필드
+	@Column(nullable = false)
+	private LocalDateTime createdDate = LocalDateTime.now(); // 기본값을 현재 시간으로 설정
+
+	// 파일 정보와의 1:1 관계 (MealPolicy와 FileUrl)
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name = "file_id", referencedColumnName = "id")
+	private FileUrl fileUrl;
+
+	public Long getFileUrlId() {
+		if (fileUrl != null) {
+			return fileUrl.getId();
+		}
+		return null;
+	}
+
 }

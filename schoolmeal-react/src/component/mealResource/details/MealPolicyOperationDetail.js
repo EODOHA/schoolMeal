@@ -6,7 +6,8 @@ import { SERVER_URL } from "../../../Constants";
 import "../../../css/mealResource/MealDetail.css"; // 스타일시트 적용
 import { MdOutlineFileDownload } from "react-icons/md";
 import { RiFileUnknowFill } from "react-icons/ri";
-import { useAuth } from "../../sign/AuthContext";  // 권한설정
+import { useAuth } from "../../sign/AuthContext";  
+import LoadingSpinner from '../../common/LoadingSpinner';
 
 function MealPolicyOperationDetail() {
     const { id } = useParams(); // URL에서 id 값을 받아옴
@@ -22,21 +23,22 @@ function MealPolicyOperationDetail() {
             setLoading(false);
             return;
         }
-
+    
         axios
             .get(`${SERVER_URL}mealPolicyOperations/${id}`)
             .then((response) => {
                 setMealPolicyOperation(response.data);
+                console.log(response.data);  // mealPolicyOperation의 데이터를 로그로 확인
                 setLoading(false);
             })
             .catch((err) => {
                 setError("데이터를 가져오는 중 오류가 발생했습니다.");
                 setLoading(false);
             });
-    }, [id]);
-   
+    }, [id]);    
+
     if (loading) {
-        return <div>데이터 로딩 중...</div>;
+        return <div><LoadingSpinner /></div>;
     }
 
     if (error) {
@@ -62,12 +64,12 @@ function MealPolicyOperationDetail() {
     const deleteForm = () => {
         if (!window.confirm("삭제하시겠습니까?")) return;
 
-        const token = sessionStorage.getItem('jwt'); // Bearer 포함된 토큰
+        const token = sessionStorage.getItem('jwt'); // JWT 토큰 가져오기
 
         axios
             .delete(`${SERVER_URL}mealPolicyOperation/delete/${id}`, {
                 headers: {
-                    Authorization: token, // Bearer 포함된 토큰 그대로 전달
+                    Authorization: `${token}`, 
                 },
             })
             .then((response) => {
@@ -95,17 +97,20 @@ function MealPolicyOperationDetail() {
                         <div className="meal-resource-date">작성일: {formatDate(mealPolicyOperation.createdDate)}</div>
                     </div>
                     <div className="meal-resource-attachment">
-                        {mealPolicyOperation.fileId ? (
-                            <a
-                                href={`${SERVER_URL}mealPolicyOperation/download/${mealPolicyOperation.id}`}
-                                download
-                                className="meal-resource-attachment-link"
-                            >
-                                첨부파일 &nbsp; <MdOutlineFileDownload />
-                            </a>
-                        ) : (
-                            <span>첨부파일 없음 &nbsp; <RiFileUnknowFill /></span>
-                        )}
+                        {/* 파일 URL을 사용하여 다운로드 링크를 생성 */}
+                        <div className="meal-resource-attachment">
+                            {mealPolicyOperation._links?.fileUrl?.href ? (
+                                <a
+                                    href={`${SERVER_URL}mealPolicyOperation/download/${mealPolicyOperation.id}`} // id를 사용하여 다운로드 URL 완성
+                                    download
+                                    className="meal-resource-attachment-link"
+                                >
+                                    첨부파일 &nbsp; <MdOutlineFileDownload />
+                                </a>
+                            ) : (
+                                <span>첨부파일 없음 &nbsp; <RiFileUnknowFill /></span>
+                            )}
+                        </div>
                     </div><br />
                     <form>
                         <div className="meal-resource-form-group">
@@ -127,15 +132,15 @@ function MealPolicyOperationDetail() {
                             />
                         </div><br />
                         <div className="meal-resource-button-group">
-                        {isAdmin && (
-                            <Button
-                                variant="outlined"
-                                color="success"
-                                onClick={update}
-                            >
-                                수정
-                            </Button>
-                        )}
+                            {isAdmin && (
+                                <Button
+                                    variant="outlined"
+                                    color="success"
+                                    onClick={update}
+                                >
+                                    수정
+                                </Button>
+                            )}
                             <Button
                                 variant="outlined"
                                 color="primary"
@@ -143,15 +148,15 @@ function MealPolicyOperationDetail() {
                             >
                                 목록
                             </Button>
-                        {isAdmin && (
-                            <Button
-                                variant="contained"
-                                color="error"
-                                onClick={deleteForm}
-                            >
-                                삭제
-                            </Button>
-                        )}
+                            {isAdmin && (
+                                <Button
+                                    variant="contained"
+                                    color="error"
+                                    onClick={deleteForm}
+                                >
+                                    삭제
+                                </Button>
+                            )}
                         </div>
                     </form>
                 </div>

@@ -1,47 +1,87 @@
 /* 컨테이너 스타일 */
 .ingredient-info-write-container {
-    display: flex;
-    justify-content: center;
-    align-items: center; /* 세로 정렬 */
-    max-width: 800px; /* Detail과 일치하는 폭 설정 */
+    max-width: 1000px;
     width: 100%;
-    margin: 0 auto; /* 중앙 정렬 */
+    margin: 0 auto;
     padding: 20px;
     box-sizing: border-box;
-    margin-top: 40px; /* 기존 여백 유지 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40px;
 }
 
+/* 카드 스타일 */
 .ingredient-info-card {
-    width: 100%; /* 카드가 컨테이너의 폭에 맞게 채워짐 */
+    width: 100%;
     padding: 20px;
     border: 1px solid #ddd;
     border-radius: 8px;
     background-color: #fff;
 }
 
-.ingredient-info-card-body {
-    font-family: Arial, sans-serif;
-}
-
+/* 제목 스타일 */
 .ingredient-info-card h2 {
-    font-size: 1.5rem;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+    font-size: 26px;
+    font-weight: bold;
     text-align: center;
 }
 
+/* 입력 폼 그룹 */
 .ingredient-info-form-group {
-    margin-bottom: 15px;
-    text-align: center;  /* 텍스트와 이미지를 중앙 정렬 */
+    margin-bottom: 20px;
+    padding: 0 10px; /* 그룹 내부 좌우 여백 추가 */
+    box-sizing: border-box; /* 여백 포함 계산 */
 }
 
+.ingredient-info-form-group input,
+.ingredient-info-form-group select,
+.ingredient-info-form-group textarea {
+    width: 100%;
+    max-width: calc(100% - 10px); /* 양쪽 패딩(10px * 2)을 제외한 최대 너비 */
+    padding: 10px;
+    margin: 0 auto; /* 중앙 정렬 */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box; /* 여백 포함 계산 */
+}
+
+textarea.ingredient-info-form-control {
+    resize: vertical;
+}
+
+/* 버튼 스타일 */
 .ingredient-info-button-group {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     margin-top: 20px;
 }
 
-.ingredient-info-error-message {
-    color: red;
-    margin-bottom: 15px;
+.ingredient-info-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
+.ingredient-info-button.submit {
+    background-color: #28a745;
+    color: white;
+}
+
+.ingredient-info-button.submit:hover {
+    background-color: #218838;
+}
+
+/* 에러 메시지 스타일 */
+.ingredient-info-error-message {
+    color: red;
+    margin-top: 10px;
+    font-size: 14px;
+    text-align: center;
+}

@@ -17,7 +17,7 @@
 /* 버튼 그룹 스타일 */
 .meal-resource-button-group {
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     gap: 10px; /* 버튼들 간 간격 */
     margin-bottom: 30px; /* 버튼과 테이블 사이 간격 */
 }

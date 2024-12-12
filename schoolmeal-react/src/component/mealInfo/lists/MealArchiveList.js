@@ -163,8 +163,7 @@ function MealArchiveList() {
                                     return (
                                         <tr key={archive.arc_id} onClick={() => gotoDetailArchive(archive.arc_id)}
                                             style={{
-                                                cursor: "pointer",
-                                                backgroundColor: isSelected ? "#e0f7fa" : "white",
+                                                cursor: "pointer"
                                             }}
                                         >
                                             <td>{postNumber}</td>

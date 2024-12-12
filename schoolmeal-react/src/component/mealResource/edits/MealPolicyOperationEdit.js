@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../../sign/AuthContext";
+import LoadingSpinner from '../../common/LoadingSpinner';
 
 function MealPolicyOperationEdit() {
     const [mealPolicyOperation, setMealPolicyOperation] = useState({
@@ -122,7 +123,7 @@ function MealPolicyOperationEdit() {
     };
 
     if (loading) {
-        return <div>데이터를 불러오는 중...</div>;
+        return <div><LoadingSpinner /></div>;
     }
 
     if (error) {

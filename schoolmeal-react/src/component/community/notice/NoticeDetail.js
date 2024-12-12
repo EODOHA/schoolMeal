@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom'; // useNavigate 추가
 import { SERVER_URL } from '../../../Constants';
+import { useAuth } from "../../sign/AuthContext";  // 권한설정
 import '../../../css/community/NoticeDetail.css';
 
 const NoticeDetail = () => {
@@ -9,6 +10,7 @@ const NoticeDetail = () => {
   const navigate = useNavigate(); // 페이지 이동을 위한 useNavigate 사용
   const [notice, setNotice] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { isAdmin } = useAuth();  // 로그인 상태 확인
 
   // 공지사항을 가져오는 함수
   const fetchNotice = async () => {
@@ -115,8 +117,15 @@ const NoticeDetail = () => {
         </tbody>
       </table>
       <div className="communityNoticebutton-group">
-        <button onClick={handleEdit} className="communityNoticeedit-btn">수정</button>
-        <button onClick={handleDelete} className="communityNoticedelete-btn">삭제</button>
+        {isAdmin  && (
+            <button onClick={handleEdit} className="communityNoticeedit-btn">수정</button>
+        )}
+
+        {isAdmin  && (
+           <button onClick={handleDelete} className="communityNoticedelete-btn">삭제</button>
+        )}
+        
+       
         <button onClick={() => navigate('/community/notices')} className="communityNoticeback-btn">뒤로 가기</button>
       </div>
     </div>

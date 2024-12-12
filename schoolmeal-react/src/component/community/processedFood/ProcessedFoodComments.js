@@ -2,10 +2,14 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { SERVER_URL } from "../../../Constants";
 import "../../../css/community/ProcessedFoodComments.css"; 
+import { useAuth } from "../../sign/AuthContext";
 
 const ProcessedFoodComments = ({ foodId }) => {
     const [comments, setComments] = useState([]);
     const [content, setContent] = useState('');
+
+    // AuthContext에서 인증 상태와 권한 정보 가져오기
+    const { isAuth, isAdmin, token } = useAuth();
 
     // 댓글 가져오기
     useEffect(() => {
@@ -35,7 +39,11 @@ const ProcessedFoodComments = ({ foodId }) => {
         };
 
         try {
-            await axios.post(`${SERVER_URL}comments`, commentData);
+            await axios.post(`${SERVER_URL}comments`, commentData, {
+                headers: {
+                    Authorization: `${token}`,
+                },
+            })
             setContent('');
             fetchComments(); // 댓글 작성 후 새로고침
         } catch (error) {
@@ -47,7 +55,11 @@ const ProcessedFoodComments = ({ foodId }) => {
     // 댓글 삭제
     const handleDelete = async (commentId) => {
         try {
-            await axios.delete(`${SERVER_URL}comments/${commentId}`);
+            await axios.delete(`${SERVER_URL}comments/${commentId}` ,{
+                headers: {
+                    Authorization: `${token}`,
+                },
+            });
             fetchComments(); // 삭제 후 새로고침
         } catch (error) {
             console.error('댓글 삭제 실패', error);
