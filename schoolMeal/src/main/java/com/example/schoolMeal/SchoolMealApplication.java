@@ -189,7 +189,7 @@ public class SchoolMealApplication implements CommandLineRunner {
         menuRecipe1.setAgeGroup("20대");
         menuRecipe1.setSeason("winter");
         menuRecipe1.setCreatedDate(LocalDateTime.now());
-        menuRecipe1.setFileId(null);  // 파일은 null로 설정
+        menuRecipe1.setFileUrl(null);  // 파일은 null로 설정
         
         MenuRecipe menuRecipe2 = new MenuRecipe();
         menuRecipe2.setContent("광어회, 미소된장국, 시금치 무침");
@@ -198,7 +198,7 @@ public class SchoolMealApplication implements CommandLineRunner {
         menuRecipe2.setAgeGroup("30대");
         menuRecipe2.setSeason("autumn");
         menuRecipe2.setCreatedDate(LocalDateTime.now());
-        menuRecipe2.setFileId(null);  // 파일은 null로 설정
+        menuRecipe2.setFileUrl(null);  // 파일은 null로 설정
 
         MenuRecipe menuRecipe3 = new MenuRecipe();
         menuRecipe3.setContent("김치찌개, 계란말이, 밥");
@@ -207,7 +207,7 @@ public class SchoolMealApplication implements CommandLineRunner {
         menuRecipe3.setAgeGroup("40대 이상");
         menuRecipe3.setSeason("spring");
         menuRecipe3.setCreatedDate(LocalDateTime.now());
-        menuRecipe3.setFileId(null);  // 파일은 null로 설정
+        menuRecipe3.setFileUrl(null);  // 파일은 null로 설정
 
         MenuRecipe menuRecipe4 = new MenuRecipe();
         menuRecipe4.setContent("불고기, 된장찌개, 밥");
@@ -216,7 +216,7 @@ public class SchoolMealApplication implements CommandLineRunner {
         menuRecipe4.setAgeGroup("10대");
         menuRecipe4.setSeason("four_seasons");
         menuRecipe4.setCreatedDate(LocalDateTime.now());
-        menuRecipe4.setFileId(null);  // 파일은 null로 설정
+        menuRecipe4.setFileUrl(null);  // 파일은 null로 설정
 
         menuRecipeRepository.save(menuRecipe1);
         menuRecipeRepository.save(menuRecipe2);

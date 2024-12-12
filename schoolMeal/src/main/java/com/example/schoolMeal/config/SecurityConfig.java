@@ -67,10 +67,16 @@ public class SecurityConfig {
 		.requestMatchers(HttpMethod.GET, "/haccp","/haccp/{haccp_id}").permitAll()
 		.requestMatchers(HttpMethod.GET, "/mealInfo/experts/{exp_id}/profile/{id}").permitAll()
 		// 급식자료실
-	    .requestMatchers(HttpMethod.GET, "/mealPolicyOperations/**", "/mealPolicyOperation/download/**").permitAll()
-	    .requestMatchers(HttpMethod.POST, "/mealPolicyOperations/**").hasRole("ADMIN")
-	    .requestMatchers(HttpMethod.PUT, "/mealPolicyOperations/**").hasRole("ADMIN")
-	    .requestMatchers(HttpMethod.DELETE, "/mealPolicyOperations/**").hasRole("ADMIN")
+	    .requestMatchers(HttpMethod.GET, "/mealPolicyOperations/**").permitAll()
+	    .requestMatchers(HttpMethod.GET, "/mealPolicyOperation/download/**").permitAll()
+	    .requestMatchers(HttpMethod.GET, "/mealPolicyOperation/**").permitAll()
+	    .requestMatchers(HttpMethod.GET, "/menuRecipes/**").permitAll()
+	    .requestMatchers(HttpMethod.GET, "/menuRecipe/**").permitAll()
+	    .requestMatchers(HttpMethod.GET, "/menuRecipe/download/**").permitAll()
+	    // 교육자료
+	    .requestMatchers(HttpMethod.GET, "/videoEducations/**").permitAll()
+	    .requestMatchers(HttpMethod.GET, "/videoEducation/**").permitAll()
+	    .requestMatchers(HttpMethod.GET, "/videoEducation/download/**").permitAll()
 				// 커뮤니티 - 공지사항
 				.requestMatchers(HttpMethod.GET, "/notices/**", "/notices/download/**").permitAll()
 				.requestMatchers(HttpMethod.POST, "/notices/**").permitAll()
