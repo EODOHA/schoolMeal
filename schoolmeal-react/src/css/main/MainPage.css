@@ -221,12 +221,28 @@ h2 {
 /* 각 서비스 항목 */
 .service-item {
     flex: 0 0 auto; /* 항목들이 기본 크기를 유지하며 가로로 배치되도록 설정 */
-    width: 100px; /* 각 항목의 고정 너비 */
+    width: 220px; /* 각 항목의 고정 너비 */
     border: 1px solid #ddd;
     padding: 10px;
     border-radius: 8px;
     background-color: #f1f1f1;
-    margin-right: 10px;
+    transition: background-color 0.3s ease; /* 배경색 변화에 부드러운 전환 추가 */
+    cursor: pointer;
+}
+
+.service-item p {
+    margin-top: 0; /* 위쪽 마진 제거 */
+    margin-bottom: 5px; /* 아래쪽 마진을 5px로 설정 (원하는 값으로 조정) */
+    color: #555;
+}
+
+.service-item:hover {
+    background-color: #ccc;
+}
+
+.service-link {
+    text-decoration: none; /* 링크의 기본 밑줄 제거 */
+    color: inherit; /* 링크 색상을 부모 요소 색상으로 상속 */
 }
 
 /* 좌우 버튼 */
@@ -284,7 +300,7 @@ h2 {
 }
 
 .video-box {
-    background-color: #f1f1f1;
+    background-color: #ccc;
     border-radius: 8px;
     width: 100%;
     height: 200px;
@@ -301,10 +317,8 @@ h2 {
     max-width: 400px;          /* 원하는 너비 */
     min-width: 200px;
     height: 90%;         /* 원하는 높이 */
-    border: 1px solid #ccc;
     border-radius: 8px;
     overflow: hidden;
-    background-color: #5b7794;
     transition: transform 0.3s ease;
 }
 
@@ -315,10 +329,10 @@ h2 {
     border-radius: 8px;
 }
 
-.video-input :hover {
+/* 마우스가 들어갔을 때 */
+.video-input:hover {
     cursor: pointer;
-    transform: scale(0.9);
-    transition: transform 0.3s ease;
+    transform: translate(-50%, -50%) scale(0.9); /* 위치는 그대로 두고 scale만 적용 */
 }
 
 /* 영상 팝업 내용 */
@@ -349,7 +363,7 @@ h2 {
     border: 1px solid #ccc;
 }
 
-/* 무한 슬라이드 영역 ------------------------------------------------ */
+/* 유관기관 무한 슬라이드 영역 ------------------------------------------------ */
 ul,
 li {
     list-style: none;

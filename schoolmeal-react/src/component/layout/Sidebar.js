@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavLinks } from './NavLinksContext'; // NavLinksContext import
 import '../../css/layout/Sidebar.css';  // Sidebar.css 파일을 import
@@ -6,12 +6,25 @@ import '../../css/layout/Sidebar.css';  // Sidebar.css 파일을 import
 const Sidebar = ({ isMemberManageOpen, isProfileUpdateOpen }) => {
     const { navLinks, selectedParent, setSelectedParent } = useNavLinks();
 
+    useEffect(() => {
+        if (selectedParent) {
+            localStorage.setItem('selectedParent', JSON.stringify(selectedParent))
+        }
+    }, [selectedParent]);
+
+    useEffect(() => {
+        const storedSelectedParent = localStorage.getItem('selectedParent');
+        if (storedSelectedParent) {
+            setSelectedParent(JSON.parse(storedSelectedParent));
+        }
+    }, [])
+
     return (
         <div className="sidebar">
             {/* 선택된 부모 게시판이 있을 때만 그 부모의 자식 게시판을 표시 */}
-            {selectedParent && (
+            {!isMemberManageOpen && !isProfileUpdateOpen && selectedParent && (
                 <div className="sub-links">
-                    <h3>{selectedParent.label}의 자식 게시판</h3>
+                    <h3>{selectedParent.label}</h3>
                     <ul>
                         {/* 선택된 부모의 자식 게시판만 렌더링 */}
                         {selectedParent.subLinks.map((subLink, index) => (

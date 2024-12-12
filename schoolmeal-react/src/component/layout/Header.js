@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { AppBar, Button, Toolbar, Typography, Box, Menu, MenuItem, Drawer, IconButton, DialogContent, DialogActions, Dialog, DialogTitle, TextField } from '@mui/material';
+import React, { useState, useEffect, useRef } from 'react';
+import { AppBar, Button, Toolbar, Typography, Box, Menu, MenuItem, Drawer, IconButton, DialogContent, DialogActions, Dialog, DialogTitle, TextField, List, ListItem, ListItemText } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../sign/AuthContext';
 import { useNavLinks } from './NavLinksContext'; // NavLinksContext import
@@ -21,8 +21,13 @@ const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setI
 
     const [anchorEl, setAnchorEl] = useState(null);
     const [openMenuIndex, setOpenMenuIndex] = useState(null);
-    const [searchQuery, setSearchQuery] = useState("");  // 검색어 상태 추가
+
+    const [searchQuery, setSearchQuery] = useState(""); // 검색어 상태 추가
+    const [suggestions, setSuggestions] = useState([]); // 자동 완성 추천 목록
+    const searchBoxRef = useRef(null); // 검색창 ref
+
     const [drawerOpen, setDrawerOpen] = useState(false); // Drawer 열고 닫기 상태 추가
+
     const [screenWidth, setScreenWidth] = useState(window.innerWidth); // 화면 너비 상태
 
     // 비밀번호 관련 상태
@@ -112,6 +117,7 @@ const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setI
       return () => window.removeEventListener('resize', handleResize); // 컴포넌트 언마운트 시 리스너 제거
     }, []);
 
+
     const handleMenuOpen = (event, index) => {
       setAnchorEl(event.currentTarget);
       setOpenMenuIndex(index);
@@ -150,10 +156,6 @@ const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setI
       navigate("/memberlist");     // 유저관리 페이지로 이동
     };
 
-    const handleSearchChange = (e) => {
-      setSearchQuery(e.target.value);  // 검색어 변경 처리
-    };
-
     const toggleDrawer = (open) => {
       setDrawerOpen(open);  // Drawer 열기/닫기
     };
@@ -182,6 +184,83 @@ const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setI
     };
 
     const visibleLinks = getVisibleLinks(); // 조건에 맞는 navLinks를 가져옴
+
+    // 검색 관련 함수 ---------------------------------------------------------
+    const handleSearchChange = (e) => {
+      const query = e.target.value;
+      setSearchQuery(query);  // 검색어 변경 처리
+
+      // 검색어에 맞는 추천 목록 필터링
+      if (query) {
+        const filteredLinks = findLinks(query);
+        setSuggestions(filteredLinks);
+      } else {
+        setSuggestions([]); // 검색어 없으면 자동완성 목록 초기화.
+      }
+    };
+
+    // 엔터키 누르면 호출되는 함수.
+    const handleSearch = (e) => {
+      if (e.key === "Enter" && suggestions.length > 0) {
+        navigate(suggestions[0].path); // 첫 번째 추천 항목으로 이동.
+        setSearchQuery("");
+        setSuggestions([]);
+      }
+    };
+
+    // 자동완성 목록 항목 클릭 시, 해당 게시판으로 이동.
+    const handleSuggestionClick = (path) => {
+      navigate(path);
+      setSearchQuery("");
+      setSuggestions([]);
+    }
+
+    // 검색어 기반으로 게시판 찾기
+    const findLinks = (query) => {
+      const matchedLinks = [];
+      
+      // 검색어에서 공백 제거하고 소문자로 변환
+      const normalizedQuery = query.replace(/\s+/g, '').toLowerCase();
+
+      for (const link of navLinks) {
+        // label에서도 공백을 제거하고 소문자로 변환
+        const normalizedLabel = link.label.replace(/\s+/g, '').toLowerCase();
+        
+        if (normalizedLabel.includes(normalizedQuery)) {
+          matchedLinks.push(link);
+        }
+
+        if (link.subLinks) {
+          for (const subLink of link.subLinks) {
+            const normalizedSubLinkLabel = subLink.label.replace(/\s+/g, '').toLowerCase();
+            
+            if (normalizedSubLinkLabel.includes(normalizedQuery)) {
+              matchedLinks.push(subLink);
+            }
+          }
+        }
+      }
+      return matchedLinks;
+    };
+
+    // 외부 클릭 시 자동 완성 목록 숨기고 검색어 초기화
+    const handleClickOutside = (e) => {
+      if (searchBoxRef.current && !searchBoxRef.current.contains(e.target)) {
+        setSearchQuery(""); // 검색어 초기화
+        setSuggestions([]); // 자동 완성 목록 숨기기
+      }
+    };
+
+    // 컴포넌트가 마운트될 때 외부 클릭 이벤트 리스너 추가
+    useEffect(() => {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, []);
+
+    // 검색 관련 함수 ---------------------------------------------------------
+
 
     return (
       <div className='header-box'>
@@ -288,8 +367,7 @@ const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setI
                             handleMenuClose(); // 메뉴 닫기
                           }}
                           sx= {{
-                            width: 'fit-content',
-                            height: "50px"
+                            height: "50px",
                           }}
                         >
                           {subLink.label}
@@ -301,25 +379,70 @@ const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setI
               ))}
             </Box>
 
-            {/* 검색창을 헤더에 추가 */}
-            <Box className="search-box">
+            {/* 검색창을 헤더에 추가 ------------------------------------------ */}
+            <Box className="search-box" ref={searchBoxRef}>
               <div className="search">
                 <div className="search-icon-wrapper">
                   <SearchIcon />
                 </div>
-                <InputBase className="search-inputBase"
-                  placeholder="검색…"
-                  inputProps={{ 'aria-label': 'search' }}
-                  value={searchQuery}
-                  onChange={handleSearchChange} // 검색어 입력 시 상태 업데이트
-                  // sx={{
-                    
-                  // }}
+                <InputBase
+                  className="search-inputBase"
+                  placeholder="게시판 검색…"
+                  inputProps={{ "aria-label": "search" }}
+                  value={searchQuery} // 검색어 상태
+                  onChange={handleSearchChange} // 입력값 업데이트
+                  onKeyDown={handleSearch} // 엔터 키 처리
                 />
               </div>
+              {/* 자동 완성 목록 표시 */}
+              {suggestions.length > 0 && (
+                <List
+                  sx={{
+                    position: 'absolute',
+                    top: '80%',
+                    padding: 0,
+                    maxHeight: 200,
+                    overflowY: 'auto',
+                    border: '1px solid #ddd',
+                    borderRadius: '8px',
+                    backgroundColor: '#fff',
+                    boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.1)',
+                    position: 'absolute', // 위치를 절대 위치로 설정
+                    zIndex: 10, // 다른 요소 위에 표시되도록 설정
+                  }}
+                >
+                  {suggestions.map((suggestion) => (
+                    <ListItem
+                      key={suggestion.path}
+                      button
+                      onClick={() => handleSuggestionClick(suggestion.path)}
+                      sx={{
+                        padding: '12px 16px',
+                        '&:hover': {
+                          backgroundColor: '#f0f0f0',
+                          cursor: 'pointer',
+                        },
+                      }}
+                    >
+                      <ListItemText
+                        primary={suggestion.label}
+                        sx={{
+                          fontSize: '16px',
+                          fontWeight: '500',
+                          color: '#333',
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                        }}
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              )}
             </Box>
+            {/* 검색창을 헤더에 추가 ------------------------------------------ */}
 
-            {/* 햄버거 버튼 */}
+            {/* 햄버거 버튼 ----------------------------------------------------- */}
             <Box className="hamburger-box">
               <IconButton
                 color="inherit"
@@ -335,38 +458,79 @@ const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setI
                 <MenuIcon />
               </IconButton>
             </Box>
-
-            
+            {/* 햄버거 버튼 ----------------------------------------------------- */}
           </Toolbar>
-          
 
           {/* Drawer (햄버거 메뉴 클릭 시 열리는 메뉴) */}
           <Drawer
             anchor="right"
             open={drawerOpen}
             onClose={() => toggleDrawer(false)}
-            disableScrollLock // 스크롤 락 해제.
+            disableScrollLock
             sx={{
-              zIndex: 1301, // Drawer의 z-index를 조정하여 Drawer가 페이지 위에 나타나도록 함
+              zIndex: 1301,
+              "& .MuiDrawer-paper": {
+                width: 300, // Drawer의 기본 너비를 늘림
+              },
             }}
           >
             <Box
-              sx={{ width: 200 }}
               role="presentation"
-              onClick={() => toggleDrawer(false)}
-              onKeyDown={() => toggleDrawer(false)}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 2, // 항목 간의 간격 추가
+                padding: 2,
+              }}
             >
               {navLinks.map((link) => (
-                <Button
-                  key={link.path}
-                  component={Link}
-                  to={link.path}
-                  fullWidth
-                  sx={{ padding: 2 }}
-                  onClick={() => handleSelectParent(link)} // 클릭 시 부모 선택 함수 호출.
-                >
-                  {link.label}
-                </Button>
+                <Box key={link.path} sx={{ display: "flex", flexDirection: "column" }}>
+                  {/* 부모 게시판 */}
+                  <Button
+                    component={Link}
+                    to={link.path}
+                    fullWidth
+                    sx={{
+                      fontWeight: "bold", // 부모 게시판을 강조
+                      textAlign: "left",
+                      backgroundColor: "#87D669",
+                      color: "white",
+                      padding: 1,
+                      "&:hover": {
+                        backgroundColor: "#9fe483",
+                      },
+                    }}
+                    onClick={() => {
+                      handleSelectParent(link);
+                      toggleDrawer(false);
+                    }}
+                  >
+                    {link.label}
+                  </Button>
+                  {/* 자식 게시판 */}
+                  {link.subLinks && (
+                    <Box>
+                      {link.subLinks.map((subLink) => (
+                        <Button
+                          key={subLink.path}
+                          component={Link}
+                          to={subLink.path}
+                          fullWidth
+                          sx={{
+                            fontWeight: "normal",
+                            color: "#555",
+                            "&:hover": {
+                              backgroundColor: "#ccc"
+                            },
+                          }}
+                          onClick={() => toggleDrawer(false)} // 자식 선택 시 Drawer 닫기
+                        >
+                          {subLink.label}
+                        </Button>
+                      ))}
+                    </Box>
+                  )}
+                </Box>
               ))}
             </Box>
           </Drawer>

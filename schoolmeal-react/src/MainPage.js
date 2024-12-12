@@ -240,8 +240,28 @@ const MainPage = () => {
     // 자주 찾는 서비스 관련 Start ----------------------------------
     const sliderRef = useRef(null);
     const [position, setPosition] = useState(0);
-    const itemWidth = 100;
+    const itemWidth = 220; // 슬라이드 버튼 누를 때 움직이는 길이.
     const [items, setItems] = useState([]);
+
+    const [sliderWidth, setSliderWidth] = useState(0);
+
+    // 화면 크기 변경 시 슬라이더 너비 업데이트
+    useEffect(() => {
+        const handleResize = () => {
+            if (sliderRef.current) {
+                setSliderWidth(sliderRef.current.clientWidth); // 슬라이더 부모의 너비 계산
+            }
+        };
+
+        window.addEventListener('resize', handleResize);
+        handleResize(); // 초기 로딩 시에도 슬라이더 너비 계산
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
+    const totalItemsWidth = items.length * itemWidth; // 전체 아이템 너비
 
     // 로컬 스토리지에서 항목 불러오기
     useEffect(() => {
@@ -262,7 +282,8 @@ const MainPage = () => {
                         { 
                             id: prevItems.length + 1, 
                             name: selectedParent.label, 
-                            description: `${selectedParent.label} 관련 페이지`,
+                            description1: `${selectedParent.label} 관련`,
+                            description2: '메인 게시판으로 이동합니다.',
                             path: selectedParent.path || '#', // selectedParent.path를 item에 추가
                         }
                     ];
@@ -276,33 +297,52 @@ const MainPage = () => {
         }
     }, [selectedParent]);  // selectedParent만 의존성에 추가
 
-    
-
     // 무한 루프 효과를 위한 useEffect
     useEffect(() => {
-        if (position > (items.length - 8) * itemWidth) {
-            // 오른쪽으로 끝에 도달한 경우
-            setItems((prevItems) => [
-                ...prevItems.slice(0, 8), // 처음 8개 항목
-                ...prevItems, // 나머지 항목
-            ]);
-        } else if (position < 0) {
-            // 왼쪽으로 끝에 도달한 경우
-            setItems((prevItems) => [
-                ...prevItems.slice(-8), // 마지막 8개 항목
-                ...prevItems, // 나머지 항목
-            ]);
-            setPosition(8 * itemWidth); // 위치 재조정
-        }
-    }, [position]);
-    
-    // 슬라이드 이동 처리 함수 (부드럽게 이동하도록 설정)
-    const handleSlide = (direction) => {
-        const newPosition = position + direction * itemWidth;
-        if (newPosition >= 0) {
-            setPosition(newPosition);
+        if (totalItemsWidth > sliderWidth) {
+            // 슬라이드가 끝에 도달했을 때, 즉시 복사된 아이템을 추가
+            if (position >= (items.length - 1) * itemWidth) {
+                setItems((prevItems) => [
+                    ...prevItems,  // 기존 아이템들
+                    ...prevItems.slice(0, items.length),  // 처음부터 items.length 만큼 복사
+                ]);
+            } else if (position < 0) {
+                // 왼쪽 끝에 도달했을 때, 즉시 복사된 아이템을 추가
+                setItems((prevItems) => [
+                    ...prevItems.slice(-items.length),  // 마지막 items.length 만큼 복사
+                    ...prevItems,  // 기존 아이템들
+                ]);
+                setPosition(items.length * itemWidth); // 위치 재조정
+            }
         } else {
-            setPosition(0); // 최소 위치로 설정
+            // 무한 루프를 끄는 로직
+            setPosition(0); // 슬라이드 초기화
+        }
+    }, [position, items.length, sliderWidth, totalItemsWidth]);
+
+    // 슬라이드 이동 처리 함수
+    const handleSlide = (direction) => {
+        if (totalItemsWidth > sliderWidth) {  // 무한 슬라이드 조건
+            const newPosition = position + direction * itemWidth;
+
+            if (newPosition >= 0 && newPosition <= (items.length - 1) * itemWidth) {
+                setPosition(newPosition);
+            } else {
+                // 끝에 도달하면 복사된 아이템을 즉시 추가하고 슬라이드를 0으로 리셋
+                setPosition(0);  // 최소 위치로 설정
+
+                setItems((prevItems) => [
+                    ...prevItems,  // 기존 아이템들
+                    ...prevItems.slice(0, items.length),  // 복사된 아이템들
+                ]);
+            }
+        } else {
+            // 슬라이드가 끝에 도달한 경우
+            const newPosition = position + direction * itemWidth;
+
+            if (newPosition >= 0 && newPosition <= (items.length - 1) * itemWidth) {
+                setPosition(newPosition);
+            }
         }
     };
     // 자주 찾는 서비스 관련 End ------------------------------------
@@ -409,7 +449,11 @@ const MainPage = () => {
             <section className="service-section">
                 <h2>자주 찾는 서비스</h2>
                 <div className="service-slider-wrapper">
-                    <button className="slider-btn prev-btn" onClick={() => handleSlide(-1)} disabled={position === 0} >
+                    <button 
+                        className="slider-btn prev-btn" 
+                        onClick={() => handleSlide(-1)} 
+                        disabled={position === 0}
+                    >
                         ◀
                     </button>
                     <div
@@ -421,16 +465,20 @@ const MainPage = () => {
                         }} // 부드러운 전환 추가
                     >
                         {items.map((item, index) => (
-                            <div key={`${item.id}-${index}`} className="service-item">
+                            <Link to={item.path || '#'} className="service-link">
+                                <div key={`${item.id}-${index}`} className="service-item">
                                 {/* react-router-dom의 Link 컴포넌트를 사용하여 href 대신 path로 이동 */}
-                                <Link to={item.path || '#'} className="service-link">
                                     <h3>{item.name}</h3>
-                                    <p>{item.description}</p>
-                                </Link>
-                            </div>
+                                    <p>{item.description1}</p>
+                                    <p>{item.description2}</p>
+                                </div>
+                            </Link>
                         ))}
                     </div>
-                    <button className="slider-btn next-btn" onClick={() => handleSlide(1)}>
+                    <button 
+                        className="slider-btn next-btn" 
+                        onClick={() => handleSlide(1)}
+                    >
                         ▶
                     </button>
                 </div>
@@ -480,71 +528,71 @@ const MainPage = () => {
                 </div>
             )}
 
-<section className="related-agencies-section">
-    <div className="wrapper">
-        <div className="agency_container">
-            <ul
-                className="agency_wrapper"
-                onMouseEnter={onStop}
-                onMouseLeave={onRun}
-            >
-                {/* 로딩 중일 때 */}
-                {isAgenciesLoading ? (
-                    <p>로딩 중입니다... ⏳</p>
-                ) : (
-                    <>
-                        {/* 자료가 없을 때 */}
-                        {agencies.length === 0 ? (
-                            <p>유관기관 자료가 없습니다. 🧐</p>
-                        ) : (
-                            <>
-                                {/* 원본 리스트 */}
-                                <li className={`agency original${animate ? "" : " stop"}`}>
-                                    {agencies.map((s, i) => (
-                                        <ul key={s.id || i}>
-                                            <div className="item">
-                                                <img
-                                                    src={s.url || "#"} // 이미지 경로가 없다면 대체 이미지 또는 빈 값
-                                                    alt={s.name || `Agency ${i}`}
-                                                    style={{
-                                                        width: "200px",
-                                                        height: "80px",
-                                                        objectFit: "cover",
-                                                        borderRadius: "8px",
-                                                    }}
-                                                />
-                                            </div>
-                                        </ul>
-                                    ))}
-                                </li>
+            <section className="related-agencies-section">
+                <div className="wrapper">
+                    <div className="agency_container">
+                        <ul
+                            className="agency_wrapper"
+                            onMouseEnter={onStop}
+                            onMouseLeave={onRun}
+                        >
+                            {/* 로딩 중일 때 */}
+                            {isAgenciesLoading ? (
+                                <p>로딩 중입니다... ⏳</p>
+                            ) : (
+                                <>
+                                    {/* 자료가 없을 때 */}
+                                    {agencies.length === 0 ? (
+                                        <p>유관기관 자료가 없습니다. 🧐</p>
+                                    ) : (
+                                        <>
+                                            {/* 원본 리스트 */}
+                                            <li className={`agency original${animate ? "" : " stop"}`}>
+                                                {agencies.map((s, i) => (
+                                                    <ul key={s.id || i}>
+                                                        <div className="item">
+                                                            <img
+                                                                src={s.url || "#"} // 이미지 경로가 없다면 대체 이미지 또는 빈 값
+                                                                alt={s.name || `Agency ${i}`}
+                                                                style={{
+                                                                    width: "200px",
+                                                                    height: "80px",
+                                                                    objectFit: "cover",
+                                                                    borderRadius: "8px",
+                                                                }}
+                                                            />
+                                                        </div>
+                                                    </ul>
+                                                ))}
+                                            </li>
 
-                                {/* 복제된 리스트 (애니메이션 용도) */}
-                                <li className={`agency clone${animate ? "" : " stop"}`}>
-                                    {agencies.map((s, i) => (
-                                        <ul key={`${s.id || i}-clone`}>
-                                            <div className="item">
-                                                <img
-                                                    src={s.url || "#"}
-                                                    alt={s.name || `Agency Clone ${i}`}
-                                                    style={{
-                                                        width: "200px",
-                                                        height: "80px",
-                                                        objectFit: "cover",
-                                                        borderRadius: "8px",
-                                                    }}
-                                                />
-                                            </div>
-                                        </ul>
-                                    ))}
-                                </li>
-                            </>
-                        )}
-                    </>
-                )}
-            </ul>
-        </div>
-    </div>
-</section>
+                                            {/* 복제된 리스트 (애니메이션 용도) */}
+                                            <li className={`agency clone${animate ? "" : " stop"}`}>
+                                                {agencies.map((s, i) => (
+                                                    <ul key={`${s.id || i}-clone`}>
+                                                        <div className="item">
+                                                            <img
+                                                                src={s.url || "#"}
+                                                                alt={s.name || `Agency Clone ${i}`}
+                                                                style={{
+                                                                    width: "200px",
+                                                                    height: "80px",
+                                                                    objectFit: "cover",
+                                                                    borderRadius: "8px",
+                                                                }}
+                                                            />
+                                                        </div>
+                                                    </ul>
+                                                ))}
+                                            </li>
+                                        </>
+                                    )}
+                                </>
+                            )}
+                        </ul>
+                    </div>
+                </div>
+            </section>
         </div>
     );
 };
