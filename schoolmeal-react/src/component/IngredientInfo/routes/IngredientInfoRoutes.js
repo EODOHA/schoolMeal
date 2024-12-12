@@ -8,7 +8,7 @@ import IngredientInfoMain from '../routes/IngredientInfoMain';
 import HaccpInfoList from '../lists/HaccpInfoList';
 import HaccpInfoWrite from '../writes/HaccpInfoWrite';
 import HaccpInfoEdit from '../edits/HaccpInfoEdit';
-import WriteFileUpload from '../writes/WriteFileUpload';
+import HaccpFileUpload from '../uploads/HaccpFileUpload';
 
 
 
@@ -20,9 +20,9 @@ const IngredientInfoRoutes = (
     <Route path="ingredientInfo/haccp-info" element={<HaccpInfoList />} />
 
     <Route path="ingredientInfo/haccp-info/write" element={<HaccpInfoWrite />} />
-    <Route path="ingredientInfo/haccp-info/edit/:id" element={<HaccpInfoEdit />} />
-    <Route path="haccp-info/write-file-upload" element={<WriteFileUpload />} />
-
+    <Route path="ingredientInfo/haccp-info/edit/:haccpId" element={<HaccpInfoEdit />} />
+    <Route path="haccp-info/write-file-upload" element={<HaccpFileUpload />} />
+    <Route path="haccp-info/write" element={<HaccpInfoWrite />} />
 
 
   </>

@@ -2,16 +2,10 @@
 .ingredient-info-list-container {
     padding: 20px;
     margin: 0 auto;
-    max-width: 1200px;
+    max-width: 1400px;
     font-family: Arial, sans-serif;
     text-align: center;
     /* 컨테이너 내 내용 가로 가운데 정렬 */
-}
-/* 제목 스타일 */
-.ingredient-info-title {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 15px;
 }
 
 /* 제목 스타일 */
@@ -19,13 +13,17 @@
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 15px;
+    text-align: center;
 }
 
 /* 버튼 그룹 스타일 */
 .ingredient-info-button-group {
     display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
+    justify-content: center !important;
+    gap: 20px;
+    /* 버튼들 간 간격 */
+    margin-bottom: 20px;
+    /* 버튼과 테이블 사이 간격 */
 }
 
 /* 테이블 스타일 */
@@ -35,52 +33,130 @@
     /* 셀 간 경계를 합침 */
     margin-top: 20px;
     /* 테이블 위쪽 여백 추가 */
-}
-
-/* 테이블 헤더 스타일 */
-.ingredient-info-thead {
-    background-color: #f2f2f2;
-    border-bottom: 2px solid #ccc;
+    table-layout: fixed;
+    /* 테이블 열 너비를 강제로 고정 */
 }
 
 /* 셀 스타일 */
 .ingredient-info-table td,
 .ingredient-info-table th {
-    padding: 10px;
+    padding: 15px;
     /* 셀 안쪽 여백 */
     text-align: center;
     /* 셀 내 글자 가운데 정렬 */
+    word-wrap: break-word;
+    /* 긴 글자는 자동 줄바꿈 */
 }
 
-/* 각 열 너비 설정 */
-.ingredient-info-table th:nth-child(1),
-.ingredient-info-table td:nth-child(1) {
-    width: 10%;
-    /* 번호 열의 너비 */
-}
-
+/* 번호 */
 .ingredient-info-table th:nth-child(2),
 .ingredient-info-table td:nth-child(2) {
-    width: 40%;
-    /* 제목 열의 너비 (가장 넓게 설정) */
+    width: 1%;
 }
 
+/* HACCP 지정번호 */
 .ingredient-info-table th:nth-child(3),
 .ingredient-info-table td:nth-child(3) {
-    width: 20%;
-    /* 등록일 열의 너비 */
+    width: 27%;
 }
 
+/* 카테고리 */
 .ingredient-info-table th:nth-child(4),
 .ingredient-info-table td:nth-child(4) {
-    width: 15%;
-    /* 작성자 열의 너비 */
+    width: 3%;
 }
 
+/* 업소명 */
 .ingredient-info-table th:nth-child(5),
 .ingredient-info-table td:nth-child(5) {
-    width: 15%;
-    /* 첨부파일 열의 너비 */
+    width: 10%;
+}
+
+/* 주소 */
+.ingredient-info-table th:nth-child(6),
+.ingredient-info-table td:nth-child(6) {
+    width: 30%;
+}
+
+/* 품목명 */
+.ingredient-info-table th:nth-child(7),
+.ingredient-info-table td:nth-child(7) {
+    width: 5%;
+}
+
+/* 영업상태 */
+.ingredient-info-table th:nth-child(8),
+.ingredient-info-table td:nth-child(8) {
+    width: 10%;
+}
+
+/* 인증 종료일자 */
+.ingredient-info-table th:nth-child(9),
+.ingredient-info-table td:nth-child(9) {
+    width: 20%;
+}
+
+/* 수정 */
+.ingredient-info-table th:nth-child(10),
+.ingredient-info-table td:nth-child(10) {
+    width: 3%;
+}
+
+/* 삭제 */
+.ingredient-info-table th:nth-child(11),
+.ingredient-info-table td:nth-child(11) {
+    width: 3%;
+    /* 좁게 설정 */
+}
+
+/* 체크박스 크기 조정 */
+.ingredient-info-table td input[type="checkbox"] {
+    width: 10px;
+    /* 체크박스 너비 */
+    height: 10px;
+    /* 체크박스 높이 */
+    margin: 0;
+    /* 체크박스 주변 여백 제거 */
+    transform: scale(1.5);
+    /* 크기 비율 조정 가능 */
+}
+
+/* 체크박스 포함된 셀 */
+.ingredient-info-table th:nth-child(1),
+.ingredient-info-table td:nth-child(1) {
+    width: 1%;
+    padding: 0;
+    /* 안쪽 여백 최소화 */
+    text-align: center;
+    /* 가운데 정렬 */
+}
+/* 페이징 선택기 스타일 */
+.ingredient-paging-selector {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    font-size: 15px;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background-color: #f9f9f9;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+.ingredient-paging-selector select {
+    margin-left: 15px;
+    padding: 5px;
+    font-size: 14px;
+}
+
+.ingredient-paging-selector select:hover {
+    background-color: #f2f2f2;
+    border-color: #888;
+}
+
+.ingredient-paging-selector select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
 /* 행 스타일 */
@@ -92,15 +168,7 @@
     background-color: #f1f1f1 !important;
 }
 
-/* 행 간격을 늘리기 위해 tr에 margin-bottom 추가 */
-.ingredient-info-tbody tr {
-    margin-bottom: 10px;
-    /* 행 간격 */
-}
-
-/* 첨부파일 아이콘 스타일 */
-.ingredient-info-attachment-icon {
-    font-size: 18px;
-    color: #007bff;
-    cursor: pointer;
+/* 선택된 행 강조 스타일 */
+.ingredient-info-table tbody tr.selected {
+    background-color: #d1eaff;
 }

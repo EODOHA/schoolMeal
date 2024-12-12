@@ -1,0 +1,110 @@
+/* 컨테이너 스타일 */
+.ingredient-info-upload-container {
+    padding: 20px;
+    margin: 0 auto;
+    max-width: 1400px;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    /* 컨테이너 내 내용 가로 가운데 정렬 */
+}
+
+/* 제목 스타일 */
+.ingredient-info-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+/* 버튼 그룹 스타일 */
+.ingredient-info-button-group {
+    display: flex;
+    justify-content: center !important;
+    gap: 10px;
+    /* 버튼들 간 간격 */
+    margin-bottom: 30px;
+    /* 버튼과 테이블 사이 간격 */
+}
+.ingredient-info-button.back-to-list {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* 테이블 스타일 */
+.ingredient-info-table {
+    width: 100%;
+    border-collapse: collapse;
+    /* 셀 간 경계를 합침 */
+    margin-top: 20px;
+    /* 테이블 위쪽 여백 추가 */
+}
+
+/* 테이블 헤더 스타일 */
+.ingredient-info-thead {
+    background-color: #f2f2f2;
+    border-bottom: 2px solid #ccc;
+}
+
+/* 셀 스타일 */
+.ingredient-info-table td,
+.ingredient-info-table th {
+    padding: 15px;
+    /* 셀 안쪽 여백 */
+    text-align: center;
+    /* 셀 내 글자 가운데 정렬 */
+    word-wrap: break-word;
+    /* 긴 글자는 자동 줄바꿈 */
+}
+
+/* 각 열 너비 설정 */
+.ingredient-info-table th:nth-child(1),
+.ingredient-info-table td:nth-child(1) {
+    width: 20%;
+    /* HACCP 지정번호 */
+}
+
+.ingredient-info-table th:nth-child(2),
+.ingredient-info-table td:nth-child(2) {
+    width: 10%;
+    /* 카테고리 */
+}
+
+.ingredient-info-table th:nth-child(3),
+.ingredient-info-table td:nth-child(3) {
+    width: 10%;
+    /* 업소명 */
+}
+
+.ingredient-info-table th:nth-child(4),
+.ingredient-info-table td:nth-child(4) {
+    width: 25%;
+    /* 주소 */
+}
+
+.ingredient-info-table th:nth-child(5),
+.ingredient-info-table td:nth-child(5) {
+    width: 10%;
+    /* 품목명 */
+}
+
+.ingredient-info-table th:nth-child(6),
+.ingredient-info-table td:nth-child(6) {
+    width: 10%;
+    /* 영업상태 */
+}
+
+.ingredient-info-table th:nth-child(7),
+.ingredient-info-table td:nth-child(7) {
+    width: 30%;
+    /* 인증종료일자 */
+}
+
+
+/* 행 스타일 */
+.ingredient-info-tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.ingredient-info-tbody tr:hover {
+    background-color: #f1f1f1 !important;
+}

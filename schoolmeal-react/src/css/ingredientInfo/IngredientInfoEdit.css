@@ -1,39 +1,24 @@
 /* 컨테이너 스타일 */
 .ingredient-info-edit-container {
     max-width: 1000px;
-    /* 최대 폭 설정 */
     width: 100%;
-    /* 100% 너비로 확장 가능 */
     margin: 0 auto;
-    /* 중앙 정렬 */
     padding: 20px;
     box-sizing: border-box;
-    /* padding과 border를 크기 안에 포함 */
     display: flex;
     flex-direction: column;
-    /* 내용은 세로로 정렬 */
     justify-content: center;
-    /* 세로 중앙 정렬 */
     align-items: center;
-    /* 가로 중앙 정렬 */
     margin-top: 40px;
 }
 
-/* 카드 스타일 (Edite 페이지) */
+/* 카드 스타일 (Edit 페이지) */
 .ingredient-info-card {
     width: 100%;
-    /* 카드가 컨테이너의 폭에 맞게 채워짐 */
     padding: 20px;
     border: 1px solid #ddd;
     border-radius: 8px;
     background-color: #fff;
-}
-
-/* 카드 본문 스타일 */
-.ingredient-info-card-body {
-    padding: 20px;
-    text-align: center;
-    /* 본문 내용을 중앙 정렬 */
 }
 
 /* 제목 스타일 */
@@ -47,15 +32,22 @@
 /* 입력 폼 그룹 */
 .ingredient-info-form-group {
     margin-bottom: 20px;
+    padding: 0 10px; /* 그룹 내부 좌우 여백 추가 */
+    box-sizing: border-box; /* 여백 포함 계산 */
 }
 
+/* 입력 필드 및 셀렉트 박스 스타일 */
 .ingredient-info-form-group input,
+.ingredient-info-form-group select,
 .ingredient-info-form-group textarea {
     width: 100%;
+    max-width: calc(100% - 10px); /* 양쪽 패딩(10px * 2)을 제외한 최대 너비 */
     padding: 10px;
+    margin: 0 auto; /* 중앙 정렬 */
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
+    box-sizing: border-box; /* 여백 포함 계산 */
 }
 
 textarea.ingredient-info-form-control {
@@ -69,6 +61,33 @@ textarea.ingredient-info-form-control {
     margin-top: 20px;
 }
 
+.ingredient-info-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.ingredient-info-button.submit {
+    background-color: #007BFF;
+    color: white;
+}
+
+.ingredient-info-button.submit:hover {
+    background-color: #0056b3;
+}
+
+.ingredient-info-button.cancel {
+    background-color: #6c757d;
+    color: white;
+}
+
+.ingredient-info-button.cancel:hover {
+    background-color: #494e52;
+}
+
 /* 에러 메시지 스타일 */
 .ingredient-info-error-message {
     color: red;
@@ -76,4 +95,3 @@ textarea.ingredient-info-form-control {
     text-align: center;
     font-size: 18px;
 }
-
