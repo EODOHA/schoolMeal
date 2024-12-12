@@ -5,6 +5,8 @@ import axios from "axios";
 import { SERVER_URL } from "../../../Constants";
 import "../../../css/eduData/EduEdit.css";
 
+import { useAuth } from "../../sign/AuthContext";
+
 function VideoEducationEdit() {
     const [title, setTitle] = useState("");
     const [writer, setWriter] = useState("");
@@ -12,10 +14,26 @@ function VideoEducationEdit() {
     const [videoFile, setVideoFile] = useState(null); // 새로 선택한 파일
     const [existingVideo, setExistingVideo] = useState(""); // 기존 비디오 URL
     const [previewVideoUrl, setPreviewVideoUrl] = useState(null); // 미리보기 URL
+    const { isAuth, isAdmin, token } = useAuth(); // 인증 상태와 권한 여부 가져오기
+    const [isLoadingAuth, setIsLoadingAuth] = useState(true); // 인증 상태 로딩
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
     const { id } = useParams();
+
+    useEffect(() => {
+        // 인증 상태와 권한 정보가 변경될 때마다 실행
+        if (isAuth !== undefined && isAdmin !== undefined) {
+            setIsLoadingAuth(false); // 인증 상태가 로드된 후 로딩 상태를 false로 설정
+        }
+    }, [isAuth, isAdmin]);
+
+    useEffect(() => {
+        // `isAuth`와 `isAdmin` 값이 `false`로 설정된 이후에만 실행되도록 체크
+        if (!isLoadingAuth && (isAuth === false || isAdmin === false)) {
+            navigate("/unauthorized");
+        }
+    }, [isAuth, isAdmin, navigate, isLoadingAuth]);
 
     // 기존 데이터 로드
     useEffect(() => {
@@ -26,8 +44,9 @@ function VideoEducationEdit() {
                 setTitle(data.title);
                 setWriter(data.writer);
                 setContent(data.content);
-                if (data.fileUrl) {
-                    setExistingVideo(`${SERVER_URL}videoEducation/videos/${data.fileId}`);
+                // 기존 비디오 URL을 http://localhost:8090/videoEducation/video/{id}로 설정
+                if (data.id) {
+                    setExistingVideo(`${SERVER_URL}videoEducation/video/${data.id}`);
                 }
             })
             .catch((err) => {
@@ -44,7 +63,7 @@ function VideoEducationEdit() {
             return () => URL.revokeObjectURL(tempUrl); // 메모리 해제
         }
         setPreviewVideoUrl(null);
-    }, [videoFile]);   
+    }, [videoFile]);
 
     const handleUpdateVideo = async () => {
         const formData = new FormData();
@@ -56,10 +75,12 @@ function VideoEducationEdit() {
         try {
             setLoading(true);
             const response = await axios.put(
-                `${SERVER_URL}videoEducation/update/${id}`,
-                formData,
-                { headers: { "Content-Type": "multipart/form-data" } }
-            );
+                `${SERVER_URL}videoEducation/update/${id}`, formData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "multipart/form-data",
+                },
+            });
 
             if (response.status === 200) {
                 alert("게시글이 성공적으로 수정되었습니다.");
@@ -108,7 +129,7 @@ function VideoEducationEdit() {
                             onChange={(e) => setContent(e.target.value)}
                             required
                         />
-                       <div className="edu-form-group">
+                        <div className="edu-form-group">
                             <label>영상 파일:</label>
                             <div>
                                 <input

@@ -21,8 +21,8 @@ function FilterButton({ onFilterChange }) {
   };
 
   const handleAgeGroupClick = (ageGroup) => {
-    setSelectedFilter('연령별');
-    onFilterChange('연령별', ageGroup, ''); 
+    setSelectedFilter(ageGroup);
+    onFilterChange('연령별', ageGroup, '');
     handleAgeGroupClose();
     handleClose();
   };
@@ -75,7 +75,13 @@ function FilterButton({ onFilterChange }) {
             "aria-labelledby": "filter-button",
           }}
         >
-          <MenuItem onClick={() => onFilterChange("전체", "", "")}>전체</MenuItem>
+          <MenuItem
+            onClick={() => {
+              setSelectedFilter("전체");
+              onFilterChange("전체", "", "");
+              handleClose();
+            }}>전체
+          </MenuItem>
           <MenuItem onClick={(e) => setAgeAnchorEl(e.currentTarget)}>연령별</MenuItem>
           <MenuItem onClick={(e) => setSeasonAnchorEl(e.currentTarget)}>시기별</MenuItem>
         </Menu>
@@ -91,9 +97,9 @@ function FilterButton({ onFilterChange }) {
           horizontal: "right",
         }}
         PaperProps={{
-            style: {
-                marginTop: -36, // Popover가 버튼 기준 위쪽으로 이동
-            },
+          style: {
+            marginTop: -36, // Popover가 버튼 기준 위쪽으로 이동
+          },
         }}
       >
         {ageGroups.map((ageGroup) => (
@@ -105,22 +111,22 @@ function FilterButton({ onFilterChange }) {
 
       {/* 시기별 선택 Popover */}
       <Popover
-          open={Boolean(seasonAnchorEl)}
-          anchorEl={seasonAnchorEl}
-          onClose={handleSeasonClose}
-          anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "left",
-          }}
-          PaperProps={{
-              style: {
-                  marginTop: -36, // Popover가 버튼 기준 위쪽으로 이동
-              },
-          }}
+        open={Boolean(seasonAnchorEl)}
+        anchorEl={seasonAnchorEl}
+        onClose={handleSeasonClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+        PaperProps={{
+          style: {
+            marginTop: -36, // Popover가 버튼 기준 위쪽으로 이동
+          },
+        }}
       >
         {seasons.map((season) => (
           <MenuItem key={season} onClick={() => handleSeasonClick(season)}>

@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, TextField, MenuItem, Select, FormControl, InputLabel } from "@mui/material";
 import axios from "axios";
 import { SERVER_URL } from "../../../Constants";
+import { useAuth } from "../../sign/AuthContext";
 import "../../../css/mealResource/MealWrite.css"; // 스타일시트 적용
 
 function MenuRecipeWrite() {
@@ -14,7 +15,30 @@ function MenuRecipeWrite() {
     const [error, setError] = useState(null); // 오류 상태
     const [ageGroup, setAgeGroup] = useState(""); // 연령대 상태
     const [season, setSeason] = useState(""); // 시기별(계절) 상태 추가
+    const [isLoadingAuth, setIsLoadingAuth] = useState(true); // 인증 상태 로딩
     const navigate = useNavigate();
+
+    // AuthContext에서 인증 상태와 권한 정보 가져오기
+    const { isAuth, isAdmin, token } = useAuth();
+
+    useEffect(() => {
+        // 인증 상태와 권한 정보가 변경될 때마다 실행
+        if (isAuth !== undefined && isAdmin !== undefined) {
+            setIsLoadingAuth(false); // 인증 상태가 로드된 후 로딩 상태를 false로 설정
+        }
+    }, [isAuth, isAdmin]);
+
+    useEffect(() => {
+        // `isAuth`와 `isAdmin` 값이 `false`로 설정된 이후에만 실행되도록 체크
+        if (!isLoadingAuth && (isAuth === false || isAdmin === false)) {
+            navigate("/unauthorized");
+        }
+    }, [isAuth, isAdmin, navigate, isLoadingAuth]);
+
+    // 로그인하지 않았거나 관리자가 아닌 경우에는 화면 렌더링을 하지 않음
+    if (isLoadingAuth || !isAuth || !isAdmin) {
+        return <div>로딩 중...</div>; // 로딩 상태일 경우 화면을 띄우지 않음
+    }
 
     // 파일 입력 변경 핸들러
     const handleFileChange = (e) => {
@@ -51,7 +75,7 @@ function MenuRecipeWrite() {
         axios
             .post(`${SERVER_URL}menuRecipe/writepro`, formData, {
                 headers: {
-                    // 'Content-Type'은 Axios가 자동으로 처리함
+                    Authorization: `${token}`,
                 },
             })
             .then((response) => {
@@ -120,7 +144,7 @@ function MenuRecipeWrite() {
                                     onChange={handleAgeGroupChange}
                                     label="연령대"
                                 >
-                                    <MenuItem value="기타">10대 이하</MenuItem>
+                                    <MenuItem value="10대 이하">10대 이하</MenuItem>
                                     <MenuItem value="10대">10대</MenuItem>
                                     <MenuItem value="20대">20대</MenuItem>
                                     <MenuItem value="30대">30대</MenuItem>

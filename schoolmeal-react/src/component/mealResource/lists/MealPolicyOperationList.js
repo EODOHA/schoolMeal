@@ -20,17 +20,9 @@ function MealPolicyOperationList() {
     // 페이지네이션 상태
     const [currentPage, setCurrentPage] = useState(1);  //현재 페이지 상태(기본값:1)
     const [postsPerPage] = useState(5); // 페이지당 게시글 수
-    const [pageNumbersPerBlock] = useState(4) // 한 블록당 표시할 페이지 번호 수
-
-    // 데이터가 없을 경우 currentPage가 1로 초기화되도록 설정
-    useEffect(() => {
-        if (mealPolicyOperation.length === 0) {
-            setCurrentPage(1); // 데이터가 없으면 페이지를 1로 설정
-        }
-    }, [mealPolicyOperation]);
+    const [pageNumbersPerBlock] = useState(4) // 한 블록당 표시할 페이지 번호 수    
 
     const totalPages = Math.ceil(mealPolicyOperation.length / postsPerPage); //전체 페이지 수
-    const totalBlocks = Math.ceil(totalPages / pageNumbersPerBlock); // 전체 블록수
     const currentBlock = Math.ceil(currentPage / pageNumbersPerBlock); // 현재 블록 번호
     const startPage = (currentBlock - 1) * pageNumbersPerBlock + 1; //현재 블록의 첫 페이지 번호
     const endPage = Math.min(startPage + pageNumbersPerBlock - 1, totalPages);  //현재 블록의 마지막 페이지번호(전체 페이지 수를 넘지 않도록)
@@ -44,13 +36,13 @@ function MealPolicyOperationList() {
             return item.writer.toLowerCase().includes(searchQuery.toLowerCase());
         } else { // 전체
             return (
-                item.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 item.writer.toLowerCase().includes(searchQuery.toLowerCase())
             );
         }
     })
-    .reverse() // 게시글을 최신 순으로 정렬
-    .slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage); // 현재 페이지에 맞는 게시글만 슬라이싱
+        .reverse() // 게시글을 최신 순으로 정렬
+        .slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage); // 현재 페이지에 맞는 게시글만 슬라이싱
 
     // 페이지 번호 클릭 시 해당 페이지로 이동
     const handlePageClick = (pageNumber) => {
@@ -113,11 +105,11 @@ function MealPolicyOperationList() {
                         새 글 쓰기
                     </Button>
                 )}
-                <SearchBar 
-                    searchQuery={searchQuery} 
+                <SearchBar
+                    searchQuery={searchQuery}
                     selectedFilter={selectedFilter}
                     setSelectedFilter={setSelectedFilter}
-                    setSearchQuery={setSearchQuery} 
+                    setSearchQuery={setSearchQuery}
                     onFilterChange={(filterType, filterValue) => {
                         setSelectedFilter(filterType);  // 필터를 설정
                         setSearchQuery(filterValue);  // 검색어를 필터에 맞게 설정
@@ -141,7 +133,8 @@ function MealPolicyOperationList() {
                         </tr>
                     ) : (
                         currentPosts.map((mealPolicyOperation, index) => {
-                            const fileUrl = mealPolicyOperation.fileId ? mealPolicyOperation._links?.fileUrl?.href : null;
+                            // 파일 URL이 _links로 제공되는 경우
+                            const fileUrl = mealPolicyOperation._links?.fileUrl?.href || null;
                             const reversedIndex = totalLength - (currentPage - 1) * postsPerPage - index;
 
                             return (
@@ -156,7 +149,9 @@ function MealPolicyOperationList() {
                                     <td>{mealPolicyOperation.writer}</td>
                                     <td>
                                         {fileUrl ? (
-                                            <span className="meal-resource-attachment-icon"><MdAttachFile /></span>
+                                            <a href={fileUrl} target="_blank" rel="noopener noreferrer">
+                                                <span className="meal-resource-attachment-icon"><MdAttachFile /></span>
+                                            </a>
                                         ) : (
                                             <span className="meal-resource-attachment-icon"><BsFileExcel /></span>
                                         )}

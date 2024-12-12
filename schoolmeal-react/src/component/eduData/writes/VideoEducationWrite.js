@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, TextField } from "@mui/material";
 import axios from "axios";
 import { SERVER_URL } from "../../../Constants";
-import "../../../css/eduData/EduWrite.css"; // 스타일시트 적용
+import { useAuth } from "../../sign/AuthContext";
+import "../../../css/eduData/EduWrite.css";
 
 function VideoEducationWrite() {
     const [title, setTitle] = useState("");
@@ -12,7 +13,30 @@ function VideoEducationWrite() {
     const [videoFile, setVideoFile] = useState(null); // 비디오 파일 상태
     const [loading, setLoading] = useState(false); // 로딩 상태
     const [error, setError] = useState(null); // 오류 상태
+    const [isLoadingAuth, setIsLoadingAuth] = useState(true); // 인증 상태 로딩
     const navigate = useNavigate();
+
+    // AuthContext에서 인증 상태와 권한 정보 가져오기
+    const { isAuth, isAdmin, token } = useAuth();
+
+    useEffect(() => {
+        // 인증 상태와 권한 정보가 변경될 때마다 실행
+        if (isAuth !== undefined && isAdmin !== undefined) {
+            setIsLoadingAuth(false); // 인증 상태가 로드된 후 로딩 상태를 false로 설정
+        }
+    }, [isAuth, isAdmin]);
+
+    useEffect(() => {
+        // `isAuth`와 `isAdmin` 값이 `false`로 설정된 이후에만 실행되도록 체크
+        if (!isLoadingAuth && (isAuth === false || isAdmin === false)) {
+            navigate("/unauthorized");
+        }
+    }, [isAuth, isAdmin, navigate, isLoadingAuth]);
+
+    // 로그인하지 않았거나 관리자가 아닌 경우에는 화면 렌더링을 하지 않음
+    if (isLoadingAuth || !isAuth || !isAdmin) {
+        return <div>로딩 중...</div>; // 로딩 상태일 경우 화면을 띄우지 않음
+    }
 
     // 비디오 파일 입력 변경 핸들러
     const handleFileChange = (e) => {
@@ -27,7 +51,7 @@ function VideoEducationWrite() {
         formData.append("title", title);
         formData.append("writer", writer);
         formData.append("content", content);
-        
+
         // 비디오 파일이 있을 때만 formData에 비디오 파일 추가
         if (videoFile) {
             formData.append("file", videoFile); // 'file' 필드명으로 비디오 파일 추가
@@ -36,13 +60,13 @@ function VideoEducationWrite() {
         // 폼 제출 전 콘솔로 FormData 내용 확인
         for (let pair of formData.entries()) {
             console.log(pair[0], pair[1]);
-        }        
+        }
 
         // POST 요청
         axios
             .post(`${SERVER_URL}videoEducation/writepro`, formData, {
                 headers: {
-                    // 'Content-Type'은 axios가 자동으로 처리함
+                    Authorization: `${token}`, // Bearer 토큰 형식으로 수정
                 },
             })
             .then((response) => {
@@ -56,6 +80,7 @@ function VideoEducationWrite() {
             .finally(() => {
                 setLoading(false); // 로딩 상태 종료
             });
+
     };
 
     return (
@@ -112,7 +137,7 @@ function VideoEducationWrite() {
                         {videoFile && (
                             <div className="edu-video-preview">
                                 <h4>영상 미리보기:</h4>
-                                <video 
+                                <video
                                     controls // 재생 컨트롤러 표시
                                     src={URL.createObjectURL(videoFile)} // 업로드된 파일의 로컬 URL
                                 >
