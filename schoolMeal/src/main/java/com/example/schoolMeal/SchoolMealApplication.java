@@ -82,7 +82,7 @@ public class SchoolMealApplication implements CommandLineRunner {
 				"01051244884",
 				Role.GUEST));
 		
-        IngredientPrice product1 = new IngredientPrice();
+		IngredientPrice product1 = new IngredientPrice();
         product1.setCategory("농산물");
         product1.setProductName("쌀");
         product1.setGrade("상");
@@ -111,7 +111,7 @@ public class SchoolMealApplication implements CommandLineRunner {
         priceRepository.save(product3);
         
         HaccpInfo cert1 = HaccpInfo.builder()
-                .haccpDesignationNumber("HACCP12345")
+                .haccpDesignationNumber("2024-01-0001")
                 .category("농")
                 .businessName("농업회사 A")
                 .address("서울시 마포구")
@@ -121,7 +121,7 @@ public class SchoolMealApplication implements CommandLineRunner {
                 .build();
 
         HaccpInfo cert2 = HaccpInfo.builder()
-                .haccpDesignationNumber("HACCP67890")
+                .haccpDesignationNumber("2024-01-0002")
                 .category("축")
                 .businessName("축산업체 B")
                 .address("경기도 안양시")
@@ -131,7 +131,7 @@ public class SchoolMealApplication implements CommandLineRunner {
                 .build();
 
         HaccpInfo cert3 = HaccpInfo.builder()
-                .haccpDesignationNumber("HACCP11223")
+                .haccpDesignationNumber("2024-01-0003")
                 .category("수")
                 .businessName("수산업체 C")
                 .address("부산시 해운대구")

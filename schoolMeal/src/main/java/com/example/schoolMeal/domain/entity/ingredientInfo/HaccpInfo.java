@@ -2,6 +2,8 @@ package com.example.schoolMeal.domain.entity.ingredientInfo;
 
 import java.time.LocalDate;
 
+import com.example.schoolMeal.common.entity.BaseEntity;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,7 +24,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class HaccpInfo {
+public class HaccpInfo extends BaseEntity{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
