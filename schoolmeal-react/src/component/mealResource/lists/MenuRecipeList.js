@@ -35,7 +35,7 @@ function MenuRecipeList() {
             .then(data => {
                 const recipes = data._embedded ? data._embedded.menuRecipes : [];
                 setFilteredRecipes(recipes);
-            })            
+            })
             .catch(error => {
                 console.error('Error fetching data:', error);
             });
@@ -99,8 +99,8 @@ function MenuRecipeList() {
 
     // 현재 페이지의 게시물 추출
     const currentPosts = filteredRecipes.slice() // 원본 배열을 복사
-    .reverse() // 게시글을 최신 순으로 정렬
-    .slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage); // 현재 페이지에 맞는 게시글만 슬라이싱
+        .reverse() // 게시글을 최신 순으로 정렬
+        .slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage); // 현재 페이지에 맞는 게시글만 슬라이싱
 
     // 페이지 번호 클릭 시 해당 페이지로 이동
     const handlePageClick = (pageNumber) => {
@@ -163,7 +163,6 @@ function MenuRecipeList() {
                         currentPosts.map((menuRecipe, index) => {
                             const href = menuRecipe._links?.self?.href;
                             const menuRecipeId = href ? extractIdFromHref(href) : menuRecipe.id;
-                            const fileUrl = menuRecipe.fileId ? menuRecipe._links?.fileUrl?.href : null;
                             const reversedIndex = totalLength - (currentPage - 1) * postsPerPage - index;
 
                             return (
@@ -177,12 +176,12 @@ function MenuRecipeList() {
                                     <td>{formatDate(menuRecipe.createdDate)}</td>
                                     <td>{menuRecipe.writer}</td>
                                     <td>
-                                        {fileUrl ? (
-                                            <a href={fileUrl} target="_blank" rel="noopener noreferrer">
-                                                <span className="meal-resource-attachment-icon">
-                                                    <MdAttachFile />
-                                                </span>
-                                            </a>
+                                        {menuRecipe.fileUrlId ? (
+
+                                            <span className="meal-resource-attachment-icon">
+                                                <MdAttachFile />
+                                            </span>
+
                                         ) : (
                                             <span className="meal-resource-attachment-icon">
                                                 <BsFileExcel />
@@ -195,8 +194,8 @@ function MenuRecipeList() {
                     )}
                 </tbody>
             </table>
-             {/* 페이지네이션 버튼 */}
-             <div className="pagination">
+            {/* 페이지네이션 버튼 */}
+            <div className="pagination">
                 <Button
                     className="pagination-nav-button"
                     onClick={() => setCurrentPage(1)}

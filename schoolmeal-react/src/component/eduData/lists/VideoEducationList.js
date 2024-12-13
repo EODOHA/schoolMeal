@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { SERVER_URL } from "../../../Constants";
 import "../../../css/eduData/EduList.css";
 import Button from "@mui/material/Button";
@@ -138,7 +138,6 @@ function VideoEducationList() {
                         </tr>
                     ) : (
                         currentPosts.map((videoEducation, index) => {
-                            const videoUrl = videoEducation._links?.fileUrl?.href || null;
                             const reversedIndex = totalLength - (currentPage - 1) * postsPerPage - index;
 
                             return (
@@ -152,10 +151,8 @@ function VideoEducationList() {
                                     <td>{formatDate(videoEducation.createdDate)}</td>
                                     <td>{videoEducation.writer}</td>
                                     <td>
-                                        {videoUrl ? (
-                                            <a href={videoUrl} target="_blank" rel="noopener noreferrer">
-                                                <span className="edu-attachment-icon"><TfiVideoClapper /></span>
-                                            </a>
+                                        {videoEducation.fileUrlId ? (
+                                            <span className="edu-attachment-icon"><TfiVideoClapper /></span>
                                         ) : (
                                             <span className="edu-attachment-icon"><BsFileExcel /></span>
                                         )}

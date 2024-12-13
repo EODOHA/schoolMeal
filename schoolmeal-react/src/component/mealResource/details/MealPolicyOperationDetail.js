@@ -99,7 +99,7 @@ function MealPolicyOperationDetail() {
                     <div className="meal-resource-attachment">
                         {/* 파일 URL을 사용하여 다운로드 링크를 생성 */}
                         <div className="meal-resource-attachment">
-                            {mealPolicyOperation._links?.fileUrl?.href ? (
+                            {mealPolicyOperation.fileUrlId ? (
                                 <a
                                     href={`${SERVER_URL}mealPolicyOperation/download/${mealPolicyOperation.id}`} // id를 사용하여 다운로드 URL 완성
                                     download

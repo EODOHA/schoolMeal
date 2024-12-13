@@ -134,7 +134,6 @@ function MealPolicyOperationList() {
                     ) : (
                         currentPosts.map((mealPolicyOperation, index) => {
                             // 파일 URL이 _links로 제공되는 경우
-                            const fileUrl = mealPolicyOperation._links?.fileUrl?.href || null;
                             const reversedIndex = totalLength - (currentPage - 1) * postsPerPage - index;
 
                             return (
@@ -148,10 +147,9 @@ function MealPolicyOperationList() {
                                     <td>{formatDate(mealPolicyOperation.createdDate)}</td>
                                     <td>{mealPolicyOperation.writer}</td>
                                     <td>
-                                        {fileUrl ? (
-                                            <a href={fileUrl} target="_blank" rel="noopener noreferrer">
-                                                <span className="meal-resource-attachment-icon"><MdAttachFile /></span>
-                                            </a>
+                                        {mealPolicyOperation.fileUrlId ? (
+                                            <span className="meal-resource-attachment-icon"><MdAttachFile /></span>
+
                                         ) : (
                                             <span className="meal-resource-attachment-icon"><BsFileExcel /></span>
                                         )}

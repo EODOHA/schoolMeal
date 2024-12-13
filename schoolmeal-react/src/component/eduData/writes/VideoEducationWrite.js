@@ -5,6 +5,7 @@ import axios from "axios";
 import { SERVER_URL } from "../../../Constants";
 import { useAuth } from "../../sign/AuthContext";
 import "../../../css/eduData/EduWrite.css";
+import LoadingSpinner from '../../common/LoadingSpinner';
 
 function VideoEducationWrite() {
     const [title, setTitle] = useState("");
@@ -35,7 +36,7 @@ function VideoEducationWrite() {
 
     // 로그인하지 않았거나 관리자가 아닌 경우에는 화면 렌더링을 하지 않음
     if (isLoadingAuth || !isAuth || !isAdmin) {
-        return <div>로딩 중...</div>; // 로딩 상태일 경우 화면을 띄우지 않음
+        return <div><LoadingSpinner /></div>; // 로딩 상태일 경우 화면을 띄우지 않음
     }
 
     // 비디오 파일 입력 변경 핸들러
@@ -46,21 +47,18 @@ function VideoEducationWrite() {
     // 폼 제출 핸들러
     const handleSubmit = (e) => {
         e.preventDefault();
-        setLoading(true);
+        setError(null); // 기존 오류 메시지 초기화
+
+        if (!videoFile) {
+            setError("영상을 업로드해주세요.");
+            return;
+        }
+
         const formData = new FormData();
         formData.append("title", title);
         formData.append("writer", writer);
         formData.append("content", content);
-
-        // 비디오 파일이 있을 때만 formData에 비디오 파일 추가
-        if (videoFile) {
-            formData.append("file", videoFile); // 'file' 필드명으로 비디오 파일 추가
-        }
-
-        // 폼 제출 전 콘솔로 FormData 내용 확인
-        for (let pair of formData.entries()) {
-            console.log(pair[0], pair[1]);
-        }
+        formData.append("file", videoFile);
 
         // POST 요청
         axios

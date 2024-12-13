@@ -57,11 +57,17 @@ function MenuRecipeDetail() {
         navigate(`/mealResource/menu-recipe/update/${id}`); // 수정 페이지로 이동
     };
 
+    const token = sessionStorage.getItem('jwt'); // JWT 토큰 가져오기
+
     const deleteForm = () => {
         if (!window.confirm("삭제하시겠습니까?")) return;
 
         axios
-            .delete(`${SERVER_URL}menuRecipes/${id}`)
+            .delete(`${SERVER_URL}menuRecipes/${id}`, {
+                headers: {
+                    Authorization: `${token}`,
+                },
+            })
             .then((response) => {
                 if (response.status === 200) { // 상태 코드 확인
                     window.alert("삭제 성공");
@@ -86,9 +92,9 @@ function MenuRecipeDetail() {
                         <div className="meal-resource-date">작성일: {formatDate(menuRecipe.createdDate)}</div>
                     </div>
                     <div className="meal-resource-attachment">
-                        {menuRecipe.fileId ? (
+                        {menuRecipe.fileUrlId ? (
                             <a
-                                href={`${SERVER_URL}menuRecipe/download/${menuRecipe.fileId}`}
+                                href={`${SERVER_URL}menuRecipe/download/${menuRecipe.id}`} // id를 사용하여 다운로드 URL 완성
                                 download
                                 className="meal-resource-attachment-link"
                             >
