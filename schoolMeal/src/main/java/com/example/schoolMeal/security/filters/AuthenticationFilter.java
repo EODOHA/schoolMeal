@@ -62,11 +62,28 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 			return;
 		}
 		
-        //"/mealInfo" "GET" 요청만 인증 없도록 필터
-        if (request.getRequestURI().startsWith("/mealInfo") && 
-				request.getMethod().equals("GET")) {
-			filterChain.doFilter(request, response);
-			return;
+        //"급식정보, 식재료정보" "GET" 요청만 인증 없도록 필터
+		// 인증을 건너 뛸 엔드포인드들( 급식정보 엔드포인트 )
+		String[] getMealInfoURIs = {"/mealInfo", "/mealArchive"};
+		
+		// 향상된 for문으로 일괄 처리
+		for(String uri : getMealInfoURIs) {
+			if (request.getRequestURI().startsWith(uri) && 
+					request.getMethod().equals("GET")) {
+				filterChain.doFilter(request, response);
+				return;
+			}
+		}
+		// 인증을 건너 뛸 엔드포인드들( 식재료 정보 엔드포인트 )
+		String[] getIngredientInfoURIs = {"/haccp","/haccp-info","price","/ingredient-price", "/safety","/product-safety"};
+		
+		// 향상된 for문으로 일괄 처리
+		for(String uri : getIngredientInfoURIs) {
+			if (request.getRequestURI().startsWith(uri) && 
+					request.getMethod().equals("GET")) {
+				filterChain.doFilter(request, response);
+				return;
+			}
 		}
 		
 		String jws = request.getHeader(HttpHeaders.AUTHORIZATION);

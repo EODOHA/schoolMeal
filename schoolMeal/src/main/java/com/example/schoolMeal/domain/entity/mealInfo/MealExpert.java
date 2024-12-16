@@ -38,7 +38,6 @@ public class MealExpert extends BaseEntity {
 	private String exp_department; // 소속
 	private String exp_position; // 직책
 	private String exp_email; // 이메일
-//	private String exp_profileImg; // 프로필 사진
 	private String exp_author;
 
 	// 전문가의 이력(1:N 연관관계) -> 한 전문가는 여러 개의 이력을 가질 수 있다. 부모객체: mealExpert, 자식객체: ExpertHistory
