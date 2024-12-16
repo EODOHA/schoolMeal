@@ -84,7 +84,7 @@ textarea.meal-resource-form-control {
 .meal-resource-button-group {
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
+    margin-bottom: 30px; /* 버튼과 테이블 사이 간격 */
 }
 
 /* 첨부파일 섹션 스타일 */

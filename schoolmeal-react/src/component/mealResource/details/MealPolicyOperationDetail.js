@@ -28,7 +28,6 @@ function MealPolicyOperationDetail() {
             .get(`${SERVER_URL}mealPolicyOperations/${id}`)
             .then((response) => {
                 setMealPolicyOperation(response.data);
-                console.log(response.data);  // mealPolicyOperation의 데이터를 로그로 확인
                 setLoading(false);
             })
             .catch((err) => {

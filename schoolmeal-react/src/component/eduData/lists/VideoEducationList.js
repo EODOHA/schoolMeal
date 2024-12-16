@@ -95,9 +95,6 @@ function VideoEducationList() {
         return parts[parts.length - 1];
     };
 
-    // 목록 길이
-    const totalLength = videoEducation.length;
-
     return (
         <div className="edu-list-container">
             <h1 className="edu-title">영상 교육자료</h1>
@@ -110,16 +107,19 @@ function VideoEducationList() {
                         새 글 쓰기
                     </Button>
                 )}
-                <SearchBar
-                    searchQuery={searchQuery}
-                    selectedFilter={selectedFilter}
-                    setSelectedFilter={setSelectedFilter}
-                    setSearchQuery={setSearchQuery}
-                    onFilterChange={(filterType, filterValue) => {
-                        setSelectedFilter(filterType);  // 필터를 설정
-                        setSearchQuery(filterValue);  // 검색어를 필터에 맞게 설정
-                    }}
-                />
+
+                <div className="edu-right-searchbar">
+                    <SearchBar
+                        searchQuery={searchQuery}
+                        selectedFilter={selectedFilter}
+                        setSelectedFilter={setSelectedFilter}
+                        setSearchQuery={setSearchQuery}
+                        onFilterChange={(filterType, filterValue) => {
+                            setSelectedFilter(filterType);
+                            setSearchQuery(filterValue);
+                        }}
+                    />
+                </div>
             </div>
             <table className="edu-table">
                 <thead className="edu-thead">
@@ -138,7 +138,7 @@ function VideoEducationList() {
                         </tr>
                     ) : (
                         currentPosts.map((videoEducation, index) => {
-                            const reversedIndex = totalLength - (currentPage - 1) * postsPerPage - index;
+                            const reversedIndex = currentPosts.length - index;
 
                             return (
                                 <tr

@@ -18,8 +18,16 @@
 .meal-resource-button-group {
     display: flex;
     justify-content: space-between;
-    gap: 10px; /* 버튼들 간 간격 */
     margin-bottom: 30px; /* 버튼과 테이블 사이 간격 */
+}
+
+.meal-resource-left-buttons {
+    display: flex;
+    gap: 10px; /* 새 글 쓰기 버튼과 필터 버튼 사이 여백 */
+}
+
+.meal-resource-right-searchbar {
+    margin-left: auto; /* 오른쪽 끝으로 정렬 */
 }
 
 /* 테이블 스타일 */

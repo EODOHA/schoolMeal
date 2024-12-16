@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, TextField } from "@mui/material";
+import { Button, TextField, MenuItem, Select, FormControl, InputLabel } from "@mui/material";
 import axios from "axios";
 import { SERVER_URL } from "../../../Constants";
 import { useAuth } from "../../sign/AuthContext";
@@ -12,6 +12,7 @@ function MealPolicyOperationWrite() {
     const [content, setContent] = useState("");
     const [file, setFile] = useState(null); // 파일 상태
     const [loading, setLoading] = useState(false); // 로딩 상태
+    const [eduOffice, setEduoffice] = useState(""); // 시∙도 교육청 상태
     const [error, setError] = useState(null); // 오류 상태
     const [isLoadingAuth, setIsLoadingAuth] = useState(true); // 인증 상태 로딩
     const navigate = useNavigate();
@@ -43,6 +44,11 @@ function MealPolicyOperationWrite() {
         setFile(e.target.files[0]);
     };
 
+    // 시∙도 교육청 선택 변경 핸들러
+    const handleEduOfficeChange = (e) => {
+        setEduoffice(e.target.value);
+    };
+
     // 폼 제출 핸들러
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -51,6 +57,7 @@ function MealPolicyOperationWrite() {
         formData.append("title", title);
         formData.append("writer", writer);
         formData.append("content", content);
+        formData.append("eduOffice", eduOffice);
 
         if (file) {
             formData.append("file", file);
@@ -61,17 +68,17 @@ function MealPolicyOperationWrite() {
                 Authorization: `${token}`,
             },
         })
-        .then((response) => {
-            window.alert("게시글이 성공적으로 등록되었습니다.");
-            navigate("/mealResource/meal-policy-operation");
-        })
-        .catch((err) => {
-            console.error("게시글 등록 중 오류가 발생했습니다.", err);
-            setError("게시글 등록 중 문제가 발생했습니다. 다시 시도해주세요.");
-        })
-        .finally(() => {
-            setLoading(false);
-        });
+            .then((response) => {
+                window.alert("게시글이 성공적으로 등록되었습니다.");
+                navigate("/mealResource/meal-policy-operation");
+            })
+            .catch((err) => {
+                console.error("게시글 등록 중 오류가 발생했습니다.", err);
+                setError("게시글 등록 중 문제가 발생했습니다. 다시 시도해주세요.");
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     };
 
     return (
@@ -113,6 +120,36 @@ function MealPolicyOperationWrite() {
                                 required
                             />
                         </div>
+
+                        <div className="meal-resource-form-group">
+                            <FormControl fullWidth required>
+                                <InputLabel>시∙도 교육청</InputLabel>
+                                <Select
+                                    value={eduOffice}
+                                    onChange={handleEduOfficeChange}
+                                    label="시∙도 교육청"
+                                >
+                                    <MenuItem value="seoul">서울특별시</MenuItem>
+                                    <MenuItem value="busan">부산광역시</MenuItem>
+                                    <MenuItem value="wangju">대구광역시</MenuItem>
+                                    <MenuItem value="incheon">인천광역시</MenuItem>
+                                    <MenuItem value="gwangju">광주광역시</MenuItem>
+                                    <MenuItem value="daejeon">대전광역시</MenuItem>
+                                    <MenuItem value="ulsan">울산광역시</MenuItem>
+                                    <MenuItem value="sejong">세종특별자치시</MenuItem>
+                                    <MenuItem value="gyeonggi">경기도</MenuItem>
+                                    <MenuItem value="gangwon">강원특별자치도</MenuItem>
+                                    <MenuItem value="chungbuk">충청북도</MenuItem>
+                                    <MenuItem value="chungnam">충청남도</MenuItem>
+                                    <MenuItem value="jeonbuk">전북특별자치도</MenuItem>
+                                    <MenuItem value="jeollanam">전라남도</MenuItem>
+                                    <MenuItem value="gyeongbuk">경상북도</MenuItem>
+                                    <MenuItem value="gyeongnam">경상남도</MenuItem>
+                                    <MenuItem value="jeju">제주특별자치도</MenuItem>\
+                                </Select>
+                            </FormControl>
+                        </div>
+
                         <div className="meal-resource-form-group">
                             <label>첨부파일:</label>
                             <input
