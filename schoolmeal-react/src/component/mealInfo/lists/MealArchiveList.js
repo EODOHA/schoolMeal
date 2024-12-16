@@ -157,7 +157,6 @@ function MealArchiveList() {
                             ) : (
 
                                 currentPosts.map((archive, index) => {
-                                    const isSelected = selectedId === archive.arc_id;
                                     // 게시글의 번호를 역순으로 계산 
                                     const postNumber = archives.length - (currentPage - 1) * postsPerPage - index;
                                     return (
