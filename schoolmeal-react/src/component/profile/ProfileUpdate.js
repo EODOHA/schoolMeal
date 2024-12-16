@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { SERVER_URL } from "../../Constants";
-import { Stack, TextField, Button, Typography } from "@mui/material";
+import { Stack, TextField, Button, Typography, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import '../../css/sign/Signup.css'; // Signup 스타일을 위한 CSS 파일 import
 
@@ -266,6 +266,37 @@ const ProfileUpdate = () => {
         return helperText;
     };
 
+    // 회원탈퇴 -----------------------------------------------------------------------
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+
+    const deleteAccount = () => {
+        fetch(SERVER_URL + "members/me", {
+            method: "DELETE",
+            headers: createHeaders(),
+        })
+        .then((res) => {
+            if (!res.ok) {
+                throw new Error("회원탈퇴 실패!");
+            }
+            sessionStorage.removeItem('jwt');
+            navigator("/main");
+            window.location.reload();  // 페이지 새로고침
+        })
+        .catch((err) => {
+            console.error(err.message);
+            setUpdateCheck("회원탈퇴에 실패했습니다.");
+        });
+    };
+
+    // 회원탈퇴 확인 다이얼로그 열기.
+    const handleOpenDeleteDialog = () => {
+        setOpenDeleteDialog(true);
+    };
+
+    const handleCloseDeleteDialog = () => {
+        setOpenDeleteDialog(false);
+    };
+
     return (
         <div className="signup-form">
             <Typography variant="h5" align="center" gutterBottom>
@@ -350,6 +381,15 @@ const ProfileUpdate = () => {
                     >
                         수정하기
                     </Button>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={handleOpenDeleteDialog}
+                        fullWidth
+                    >
+                        회원탈퇴
+                    </Button>
+
                     {updateCheck && ( // 가입 관련 오류 표시
                         <Typography variant="body2" color="red">
                             {updateCheck}
@@ -357,6 +397,30 @@ const ProfileUpdate = () => {
                     )}
                 </Stack>
             </form>
+
+            {/* 회원탈퇴 다이얼로그 */}
+            <Dialog
+                open={openDeleteDialog}
+                onClose={handleCloseDeleteDialog}
+            >
+                <DialogTitle>회원탈퇴</DialogTitle>
+                <DialogContent>
+                    <Typography>
+                        정말로 회원탈퇴를 하시겠습니까?
+                    </Typography>
+                    <Typography>
+                        이 작업은 되돌릴 수 없습니다!
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDeleteDialog} color="primary">
+                        취소
+                    </Button>
+                    <Button onClick={deleteAccount} color="secondary">
+                        탈퇴
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 }

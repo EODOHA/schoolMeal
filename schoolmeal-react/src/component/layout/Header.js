@@ -8,6 +8,7 @@ import SearchIcon from '@mui/icons-material/Search'; // 검색 아이콘
 import InputBase from '@mui/material/InputBase';
 import '../../css/layout/Header.css';  // Header.css 파일을 import
 import { SERVER_URL } from '../../Constants';
+import { Block } from '@mui/icons-material';
 
 const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setIsMemberManageOpen을 props로 받아옴
     // 헤더 이미지 상태.
@@ -24,7 +25,9 @@ const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setI
 
     const [searchQuery, setSearchQuery] = useState(""); // 검색어 상태 추가
     const [suggestions, setSuggestions] = useState([]); // 자동 완성 추천 목록
+    const [selectedIndex, setSelectedIndex] = useState(-1); // 자동 완성 선택 항목.
     const searchBoxRef = useRef(null); // 검색창 ref
+    const suggestionsRefs = useRef([]); // 각 항목 참조하기 위한 배열.
 
     const [drawerOpen, setDrawerOpen] = useState(false); // Drawer 열고 닫기 상태 추가
 
@@ -189,6 +192,7 @@ const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setI
     const handleSearchChange = (e) => {
       const query = e.target.value;
       setSearchQuery(query);  // 검색어 변경 처리
+      setSelectedIndex(-1); // 검색어 변경마다 인덱스 초기화.
 
       // 검색어에 맞는 추천 목록 필터링
       if (query) {
@@ -201,10 +205,39 @@ const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setI
 
     // 엔터키 누르면 호출되는 함수.
     const handleSearch = (e) => {
-      if (e.key === "Enter" && suggestions.length > 0) {
-        navigate(suggestions[0].path); // 첫 번째 추천 항목으로 이동.
-        setSearchQuery("");
-        setSuggestions([]);
+      if (e.key === "Enter") {
+        e.preventDefault(); // 기본 동작(페이지 리로드 등) 방지.
+        if (suggestions.length > 0) {
+          const targetPath = selectedIndex === -1 ? suggestions[0]?.path : suggestions[selectedIndex]?.path;
+          if (targetPath) {
+            handleSuggestionClick(targetPath);
+          }
+        }
+      } else if (e.key === "ArrowDown") {
+        e.preventDefault(); // 기본 동작(페이지 리로드 등) 방지.
+        // 아래 방향키 -> 다음 항목 선택.
+        setSelectedIndex((prev) => {
+          const nextIndex = (prev + 1) % suggestions.length;
+          scrollToSuggestion(nextIndex);
+          return nextIndex
+        }); // 순환.
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        setSelectedIndex((prev) => {
+          const nextIndex = (prev - 1 + suggestions.length) % suggestions.length;
+          scrollToSuggestion(nextIndex); // 스크롤 조정
+          return nextIndex;
+        });
+      }
+    };
+
+    const scrollToSuggestion = (index) => {
+      const ref = suggestionsRefs.current[index];
+      if (ref) {
+        ref.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+        });
       }
     };
 
@@ -411,16 +444,17 @@ const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setI
                     zIndex: 10, // 다른 요소 위에 표시되도록 설정
                   }}
                 >
-                  {suggestions.map((suggestion) => (
+                  {suggestions.map((suggestion, index) => (
                     <ListItem
                       key={suggestion.path}
+                      ref={(el) => (suggestionsRefs.current[index] = el)}
                       button
                       onClick={() => handleSuggestionClick(suggestion.path)}
                       sx={{
                         padding: '12px 16px',
+                        backgroundColor: index === selectedIndex ? '#f0f0f0' : 'transparent', // 선택된 항목 강조
                         '&:hover': {
-                          backgroundColor: '#f0f0f0',
-                          cursor: 'pointer',
+                          backgroundColor: '#e0e0e0',
                         },
                       }}
                     >

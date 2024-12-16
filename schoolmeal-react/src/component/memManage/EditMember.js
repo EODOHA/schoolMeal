@@ -79,6 +79,7 @@ function EditMember(props) {
                                 '& .MuiSelect-icon': { color: 'primary.main' }
                             }}
                         >
+                            <MenuItem value="BOARDADMIN">BOARDADMIN</MenuItem>
                             <MenuItem value="LINKAGE">LINKAGE</MenuItem>
                             <MenuItem value="MEMBER">MEMBER</MenuItem>
                             <MenuItem value="GUEST">GUEST</MenuItem>

@@ -8,6 +8,7 @@
     margin: 0 auto;
     margin-top: 50px;
     margin-bottom: 100px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
 }
 
 h1 {
@@ -19,6 +20,9 @@ h1 {
 .category-selector {
     text-align: center;
     margin-bottom: 30px;
+    background-color: #dddddd;
+    border-radius: 8px;
+    padding: 5px;
 }
 
 .category-selector label {
@@ -38,6 +42,9 @@ h1 {
     display: none; /* 기본적으로 숨겨두기 */
     text-align: center;
     margin-bottom: 30px;
+    background-color: #dddddd;
+    border-radius: 8px;
+    padding: 5px;
 }
 
 .upload-section h2 {
@@ -67,6 +74,9 @@ h1 {
 .image-list {
     display: none; /* 기본적으로 숨겨두기 */
     text-align: center;
+    background-color: #dddddd;
+    border-radius: 8px;
+    padding: 5px;
 }
 
 .image-list h2 {
@@ -92,13 +102,26 @@ h1 {
 .image-item button {
     margin-top: 10px;
     padding: 8px 16px;
-    background-color: #f44336;
+    background-color: #1976d2;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    margin: 10px;
 }
 
-.image-item button:hover {
-    background-color: #d32f2f;
+.editBtn {
+    background-color: #1976d2 !important;
+}
+
+.editBtn:hover {
+    background-color: #52a8ff !important;
+}
+
+.delBtn {
+    background-color: #d32f2f !important;
+}
+
+.delBtn:hover {
+    background-color: #f44336 !important;
 }
