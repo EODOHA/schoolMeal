@@ -61,24 +61,31 @@ public class SchoolMealApplication implements CommandLineRunner {
 				"01012345678",
 				Role.ADMIN));
 		memberRepository.save(new Member(
-				"연계회원",
-				"member1", 
-				"$2a$12$SIIf/Riy.LSvYwbSBtsLeuiqZMBXHA/nKWhpvIHWS5W/OBUkVo0.y",
-				"member1@*#%*12VVGd1.com",
+				"게시판관리",
+				"boardadmin", 
+				"$2a$10$8cjz47bjbR4Mn8GMg9IZx.vyjhLXR/SKKMSZ9.mP9vpMu0ssKi8GW",
+				"boardAdmin@admin.com",
 				"01075623132",
+				Role.BOARDADMIN));
+		memberRepository.save(new Member(
+				"연계회원",
+				"linkMember", 
+				"$2a$12$SIIf/Riy.LSvYwbSBtsLeuiqZMBXHA/nKWhpvIHWS5W/OBUkVo0.y",
+				"linkMember@*#%*12VVGd2.com",
+				"01044217412",
 				Role.LINKAGE));
 		memberRepository.save(new Member(
 				"일반회원",
-				"member2", 
+				"member1", 
 				"$2a$12$SIIf/Riy.LSvYwbSBtsLeuiqZMBXHA/nKWhpvIHWS5W/OBUkVo0.y",
-				"member2@*#%*12VVGd2.com",
-				"01044217412",
+				"member1@*#%*12VVGd2.com",
+				"01095276514",
 				Role.MEMBER));
 		memberRepository.save(new Member(
 				"강등회원",
-				"member3", 
+				"member2", 
 				"$2a$12$SIIf/Riy.LSvYwbSBtsLeuiqZMBXHA/nKWhpvIHWS5W/OBUkVo0.y",
-				"member3@*#%*12VVGd3.com",
+				"member2@*#%*12VVGd3.com",
 				"01051244884",
 				Role.GUEST));
 		

@@ -90,6 +90,8 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.GET, "/crawling/**").permitAll()
 				// 커뮤니티 - 댓글기능
 				.requestMatchers(HttpMethod.GET, "/comments/**").permitAll()
+				
+				.requestMatchers(HttpMethod.POST, "/chat/sendMessage").permitAll()
 
 
 				// 해당 엔드포인트는 인증 필요 없음.

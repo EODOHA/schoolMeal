@@ -86,7 +86,7 @@ public class ProfileContoller { // 회원 본인 정보.
 					memberRepository.delete(member);
 					return "회원 탈퇴가 완료되었습니다.";
 				})
-				.orElseThrow(() -> new RuntimeException("Member nout found"));
+				.orElseThrow(() -> new RuntimeException("Member not found"));
 	}
 	
 }
