@@ -2,51 +2,71 @@ package com.example.schoolMeal.service.eduData;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.schoolMeal.common.PathResolver;
 import com.example.schoolMeal.domain.entity.FileUrl;
-import com.example.schoolMeal.domain.entity.eduData.NutritionDietEducation;
+import com.example.schoolMeal.domain.entity.eduData.LessonDemoVideo;
 import com.example.schoolMeal.domain.repository.FileUrlRepository;
-import com.example.schoolMeal.domain.repository.eduData.NutritionDietEducationRepository;
+import com.example.schoolMeal.domain.repository.eduData.LessonDemoVideoRepository;
 
 import jakarta.annotation.PostConstruct;
-import jakarta.transaction.Transactional;
 
 @Service
-public class NutritionDietEducationService extends PathResolver {
+public class LessonDemoVideoService extends PathResolver {
 
 	@Autowired
-	private NutritionDietEducationRepository nutritionDietEducationRepository;
+	private LessonDemoVideoRepository lessonDemoVideoRepository;
 
 	@Autowired
 	private FileUrlRepository fileUrlRepository;
 
 	/* 파일 업로드 경로 설정 */
-	private String nutritionPath;
+	private String lessonDemoPath;
 
 	@PostConstruct
 	public void init() {
-		nutritionPath = buildPath("영양·식생활 자료실");
+		lessonDemoPath = buildPath("수업&시연 영상 자료실");
 
 		// 저장 경로의 유효성 검사
-		File saveDir = new File(nutritionPath);
+		File saveDir = new File(lessonDemoPath);
 		if (!saveDir.exists() && !saveDir.mkdirs()) {
-			throw new RuntimeException("저장 폴더를 생성할 수 없습니다: " + nutritionPath);
+			throw new RuntimeException("저장 폴더를 생성할 수 없습니다: " + lessonDemoPath);
 		}
 	}
 
-	// 게시글 저장
-	public void write(NutritionDietEducation nutritionDietEducation, MultipartFile file) {
+	// 목록 반환
+	public List<LessonDemoVideo> lessonDemoVideoList() {
 		try {
-			if (nutritionDietEducation == null) {
-				throw new IllegalArgumentException("NutritionDietEducation 객체가 null입니다.");
+			return lessonDemoVideoRepository.findAll();
+		} catch (Exception e) {
+			throw new RuntimeException("게시글 목록 조회 중 오류가 발생했습니다. 다시 시도해 주세요.", e);
+		}
+	}
+
+	// 특정 파일 정보 조회
+	public FileUrl getFileUrlByVideoEduId(Long id) {
+		LessonDemoVideo lessonDemoVideo = lessonDemoVideoRepository.findById(id)
+				.orElseThrow(() -> new IllegalArgumentException("해당 ID의 게시글이 존재하지 않습니다: " + id));
+
+		return lessonDemoVideo.getFileUrl(); // 파일이 없으면 null 반환
+	}
+
+	// 저장
+	public void write(LessonDemoVideo lessonDemoVideo, MultipartFile file) {
+		try {
+			if (lessonDemoVideo == null) {
+				throw new IllegalArgumentException("LessonDemoVideo 객체가 null입니다.");
 			}
 
 			if (file != null && !file.isEmpty()) {
@@ -56,13 +76,13 @@ public class NutritionDietEducationService extends PathResolver {
 
 				// 파일 저장 및 FileUrl 생성
 				FileUrl fileUrl = saveFile(file);
-				nutritionDietEducation.setFileUrl(fileUrl); // fileUrl 설정
-				nutritionDietEducation.getFileUrlId();
+				lessonDemoVideo.setFileUrl(fileUrl); // fileUrl 설정
+				lessonDemoVideo.getFileUrlId();
 			}
 
 			// 게시글 저장
-			NutritionDietEducation savedNutritionDietEducation = nutritionDietEducationRepository.save(nutritionDietEducation);
-			System.out.println("DB에 저장된 Nutrition ID: " + savedNutritionDietEducation.getId());
+			LessonDemoVideo savedLessonDemoVideo = lessonDemoVideoRepository.save(lessonDemoVideo);
+			System.out.println("DB에 저장된 VideoEdu ID: " + savedLessonDemoVideo.getId());
 		} catch (IOException e) {
 			throw new RuntimeException("파일 업로드 중 오류가 발생했습니다. 자세한 내용을 확인하세요.", e);
 		} catch (Exception e) {
@@ -86,12 +106,12 @@ public class NutritionDietEducationService extends PathResolver {
 		}
 
 		String filename = System.currentTimeMillis() + "_" + origFilename;
-		File saveDir = new File(nutritionPath);
+		File saveDir = new File(lessonDemoPath);
 		if (!saveDir.exists() && !saveDir.mkdirs()) {
 			throw new IOException("저장 폴더를 생성할 수 없습니다.");
 		}
 
-		String filePath = nutritionPath + File.separator + filename;
+		String filePath = lessonDemoPath + File.separator + filename;
 		Long fileSize = file.getSize();
 
 		// 파일 저장 로직
@@ -111,33 +131,18 @@ public class NutritionDietEducationService extends PathResolver {
 		return savedFileUrl;
 	}
 
-	// 게시글 리스트 반환 메서드
-	public List<NutritionDietEducation> nutritionDietEducationList() {
-		return nutritionDietEducationRepository.findAll();
-	}
-
-	// 특정 파일 정보 조회
-	public FileUrl getFileUrlByNutritionDietEducationId(Long id) {
-		// 해당 ID의 NutritionDietEducation 조회
-		NutritionDietEducation nutrition = nutritionDietEducationRepository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("해당 ID의 게시글이 존재하지 않습니다: " + id));
-
-		// NutritionDietEducation에 연결된 FileUrl 조회
-		return nutrition.getFileUrl(); // 파일이 없으면 null 반환
-	}
-
 	// 특정 게시글을 조회하면서 첨부 파일 정보도 함께 반환
-	public NutritionDietEducation getPostWithFileDetails(Long id) {
+	public LessonDemoVideo getPostWithFileDetails(Long id) {
 		try {
-			NutritionDietEducation nutritionDietEducation = nutritionDietEducationRepository.findById(id)
+			LessonDemoVideo lessonDemoVideo = lessonDemoVideoRepository.findById(id)
 					.orElseThrow(() -> new IllegalArgumentException("해당 ID의 게시글이 존재하지 않습니다: " + id));
 
-			if (nutritionDietEducation.getFileUrl() != null) {
-				FileUrl fileUrl = fileUrlRepository.findById(nutritionDietEducation.getFileUrl().getId()).orElse(null);																														// 처리
-				nutritionDietEducation.setFileUrl(fileUrl); // NutritionDietEducation에 FileUrl 설정
+			if (lessonDemoVideo.getFileUrl() != null) {
+				FileUrl fileUrl = fileUrlRepository.findById(lessonDemoVideo.getFileUrl().getId()).orElse(null);
+				lessonDemoVideo.setFileUrl(fileUrl);
 			}
 
-			return nutritionDietEducation;
+			return lessonDemoVideo;
 		} catch (Exception e) {
 			throw new RuntimeException("게시글 조회 중 오류가 발생했습니다. 다시 시도해 주세요.", e);
 		}
@@ -145,54 +150,37 @@ public class NutritionDietEducationService extends PathResolver {
 
 	// 게시글 삭제
 	@Transactional
-	public ResponseEntity<Integer> nutritionDietEducationDelete(Long id) {
+	public ResponseEntity<Integer> lessonDemoVideoDelete(Long id) {
 		try {
-			// 1. 삭제할 NutritionDietEducation 조회
-			NutritionDietEducation nutritionDietEducation = nutritionDietEducationRepository.findById(id)
+			LessonDemoVideo lessonDemoVideo = lessonDemoVideoRepository.findById(id)
 					.orElseThrow(() -> new IllegalArgumentException("해당 ID의 게시글이 존재하지 않습니다: " + id));
 
-			// 2. NutritionDietEducation에서 파일 참조 해제 (FILE_ID를 null로 설정)
-			if (nutritionDietEducation.getFileUrl() != null) {
-				FileUrl fileUrl = nutritionDietEducation.getFileUrl();
-				nutritionDietEducation.setFileUrl(null); // fileUrl 설정
-				nutritionDietEducationRepository.save(nutritionDietEducation); // DB에 반영
-
-				// 3. 파일 삭제
+			if (lessonDemoVideo.getFileUrl() != null) {
+				FileUrl fileUrl = lessonDemoVideo.getFileUrl();
 				File fileToDelete = new File(fileUrl.getFilePath());
 				if (fileToDelete.exists()) {
 					boolean deleted = fileToDelete.delete();
 					if (!deleted) {
 						System.err.println("파일 삭제 실패: " + fileUrl.getFilePath() + " (삭제되지 않았습니다)");
-						throw new IOException("파일 삭제 실패");
 					}
 				}
-
-				// 4. FileUrl 삭제
 				fileUrlRepository.delete(fileUrl);
-				System.out.println("파일 URL 삭제 완료: " + fileUrl.getId());
 			}
 
-			// 5. 게시글 삭제
-			nutritionDietEducationRepository.deleteById(id);
-			System.out.println("게시글 삭제 완료: " + id);
-
+			lessonDemoVideoRepository.deleteById(id);
 			return ResponseEntity.ok(1); // 삭제 성공 시 명시적으로 1 반환
 
 		} catch (Exception e) {
-			// 예외 로그 출력
-			System.err.println("게시글 삭제 중 오류 발생: " + e.getMessage());
-			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(0); // 오류 시 0 반환
 		}
 	}
 
 	// 게시글 수정
 	@Transactional
-	public void nutritionDietEducationUpdate(NutritionDietEducation nutritionDietEducation, MultipartFile file)
-			throws IOException {
+	public void lessonDemoVideoUpdate(LessonDemoVideo lessonDemoVideo, MultipartFile file) throws IOException {
 		try {
 			if (file != null && !file.isEmpty()) {
-				FileUrl existingFile = nutritionDietEducation.getFileUrl(); // 기존 파일 정보 가져오기
+				FileUrl existingFile = lessonDemoVideo.getFileUrl(); // 기존 파일 정보 가져오기
 
 				if (existingFile != null) {
 					// 기존 파일 삭제
@@ -210,17 +198,17 @@ public class NutritionDietEducationService extends PathResolver {
 				} else {
 					// 기존 파일이 없으면 새 파일 생성
 					FileUrl newFileUrl = saveFile(file);
-					nutritionDietEducation.setFileUrl(newFileUrl);
+					lessonDemoVideo.setFileUrl(newFileUrl);
 				}
 
 				// 파일 정보
-				if (nutritionDietEducation.getFileUrl() != null) {
-					Long fileId = nutritionDietEducation.getFileUrl().getId();
+				if (lessonDemoVideo.getFileUrl() != null) {
+					Long fileId = lessonDemoVideo.getFileUrl().getId();
 				}
 			}
 
 			// 게시글 업데이트
-			nutritionDietEducationRepository.save(nutritionDietEducation);
+			lessonDemoVideoRepository.save(lessonDemoVideo);
 
 		} catch (IOException e) {
 			throw new RuntimeException("파일 업로드 또는 게시글 수정 중 오류가 발생했습니다. 세부사항: " + e.getMessage(), e);
@@ -232,7 +220,7 @@ public class NutritionDietEducationService extends PathResolver {
 	// 파일을 디스크에 저장
 	private String saveFileToDisk(MultipartFile file) throws IOException {
 		// 파일 저장 경로 생성 (저장 디렉터리 유효성 검사 추가)
-		String uploadDir = nutritionPath;
+		String uploadDir = lessonDemoPath;
 		File directory = new File(uploadDir);
 		if (!directory.exists() && !directory.mkdirs()) {
 			throw new IOException("파일 저장 디렉터리를 생성하지 못했습니다: " + uploadDir);
@@ -244,4 +232,27 @@ public class NutritionDietEducationService extends PathResolver {
 		file.transferTo(destination); // 파일 저장
 		return filePath;
 	}
+
+	// ID로 영상 데이터를 스트리밍할 수 있도록 URL을 반환
+	public String getVideoAsBase64(Long id) throws IOException {
+		LessonDemoVideo lessonDemoVideo = getPostWithFileDetails(id); // getPostWithFileDetails 사용
+
+		if (lessonDemoVideo == null || lessonDemoVideo.getFileUrl() == null) {
+			throw new IllegalArgumentException("해당 영상이 존재하지 않습니다.");
+		}
+
+		// FileUrl 객체에서 filePath를 가져옴
+		String videoUrl = lessonDemoVideo.getFileUrl().getFilePath().replaceFirst("^videos/", "");
+		Path filePath = Paths.get("C:/Video/", videoUrl).normalize(); // 경로 수정
+
+		if (!Files.exists(filePath)) {
+			throw new IOException("영상 파일이 존재하지 않습니다.");
+		}
+
+		byte[] videoBytes = Files.readAllBytes(filePath);
+		String mimeType = Files.probeContentType(filePath);
+
+		return "data:" + mimeType + ";base64," + java.util.Base64.getEncoder().encodeToString(videoBytes);
+	}
+
 }

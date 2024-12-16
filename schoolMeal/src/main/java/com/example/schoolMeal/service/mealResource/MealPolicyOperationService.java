@@ -139,11 +139,7 @@ public class MealPolicyOperationService extends PathResolver {
 					.orElseThrow(() -> new IllegalArgumentException("해당 ID의 게시글이 존재하지 않습니다: " + id));
 
 			if (mealPolicyOperation.getFileUrl() != null) {
-				FileUrl fileUrl = fileUrlRepository.findById(mealPolicyOperation.getFileUrl().getId()).orElse(null); // 파일이
-																														// 없을
-																														// 경우
-																														// null
-																														// 처리
+				FileUrl fileUrl = fileUrlRepository.findById(mealPolicyOperation.getFileUrl().getId()).orElse(null);																							// 처리
 				mealPolicyOperation.setFileUrl(fileUrl); // MealPolicyOperation에 FileUrl 설정
 			}
 

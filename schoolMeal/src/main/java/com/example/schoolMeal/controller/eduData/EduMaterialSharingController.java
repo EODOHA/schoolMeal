@@ -28,70 +28,70 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.schoolMeal.domain.entity.FileUrl;
-import com.example.schoolMeal.domain.entity.eduData.VideoEducation;
-import com.example.schoolMeal.domain.repository.eduData.VideoEducationRepository;
-import com.example.schoolMeal.service.eduData.VideoEducationService;
+import com.example.schoolMeal.domain.entity.eduData.EduMaterialSharing;
+import com.example.schoolMeal.domain.repository.eduData.EduMaterialSharingRepository;
+import com.example.schoolMeal.service.eduData.EduMaterialSharingService;
 
 @RestController
-@RequestMapping("/videoEducation")
-public class VideoEducationController {
+@RequestMapping("/eduMaterialSharing")
+public class EduMaterialSharingController {
 
 	@Autowired
-    private VideoEducationRepository videoEducationRepository;
+    private EduMaterialSharingRepository eduMaterialSharingRepository;
 	
     @Autowired
-    private VideoEducationService videoEducationService;
+    private EduMaterialSharingService eduMaterialSharingService;
 
     // 목록을 반환
     @GetMapping("/list")
-    public ResponseEntity<List<VideoEducation>> videoEducationList() {
-        List<VideoEducation> videoEdus = videoEducationService.videoEducationList();
-        return ResponseEntity.ok(videoEdus);
+    public ResponseEntity<List<EduMaterialSharing>> eduMaterialSharingList() {
+        List<EduMaterialSharing> eduMaterials = eduMaterialSharingService.eduMaterialSharingList();
+        return ResponseEntity.ok(eduMaterials);
     }
 
     // 작성 처리
     @PostMapping("/writepro")
-    public String videoEducationWritePro(@RequestParam("title") String title,
+    public String eduMaterialSharingWritePro(@RequestParam("title") String title,
                                          @RequestParam("writer") String writer,
                                          @RequestParam("content") String content,
                                          @RequestParam(value = "file", required = false) MultipartFile file,
                                          RedirectAttributes redirectAttributes) throws IOException {
-        VideoEducation videoEducation = new VideoEducation();
-        videoEducation.setTitle(title);
-        videoEducation.setWriter(writer);
-        videoEducation.setContent(content);
+        EduMaterialSharing eduMaterialSharing = new EduMaterialSharing();
+        eduMaterialSharing.setTitle(title);
+        eduMaterialSharing.setWriter(writer);
+        eduMaterialSharing.setContent(content);
 
-        videoEducationService.write(videoEducation, file);
+        eduMaterialSharingService.write(eduMaterialSharing, file);
 
         redirectAttributes.addFlashAttribute("message", "게시글이 성공적으로 작성되었습니다.");
-        return "redirect:/videoEducation/list";
+        return "redirect:/eduMaterialSharing/list";
     }
 
     // 특정 id 조회
     @GetMapping("/{id}")
-    public ResponseEntity<VideoEducation> getVideoEducationById(@PathVariable Long id) {
-        VideoEducation videoEducation = videoEducationService.getPostWithFileDetails(id);
-        return videoEducation != null ? ResponseEntity.ok(videoEducation) : ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    public ResponseEntity<EduMaterialSharing> getEduMaterialSharingById(@PathVariable Long id) {
+        EduMaterialSharing eduMaterialSharing = eduMaterialSharingService.getPostWithFileDetails(id);
+        return eduMaterialSharing != null ? ResponseEntity.ok(eduMaterialSharing) : ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
     // 수정 처리하는 PUT 요청
     @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateVideoEducation(@PathVariable Long id,
+    public ResponseEntity<String> updateEduMaterialSharing(@PathVariable Long id,
                                                        @RequestParam(value = "title", required = false) String title,
                                                        @RequestParam(value = "content", required = false) String content,
                                                        @RequestParam(value = "writer", required = false) String writer,
                                                        @RequestParam(value = "file", required = false) MultipartFile file) {
         try {
-            VideoEducation existingVideoEducation = videoEducationService.getPostWithFileDetails(id);
-            if (existingVideoEducation == null) {
+            EduMaterialSharing existingEduMaterialSharing = eduMaterialSharingService.getPostWithFileDetails(id);
+            if (existingEduMaterialSharing == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("게시글이 존재하지 않습니다.");
             }
 
-            if (title != null) existingVideoEducation.setTitle(title);
-            if (content != null) existingVideoEducation.setContent(content);
-            if (writer != null) existingVideoEducation.setWriter(writer);
+            if (title != null) existingEduMaterialSharing.setTitle(title);
+            if (content != null) existingEduMaterialSharing.setContent(content);
+            if (writer != null) existingEduMaterialSharing.setWriter(writer);
 
-            videoEducationService.videoEducationUpdate(existingVideoEducation, file);
+            eduMaterialSharingService.eduMaterialSharingUpdate(existingEduMaterialSharing, file);
 
             return ResponseEntity.ok("수정되었습니다.");
         } catch (Exception e) {
@@ -102,9 +102,9 @@ public class VideoEducationController {
 
     // 게시글 삭제
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteVideoEducation(@PathVariable Long id) {
+    public ResponseEntity<String> deleteEduMaterialSharing(@PathVariable Long id) {
         try {
-            videoEducationService.videoEducationDelete(id);
+            eduMaterialSharingService.eduMaterialSharingDelete(id);
             return ResponseEntity.ok("게시글이 삭제되었습니다.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("삭제 실패: " + e.getMessage());
@@ -113,17 +113,17 @@ public class VideoEducationController {
     
     // 파일 다운로드
     @GetMapping("/download/{id}")
-    public ResponseEntity<InputStreamResource> downloadVideoEducation(@PathVariable Long id) {
+    public ResponseEntity<InputStreamResource> downloadEduMaterialSharing(@PathVariable Long id) {
         // 해당 ID의 게시글 조회
-    	VideoEducation videoEducation = videoEducationRepository.findById(id)
+    	EduMaterialSharing eduMaterialSharing = eduMaterialSharingRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 게시글이 존재하지 않습니다: " + id));
 
         // 게시글에 첨부된 파일이 있는지 확인
-        if (videoEducation.getFileUrl() == null) {
+        if (eduMaterialSharing.getFileUrl() == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        FileUrl fileUrl = videoEducation.getFileUrl();
+        FileUrl fileUrl = eduMaterialSharing.getFileUrl();
         Path filePath = Paths.get(fileUrl.getFilePath()).normalize();  // 파일 경로 얻기
 
         // 파일 존재 여부 확인
@@ -158,13 +158,13 @@ public class VideoEducationController {
     @GetMapping("/video/{id}")
     public ResponseEntity<Resource> getVideo(@PathVariable Long id) {
         try {
-            VideoEducation videoEducation = videoEducationService.getPostWithFileDetails(id);
+            EduMaterialSharing eduMaterialSharing = eduMaterialSharingService.getPostWithFileDetails(id);
 
-            if (videoEducation == null || videoEducation.getFileUrl() == null) {
+            if (eduMaterialSharing == null || eduMaterialSharing.getFileUrl() == null) {
                 throw new IllegalArgumentException("해당 영상이 존재하지 않습니다.");
             }
 
-            String videoUrl = videoEducation.getFileUrl().getFilePath();
+            String videoUrl = eduMaterialSharing.getFileUrl().getFilePath();
             Path path = Paths.get(videoUrl);  // 실제 경로로 변경
 
             if (!Files.exists(path)) {
@@ -193,7 +193,7 @@ public class VideoEducationController {
     @GetMapping("/videos/{id}")
     public ResponseEntity<byte[]> streamVideo(@PathVariable Long id) {
         try {
-            String videoPath = videoEducationService.getPostWithFileDetails(id).getFileUrl().getFilePath();
+            String videoPath = eduMaterialSharingService.getPostWithFileDetails(id).getFileUrl().getFilePath();
 
             // 파일이 저장된 디렉터리와 실제 파일 경로를 결합
             Path path = Paths.get(videoPath);

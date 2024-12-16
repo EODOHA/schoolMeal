@@ -18,12 +18,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Table(name = "NutritionDietEdu") // 테이블 명
+@Table(name = "EduMaterialSharing") // 테이블 명
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-public class NutritionDietEducation {
+public class EduMaterialSharing {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,7 +46,7 @@ public class NutritionDietEducation {
 	@Column(nullable = false)
 	private LocalDateTime createdDate = LocalDateTime.now(); // 기본값을 현재 시간으로 설정
 
-	// 파일 정보와의 1:1 관계 (MealPolicy와 FileUrl)
+	// 파일 정보와의 1:1 관계
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "file_id", referencedColumnName = "id")
 	private FileUrl fileUrl;
@@ -57,4 +57,5 @@ public class NutritionDietEducation {
 		}
 		return null;
 	}
+
 }
