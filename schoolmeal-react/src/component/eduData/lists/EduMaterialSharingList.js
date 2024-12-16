@@ -3,15 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { SERVER_URL } from "../../../Constants";
 import "../../../css/eduData/EduList.css";
 import Button from "@mui/material/Button";
-import { MdAttachFile } from "react-icons/md";
+import { TfiVideoClapper } from "react-icons/tfi";
 import { BsFileExcel } from "react-icons/bs";
 import { HiChevronLeft, HiChevronDoubleLeft, HiChevronRight, HiChevronDoubleRight } from "react-icons/hi";
 import "../../../css/page/Pagination.css";
 import { useAuth } from "../../sign/AuthContext";  // 권한설정
 import SearchBar from "../../common/SearchBar";  // 검색기능
 
-function NutritionDietEducationList() {
-    const [nutritionDietEducation, setNutritionDietEducation] = useState([]);
+function EduMaterialSharingList() {
+    const [eduMaterialSharing, setEduMaterialSharing] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');  // 검색어 상태 추가
     const [selectedFilter, setSelectedFilter] = useState('전체'); // 필터 상태 추가
     const navigate = useNavigate();
@@ -22,13 +22,13 @@ function NutritionDietEducationList() {
     const [postsPerPage] = useState(5); // 페이지당 게시글 수
     const [pageNumbersPerBlock] = useState(4) // 한 블록당 표시할 페이지 번호 수    
 
-    const totalPages = Math.ceil(nutritionDietEducation.length / postsPerPage); //전체 페이지 수
+    const totalPages = Math.ceil(eduMaterialSharing.length / postsPerPage); //전체 페이지 수
     const currentBlock = Math.ceil(currentPage / pageNumbersPerBlock); // 현재 블록 번호
     const startPage = (currentBlock - 1) * pageNumbersPerBlock + 1; //현재 블록의 첫 페이지 번호
     const endPage = Math.min(startPage + pageNumbersPerBlock - 1, totalPages);  //현재 블록의 마지막 페이지번호(전체 페이지 수를 넘지 않도록)
 
     // 현재 페이지의 게시물 추출
-    const currentPosts = nutritionDietEducation.filter(item => {
+    const currentPosts = eduMaterialSharing.filter(item => {
         // 검색어 필터링 적용
         if (selectedFilter === '제목') {
             return item.title.toLowerCase().includes(searchQuery.toLowerCase());
@@ -63,30 +63,33 @@ function NutritionDietEducationList() {
         }
     };
 
+    // 컴포넌트가 마운트되면 목록을 가져옴
     useEffect(() => {
-        fetch(SERVER_URL + "nutritionDietEducations")
+        fetch(SERVER_URL + "eduMaterialSharings")
             .then(response => response.json())
             .then(data => {
-                setNutritionDietEducation(data._embedded.nutritionDietEducations);
+                setEduMaterialSharing(data._embedded.eduMaterialSharings);
             })
             .catch(err => console.error("Error fetching data:", err));
     }, []);
 
+    // 날짜 포맷팅 함수
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
     };
 
     // 상세 페이지로 이동하는 함수
-    const goToDetailPage = (nutritionDietEducation) => {
-        const nutritionId = nutritionDietEducation.id || (nutritionDietEducation._links?.self?.href ? extractIdFromHref(nutritionDietEducation._links.self.href) : null);
-        if (!nutritionId) {
-            console.error("Invalid ID:", nutritionId);
+    const goToDetailPage = (eduMaterialSharing) => {
+        const eduMaterialSharingId = eduMaterialSharing.id || (eduMaterialSharing._links?.self?.href ? extractIdFromHref(eduMaterialSharing._links.self.href) : null);
+        if (!eduMaterialSharingId) {
+            console.error("Invalid ID:", eduMaterialSharingId);
             return;
         }
-        navigate(`/eduData/nutrition-diet-education/${nutritionId}`);
+        navigate(`/eduData/edu-material-sharing/${eduMaterialSharingId}`);
     };
 
+    // URL에서 ID를 추출하는 함수
     const extractIdFromHref = (href) => {
         const parts = href.split('/');
         return parts[parts.length - 1];
@@ -94,26 +97,29 @@ function NutritionDietEducationList() {
 
     return (
         <div className="edu-list-container">
-            <h1 className="edu-title">영양·식생활 교육자료</h1>
+            <h1 className="edu-title">교육자료 나눔</h1>
             <div className="edu-button-group">
                 {isAdmin && (
                     <Button
                         variant="outlined"
-                        onClick={() => navigate("/eduData/nutrition-diet-education/write")}
+                        onClick={() => navigate("/eduData/edu-material-sharing/write")}
                     >
                         새 글 쓰기
                     </Button>
                 )}
-                <SearchBar
-                    searchQuery={searchQuery}
-                    selectedFilter={selectedFilter}
-                    setSelectedFilter={setSelectedFilter}
-                    setSearchQuery={setSearchQuery}
-                    onFilterChange={(filterType, filterValue) => {
-                        setSelectedFilter(filterType);
-                        setSearchQuery(filterValue);
-                    }}
-                />
+
+                <div className="edu-right-searchbar">
+                    <SearchBar
+                        searchQuery={searchQuery}
+                        selectedFilter={selectedFilter}
+                        setSelectedFilter={setSelectedFilter}
+                        setSearchQuery={setSearchQuery}
+                        onFilterChange={(filterType, filterValue) => {
+                            setSelectedFilter(filterType);
+                            setSearchQuery(filterValue);
+                        }}
+                    />
+                </div>
             </div>
             <table className="edu-table">
                 <thead className="edu-thead">
@@ -122,7 +128,7 @@ function NutritionDietEducationList() {
                         <th>제목</th>
                         <th>등록일</th>
                         <th>작성자</th>
-                        <th>첨부파일</th>
+                        <th>영상</th>
                     </tr>
                 </thead>
                 <tbody className="edu-tbody">
@@ -131,23 +137,22 @@ function NutritionDietEducationList() {
                             <td colSpan="5" style={{ textAlign: "center" }}>해당하는 게시글이 없습니다.</td>
                         </tr>
                     ) : (
-                        currentPosts.map((nutritionDietEducation, index) => {
-                            // 필터링된 게시글의 역순 인덱스를 계산
-                            const reversedFilteredIndex = currentPosts.length - index;
+                        currentPosts.map((eduMaterialSharing, index) => {
+                            const reversedIndex = currentPosts.length - index;
 
                             return (
                                 <tr
-                                    key={nutritionDietEducation.id || `nutritionDietEducation-${index}`}
-                                    onClick={() => goToDetailPage(nutritionDietEducation)}
+                                    key={eduMaterialSharing.id || `eduMaterialSharing-${index}`}
+                                    onClick={() => goToDetailPage(eduMaterialSharing)}
                                     style={{ cursor: "pointer" }}
                                 >
-                                    <td>{reversedFilteredIndex}</td> {/* 필터링 후 역순 번호 */}
-                                    <td>{nutritionDietEducation.title}</td>
-                                    <td>{formatDate(nutritionDietEducation.createdDate)}</td>
-                                    <td>{nutritionDietEducation.writer}</td>
+                                    <td>{reversedIndex}</td>
+                                    <td>{eduMaterialSharing.title}</td>
+                                    <td>{formatDate(eduMaterialSharing.createdDate)}</td>
+                                    <td>{eduMaterialSharing.writer}</td>
                                     <td>
-                                        {nutritionDietEducation.fileUrlId ? (
-                                            <span className="edu-attachment-icon"><MdAttachFile /></span>
+                                        {eduMaterialSharing.fileUrlId ? (
+                                            <span className="edu-attachment-icon"><TfiVideoClapper /></span>
                                         ) : (
                                             <span className="edu-attachment-icon"><BsFileExcel /></span>
                                         )}
@@ -163,14 +168,14 @@ function NutritionDietEducationList() {
                 <Button
                     className="pagination-nav-button"
                     onClick={() => setCurrentPage(1)}
-                    disabled={currentPage === 1 || nutritionDietEducation.length === 0}
+                    disabled={currentPage === 1 || eduMaterialSharing.length === 0}
                 >
                     <HiChevronDoubleLeft />
                 </Button>
                 <Button
                     className="pagination-nav-button"
                     onClick={handlePrevBlock}
-                    disabled={currentPage === 1 || nutritionDietEducation.length === 0}
+                    disabled={currentPage === 1 || eduMaterialSharing.length === 0}
                 >
                     <HiChevronLeft />
                 </Button>
@@ -186,14 +191,14 @@ function NutritionDietEducationList() {
                 <Button
                     className="pagination-nav-button"
                     onClick={handleNextBlock}
-                    disabled={currentPage === totalPages || nutritionDietEducation.length === 0}
+                    disabled={currentPage === totalPages || eduMaterialSharing.length === 0}
                 >
                     <HiChevronRight />
                 </Button>
                 <Button
                     className="pagination-nav-button"
                     onClick={() => setCurrentPage(totalPages)}
-                    disabled={currentPage === totalPages || nutritionDietEducation.length === 0}
+                    disabled={currentPage === totalPages || eduMaterialSharing.length === 0}
                 >
                     <HiChevronDoubleRight />
                 </Button>
@@ -202,4 +207,4 @@ function NutritionDietEducationList() {
     );
 }
 
-export default NutritionDietEducationList;
+export default EduMaterialSharingList;

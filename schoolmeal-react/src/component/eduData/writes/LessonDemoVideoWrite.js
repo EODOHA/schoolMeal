@@ -7,7 +7,7 @@ import { useAuth } from "../../sign/AuthContext";
 import "../../../css/eduData/EduWrite.css";
 import LoadingSpinner from '../../common/LoadingSpinner';
 
-function VideoEducationWrite() {
+function LessonDemoVideoWrite() {
     const [title, setTitle] = useState("");
     const [writer, setWriter] = useState("");
     const [content, setContent] = useState("");
@@ -62,14 +62,14 @@ function VideoEducationWrite() {
 
         // POST 요청
         axios
-            .post(`${SERVER_URL}videoEducation/writepro`, formData, {
+            .post(`${SERVER_URL}lessonDemoVideo/writepro`, formData, {
                 headers: {
                     Authorization: `${token}`, // Bearer 토큰 형식으로 수정
                 },
             })
             .then((response) => {
                 window.alert("게시글이 성공적으로 등록되었습니다.");
-                navigate("/eduData/video-education"); // 성공 시 목록 페이지로 이동
+                navigate("/eduData/lesson-demo-video"); // 성공 시 목록 페이지로 이동
             })
             .catch((err) => {
                 console.error("게시글 등록 중 오류가 발생했습니다.", err);
@@ -156,7 +156,7 @@ function VideoEducationWrite() {
                             <Button
                                 variant="outlined"
                                 color="secondary"
-                                onClick={() => navigate("/eduData/video-education")}
+                                onClick={() => navigate("/eduData/lesson-demo-video")}
                             >
                                 목록
                             </Button>
@@ -168,4 +168,4 @@ function VideoEducationWrite() {
     );
 }
 
-export default VideoEducationWrite;
+export default LessonDemoVideoWrite;

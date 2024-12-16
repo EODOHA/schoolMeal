@@ -5,6 +5,7 @@ import axios from "axios";
 import { SERVER_URL } from "../../../Constants";
 import { useAuth } from "../../sign/AuthContext";
 import "../../../css/mealResource/MealWrite.css";
+import LoadingSpinner from '../../common/LoadingSpinner';
 
 function MealPolicyOperationWrite() {
     const [title, setTitle] = useState("");
@@ -36,7 +37,7 @@ function MealPolicyOperationWrite() {
 
     // 로그인하지 않았거나 관리자가 아닌 경우에는 화면 렌더링을 하지 않음
     if (isLoadingAuth || !isAuth || !isAdmin) {
-        return <div>로딩 중...</div>; // 로딩 상태일 경우 화면을 띄우지 않음
+        return <div><LoadingSpinner /></div>;
     }
 
     // 파일 입력 변경 핸들러
@@ -131,7 +132,7 @@ function MealPolicyOperationWrite() {
                                 >
                                     <MenuItem value="seoul">서울특별시</MenuItem>
                                     <MenuItem value="busan">부산광역시</MenuItem>
-                                    <MenuItem value="wangju">대구광역시</MenuItem>
+                                    <MenuItem value="dangju">대구광역시</MenuItem>
                                     <MenuItem value="incheon">인천광역시</MenuItem>
                                     <MenuItem value="gwangju">광주광역시</MenuItem>
                                     <MenuItem value="daejeon">대전광역시</MenuItem>
@@ -145,7 +146,7 @@ function MealPolicyOperationWrite() {
                                     <MenuItem value="jeollanam">전라남도</MenuItem>
                                     <MenuItem value="gyeongbuk">경상북도</MenuItem>
                                     <MenuItem value="gyeongnam">경상남도</MenuItem>
-                                    <MenuItem value="jeju">제주특별자치도</MenuItem>\
+                                    <MenuItem value="jeju">제주특별자치도</MenuItem>
                                 </Select>
                             </FormControl>
                         </div>

@@ -3,15 +3,15 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 import axios from "axios";
 import { SERVER_URL } from "../../../Constants";
-import "../../../css/eduData/EduDetail.css"; // 스타일시트 적용
-import { MdOutlineFileDownload } from "react-icons/md";
-import { RiFileUnknowFill } from "react-icons/ri";
-import { useAuth } from "../../sign/AuthContext";  
+import "../../../css/eduData/EduDetail.css";
+import { RiVideoDownloadFill } from "react-icons/ri";
+import { FaVideoSlash } from "react-icons/fa";
+import { useAuth } from "../../sign/AuthContext";
 import LoadingSpinner from '../../common/LoadingSpinner';
 
-function NutritionDietEducationDetail() {
-    const { id } = useParams(); // URL에서 id 값을 받아옴
-    const [nutritionDietEducation, setNutritionDietEducation] = useState(null);
+function EduMaterialSharingDetail() {
+    const { id } = useParams();  // URL에서 id 값을 받아옴
+    const [eduMaterialSharing, setEduMaterialSharing] = useState(null);
     const [loading, setLoading] = useState(true); // 로딩 상태
     const [error, setError] = useState(null); // 오류 상태
     const { isAdmin } = useAuth();  // 로그인 상태 확인
@@ -23,18 +23,18 @@ function NutritionDietEducationDetail() {
             setLoading(false);
             return;
         }
-    
+
         axios
-            .get(`${SERVER_URL}nutritionDietEducations/${id}`)
+            .get(`${SERVER_URL}eduMaterialSharings/${id}`) // API URL
             .then((response) => {
-                setNutritionDietEducation(response.data);
+                setEduMaterialSharing(response.data);
                 setLoading(false);
             })
             .catch((err) => {
                 setError("데이터를 가져오는 중 오류가 발생했습니다.");
                 setLoading(false);
             });
-    }, [id]);    
+    }, [id]);
 
     if (loading) {
         return <div><LoadingSpinner /></div>;
@@ -44,7 +44,7 @@ function NutritionDietEducationDetail() {
         return <div>{error}</div>;
     }
 
-    if (!nutritionDietEducation) {
+    if (!eduMaterialSharing) {
         return <div>데이터를 찾을 수 없습니다.</div>;
     }
 
@@ -57,79 +57,96 @@ function NutritionDietEducationDetail() {
     };
 
     const update = () => {
-        navigate(`/eduData/nutrition-diet-education/update/${id}`); // 수정 페이지로 이동
+        navigate(`/eduData/edu-material-sharing/update/${id}`); // 수정 페이지로 이동
     };
+
+    const token = sessionStorage.getItem('jwt'); // JWT 토큰 가져오기
 
     const deleteForm = () => {
         if (!window.confirm("삭제하시겠습니까?")) return;
 
-        const token = sessionStorage.getItem('jwt'); // JWT 토큰 가져오기
-
         axios
-            .delete(`${SERVER_URL}nutritionDietEducation/delete/${id}`, {
+            .delete(`${SERVER_URL}eduMaterialSharings/${id}`, {
                 headers: {
-                    Authorization: `${token}`, 
+                    Authorization: `${token}`,
                 },
-            })
+            }) // 수정된 URL로 요청
             .then((response) => {
                 if (response.status === 200) {
                     window.alert("삭제 성공");
-                    navigate("/eduData/nutrition-diet-education");
+                    navigate("/eduData/edu-material-sharing"); // 목록으로 돌아가기
                 } else {
                     window.alert("삭제 실패");
                 }
             })
             .catch((err) => {
-                console.error("Delete error:", err);
                 window.alert("삭제 중 오류가 발생했습니다.");
             });
     };
+
+    // 비디오 URL 처리
+    const videoUrl = eduMaterialSharing?.id;  // eduMaterialSharing 객체에서 id 사용
+
+    const fullVideoUrl = videoUrl
+        ? `${SERVER_URL}eduMaterialSharing/video/${videoUrl}`  // eduMaterialSharing의 ID를 URL에 추가
+        : null;
 
     return (
         <div className="edu-detail-container">
             <div className="edu-card">
                 <div className="edu-card-body">
-                    <h2>{nutritionDietEducation.title}</h2>
+                    <h2>{eduMaterialSharing.title}</h2>
                     <hr />
                     <div className="edu-header">
-                        <div className="edu-id">ID: {nutritionDietEducation.id}</div>
-                        <div className="edu-date">작성일: {formatDate(nutritionDietEducation.createdDate)}</div>
+                        <div className="edu-id">ID: {eduMaterialSharing.id}</div>
+                        <div className="edu-date">작성일: {formatDate(eduMaterialSharing.createdDate)}</div>
                     </div>
                     <div className="edu-attachment">
-                        {/* 파일 URL을 사용하여 다운로드 링크를 생성 */}
-                        <div className="edu-attachment">
-                            {nutritionDietEducation.fileUrlId ? (
-                                <a
-                                    href={`${SERVER_URL}nutritionDietEducation/download/${nutritionDietEducation.id}`} // id를 사용하여 다운로드 URL 완성
-                                    download
-                                    className="edu-attachment-link"
-                                >
-                                    첨부파일 &nbsp; <MdOutlineFileDownload />
-                                </a>
-                            ) : (
-                                <span>첨부파일 없음 &nbsp; <RiFileUnknowFill /></span>
-                            )}
-                        </div>
+                        {eduMaterialSharing.fileUrlId ? (
+                            <a
+                                href={`${SERVER_URL}eduMaterialSharing/download/${eduMaterialSharing.id}`}
+                                download
+                                className="edu-attachment-link"
+                            >
+                                동영상 다운로드 &nbsp; <RiVideoDownloadFill />
+                            </a>
+                        ) : (
+                            <span>동영상 없음 &nbsp;<FaVideoSlash /></span>
+                        )}
                     </div><br />
                     <form>
                         <div className="edu-form-group">
                             <label>작성자:</label>
                             <input
                                 type="text"
-                                value={nutritionDietEducation.writer}
+                                value={eduMaterialSharing.writer}
                                 readOnly
                                 className="edu-form-control"
                             />
-                        </div><br />
+                        </div>
                         <div className="edu-form-group">
                             <label>내용:</label>
                             <textarea
                                 rows={5}
-                                value={nutritionDietEducation.content}
+                                value={eduMaterialSharing.content}
                                 readOnly
                                 className="edu-form-control"
                             />
-                        </div><br />
+                        </div>
+
+                        {/* 영상 재생 (업로드된 비디오 파일이 있을 경우) */}
+                        {eduMaterialSharing.fileUrlId && (
+                            <div className="edu-video-play">
+                                <h4>영상 재생:</h4>
+                                <video
+                                    controls
+                                    src={fullVideoUrl} // 백엔드에서 제공하는 비디오 URL
+                                >
+                                    브라우저가 비디오 태그를 지원하지 않습니다.
+                                </video>
+                            </div>
+                        )}
+
                         <div className="edu-button-group">
                             {isAdmin && (
                                 <Button
@@ -142,8 +159,7 @@ function NutritionDietEducationDetail() {
                             )}
                             <Button
                                 variant="outlined"
-                                color="primary"
-                                onClick={() => navigate("/eduData/nutrition-diet-education")}
+                                color="primary" onClick={() => navigate("/eduData/edu-material-sharing")}
                             >
                                 목록
                             </Button>
@@ -164,4 +180,4 @@ function NutritionDietEducationDetail() {
     );
 }
 
-export default NutritionDietEducationDetail;
+export default EduMaterialSharingDetail;

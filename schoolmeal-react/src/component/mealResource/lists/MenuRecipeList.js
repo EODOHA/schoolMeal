@@ -9,14 +9,12 @@ import MenuFilterButton from "../filter/menu/MenuFilterButton";
 import { seasonTypeEnglish } from "../filter/menu/SeasonUtils";
 import { HiChevronLeft, HiChevronDoubleLeft, HiChevronRight, HiChevronDoubleRight } from "react-icons/hi";
 import { useAuth } from "../../sign/AuthContext";  // 권한설정
-import SearchBar from "../../common/SearchBar";  // 검색기능
 
 function MenuRecipeList() {
     const [filteredRecipes, setFilteredRecipes] = useState([]);
     const [selectedFilter, setSelectedFilter] = useState("전체");
     const [selectedAgeGroup, setSelectedAgeGroup] = useState("");
     const [selectedSeason, setSelectedSeason] = useState("");
-    const [searchQuery, setSearchQuery] = useState('');  // 검색어 상태 추가
     const { isAdmin } = useAuth();
     const navigate = useNavigate();
 
