@@ -81,7 +81,12 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.GET, "/nutritionDietEducations/**").permitAll()
 				.requestMatchers(HttpMethod.GET, "/nutritionDietEducation/**").permitAll()
 				.requestMatchers(HttpMethod.GET, "/nutritionDietEducation/download/**").permitAll()
-
+				.requestMatchers(HttpMethod.GET, "/lessonDemoVideos/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/lessonDemoVideo/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/lessonDemoVideo/download/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/eduMaterialSharings/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/eduMaterialSharing/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/eduMaterialSharing/download/**").permitAll()
 
 				// 커뮤니티 - 공지사항
 				.requestMatchers(HttpMethod.GET, "/notices/**", "/notices/download/**").permitAll()
