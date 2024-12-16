@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.schoolMeal.common.PathResolver;
 import com.example.schoolMeal.domain.entity.FileUrl;
 import com.example.schoolMeal.domain.entity.mealResource.MealPolicyOperation;
+import com.example.schoolMeal.domain.entity.mealResource.MenuRecipe;
 import com.example.schoolMeal.domain.repository.FileUrlRepository;
 import com.example.schoolMeal.domain.repository.mealResource.MealPolicyOperationRepository;
 
@@ -113,11 +114,12 @@ public class MealPolicyOperationService extends PathResolver {
 
 	// 게시글 리스트 반환 메서드
 	public List<MealPolicyOperation> mealPolicyOperationList() {
-		try {
-			return mealPolicyOperationRepository.findAll();
-		} catch (Exception e) {
-			throw new RuntimeException("게시글 목록 조회 중 오류가 발생했습니다. 다시 시도해 주세요.", e);
-		}
+		return mealPolicyOperationRepository.findAll();
+	}
+
+	// 시∙도 교육청 게시글 조회
+	public List<MealPolicyOperation> mealPolicyOperationByEduOffice(String eduOffice) {
+		return mealPolicyOperationRepository.findByEduOffice(eduOffice);
 	}
 
 	// 특정 파일 정보 조회

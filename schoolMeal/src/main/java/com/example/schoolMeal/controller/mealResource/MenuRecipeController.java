@@ -47,7 +47,7 @@ public class MenuRecipeController {
     @GetMapping("/list")
     public ResponseEntity<List<MenuRecipe>> menuRecipeList(
             @RequestParam(value = "ageGroup", required = false) String ageGroup,
-            @RequestParam(value = "season", required = false) String season) {
+			@RequestParam(value = "season", required = false) String season) {
 
         List<MenuRecipe> menuRecipes;
 

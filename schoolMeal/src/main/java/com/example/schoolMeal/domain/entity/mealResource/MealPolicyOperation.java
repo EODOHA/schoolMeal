@@ -42,6 +42,10 @@ public class MealPolicyOperation {
 	@Column(nullable = false)
 	private String writer;
 
+	// 시∙도 교육청
+	@Column(nullable = false)
+	private String eduOffice;
+
 	// 생성 날짜와 시간을 저장하는 필드
 	@Column(nullable = false)
 	private LocalDateTime createdDate = LocalDateTime.now(); // 기본값을 현재 시간으로 설정
