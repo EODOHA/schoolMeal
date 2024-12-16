@@ -71,10 +71,16 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.GET, "/menuRecipes/**").permitAll()
 				.requestMatchers(HttpMethod.GET, "/menuRecipe/**").permitAll()
 				.requestMatchers(HttpMethod.GET, "/menuRecipe/download/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/nutritionManages/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/nutritionManage/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/nutritionManage/download/**").permitAll()
 				// 교육자료
 				.requestMatchers(HttpMethod.GET, "/videoEducations/**").permitAll()
 				.requestMatchers(HttpMethod.GET, "/videoEducation/**").permitAll()
 				.requestMatchers(HttpMethod.GET, "/videoEducation/download/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/nutritionDietEducations/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/nutritionDietEducation/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/nutritionDietEducation/download/**").permitAll()
 
 
 				// 커뮤니티 - 공지사항
