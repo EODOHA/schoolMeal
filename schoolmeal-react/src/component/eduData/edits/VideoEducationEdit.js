@@ -141,8 +141,6 @@ function VideoEducationEdit() {
                                             const tempUrl = URL.createObjectURL(file);
                                             setVideoFile(file);
                                             setPreviewVideoUrl(tempUrl); // URL 갱신
-                                            console.log("업로드된 파일:", file);
-                                            console.log("생성된 URL:", tempUrl);
                                         }
                                     }}
                                 />

@@ -5,7 +5,6 @@
     max-width: 1400px;
     font-family: Arial, sans-serif;
     text-align: center;
-    /* 컨테이너 내 내용 가로 가운데 정렬 */
 }
 
 /* 제목 스타일 */
@@ -19,11 +18,9 @@
 /* 버튼 그룹 스타일 */
 .ingredient-info-button-group {
     display: flex;
-    justify-content: center !important;
     gap: 20px;
-    /* 버튼들 간 간격 */
     margin-bottom: 20px;
-    /* 버튼과 테이블 사이 간격 */
+    justify-content: center;
 }
 
 /* 테이블 스타일 */
@@ -33,8 +30,13 @@
     /* 셀 간 경계를 합침 */
     margin-top: 20px;
     /* 테이블 위쪽 여백 추가 */
-    table-layout: fixed;
+    table-layout: auto;
     /* 테이블 열 너비를 강제로 고정 */
+}
+/* 테이블 헤더 스타일 */
+.ingredient-info-thead {
+    background-color: #f2f2f2;
+    border-bottom: 2px solid #ccc;
 }
 
 /* 셀 스타일 */
@@ -51,19 +53,19 @@
 /* 번호 */
 .ingredient-info-table th:nth-child(2),
 .ingredient-info-table td:nth-child(2) {
-    width: 1%;
+    width: 6%;
 }
 
 /* HACCP 지정번호 */
 .ingredient-info-table th:nth-child(3),
 .ingredient-info-table td:nth-child(3) {
-    width: 27%;
+    width: 15%;
 }
 
 /* 카테고리 */
 .ingredient-info-table th:nth-child(4),
 .ingredient-info-table td:nth-child(4) {
-    width: 3%;
+    width: 9%;
 }
 
 /* 업소명 */
@@ -75,37 +77,37 @@
 /* 주소 */
 .ingredient-info-table th:nth-child(6),
 .ingredient-info-table td:nth-child(6) {
-    width: 30%;
+    width: 29%;
 }
 
 /* 품목명 */
 .ingredient-info-table th:nth-child(7),
 .ingredient-info-table td:nth-child(7) {
-    width: 5%;
+    width: 8%;
 }
 
 /* 영업상태 */
 .ingredient-info-table th:nth-child(8),
 .ingredient-info-table td:nth-child(8) {
-    width: 10%;
+    width: 9%;
 }
 
 /* 인증 종료일자 */
 .ingredient-info-table th:nth-child(9),
 .ingredient-info-table td:nth-child(9) {
-    width: 20%;
+    width: 11%;
 }
 
 /* 수정 */
 .ingredient-info-table th:nth-child(10),
 .ingredient-info-table td:nth-child(10) {
-    width: 3%;
+    width: 2%;
 }
 
 /* 삭제 */
 .ingredient-info-table th:nth-child(11),
 .ingredient-info-table td:nth-child(11) {
-    width: 3%;
+    width: 2%;
     /* 좁게 설정 */
 }
 
@@ -124,39 +126,11 @@
 /* 체크박스 포함된 셀 */
 .ingredient-info-table th:nth-child(1),
 .ingredient-info-table td:nth-child(1) {
-    width: 1%;
+    width: 5%;
     padding: 0;
     /* 안쪽 여백 최소화 */
     text-align: center;
     /* 가운데 정렬 */
-}
-/* 페이징 선택기 스타일 */
-.ingredient-paging-selector {
-    display: inline-flex;
-    align-items: center;
-    justify-content: flex-end;
-    font-size: 15px;
-    padding: 5px 10px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    background-color: #f9f9f9;
-    transition: background-color 0.2s, border-color 0.2s;
-}
-.ingredient-paging-selector select {
-    margin-left: 15px;
-    padding: 5px;
-    font-size: 14px;
-}
-
-.ingredient-paging-selector select:hover {
-    background-color: #f2f2f2;
-    border-color: #888;
-}
-
-.ingredient-paging-selector select:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
 /* 행 스타일 */
@@ -171,4 +145,92 @@
 /* 선택된 행 강조 스타일 */
 .ingredient-info-table tbody tr.selected {
     background-color: #d1eaff;
+}
+
+/* 검색 및 페이지 선택 컨테이너 */
+.ingredient-info-search-and-page-select {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    justify-content: center; /* 수평 중앙 정렬 */
+    margin-bottom: 20px;
+}
+
+/* 페이징 선택기 스타일 */
+.ingredient-paging-selector {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    /* 페이지 크기와 텍스트 간 간격 */
+}
+
+.ingredient-paging-selector select {
+    margin-left: 15px;
+    padding: 8px 12px;
+    /* 패딩을 키워서 옵션 크기 확장 */
+    font-size: 16px;
+    /* 글자 크기 키우기 */
+    height: 40px;
+    /* 드롭다운 높이 키우기 */
+}
+
+.ingredient-paging-selector label {
+    font-size: 16px;
+}
+
+.ingredient-paging-selector select:hover {
+    background-color: #f2f2f2;
+    border-color: #888;
+}
+
+.ingredient-paging-selector select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+
+/* TextField (업소명 검색) */
+.ingredient-filter-container .MuiTextField-root {
+    width: 50px;
+    /* 검색 필드의 너비 */
+    min-width: 200px;
+    background-color: #f5f5f5;
+    /* 배경색 */
+    border-radius: 4px;
+    /* 모서리 둥글게 */
+}
+
+
+/* 검색 버튼 */
+.ingredient-filter-button {
+    margin-right: auto;
+    /* 버튼을 오른쪽 끝으로 배치 */
+    padding: 16px 18px;
+    /* 버튼 크기 */
+    font-size: 14px;
+    /* 버튼 글자 크기 */
+    background-color: #1976d2;
+    /* 기본 배경색 */
+    color: white;
+    /* 버튼 글자 색 */
+    border-radius: 4px;
+    /* 모서리 둥글게 */
+    transition: background-color 0.3s;
+    /* 배경색 전환 애니메이션 */
+}
+
+.ingredient-filter-button:hover {
+    background-color: #1565c0;
+    /* 호버 시 색상 변화 */
+}
+
+/* 모바일 및 작은 화면에서 요소들이 한 줄로 표시되도록 하기 위한 스타일 */
+@media (max-width: 768px) {
+    .ingredient-filter-container {
+        flex-direction: column;
+        /* 세로로 나열 */
+        gap: 10px;
+    }
 }

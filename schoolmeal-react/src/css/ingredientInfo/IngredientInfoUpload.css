@@ -9,7 +9,7 @@
 }
 
 /* 제목 스타일 */
-.ingredient-info-title {
+.ingredient-info-upload-title {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 15px;
@@ -31,23 +31,24 @@
 }
 
 /* 테이블 스타일 */
-.ingredient-info-table {
+.ingredient-info-upload-table {
     width: 100%;
     border-collapse: collapse;
     /* 셀 간 경계를 합침 */
     margin-top: 20px;
     /* 테이블 위쪽 여백 추가 */
+    table-layout: auto;
 }
 
 /* 테이블 헤더 스타일 */
-.ingredient-info-thead {
+.ingredient-info-upload-thead {
     background-color: #f2f2f2;
     border-bottom: 2px solid #ccc;
 }
 
 /* 셀 스타일 */
-.ingredient-info-table td,
-.ingredient-info-table th {
+.ingredient-info-upload-table td,
+.ingredient-info-upload-table th {
     padding: 15px;
     /* 셀 안쪽 여백 */
     text-align: center;
@@ -57,54 +58,54 @@
 }
 
 /* 각 열 너비 설정 */
-.ingredient-info-table th:nth-child(1),
-.ingredient-info-table td:nth-child(1) {
-    width: 20%;
+.ingredient-info-upload-table th:nth-child(1),
+.ingredient-info-upload-table td:nth-child(1) {
+    width: 13%;
     /* HACCP 지정번호 */
 }
 
-.ingredient-info-table th:nth-child(2),
-.ingredient-info-table td:nth-child(2) {
+.ingredient-info-upload-table th:nth-child(2),
+.ingredient-info-upload-table td:nth-child(2) {
     width: 10%;
     /* 카테고리 */
 }
 
-.ingredient-info-table th:nth-child(3),
-.ingredient-info-table td:nth-child(3) {
-    width: 10%;
+.ingredient-info-upload-table th:nth-child(3),
+.ingredient-info-upload-table td:nth-child(3) {
+    width: 15%;
     /* 업소명 */
 }
 
-.ingredient-info-table th:nth-child(4),
-.ingredient-info-table td:nth-child(4) {
-    width: 25%;
+.ingredient-info-upload-table th:nth-child(4),
+.ingredient-info-upload-table td:nth-child(4) {
+    width: 30%;
     /* 주소 */
 }
 
-.ingredient-info-table th:nth-child(5),
-.ingredient-info-table td:nth-child(5) {
+.ingredient-info-upload-table th:nth-child(5),
+.ingredient-info-upload-table td:nth-child(5) {
     width: 10%;
     /* 품목명 */
 }
 
-.ingredient-info-table th:nth-child(6),
-.ingredient-info-table td:nth-child(6) {
+.ingredient-info-upload-table th:nth-child(6),
+.ingredient-info-upload-table td:nth-child(6) {
     width: 10%;
     /* 영업상태 */
 }
 
-.ingredient-info-table th:nth-child(7),
-.ingredient-info-table td:nth-child(7) {
-    width: 30%;
+.ingredient-info-upload-table th:nth-child(7),
+.ingredient-info-upload-table td:nth-child(7) {
+    width: 25%;
     /* 인증종료일자 */
 }
 
 
 /* 행 스타일 */
-.ingredient-info-tbody tr:nth-child(even) {
+.ingredient-info-upload-tbody tr:nth-child(even) {
     background-color: #f9f9f9;
 }
 
-.ingredient-info-tbody tr:hover {
+.ingredient-info-upload-tbody tr:hover {
     background-color: #f1f1f1 !important;
 }

@@ -10,7 +10,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import axios from "axios";
 import * as XLSX from 'xlsx';
 
-const HaccpInfoList = () => {
+const ProductSafetyList = () => {
 
     const [haccpList, setHaccpList] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -303,7 +303,7 @@ const HaccpInfoList = () => {
 
     return (
         <div className="ingredient-info-list-container">
-            <h1 className="ingredient-info-title">HACCP 인증 정보</h1>
+            <h1 className="ingredient-info-title">식품 안정성 조사결과 정보</h1>
 
 
             {/* 데이터 관리 버튼 목록 - 관리자에게만 보이도록 */}
@@ -520,4 +520,4 @@ const HaccpInfoList = () => {
     );
 };
 
-export default HaccpInfoList;
+export default ProductSafetyList;

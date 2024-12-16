@@ -13,7 +13,7 @@ const navLinksInitial = [
     { path: "/ingredientInfo", label: "식재료 정보",
         subLinks: [
             { path: "/ingredientInfo/ingredient-price", label: "식재료 가격 정보" },
-            { path: "/ingredientInfo/ingredient-safety", label: "식품 안정성 조사결과 정보" },
+            { path: "/ingredientInfo/product-safety", label: "식품 안정성 조사결과 정보" },
             { path: "/ingredientInfo/haccp-info", label: "식재료 안정성 인증 정보" },
         ]
     },

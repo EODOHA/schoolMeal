@@ -119,7 +119,7 @@ public class SchoolMealApplication implements CommandLineRunner {
         
         HaccpInfo cert1 = HaccpInfo.builder()
                 .haccpDesignationNumber("2024-01-0001")
-                .category("농")
+                .category("농산물")
                 .businessName("농업회사 A")
                 .address("서울시 마포구")
                 .productName("쌀")
@@ -129,7 +129,7 @@ public class SchoolMealApplication implements CommandLineRunner {
 
         HaccpInfo cert2 = HaccpInfo.builder()
                 .haccpDesignationNumber("2024-01-0002")
-                .category("축")
+                .category("축산물")
                 .businessName("축산업체 B")
                 .address("경기도 안양시")
                 .productName("돼지고기")
@@ -139,7 +139,7 @@ public class SchoolMealApplication implements CommandLineRunner {
 
         HaccpInfo cert3 = HaccpInfo.builder()
                 .haccpDesignationNumber("2024-01-0003")
-                .category("수")
+                .category("수산물")
                 .businessName("수산업체 C")
                 .address("부산시 해운대구")
                 .productName("광어")

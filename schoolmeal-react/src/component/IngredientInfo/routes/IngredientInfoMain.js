@@ -25,7 +25,7 @@ function IngredientInfoMain() {
                 </Button>
                 <Button
                     variant="contained"
-                    color="primary"
+                    color="primary"              
                     onClick={() => navigate("/ingredientInfo/haccp-info")}
                 >
                     식재료 안정성 인증 정보

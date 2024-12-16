@@ -41,7 +41,7 @@ const MealMenuDetail = ({ school }) => {
                 // console.log('mealBoard데이터:', meals);
                 setMealData(meals);
             } catch (err) {
-                setError('급식 정보를 불러오는 데 실패했습니다.');
+                setError('식단표 정보가 존재하지 않습니다.');
                 console.error(err);
             } finally {
                 setLoading(false);
@@ -64,15 +64,17 @@ const MealMenuDetail = ({ school }) => {
 
     return (
         <Box sx={{ padding: 2 }}>
-            <Typography variant='h5' align='center'>{school.schoolName} 식단표</Typography>
-            <br />
-            <Box sx={{ marginBottom: 2 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 2 }}>
+                <Typography variant='h6' sx={{ flexGrow: 1, textAlign: 'center' }}>
+                    {school.schoolName} 식단표
+                </Typography>
                 <TextField
                     label="선택 월"
                     type="month"
                     value={moment(selectedMonth, 'YYYYMM').format('YYYY-MM')}
                     onChange={handleMonthChange}
                     variant="outlined"
+                    sx={{ marginLeft: 2 }}  // '선택 월' 입력 필드와 타이포그래피 사이 간격 설정
                 />
             </Box>
             {/* 로딩 중일 때 */}

@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { SERVER_URL } from "../../../Constants";
 import { useAuth } from "../../sign/AuthContext";
@@ -6,7 +7,7 @@ import { Button } from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
 
-const HaccpInfoEdit = () => {
+const ProductSafetyEdit = () => {
     const [categories] = useState(["농산물", "축산물", "수산물", "공산품"]);
     const [businessStatus] = useState(["영업중", "휴업중", "폐업"]);
     const { token } = useAuth();
@@ -201,4 +202,4 @@ const HaccpInfoEdit = () => {
     );
 };
 
-export default HaccpInfoEdit;
+export default ProductSafetyEdit;

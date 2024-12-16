@@ -61,7 +61,6 @@ function VideoEducationDetail() {
     };
 
     const token = sessionStorage.getItem('jwt'); // JWT 토큰 가져오기
-    console.log(token);
 
     const deleteForm = () => {
         if (!window.confirm("삭제하시겠습니까?")) return;
@@ -92,10 +91,6 @@ function VideoEducationDetail() {
         ? `${SERVER_URL}videoEducation/video/${videoUrl}`  // videoEducation의 ID를 URL에 추가
         : null;
 
-    console.log("비디오 URL:", fullVideoUrl);  // 전체 비디오 URL 확인
-
-
-
     return (
         <div className="edu-detail-container">
             <div className="edu-card">
@@ -107,7 +102,7 @@ function VideoEducationDetail() {
                         <div className="edu-date">작성일: {formatDate(videoEducation.createdDate)}</div>
                     </div>
                     <div className="edu-attachment">
-                        {videoEducation?._links?.fileUrl?.href ? (
+                        {videoEducation.fileUrlId ? (
                             <a
                                 href={`${SERVER_URL}videoEducation/download/${videoEducation.id}`}
                                 download
@@ -140,7 +135,7 @@ function VideoEducationDetail() {
                         </div>
 
                         {/* 영상 재생 (업로드된 비디오 파일이 있을 경우) */}
-                        {fullVideoUrl && (
+                        {videoEducation.fileUrlId && (
                             <div className="edu-video-play">
                                 <h4>영상 재생:</h4>
                                 <video

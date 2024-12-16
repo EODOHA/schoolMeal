@@ -3,24 +3,49 @@ import * as XLSX from 'xlsx';
 import { SERVER_URL } from "../../../Constants";
 import { useAuth } from "../../sign/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { Button} from "@mui/material";
+import { Button } from "@mui/material";
 import '../../../css/ingredientInfo/IngredientInfoUpload.css';
 
-const WriteFileUpload = () => {
+const HaccpFileUpload = () => {
     const [haccpData, setHaccpData] = useState([]);
+    const [selectedFile, setselectedFile] = useState(null);
     const { token } = useAuth();
     const navigate = useNavigate();
 
     // 파일 선택 후 처리
     const handleFileChange = (e) => {
-        const selectedFile = e.target.files[0];
+        const file = e.target.files[0];
+        setselectedFile(file);
+        
+        // console.log(selectedFile); // 파일 객체가 제대로 출력되는지 확인
+        // console.log(file instanceof Blob); // true인지 확인
+        if (!file) {
+            alert("파일을 선택해주세요.");
+            return;
+        }
         readExcelFile(selectedFile);
     };
+
+    // 파일 초기화
+    const handleFileReset = () => {
+        setselectedFile(null);  // 파일 상태 초기화
+        setHaccpData([]);       // 파싱된 데이터 초기화
+    }
 
 
     //excel 파일 파싱
     const readExcelFile = (file) => {
+
+        if (!(file instanceof Blob)) {
+            console.error("올바르지 않은 파일 형식입니다.");
+            alert("올바르지 않은 파일 형식입니다. 다시 시도하세요.");
+            return;
+        }
         const reader = new FileReader();
+        // reader.onloadstart = () => console.log("파일 읽기 시작...");
+        // reader.onloadend = () => console.log("파일 읽기 완료!");
+        // reader.onerror = (err) => console.error("파일 읽기 중 오류 발생:", err);
+
 
         reader.onload = (e) => {
             const arrayBuffer = e.target.result;
@@ -36,7 +61,7 @@ const WriteFileUpload = () => {
             const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });   //첫번째 행을 헤더로 사용
 
             //첫번째 행(헤더)를 제외하고, 두번째 행부터 매핑
-            // 데이터 필터링
+            // 데이터 필터링 및 매핑
             const haccpData = jsonData.slice(1).filter(row =>
                 row.every(cell => cell !== null && cell !== undefined && cell !== '') // 모든 셀 값이 null, undefined, 빈 문자열이 아닌지 체크
             ).map((row) => ({
@@ -157,13 +182,26 @@ const WriteFileUpload = () => {
                     style={{ padding: '10px', border: '1px solid #ccc', borderRadius: '4px' }}
                 />
             </div>
+            {selectedFile && (
+                <p>선택된 파일: {selectedFile.name}</p>
+            )}
 
-
+            {/* 파일 초기화 버튼 */}
+            {selectedFile && (
+                <Button
+                    variant="outlined"
+                    color="error"
+                    onClick={handleFileReset}
+                    style={{ marginLeft: "10px" }}
+                >
+                    파일 초기화
+                </Button>
+            )}
 
             {/* 파싱된 데이터 출력 */}
-            <h2 className="ingredient-info-title">업로드된 데이터</h2>
-            <table className="ingredient-info-table">
-                <thead className="ingredient-info-thead">
+            <h2 className="ingredient-info-upload-title">업로드된 데이터</h2>
+            <table className="ingredient-info-upload-table">
+                <thead className="ingredient-info-upload-thead">
                     <tr>
                         <th>HACCP 지정번호</th>
                         <th>카테고리</th>
@@ -174,7 +212,7 @@ const WriteFileUpload = () => {
                         <th>인증 종료일자</th>
                     </tr>
                 </thead>
-                <tbody className="ingredient-info-tbody">
+                <tbody className="ingredient-info-upload-tbody">
                     {haccpData.map((row, index) => (
                         <tr key={index}>
                             <td>{row.haccpDesignationNumber}</td>
@@ -188,7 +226,7 @@ const WriteFileUpload = () => {
                     ))}
                 </tbody>
             </table>
-        </div>
+        </div >
     );
 };
-export default WriteFileUpload;
+export default HaccpFileUpload;

@@ -20,21 +20,22 @@ public class HaccpInfoController {
 
 	@Autowired
 	private HaccpInfoRepository haccpInfoRepository;
-	
+
 	@GetMapping
 	public Iterable<HaccpInfo> getHACCPInfo() {
 		// HACCP 인증 정보를 검색하고 반환
 		return haccpInfoRepository.findAll();
 	}
 
-	 @PostMapping("/bulk-upload")
-	    public ResponseEntity<List<HaccpInfo>> uploadHaccpData(@RequestBody List<HaccpInfo> haccpList) {
-	        try {
-	            // 받은 데이터 처리 (DB에 저장)
-	            haccpInfoRepository.saveAll(haccpList);
-	            return ResponseEntity.ok(haccpList);
-	        } catch (Exception e) {
-	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-	        }
-	    }
+	@PostMapping("/bulk-upload")
+	public ResponseEntity<List<HaccpInfo>> uploadHaccpData(@RequestBody List<HaccpInfo> haccpList) {
+		try {
+			// 받은 데이터 처리 (DB에 저장)
+			haccpInfoRepository.saveAll(haccpList);
+			return ResponseEntity.ok(haccpList);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+		}
 	}
+
+}

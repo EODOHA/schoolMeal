@@ -3,6 +3,9 @@ import { SERVER_URL } from "../../../Constants";
 import "../../../css/mealResource/MealEdit.css";
 import Button from "@mui/material/Button";
 import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import { useAuth } from "../../sign/AuthContext";
+import LoadingSpinner from '../../common/LoadingSpinner';
 
 function MenuRecipeEdit() {
     const [menuRecipe, setMenuRecipe] = useState({
@@ -18,33 +21,53 @@ function MenuRecipeEdit() {
     const [error, setError] = useState(null);
     const { id } = useParams();
     const navigate = useNavigate();
+    const { isAuth, isAdmin, token } = useAuth(); // 인증 상태와 권한 여부 가져오기
+    const [isLoadingAuth, setIsLoadingAuth] = useState(true); // 인증 상태 로딩
     const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
     useEffect(() => {
-        fetch(SERVER_URL + "menuRecipes/" + id)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("게시글을 불러오는 중 오류가 발생했습니다.");
-                }
-                return response.json();
-            })
-            .then(data => {
-                setMenuRecipe({
-                    title: data.title,
-                    writer: data.writer,
-                    createdDate: data.createdDate,
-                    content: data.content,
-                    fileId: data.fileId,
-                    file: null,
-                    fileUrl: data.fileUrl,
+        // 인증 상태와 권한 정보가 변경될 때마다 실행
+        if (isAuth !== undefined && isAdmin !== undefined) {
+            setIsLoadingAuth(false); // 인증 상태가 로드된 후 로딩 상태를 false로 설정
+        }
+    }, [isAuth, isAdmin]);
+
+    useEffect(() => {
+        // `isAuth`와 `isAdmin` 값이 `false`로 설정된 이후에만 실행되도록 체크
+        if (!isLoadingAuth && (isAuth === false || isAdmin === false)) {
+            navigate("/unauthorized");
+        }
+    }, [isAuth, isAdmin, navigate, isLoadingAuth]);
+
+    // 데이터를 불러오는 useEffect
+    useEffect(() => {
+        if (isAuth && isAdmin) {
+            axios
+                .get(`${SERVER_URL}menuRecipes/${id}`, {
+                    headers: {
+                        Authorizatio: `${token}`,
+                    }
+                })
+                .then((response) => {
+                    const data = response.data;
+                    setMenuRecipe({
+                        title: data.title,
+                        writer: data.writer,
+                        createdDate: data.createdDate,
+                        content: data.content,
+                        fileId: data.fileId,
+                        file: null,
+                        fileUrl: data.fileUrl,
+                    });
+                    setLoading(false);
+                })
+                .catch((err) => {
+                    console.error("Error fetching post:", err);
+                    setError("게시글을 불러오는 중 오류가 발생했습니다.");
+                    setLoading(false);
                 });
-                setLoading(false);
-            })
-            .catch(err => {
-                setError(err.message);
-                setLoading(false);
-            });
-    }, [id]);
+        }
+    }, [id, isAuth, isAdmin, token]);
 
     const handleChange = (e) => {
         if (e.target.name === "file") {
@@ -81,22 +104,13 @@ function MenuRecipeEdit() {
         } else if (menuRecipe.fileId) {
             formData.append("fileId", menuRecipe.fileId);
         }
-
-        for (let [key, value] of formData.entries()) {
-            console.log(`${key}:`, value);
-        }
-
         try {
-            const response = await fetch(SERVER_URL + "menuRecipe/update/" + id, {
-                method: "PUT",
-                body: formData,
+            await axios.put(`${SERVER_URL}menuRecipe/update/${id}`, formData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "multipart/form-data",
+                },
             });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(errorText || "수정에 실패했습니다.");
-            }
-
             alert("수정되었습니다.");
             navigate("/mealResource/menu-recipe");
         } catch (err) {
@@ -106,7 +120,7 @@ function MenuRecipeEdit() {
     };
 
     if (loading) {
-        return <div>데이터를 불러오는 중...</div>;
+        return <div><LoadingSpinner /></div>;
     }
 
     if (error) {
@@ -129,7 +143,7 @@ function MenuRecipeEdit() {
                                 required
                             />
                         </div>
-                        
+
                         <div className="meal-resource-form-group">
                             <label>작성자</label>
                             <input
