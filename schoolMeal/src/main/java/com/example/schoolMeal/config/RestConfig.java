@@ -20,7 +20,7 @@ public class RestConfig {
         config.exposeIdsFor(// 급식자료실
         					MealPolicyOperation.class,
         					MenuRecipe.class,
-        					NutritionManage.class,
+//        					NutritionManage.class,
 //        					MealHygiene.class,
 //        					MealFacilityEquipment.class,
 //        					SchoolMealCases.class,
