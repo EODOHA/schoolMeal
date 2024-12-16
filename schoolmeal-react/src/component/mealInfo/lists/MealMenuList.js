@@ -164,6 +164,7 @@ const MealMenuList = ({ meals, selectedMonth, monthStart }) => {
         // 만약 newDate가 해당 월의 첫날보다 이전이라면, 버튼 비활성화
         if (newDate < startOfMonth) {
             setCurrentDate(startOfMonth);  // 첫날로 설정하여 더 이상 이전으로 가도록 막음
+            alert("해당 월이 종료되었습니다. 새로운 월을 선택해주세요");  // 알림창 표시
         } else {
             setCurrentDate(newDate);
         }
@@ -178,6 +179,7 @@ const MealMenuList = ({ meals, selectedMonth, monthStart }) => {
         // 만약 newDate가 해당 월의 마지막 날짜보다 크다면, 버튼 비활성화
         if (newDate > endOfMonth) {
             setCurrentDate(endOfMonth);  // 마지막 날짜로 설정하여 더 이상 넘어가지 않도록
+            alert("해당 월이 종료되었습니다. 새로운 월을 선택해주세요");  // 알림창 표시
         } else {
             setCurrentDate(newDate);
         }
@@ -209,7 +211,7 @@ const MealMenuList = ({ meals, selectedMonth, monthStart }) => {
     const isNextWeekDisabled = currentDate >= endOfSelectedMonth;
 
     return (
-        <div style={{position: "relative"}}>
+        <div style={{ position: "relative" }}>
             <Box display="flex" justifyContent="center" alignItems="center" mb={2}>
                 <Button onClick={goToPreviousWeek}
                     disabled={isPreviousWeekDisabled}
@@ -220,7 +222,7 @@ const MealMenuList = ({ meals, selectedMonth, monthStart }) => {
                         '&:hover': {
                             bgcolor: 'secondary.main', // 마우스 오버 시 색상 변경
                         },
-                    }}>◀️ 지난 주</Button>
+                    }}> {"< 지난 주"} </Button>
                 <Typography variant="h6" mx={2}>
                     {startFormatted} - {endFormatted}
                 </Typography>
@@ -232,7 +234,7 @@ const MealMenuList = ({ meals, selectedMonth, monthStart }) => {
                         '&:hover': {
                             bgcolor: 'secondary.main', // 마우스 오버 시 색상 변경
                         },
-                    }}>다음 주 ▶️</Button>
+                    }}>{"다음 주 >"}</Button>
             </Box>
             {renderWeek()}
         </div>

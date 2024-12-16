@@ -59,11 +59,11 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.GET, "/imageManage/{category}").permitAll()
 				.requestMatchers(HttpMethod.GET, "/adminNotice/**").permitAll()
 				// 급식정보
-				.requestMatchers(HttpMethod.GET, "/mealArchive", "/mealArchive/download/*", "/mealArchive/{arc_id}").permitAll()
-				.requestMatchers(HttpMethod.GET, "/mealInfo/experts", "/mealInfo/experts/{exp_id}").permitAll()
-				.requestMatchers(HttpMethod.GET, "/mealInfo/experts/{exp_id}/profile/{id}").permitAll()
+				.requestMatchers(HttpMethod.GET, "/mealArchive/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/mealInfo/experts/**").permitAll()
 				// 식재료정보
-				.requestMatchers(HttpMethod.GET, "/haccp", "/haccp/{haccp_id}", "/hccp-info/bulk-upload").permitAll()
+				.requestMatchers(HttpMethod.GET, "/haccp-info/**", "/ingredient-price/**", "/ingredient-price/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/haccp/**", "/price/**", "/safety/**").permitAll()
 				// 급식자료실
 				.requestMatchers(HttpMethod.GET, "/mealPolicyOperations/**").permitAll()
 				.requestMatchers(HttpMethod.GET, "/mealPolicyOperation/download/**").permitAll()
@@ -90,6 +90,8 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.GET, "/crawling/**").permitAll()
 				// 커뮤니티 - 댓글기능
 				.requestMatchers(HttpMethod.GET, "/comments/**").permitAll()
+				
+				.requestMatchers(HttpMethod.POST, "/chat/sendMessage").permitAll()
 
 
 				// 해당 엔드포인트는 인증 필요 없음.

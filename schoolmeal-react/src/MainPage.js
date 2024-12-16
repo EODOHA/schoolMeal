@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState, useLayoutEffect } from "react";
 import { Link } from "react-router-dom";
 import "./css/main/MainPage.css";
 import { SERVER_URL } from "./Constants";
-import axios from 'axios';
 import { useNavLinks } from "./component/layout/NavLinksContext";
+import ChatApp from "./ChatApp";
 
 const MainPage = () => {
     const [images, setImages] = useState([]);
@@ -464,13 +464,14 @@ const MainPage = () => {
                 </div>
             </section>
 
+            <ChatApp></ChatApp>
+
             <section className="service-section">
                 <h2>자주 찾는 서비스</h2>
                 <div className="service-slider-wrapper">
                     <button 
                         className="slider-btn prev-btn" 
-                        onClick={() => handleSlide(-1)} 
-                        disabled={position === 0}
+                        onClick={() => handleSlide(-1)}
                     >
                         ◀
                     </button>
@@ -482,16 +483,20 @@ const MainPage = () => {
                             transition: "transform 0.5s ease",
                         }} // 부드러운 전환 추가
                     >
-                        {items.map((item, index) => (
-                            <Link to={item.path || '#'} className="service-link">
-                                <div key={`${item.id}-${index}`} className="service-item">
-                                {/* react-router-dom의 Link 컴포넌트를 사용하여 href 대신 path로 이동 */}
-                                    <h3>{item.name}</h3>
-                                    <p>{item.description1}</p>
-                                    <p>{item.description2}</p>
-                                </div>
-                            </Link>
-                        ))}
+                        {items.length > 0 ? (
+                            items.map((item, index) => (
+                                <Link to={item.path || '#'} className="service-link">
+                                    <div key={`${item.id}-${index}`} className="service-item">
+                                    {/* react-router-dom의 Link 컴포넌트를 사용하여 href 대신 path로 이동 */}
+                                        <h3>{item.name}</h3>
+                                        <p>{item.description1}</p>
+                                        <p>{item.description2}</p>
+                                    </div>
+                                </Link>
+                            ))
+                        ) : (
+                            <p style={{marginLeft: "70px"}}>아직 방문한 게시판이 없습니다. 🧐</p>
+                        )}
                     </div>
                     <button 
                         className="slider-btn next-btn" 

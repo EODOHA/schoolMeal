@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, TextField } from '@mui/material';
 import '../../../css/mealInfo/MealInfoWrite.css';
+import { useAuth } from '../../sign/AuthContext';
 
 function MealArchiveWrite({ writeArchive, error, handleBackToList }) {
     const [title, setTitle] = useState('');
@@ -8,7 +9,12 @@ function MealArchiveWrite({ writeArchive, error, handleBackToList }) {
     const [author, setAuthor] = useState('');
     const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
+    const {memberId} = useAuth();  //현재 로그인한 사용자의 memberId가져오기
 
+    //컴포넌트가 처음 렌더링될 때 author를 memberId로 설정 
+    useEffect(()=>{
+        setAuthor(memberId);
+    },[memberId]);
 
     // 파일 입력 변경 핸들러
     const handleFileChange = (e) => {
@@ -22,7 +28,7 @@ function MealArchiveWrite({ writeArchive, error, handleBackToList }) {
         const newArchive = {
             arc_title: title,
             arc_content: content,
-            arc_author: author
+            arc_author: memberId,
         };
 
         try {
@@ -55,8 +61,8 @@ function MealArchiveWrite({ writeArchive, error, handleBackToList }) {
                             label="작성자"
                             fullWidth
                             value={author}
-                            onChange={(e) => setAuthor(e.target.value)}
                             required
+                            read-only
                         />
                     </div>
                     <div className='meal-info-form-group'>

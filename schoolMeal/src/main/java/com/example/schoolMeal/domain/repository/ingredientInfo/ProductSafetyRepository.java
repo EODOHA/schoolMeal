@@ -10,7 +10,6 @@ import com.example.schoolMeal.domain.entity.ingredientInfo.ProductSafety;
 
 @RepositoryRestResource(path = "safety")
 public interface ProductSafetyRepository extends JpaRepository<ProductSafety, Long> {
-
 	// 카테고리로 검사결과 검색
 	List<ProductSafety> findByCategory(@Param("category") String category);
 

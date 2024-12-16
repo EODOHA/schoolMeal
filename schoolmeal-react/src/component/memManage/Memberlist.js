@@ -37,7 +37,7 @@ function Memberlist() {
         { field: 'memberId', headerName: '아이디', width: 90, headerAlign: 'center', align: "center", },
         { field: 'email', 
             headerName: '이메일',
-            width: 120,
+            width: 130,
             headerAlign: 'center',
             align: "center",
             renderCell: (row) => {
@@ -81,7 +81,7 @@ function Memberlist() {
                 return phone; // 10자리, 11자리 아니면, 원본 반환.
             }
         },
-        { field: 'role', headerName: '권한', width: 80, headerAlign: 'center', align: "center" },
+        { field: 'role', headerName: '권한', width: 100, headerAlign: 'center', align: "center" },
         { field: 'is_locked', headerName: '잠금여부', width: 80, headerAlign: 'center', align: "center" },
         { field: 'status', headerName: '상태', width: 60, headerAlign: 'center', align: "center" },
         { 

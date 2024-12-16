@@ -4,7 +4,7 @@ import { useAuth } from "../../sign/AuthContext";
 import '../../../css/ingredientInfo/IngredientInfoEdit.css';
 import { Button } from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
-import LoadingSpinner from "../../common/LoadingSpinner";
+import { CircularProgress } from "@mui/material";
 
 const HaccpInfoEdit = () => {
     const [categories] = useState(["농산물", "축산물", "수산물", "공산품"]);
@@ -22,6 +22,7 @@ const HaccpInfoEdit = () => {
         productName: "",
         businessStatus: businessStatus[0],
         certificationEndDate: "",
+        createdDate: ""
     });
 
     useEffect(() => {
@@ -38,6 +39,7 @@ const HaccpInfoEdit = () => {
                     productName: data.productName,
                     businessStatus: data.businessStatus || businessStatus[0],
                     certificationEndDate: data.certificationEndDate,
+                    createdDate: data.createdDate
                 });
             })
             .catch((error) => console.error("Error fetching data:", error));
@@ -78,9 +80,30 @@ const HaccpInfoEdit = () => {
                 alert("수정 중 오류가 발생하였습니다.");
             });
     };
+    // useEffect(() => {
+    //     if (!haccp) {
+    //         handleBackToList();
+    //     }
+    // }, [haccp]);
+
+    // const handleBackToList = () => {
+    //     alert("데이터가 존재하지 않습니다. 목록으로 돌아갑니다.");
+    //     navigate("/ingredientInfo/haccp-info");
+
+    // };
+
     if (!haccp) {
-        return <div><LoadingSpinner /></div>
-    }
+        return (
+            <div style={{
+                display: 'flex',
+                justifyContent: 'center', // 수평 가운데 정렬
+                alignItems: 'center', // 수직 가운데 정렬
+                height: '30vh' // 전체 화면 높이
+            }}>
+                <CircularProgress />
+            </div>
+        );
+    };
     return (
         <div className="ingredient-info-edit-container">
             <div className="ingredient-info-card">

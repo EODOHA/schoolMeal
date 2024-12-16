@@ -50,8 +50,6 @@ import RegionalCommunityDetail from './component/community/regionalCommunity/Reg
 // 커뮤니티-급식 뉴스와 학술 자료 컴포넌트 추가
 import SchoolMealNewsList from './component/community/schoolNews/SchoolMealNewsList';
 import AcademicMaterialsList from './component/community/materials/AcademicMaterialsList';
-import AdminNoticeManagerWrite from './component/mainManage/adminNoticeManager/writes/AdminNoticeManagerWrite';
-import AdminNoticeManagerEdit from './component/mainManage/adminNoticeManager/edits/AdminNoticeManagerEdit';
 
 
 

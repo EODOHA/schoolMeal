@@ -4,6 +4,7 @@ import { SERVER_URL } from "../../Constants";
 import { useAuth } from "../sign/AuthContext";
 import '../../css/mainManage/MainManager.css';
 import LoadingSpinner from "../common/LoadingSpinner";
+import { Button } from "@mui/material";
 
 const MainManager = () => {
     // 카테고리 목록 상태.
@@ -443,7 +444,7 @@ const MainManager = () => {
                             accept={selectedCategory === "video" ? "video/*" : "image/*"}
                             onChange={(e) => setNewImage(e.target.files[0])}
                         />
-                        <button onClick={handleUpload}>업로드하기</button>
+                        <Button onClick={handleUpload}>업로드하기</Button>
                     </div>
 
 
@@ -473,8 +474,8 @@ const MainManager = () => {
                                             </span>
 
                                             <br />
-                                            <button onClick={() => handleEdit(image.id)}>수정</button>
-                                            <button onClick={() => handleDelete(image.id)}>삭제</button>
+                                            <Button className="editBtn" onClick={() => handleEdit(image.id)}>수정</Button>
+                                            <Button className="delBtn" onClick={() => handleDelete(image.id)}>삭제</Button>
                                         </div>
                                     ))}
                                 </div>

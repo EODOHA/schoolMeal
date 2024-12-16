@@ -1,0 +1,57 @@
+/* 모달의 박스 스타일 */
+.school-search-modal-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    max-width: 500px;
+    background-color: white;
+    border: 2px solid #000;
+    box-shadow: 24px;
+    padding: 20px;
+    border-radius: 8px;
+    overflow-y: auto; 
+    max-height: 80vh; 
+    padding: 16px; 
+  }
+  
+  /* 표 스타일 */
+  .table-container {
+    width: 100%;
+    overflow: auto;
+    border-collapse: collapse;
+  }
+  
+  .table-cell {
+    padding: 12px;
+    font-size: 14px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+  }
+  
+.table-header-cell {
+    background-color: #f4f4f4;
+    font-weight: bold;
+    padding: 12px;
+    font-size: 14px;
+    text-align: center;
+    border-bottom: 2px solid #ddd;
+  }
+  
+  /* 검색창과 버튼 스타일 */
+ .search-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;  /* 수평 중앙 정렬 */
+    gap: 20px;
+  }
+  
+  .search-input {
+    max-width: 30%;
+  }
+  
+  .school-search-modal .search-button {
+    padding: 8px 16px;
+  }
+  

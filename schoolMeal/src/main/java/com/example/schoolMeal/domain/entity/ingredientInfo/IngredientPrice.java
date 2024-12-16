@@ -2,6 +2,8 @@ package com.example.schoolMeal.domain.entity.ingredientInfo;
 
 import java.time.LocalDate;
 
+import org.springframework.data.annotation.CreatedDate;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -32,6 +34,8 @@ public class IngredientPrice {
 	private String grade;		//등급
 	private String productDistrict;	//생산지	
 	private int productPrice;		//가격
+	
+	@CreatedDate
 	private LocalDate entryDate;	//등록일
 	
 }

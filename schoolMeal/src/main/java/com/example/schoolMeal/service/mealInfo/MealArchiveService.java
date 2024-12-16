@@ -36,8 +36,11 @@ public class MealArchiveService {
 	public MealArchiveDto createArchive(MealArchiveDto archiveDto, MultipartFile file) {
 
 		// 게시글 생성
-		MealArchive mealArchive = MealArchive.builder().arc_title(archiveDto.getArc_title()) // 빌더로 필드 설정
-				.arc_content(archiveDto.getArc_content()).build(); // 객체 생성
+		MealArchive mealArchive = MealArchive.builder()
+				.arc_title(archiveDto.getArc_title()) // 빌더로 필드 설정
+				.arc_content(archiveDto.getArc_content())
+				.arc_author(archiveDto.getArc_author())
+				.build(); // 객체 생성
 
 		// 게시글 저장
 		MealArchive savedMealArchive = archiveRepository.save(mealArchive);
@@ -49,9 +52,14 @@ public class MealArchiveService {
 			MealArchiveFileDto uploadedFileDto = fileService.uploadFile(savedMealArchive, file);
 
 			// 파일을 게시글에 추가
-			MealArchiveFile fileEntity = new MealArchiveFile(uploadedFileDto.getArc_originalFilename(),
-					uploadedFileDto.getArc_storedFilename(), uploadedFileDto.getArc_file_url(),
-					uploadedFileDto.getArc_file_type(), uploadedFileDto.getArc_file_size(), savedMealArchive);
+			MealArchiveFile fileEntity = new MealArchiveFile(
+					uploadedFileDto.getArc_originalFilename(),
+					uploadedFileDto.getArc_storedFilename(),
+					uploadedFileDto.getArc_file_url(),
+					uploadedFileDto.getArc_file_type(),
+					uploadedFileDto.getArc_file_size(),
+					savedMealArchive
+					);
 
 			// 게시글에 파일 추가
 			savedMealArchive.getArc_files().add(fileEntity); // 파일을 게시글에 추가
@@ -81,6 +89,7 @@ public class MealArchiveService {
 		// 게시글 수정
 		existingArchive.setArc_title(updatedArchive.getArc_title());
 		existingArchive.setArc_content(updatedArchive.getArc_content());
+		existingArchive.setArc_author(updatedArchive.getArc_author());
 		
 		// 기존 파일 삭제 및 새로운 파일 업로드
 		if (newFile != null && !newFile.isEmpty()) { // 새 파일이 있을 경우
@@ -145,6 +154,7 @@ public class MealArchiveService {
 		MealArchiveDto dto = new MealArchiveDto();
 		dto.setArc_id(mealArchive.getArc_id());
 		dto.setArc_title(mealArchive.getArc_title());
+		dto.setArc_author(mealArchive.getArc_author());
 		dto.setArc_content(mealArchive.getArc_content());
 		dto.setCreatedDate(mealArchive.getCreatedDate());
 		dto.setLastModifiedDate(mealArchive.getLastModifiedDate());

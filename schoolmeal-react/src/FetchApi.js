@@ -12,7 +12,7 @@ export const fetchSchoolCode = async(schoolName) =>{
         }
     });
     // 응답 데이터 확인
-    console.log('학교 데이터 :', response.data.schoolInfo[1].row[1]);
+    // console.log('학교 데이터 :', response.data.schoolInfo[1].row);
     return response.data.schoolInfo[1].row;
 
 }
