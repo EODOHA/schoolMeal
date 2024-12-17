@@ -9,7 +9,6 @@ import { Button } from "@mui/material";
 import MealArchiveEdit from '../edits/MealArchiveEdit';
 import { useAuth } from '../../sign/AuthContext';
 import LoadingSpinner from '../../common/LoadingSpinner';
-import { isMatch } from 'date-fns';
 
 
 function MealArchiveDetails() {
@@ -59,7 +58,7 @@ function MealArchiveDetails() {
                 setError("데이터를 가져오는 중 오류가 발생했습니다.");
                 setLoading(false);
             });
-    }, [id, isAdmin, isBoardAdmin]); 
+    }, [id, isAdmin, isBoardAdmin]);
 
     // 로딩 중일 때 화면 표시
     if (loading) {
@@ -147,26 +146,26 @@ function MealArchiveDetails() {
                             </div><br />
                         </form>
                         <div className="meal-info-button-group">
-                            {/* 수정과 삭제버튼은 작성자 본인만 선택 가능 */}
+                            {/* 수정은 작성자 본인, 삭제는 관리자도 선택 가능 */}
                             {isAuthor && (
-                                <>
-                                    <Button
-                                        variant="outlined"
-                                        color="success"
-                                        onClick={handleUpdate}
-                                        disabled={!isAuthor}
-                                    >
-                                        수정
-                                    </Button>
-                                    <Button
-                                        variant="contained"
-                                        color="error"
-                                        onClick={handleDelete}
-                                        disabled={!isAuthor}
-                                    >
-                                        삭제
-                                    </Button>
-                                </>
+                                <Button
+                                    variant="outlined"
+                                    color="success"
+                                    onClick={handleUpdate}
+                                    disabled={!isAuthor}
+                                >
+                                    수정
+                                </Button>
+                            )}
+                            {(isAuthor || isAdmin) && (
+                                <Button
+                                    variant="contained"
+                                    color="error"
+                                    onClick={handleDelete}
+                                    disabled={(!isAuthor && !isAdmin)}
+                                >
+                                    삭제
+                                </Button>
                             )}
                             <Button
                                 variant="outlined"
@@ -178,7 +177,8 @@ function MealArchiveDetails() {
                         </div>
                     </div>
                 </div>
-            )}
+            )
+            }
         </div >
     );
 }
