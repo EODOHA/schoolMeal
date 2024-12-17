@@ -78,7 +78,7 @@ public class NoticeController {
             CommunityFile file = communityFileRepository.findById(notice.getFileId())
                     .orElseThrow(() -> new EntityNotFoundException("File not found"));
 
-            String filePath = "C:/uploadTest/공지사항/" + file.getOrigFileName(); // 저장된 파일 경로
+            String filePath = "C:/Files/공지사항/" + file.getOrigFileName(); // 저장된 파일 경로
             File downloadFile = new File(filePath);
 
             // 디버깅

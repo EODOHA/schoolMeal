@@ -89,7 +89,9 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.GET, "/eduMaterialSharing/download/**").permitAll()
 
 				// 커뮤니티 - 공지사항
-				.requestMatchers(HttpMethod.GET, "/notices/**", "/notices/download/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/notices/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/notices/download/**").permitAll()
+
 
 				// 커뮤니티 - 가공식품정보
 				.requestMatchers(HttpMethod.GET, "/processed-foods/**").permitAll()
@@ -101,7 +103,7 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.GET, "/crawling/**").permitAll()
 				// 커뮤니티 - 댓글기능
 				.requestMatchers(HttpMethod.GET, "/comments/**").permitAll()
-				
+
 				.requestMatchers(HttpMethod.POST, "/chat/sendMessage").permitAll()
 
 
