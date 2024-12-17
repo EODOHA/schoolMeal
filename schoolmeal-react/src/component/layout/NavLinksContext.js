@@ -27,8 +27,7 @@ const navLinksInitial = [
             { path: "/mealResource/nutrition-manage", label: "영양 관리" },
             { path: "/mealResource/meal-hygiene", label: "급식 위생" },
             { path: "/mealResource/meal-facility-equipment", label: "급식 시설 및 설비" },
-            { path: "/mealResource/school-meal-cases", label: "학교급식 우수사례" },
-            { path: "/mealResource/edu-office-meal-data", label: "교육청 급식자료" }
+            { path: "/mealResource/school-meal-case", label: "학교급식 우수사례" }
         ],
         showSearch: true
     },

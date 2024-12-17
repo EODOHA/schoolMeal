@@ -9,9 +9,9 @@ import { RiFileUnknowFill } from "react-icons/ri";
 import { useAuth } from "../../sign/AuthContext";
 import LoadingSpinner from '../../common/LoadingSpinner';
 
-function MealPolicyOperationDetail() {
+function MealFacilityEquipmentDetail() {
     const { id } = useParams(); // URL에서 id 값을 받아옴
-    const [mealPolicyOperation, setMealPolicyOperation] = useState(null);
+    const [mealFacilityEquipment, setMealFacilityEquipment] = useState(null);
     const [loading, setLoading] = useState(true); // 로딩 상태
     const [error, setError] = useState(null); // 오류 상태
     const navigate = useNavigate();
@@ -28,21 +28,20 @@ function MealPolicyOperationDetail() {
         }
 
         axios
-            .get(`${SERVER_URL}mealPolicyOperations/${id}`)
+            .get(`${SERVER_URL}mealFacilityEquipments/${id}`)
             .then((response) => {
-                setMealPolicyOperation(response.data);
+                setMealFacilityEquipment(response.data);
                 // 작성자 확인
                 const isAuthor = (isAdmin && response.data.writer === "관리자") ||
                     (isBoardAdmin && response.data.writer === "담당자");
                 setIsAuthor(isAuthor);
                 setLoading(false);
             })
-            .catch((error) => {
+            .catch((err) => {
                 setError("데이터를 가져오는 중 오류가 발생했습니다.");
                 setLoading(false);
             });
     }, [id, isAdmin, isBoardAdmin]);
-
 
     if (loading) {
         return <div><LoadingSpinner /></div>;
@@ -52,7 +51,7 @@ function MealPolicyOperationDetail() {
         return <div>{error}</div>;
     }
 
-    if (!mealPolicyOperation) {
+    if (!mealFacilityEquipment) {
         return <div>데이터를 찾을 수 없습니다.</div>;
     }
 
@@ -65,14 +64,14 @@ function MealPolicyOperationDetail() {
     };
 
     const update = () => {
-        navigate(`/mealResource/meal-policy-operation/update/${id}`); // 수정 페이지로 이동
+        navigate(`/mealResource/meal-facility-equipment/update/${id}`); // 수정 페이지로 이동
     };
 
     const deleteForm = () => {
         if (!window.confirm("삭제하시겠습니까?")) return;
 
         axios
-            .delete(`${SERVER_URL}mealPolicyOperation/delete/${id}`, {
+            .delete(`${SERVER_URL}mealFacilityEquipment/delete/${id}`, {
                 headers: {
                     Authorization: `${token}`,
                 },
@@ -80,7 +79,7 @@ function MealPolicyOperationDetail() {
             .then((response) => {
                 if (response.status === 200) {
                     window.alert("삭제 성공");
-                    navigate("/mealResource/meal-policy-operation");
+                    navigate("/mealResource/meal-facility-equipment");
                 } else {
                     window.alert("삭제 실패");
                 }
@@ -95,18 +94,18 @@ function MealPolicyOperationDetail() {
         <div className="meal-resource-detail-container">
             <div className="meal-resource-card">
                 <div className="meal-resource-card-body">
-                    <h2>{mealPolicyOperation.title}</h2>
+                    <h2>{mealFacilityEquipment.title}</h2>
                     <hr />
                     <div className="meal-resource-header">
-                        <div className="meal-resource-id">ID: {mealPolicyOperation.id}</div>
-                        <div className="meal-resource-date">작성일: {formatDate(mealPolicyOperation.createdDate)}</div>
+                        <div className="meal-resource-id">ID: {mealFacilityEquipment.id}</div>
+                        <div className="meal-resource-date">작성일: {formatDate(mealFacilityEquipment.createdDate)}</div>
                     </div>
                     <div className="meal-resource-attachment">
                         {/* 파일 URL을 사용하여 다운로드 링크를 생성 */}
                         <div className="meal-resource-attachment">
-                            {mealPolicyOperation.fileUrlId ? (
+                            {mealFacilityEquipment.fileUrlId ? (
                                 <a
-                                    href={`${SERVER_URL}mealPolicyOperation/download/${mealPolicyOperation.id}`} // id를 사용하여 다운로드 URL 완성
+                                    href={`${SERVER_URL}mealFacilityEquipment/download/${mealFacilityEquipment.id}`} // id를 사용하여 다운로드 URL 완성
                                     download
                                     className="meal-resource-attachment-link"
                                 >
@@ -122,7 +121,7 @@ function MealPolicyOperationDetail() {
                             <label>작성자:</label>
                             <input
                                 type="text"
-                                value={mealPolicyOperation.writer}
+                                value={mealFacilityEquipment.writer}
                                 readOnly
                                 className="meal-resource-form-control"
                             />
@@ -131,12 +130,13 @@ function MealPolicyOperationDetail() {
                             <label>내용:</label>
                             <textarea
                                 rows={5}
-                                value={mealPolicyOperation.content}
+                                value={mealFacilityEquipment.content}
                                 readOnly
                                 className="meal-resource-form-control"
                             />
                         </div><br />
                         <div className="meal-resource-button-group">
+                            {/* 수정은 작성자 본인, 삭제는 관리자도 선택 가능 */}
                             {isAuthor && (
                                 <Button
                                     variant="outlined"
@@ -149,7 +149,7 @@ function MealPolicyOperationDetail() {
                             <Button
                                 variant="outlined"
                                 color="primary"
-                                onClick={() => navigate("/mealResource/meal-policy-operation")}
+                                onClick={() => navigate("/mealResource/meal-facility-equipment")}
                             >
                                 목록
                             </Button>
@@ -171,4 +171,4 @@ function MealPolicyOperationDetail() {
     );
 }
 
-export default MealPolicyOperationDetail;
+export default MealFacilityEquipmentDetail;

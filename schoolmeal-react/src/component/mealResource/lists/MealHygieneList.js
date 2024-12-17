@@ -1,97 +1,46 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SERVER_URL } from "../../../Constants";
 import "../../../css/mealResource/MealList.css";
 import Button from "@mui/material/Button";
 import { MdAttachFile } from "react-icons/md";
 import { BsFileExcel } from "react-icons/bs";
-import MenuFilterButton from "../filter/menu/MenuFilterButton";
-import { seasonTypeEnglish } from "../filter/menu/SeasonUtils";
 import { HiChevronLeft, HiChevronDoubleLeft, HiChevronRight, HiChevronDoubleRight } from "react-icons/hi";
+import "../../../css/page/Pagination.css";
 import { useAuth } from "../../sign/AuthContext";  // 권한설정
+import SearchBar from "../../common/SearchBar";  // 검색기능
 
-function MenuRecipeList() {
-    const [filteredRecipes, setFilteredRecipes] = useState([]);
-    const [selectedFilter, setSelectedFilter] = useState("전체");
-    const [selectedAgeGroup, setSelectedAgeGroup] = useState("");
-    const [selectedSeason, setSelectedSeason] = useState("");
-    const { isAdmin, isBoardAdmin } = useAuth();
+function MealHygieneList() {
+    const [mealHygiene, setMealHygiene] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');  // 검색어 상태 추가
+    const [selectedFilter, setSelectedFilter] = useState('전체'); // 필터 상태 추가
     const navigate = useNavigate();
-
-    const applyFilter = useCallback(() => {
-        let url = SERVER_URL + "menuRecipes";
-
-        if (selectedFilter === "연령별" && selectedAgeGroup) {
-            url = `${SERVER_URL}menuRecipe/byAgeGroup?ageGroup=${encodeURIComponent(selectedAgeGroup)}`;
-        }
-
-        if (selectedFilter === "시기별" && selectedSeason) {
-            const seasonType = seasonTypeEnglish(selectedSeason);
-            url = `${SERVER_URL}menuRecipe/bySeason?season=${encodeURIComponent(seasonType)}`;
-        }
-
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                const recipes = data._embedded ? data._embedded.menuRecipes : [];
-                setFilteredRecipes(recipes);
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-            });
-    }, [selectedFilter, selectedAgeGroup, selectedSeason]);
-
-    useEffect(() => {
-        applyFilter();
-    }, [applyFilter]);
-
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, "0")}.${String(date.getDate()).padStart(2, "0")}`;
-    };
-
-    const goToDetailPage = (menuRecipe) => {
-        const menuRecipeId =
-            menuRecipe.id || (menuRecipe._links?.self?.href ? extractIdFromHref(menuRecipe._links.self.href) : null);
-        if (!menuRecipeId) {
-            console.error("Invalid ID:", menuRecipeId);
-            return;
-        }
-        navigate(`/mealResource/menu-recipe/${menuRecipeId}`);
-    };
-
-    const extractIdFromHref = (href) => {
-        if (!href) {
-            console.error("Invalid href:", href);
-            return null;
-        }
-        const parts = href.split("/");
-        return parts[parts.length - 1];
-    };
-
-    const handleWriteNew = () => {
-        setSelectedFilter("전체");
-        navigate("/mealResource/menu-recipe/write");
-    };
-
-    const handleFilterChange = (filter, ageGroup, season) => {
-        setSelectedFilter(filter);
-        setSelectedAgeGroup(ageGroup);
-        setSelectedSeason(season);
-    };
+    const { isAdmin, isBoardAdmin } = useAuth();  // 로그인 상태 확인
 
     // 페이지네이션 상태
     const [currentPage, setCurrentPage] = useState(1);  //현재 페이지 상태(기본값:1)
     const [postsPerPage] = useState(5); // 페이지당 게시글 수
-    const [pageNumbersPerBlock] = useState(4) // 한 블록당 표시할 페이지 번호 수
+    const [pageNumbersPerBlock] = useState(4) // 한 블록당 표시할 페이지 번호 수    
 
-    const totalPages = Math.ceil(filteredRecipes.length / postsPerPage); //전체 페이지 수
+    const totalPages = Math.ceil(mealHygiene.length / postsPerPage); //전체 페이지 수
     const currentBlock = Math.ceil(currentPage / pageNumbersPerBlock); // 현재 블록 번호
     const startPage = (currentBlock - 1) * pageNumbersPerBlock + 1; //현재 블록의 첫 페이지 번호
     const endPage = Math.min(startPage + pageNumbersPerBlock - 1, totalPages);  //현재 블록의 마지막 페이지번호(전체 페이지 수를 넘지 않도록)
 
     // 현재 페이지의 게시물 추출
-    const currentPosts = filteredRecipes.slice() // 원본 배열을 복사
+    const currentPosts = mealHygiene.filter(item => {
+        // 검색어 필터링 적용
+        if (selectedFilter === '제목') {
+            return item.title.toLowerCase().includes(searchQuery.toLowerCase());
+        } else if (selectedFilter === '작성자') {
+            return item.writer.toLowerCase().includes(searchQuery.toLowerCase());
+        } else { // 전체
+            return (
+                item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                item.writer.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+        }
+    })
         .reverse() // 게시글을 최신 순으로 정렬
         .slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage); // 현재 페이지에 맞는 게시글만 슬라이싱
 
@@ -114,27 +63,59 @@ function MenuRecipeList() {
         }
     };
 
-    const totalLength = filteredRecipes.length;
+    useEffect(() => {
+        fetch(SERVER_URL + "mealHygienes")
+            .then(response => response.json())
+            .then(data => {
+                setMealHygiene(data._embedded.mealHygienes);
+            })
+            .catch(err => console.error("Error fetching data:", err));
+    }, []);
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
+    };
+
+    // 상세 페이지로 이동하는 함수
+    const goToDetailPage = (mealHygiene) => {
+        const hygieneId = mealHygiene.id || (mealHygiene._links?.self?.href ? extractIdFromHref(mealHygiene._links.self.href) : null);
+        if (!hygieneId) {
+            console.error("Invalid ID:", hygieneId);
+            return;
+        }
+        navigate(`/mealResource/meal-hygiene/${hygieneId}`);
+    };
+
+    const extractIdFromHref = (href) => {
+        const parts = href.split('/');
+        return parts[parts.length - 1];
+    };
 
     return (
         <div className="meal-resource-list-container">
-            <h1 className="meal-resource-title">식단 및 레시피</h1>
+            <h1 className="meal-resource-title">급식위생</h1>
             <div className="meal-resource-button-group">
                 <div className="meal-resource-left-buttons">
                     {(isAdmin || isBoardAdmin) && (
                         <Button
                             variant="outlined"
-                            onClick={handleWriteNew}
+                            onClick={() => navigate("/mealResource/meal-hygiene/write")}
                         >
                             새 글 쓰기
                         </Button>
                     )}
                 </div>
                 <div className="meal-resource-right-searchbar">
-                    <MenuFilterButton
-                        variant="contained"
-                        onFilterChange={handleFilterChange}
+                    <SearchBar
+                        searchQuery={searchQuery}
                         selectedFilter={selectedFilter}
+                        setSelectedFilter={setSelectedFilter}
+                        setSearchQuery={setSearchQuery}
+                        onFilterChange={(filterType, filterValue) => {
+                            setSelectedFilter(filterType);
+                            setSearchQuery(filterValue);
+                        }}
                     />
                 </div>
             </div>
@@ -151,37 +132,28 @@ function MenuRecipeList() {
                 <tbody className="meal-resource-tbody">
                     {currentPosts.length === 0 ? (
                         <tr>
-                            <td colSpan="5" style={{ textAlign: "center" }}>
-                                해당하는 게시글이 없습니다.
-                            </td>
+                            <td colSpan="5" style={{ textAlign: "center" }}>해당하는 게시글이 없습니다.</td>
                         </tr>
                     ) : (
-                        currentPosts.map((menuRecipe, index) => {
-                            const href = menuRecipe._links?.self?.href;
-                            const menuRecipeId = href ? extractIdFromHref(href) : menuRecipe.id;
-                            const reversedIndex = totalLength - (currentPage - 1) * postsPerPage - index;
+                        currentPosts.map((mealHygiene, index) => {
+                            // 필터링된 게시글의 역순 인덱스를 계산
+                            const reversedFilteredIndex = currentPosts.length - index;
 
                             return (
                                 <tr
-                                    key={menuRecipeId || `menuRecipe-${index}`}
-                                    onClick={() => goToDetailPage(menuRecipe)}
+                                    key={mealHygiene.id || `mealHygiene-${index}`}
+                                    onClick={() => goToDetailPage(mealHygiene)}
                                     style={{ cursor: "pointer" }}
                                 >
-                                    <td>{reversedIndex}</td>
-                                    <td>{menuRecipe.title}</td>
-                                    <td>{formatDate(menuRecipe.createdDate)}</td>
-                                    <td>{menuRecipe.writer}</td>
+                                    <td>{reversedFilteredIndex}</td> {/* 필터링 후 역순 번호 */}
+                                    <td>{mealHygiene.title}</td>
+                                    <td>{formatDate(mealHygiene.createdDate)}</td>
+                                    <td>{mealHygiene.writer}</td>
                                     <td>
-                                        {menuRecipe.fileUrlId ? (
-
-                                            <span className="meal-resource-attachment-icon">
-                                                <MdAttachFile />
-                                            </span>
-
+                                        {mealHygiene.fileUrlId ? (
+                                            <span className="meal-resource-attachment-icon"><MdAttachFile /></span>
                                         ) : (
-                                            <span className="meal-resource-attachment-icon">
-                                                <BsFileExcel />
-                                            </span>
+                                            <span className="meal-resource-attachment-icon"><BsFileExcel /></span>
                                         )}
                                     </td>
                                 </tr>
@@ -195,14 +167,14 @@ function MenuRecipeList() {
                 <Button
                     className="pagination-nav-button"
                     onClick={() => setCurrentPage(1)}
-                    disabled={currentPage === 1 || filteredRecipes.length === 0}
+                    disabled={currentPage === 1 || mealHygiene.length === 0}
                 >
                     <HiChevronDoubleLeft />
                 </Button>
                 <Button
                     className="pagination-nav-button"
                     onClick={handlePrevBlock}
-                    disabled={currentPage === 1 || filteredRecipes.length === 0}
+                    disabled={currentPage === 1 || mealHygiene.length === 0}
                 >
                     <HiChevronLeft />
                 </Button>
@@ -218,14 +190,14 @@ function MenuRecipeList() {
                 <Button
                     className="pagination-nav-button"
                     onClick={handleNextBlock}
-                    disabled={currentPage === totalPages || filteredRecipes.length === 0}
+                    disabled={currentPage === totalPages || mealHygiene.length === 0}
                 >
                     <HiChevronRight />
                 </Button>
                 <Button
                     className="pagination-nav-button"
                     onClick={() => setCurrentPage(totalPages)}
-                    disabled={currentPage === totalPages || filteredRecipes.length === 0}
+                    disabled={currentPage === totalPages || mealHygiene.length === 0}
                 >
                     <HiChevronDoubleRight />
                 </Button>
@@ -234,4 +206,4 @@ function MenuRecipeList() {
     );
 }
 
-export default MenuRecipeList;
+export default MealHygieneList;

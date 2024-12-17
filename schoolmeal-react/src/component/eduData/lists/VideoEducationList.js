@@ -15,7 +15,7 @@ function VideoEducationList() {
     const [searchQuery, setSearchQuery] = useState('');  // 검색어 상태 추가
     const [selectedFilter, setSelectedFilter] = useState('전체'); // 필터 상태 추가
     const navigate = useNavigate();
-    const { isAdmin } = useAuth();  // 로그인 상태 확인
+    const { isAdmin, isBoardAdmin } = useAuth();  // 로그인 상태 확인
 
     // 페이지네이션 상태
     const [currentPage, setCurrentPage] = useState(1);  //현재 페이지 상태(기본값:1)
@@ -99,15 +99,16 @@ function VideoEducationList() {
         <div className="edu-list-container">
             <h1 className="edu-title">영상 교육자료</h1>
             <div className="edu-button-group">
-                {isAdmin && (
-                    <Button
-                        variant="outlined"
-                        onClick={() => navigate("/eduData/video-education/write")}
-                    >
-                        새 글 쓰기
-                    </Button>
-                )}
-
+                <div className="edu-left-buttons">
+                    {(isAdmin || isBoardAdmin) && (
+                        <Button
+                            variant="outlined"
+                            onClick={() => navigate("/eduData/video-education/write")}
+                        >
+                            새 글 쓰기
+                        </Button>
+                    )}
+                </div>
                 <div className="edu-right-searchbar">
                     <SearchBar
                         searchQuery={searchQuery}

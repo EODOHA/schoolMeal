@@ -9,7 +9,7 @@ import { HiChevronLeft, HiChevronDoubleLeft, HiChevronRight, HiChevronDoubleRigh
 import "../../../css/page/Pagination.css";
 import { useAuth } from "../../sign/AuthContext";  // 권한설정
 import SearchBar from "../../common/SearchBar";  // 검색기능
-import MealPolicycyFilterButton from "../filter/mealPolicy/MealPolicyFilterButton";
+import MealPolicyFilterButton from "../filter/mealPolicy/MealPolicyFilterButton";
 
 function MealPolicyOperationList() {
     const [mealPolicyOperation, setMealPolicyOperation] = useState([]);
@@ -17,7 +17,7 @@ function MealPolicyOperationList() {
     const [selectedFilter, setSelectedFilter] = useState('전체'); // 필터 상태 추가
     const [eduOfficeFilter, setEduOfficeFilter] = useState('');  // 교육청 필터 상태 추가
     const navigate = useNavigate();
-    const { isAdmin } = useAuth();  // 로그인 상태 확인
+    const { isAdmin, isBoardAdmin } = useAuth();  // 로그인 상태 확인
 
     // 페이지네이션 상태
     const [currentPage, setCurrentPage] = useState(1);  //현재 페이지 상태(기본값:1)
@@ -28,7 +28,6 @@ function MealPolicyOperationList() {
     const currentBlock = Math.ceil(currentPage / pageNumbersPerBlock); // 현재 블록 번호
     const startPage = (currentBlock - 1) * pageNumbersPerBlock + 1; //현재 블록의 첫 페이지 번호
     const endPage = Math.min(startPage + pageNumbersPerBlock - 1, totalPages);  //현재 블록의 마지막 페이지번호(전체 페이지 수를 넘지 않도록)
-
     // 현재 페이지의 게시물 추출
     const currentPosts = mealPolicyOperation.filter(item => {
         // 검색어 필터링 적용
@@ -100,7 +99,7 @@ function MealPolicyOperationList() {
             <h1 className="meal-resource-title">급식 정책 및 운영</h1>
             <div className="meal-resource-button-group">
                 <div className="meal-resource-left-buttons">
-                    {isAdmin && (
+                    {(isAdmin || isBoardAdmin) && (
                         <Button
                             variant="outlined"
                             onClick={() => navigate("/mealResource/meal-policy-operation/write")}
@@ -108,7 +107,7 @@ function MealPolicyOperationList() {
                             새 글 쓰기
                         </Button>
                     )}
-                    <MealPolicycyFilterButton onFilterChange={(filterType, filterValue, eduOfficeType) => {
+                    <MealPolicyFilterButton onFilterChange={(filterType, filterValue, eduOfficeType) => {
                         setSelectedFilter(filterType);
                         if (filterType === '시∙도 교육청') {
                             setEduOfficeFilter(eduOfficeType);

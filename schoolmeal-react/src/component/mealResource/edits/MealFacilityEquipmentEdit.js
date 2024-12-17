@@ -7,8 +7,8 @@ import axios from "axios";
 import { useAuth } from "../../sign/AuthContext";
 import LoadingSpinner from '../../common/LoadingSpinner';
 
-function MenuRecipeEdit() {
-    const [menuRecipe, setMenuRecipe] = useState({
+function MealFacilityEquipmentEdit() {
+    const [mealFacilityEquipment, setMealFacilityEquipment] = useState({
         title: "",
         writer: "",
         createdDate: "",
@@ -29,9 +29,9 @@ function MenuRecipeEdit() {
         // 인증 상태와 권한 정보가 변경될 때마다 실행
         if (isAuth !== undefined && isAdmin !== undefined && isBoardAdmin !== undefined) {
             setIsLoadingAuth(false); // 인증 상태가 로드된 후 로딩 상태를 false로 설정
-        }
+        } 
     }, [isAuth, isAdmin, isBoardAdmin]);
-
+    
     useEffect(() => {
         // 인증 상태가 완전히 로딩된 후, 권한이 없을 경우 "unauthorized" 페이지로 리다이렉트
         if (!isLoadingAuth && (!isAuth || (!isAdmin && !isBoardAdmin))) {
@@ -39,18 +39,14 @@ function MenuRecipeEdit() {
         }
     }, [isAuth, isAdmin, isBoardAdmin, isLoadingAuth, navigate]);
 
-    // 데이터를 불러오는 useEffect
     useEffect(() => {
+        // 데이터를 불러오는 로직
         if (isAuth && isAdmin) {
             axios
-                .get(`${SERVER_URL}menuRecipes/${id}`, {
-                    headers: {
-                        Authorizatio: `${token}`,
-                    }
-                })
+                .get(`${SERVER_URL}mealFacilityEquipments/${id}`)
                 .then((response) => {
                     const data = response.data;
-                    setMenuRecipe({
+                    setMealFacilityEquipment({
                         title: data.title,
                         writer: data.writer,
                         createdDate: data.createdDate,
@@ -67,7 +63,7 @@ function MenuRecipeEdit() {
                     setLoading(false);
                 });
         }
-    }, [id, isAuth, isAdmin, token]);
+    }, [id, isAuth, isAdmin]);
 
     const handleChange = (e) => {
         if (e.target.name === "file") {
@@ -77,15 +73,14 @@ function MenuRecipeEdit() {
                     alert("파일 크기가 너무 큽니다. 최대 10MB까지 지원됩니다.");
                     return;
                 }
-                console.log("Selected file:", file.name);
             }
-            setMenuRecipe({
-                ...menuRecipe,
+            setMealFacilityEquipment({
+                ...mealFacilityEquipment,
                 file: file || null,
             });
         } else {
-            setMenuRecipe({
-                ...menuRecipe,
+            setMealFacilityEquipment({
+                ...mealFacilityEquipment,
                 [e.target.name]: e.target.value,
             });
         }
@@ -93,34 +88,38 @@ function MenuRecipeEdit() {
 
     const handleSave = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
         const formData = new FormData();
-        formData.append("title", menuRecipe.title);
-        formData.append("writer", menuRecipe.writer);
-        formData.append("content", menuRecipe.content);
+        formData.append("title", mealFacilityEquipment.title);
+        formData.append("writer", mealFacilityEquipment.writer);
+        formData.append("content", mealFacilityEquipment.content);
 
-        if (menuRecipe.file) {
-            formData.append("file", menuRecipe.file);
-        } else if (menuRecipe.fileId) {
-            formData.append("fileId", menuRecipe.fileId);
+        if (mealFacilityEquipment.file) {
+            formData.append("file", mealFacilityEquipment.file);
+        } else if (mealFacilityEquipment.fileId) {
+            formData.append("fileId", mealFacilityEquipment.fileId);
         }
+
         try {
-            await axios.put(`${SERVER_URL}menuRecipe/update/${id}`, formData, {
+            await axios.put(`${SERVER_URL}mealFacilityEquipment/update/${id}`, formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "multipart/form-data",
                 },
             });
             alert("수정되었습니다.");
-            navigate("/mealResource/menu-recipe");
+            navigate("/mealResource/meal-facility-equipment");
         } catch (err) {
-            console.error("Error updating:", err);
-            alert("수정에 실패했습니다: " + err.message);
+            console.error("Error updating post:", err);
+            setError("수정 중 오류가 발생했습니다. 다시 시도해주세요.");
+        } finally {
+            setLoading(false);
         }
     };
 
-    if (loading) {
-        return <div><LoadingSpinner /></div>;
+    if (isLoadingAuth || loading) {
+        return <LoadingSpinner />;
     }
 
     if (error) {
@@ -134,22 +133,21 @@ function MenuRecipeEdit() {
                     <h2>게시글 수정</h2>
                     <form onSubmit={handleSave}>
                         <div className="meal-resource-form-group">
-                            <label>제목</label>
+                            <label>제목:</label>
                             <input
                                 type="text"
                                 name="title"
-                                value={menuRecipe.title}
+                                value={mealFacilityEquipment.title}
                                 onChange={handleChange}
                                 required
                             />
                         </div>
-
                         <div className="meal-resource-form-group">
-                            <label>작성자</label>
+                            <label>작성자:</label>
                             <input
                                 type="text"
                                 name="writer"
-                                value={menuRecipe.writer}
+                                value={mealFacilityEquipment.writer}
                                 onChange={handleChange}
                                 required
                             />
@@ -159,7 +157,7 @@ function MenuRecipeEdit() {
                             <textarea
                                 name="content"
                                 rows={5}
-                                value={menuRecipe.content}
+                                value={mealFacilityEquipment.content}
                                 onChange={handleChange}
                                 required
                             />
@@ -174,8 +172,12 @@ function MenuRecipeEdit() {
                             />
                         </div>
                         <div className="meal-resource-button-group">
-                            <Button variant="contained" color="success" type="submit">수정 저장</Button>
-                            <Button variant="outlined" onClick={() => navigate(`/mealResource/menu-recipe/${id}`)}>취소</Button>
+                            <Button variant="contained" color="success" type="submit">
+                                수정 저장
+                            </Button>
+                            <Button variant="outlined" onClick={() => navigate(`/mealResource/meal-facility-equipment/${id}`)}>
+                                취소
+                            </Button>
                         </div>
                     </form>
                 </div>
@@ -184,4 +186,4 @@ function MenuRecipeEdit() {
     );
 }
 
-export default MenuRecipeEdit;
+export default MealFacilityEquipmentEdit;

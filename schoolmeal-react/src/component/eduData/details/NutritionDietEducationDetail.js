@@ -6,7 +6,7 @@ import { SERVER_URL } from "../../../Constants";
 import "../../../css/eduData/EduDetail.css"; // 스타일시트 적용
 import { MdOutlineFileDownload } from "react-icons/md";
 import { RiFileUnknowFill } from "react-icons/ri";
-import { useAuth } from "../../sign/AuthContext";  
+import { useAuth } from "../../sign/AuthContext";
 import LoadingSpinner from '../../common/LoadingSpinner';
 
 function NutritionDietEducationDetail() {
@@ -14,8 +14,11 @@ function NutritionDietEducationDetail() {
     const [nutritionDietEducation, setNutritionDietEducation] = useState(null);
     const [loading, setLoading] = useState(true); // 로딩 상태
     const [error, setError] = useState(null); // 오류 상태
-    const { isAdmin } = useAuth();  // 로그인 상태 확인
     const navigate = useNavigate();
+
+    // 권한설정
+    const { token, isAdmin, isBoardAdmin } = useAuth();
+    const [isAuthor, setIsAuthor] = useState(false);
 
     useEffect(() => {
         if (!id) {
@@ -23,18 +26,22 @@ function NutritionDietEducationDetail() {
             setLoading(false);
             return;
         }
-    
+
         axios
             .get(`${SERVER_URL}nutritionDietEducations/${id}`)
             .then((response) => {
                 setNutritionDietEducation(response.data);
+                // 작성자 확인
+                const isAuthor = (isAdmin && response.data.writer === "관리자") ||
+                    (isBoardAdmin && response.data.writer === "담당자");
+                setIsAuthor(isAuthor);
                 setLoading(false);
             })
-            .catch((err) => {
+            .catch((error) => {
                 setError("데이터를 가져오는 중 오류가 발생했습니다.");
                 setLoading(false);
             });
-    }, [id]);    
+    }, [id, isAdmin, isBoardAdmin]);
 
     if (loading) {
         return <div><LoadingSpinner /></div>;
@@ -63,12 +70,10 @@ function NutritionDietEducationDetail() {
     const deleteForm = () => {
         if (!window.confirm("삭제하시겠습니까?")) return;
 
-        const token = sessionStorage.getItem('jwt'); // JWT 토큰 가져오기
-
         axios
             .delete(`${SERVER_URL}nutritionDietEducation/delete/${id}`, {
                 headers: {
-                    Authorization: `${token}`, 
+                    Authorization: `${token}`,
                 },
             })
             .then((response) => {
@@ -131,7 +136,7 @@ function NutritionDietEducationDetail() {
                             />
                         </div><br />
                         <div className="edu-button-group">
-                            {isAdmin && (
+                            {isAuthor && (
                                 <Button
                                     variant="outlined"
                                     color="success"
@@ -147,15 +152,16 @@ function NutritionDietEducationDetail() {
                             >
                                 목록
                             </Button>
-                            {isAdmin && (
+                            {((isAdmin || (isBoardAdmin && isAuthor)) && (
                                 <Button
                                     variant="contained"
                                     color="error"
                                     onClick={deleteForm}
+                                    disabled={!(isAdmin || (isBoardAdmin && isAuthor))}
                                 >
                                     삭제
                                 </Button>
-                            )}
+                            ))}
                         </div>
                     </form>
                 </div>

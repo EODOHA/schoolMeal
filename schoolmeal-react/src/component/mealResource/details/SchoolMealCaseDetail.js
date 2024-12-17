@@ -9,9 +9,9 @@ import { RiFileUnknowFill } from "react-icons/ri";
 import { useAuth } from "../../sign/AuthContext";
 import LoadingSpinner from '../../common/LoadingSpinner';
 
-function MealPolicyOperationDetail() {
+function SchoolMealCaseDetail() {
     const { id } = useParams(); // URL에서 id 값을 받아옴
-    const [mealPolicyOperation, setMealPolicyOperation] = useState(null);
+    const [schoolMealCase, setSchoolMealCase] = useState(null);
     const [loading, setLoading] = useState(true); // 로딩 상태
     const [error, setError] = useState(null); // 오류 상태
     const navigate = useNavigate();
@@ -28,9 +28,9 @@ function MealPolicyOperationDetail() {
         }
 
         axios
-            .get(`${SERVER_URL}mealPolicyOperations/${id}`)
+            .get(`${SERVER_URL}schoolMealCase/${id}`)
             .then((response) => {
-                setMealPolicyOperation(response.data);
+                setSchoolMealCase(response.data);
                 // 작성자 확인
                 const isAuthor = (isAdmin && response.data.writer === "관리자") ||
                     (isBoardAdmin && response.data.writer === "담당자");
@@ -43,7 +43,6 @@ function MealPolicyOperationDetail() {
             });
     }, [id, isAdmin, isBoardAdmin]);
 
-
     if (loading) {
         return <div><LoadingSpinner /></div>;
     }
@@ -52,7 +51,7 @@ function MealPolicyOperationDetail() {
         return <div>{error}</div>;
     }
 
-    if (!mealPolicyOperation) {
+    if (!schoolMealCase) {
         return <div>데이터를 찾을 수 없습니다.</div>;
     }
 
@@ -65,14 +64,14 @@ function MealPolicyOperationDetail() {
     };
 
     const update = () => {
-        navigate(`/mealResource/meal-policy-operation/update/${id}`); // 수정 페이지로 이동
+        navigate(`/mealResource/school-meal-case/update/${id}`); // 수정 페이지로 이동
     };
 
     const deleteForm = () => {
         if (!window.confirm("삭제하시겠습니까?")) return;
 
         axios
-            .delete(`${SERVER_URL}mealPolicyOperation/delete/${id}`, {
+            .delete(`${SERVER_URL}schoolMealCase/delete/${id}`, {
                 headers: {
                     Authorization: `${token}`,
                 },
@@ -80,7 +79,7 @@ function MealPolicyOperationDetail() {
             .then((response) => {
                 if (response.status === 200) {
                     window.alert("삭제 성공");
-                    navigate("/mealResource/meal-policy-operation");
+                    navigate("/mealResource/school-meal-case");
                 } else {
                     window.alert("삭제 실패");
                 }
@@ -92,23 +91,23 @@ function MealPolicyOperationDetail() {
     };
 
     return (
-        <div className="meal-resource-detail-container">
-            <div className="meal-resource-card">
-                <div className="meal-resource-card-body">
-                    <h2>{mealPolicyOperation.title}</h2>
+        <div className="edu-detail-container">
+            <div className="edu-card">
+                <div className="edu-card-body">
+                    <h2>{schoolMealCase.title}</h2>
                     <hr />
-                    <div className="meal-resource-header">
-                        <div className="meal-resource-id">ID: {mealPolicyOperation.id}</div>
-                        <div className="meal-resource-date">작성일: {formatDate(mealPolicyOperation.createdDate)}</div>
+                    <div className="edu-header">
+                        <div className="edu-id">ID: {schoolMealCase.id}</div>
+                        <div className="edu-date">작성일: {formatDate(schoolMealCase.createdDate)}</div>
                     </div>
-                    <div className="meal-resource-attachment">
+                    <div className="edu-attachment">
                         {/* 파일 URL을 사용하여 다운로드 링크를 생성 */}
-                        <div className="meal-resource-attachment">
-                            {mealPolicyOperation.fileUrlId ? (
+                        <div className="edu-attachment">
+                            {schoolMealCase.fileUrlId ? (
                                 <a
-                                    href={`${SERVER_URL}mealPolicyOperation/download/${mealPolicyOperation.id}`} // id를 사용하여 다운로드 URL 완성
+                                    href={`${SERVER_URL}schoolMealCase/download/${schoolMealCase.id}`} // id를 사용하여 다운로드 URL 완성
                                     download
-                                    className="meal-resource-attachment-link"
+                                    className="edu-attachment-link"
                                 >
                                     첨부파일 &nbsp; <MdOutlineFileDownload />
                                 </a>
@@ -118,25 +117,25 @@ function MealPolicyOperationDetail() {
                         </div>
                     </div><br />
                     <form>
-                        <div className="meal-resource-form-group">
+                        <div className="edu-form-group">
                             <label>작성자:</label>
                             <input
                                 type="text"
-                                value={mealPolicyOperation.writer}
+                                value={schoolMealCase.writer}
                                 readOnly
-                                className="meal-resource-form-control"
+                                className="edu-form-control"
                             />
                         </div><br />
-                        <div className="meal-resource-form-group">
+                        <div className="edu-form-group">
                             <label>내용:</label>
                             <textarea
                                 rows={5}
-                                value={mealPolicyOperation.content}
+                                value={schoolMealCase.content}
                                 readOnly
-                                className="meal-resource-form-control"
+                                className="edu-form-control"
                             />
                         </div><br />
-                        <div className="meal-resource-button-group">
+                        <div className="edu-button-group">
                             {isAuthor && (
                                 <Button
                                     variant="outlined"
@@ -149,7 +148,7 @@ function MealPolicyOperationDetail() {
                             <Button
                                 variant="outlined"
                                 color="primary"
-                                onClick={() => navigate("/mealResource/meal-policy-operation")}
+                                onClick={() => navigate("/mealResource/school-meal-case")}
                             >
                                 목록
                             </Button>
@@ -171,4 +170,4 @@ function MealPolicyOperationDetail() {
     );
 }
 
-export default MealPolicyOperationDetail;
+export default SchoolMealCaseDetail;

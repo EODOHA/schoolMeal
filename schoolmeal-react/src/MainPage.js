@@ -224,10 +224,10 @@ const MainPage = () => {
         .finally(() => setIsAdminNoticeLoading(false));
     }, []); // 컴포넌트 마운트 시 한 번만 실행.
 
-    // 급식자료실 목록을 가져오기 ------------------------------------
+    // 학교급식 우수사례 목록을 가져오기 ------------------------------------
     useEffect(() => {
         setIsResourcesLoading(true);
-        fetch(SERVER_URL + 'mealPolicyOperations', {
+        fetch(SERVER_URL + 'schoolMealCases', {
             method: 'GET',
             headers: createHeaders(),
         })
@@ -239,7 +239,7 @@ const MainPage = () => {
         })
         .then(data => {
             console.log("Fetched Resource:", data);
-            setResources(data._embedded?.mealPolicyOperations || []);  // 데이터가 없으면 빈 배열로 설정
+            setResources(data._embedded?.schoolMealCases || []);  // 데이터가 없으면 빈 배열로 설정
             setIsResourcesLoading(false);  // 로딩 완료 상태로 설정
         })
         .catch((error) => {
@@ -436,8 +436,8 @@ const MainPage = () => {
                 </div>
 
                 <div className="resource-container">
-                    <Link to={'/mealResource/meal-policy-operation'}>
-                        <h2>급식자료실</h2>
+                    <Link to={'/mealResource/school-meal-case'}>
+                        <h2>학교급식 우수사례</h2>
                     </Link>
                     <ul>
                         {isResourcesLoading ? (
@@ -450,7 +450,7 @@ const MainPage = () => {
                                     // 개수 제한 .slice(x, y) 사용
                                     [...resources].reverse().slice(0, 10).map((resource) => ( // 변수 이름 변경
                                         <li key={resource.id}>
-                                            <Link to={`/mealResource/meal-policy-operation/${resource.id}`}>
+                                            <Link to={`/mealResource/school-meal-case/${resource.id}`}>
                                                 {resource.title} {/* title을 올바르게 출력 */}
                                             </Link>
                                         </li>

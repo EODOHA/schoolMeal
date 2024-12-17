@@ -4,14 +4,14 @@ import { Button, TextField } from "@mui/material";
 import axios from "axios";
 import { SERVER_URL } from "../../../Constants";
 import { useAuth } from "../../sign/AuthContext";
-import "../../../css/eduData/EduWrite.css";
+import "../../../css/mealResource/MealWrite.css";
 import LoadingSpinner from '../../common/LoadingSpinner';
 
-function VideoEducationWrite() {
+function MealFacilityEquipmentWrite() {
     const [title, setTitle] = useState("");
     const [writer, setWriter] = useState("");
     const [content, setContent] = useState("");
-    const [videoFile, setVideoFile] = useState(null); // 비디오 파일 상태
+    const [file, setFile] = useState(null); // 파일 상태
     const [loading, setLoading] = useState(false); // 로딩 상태
     const [error, setError] = useState(null); // 오류 상태
     const [isLoadingAuth, setIsLoadingAuth] = useState(true); // 인증 상태 로딩
@@ -22,7 +22,7 @@ function VideoEducationWrite() {
 
     // 작성자를 memberId로 설정 
     useEffect(() => {
-        let writer = role;
+        let writer = role; 
         console.log(role);
         console.log(isBoardAdmin);
 
@@ -55,57 +55,50 @@ function VideoEducationWrite() {
         return <div><LoadingSpinner /></div>;
     }
 
-    // 비디오 파일 입력 변경 핸들러
+    // 파일 입력 변경 핸들러
     const handleFileChange = (e) => {
-        setVideoFile(e.target.files[0]);
+        setFile(e.target.files[0]);
     };
 
     // 폼 제출 핸들러
     const handleSubmit = (e) => {
         e.preventDefault();
-        setError(null); // 기존 오류 메시지 초기화
-
-        if (!videoFile) {
-            setError("영상을 업로드해주세요.");
-            return;
-        }
-
+        setLoading(true);
         const formData = new FormData();
         formData.append("title", title);
         formData.append("writer", writer);
         formData.append("content", content);
-        formData.append("file", videoFile);
 
-        // POST 요청
-        axios
-            .post(`${SERVER_URL}videoEducation/writepro`, formData, {
-                headers: {
-                    Authorization: `${token}`, // Bearer 토큰 형식으로 수정
-                },
-            })
+        if (file) {
+            formData.append("file", file);
+        }
+
+        axios.post(`${SERVER_URL}mealFacilityEquipment/writepro`, formData, {
+            headers: {
+                Authorization: `${token}`,
+            },
+        })
             .then((response) => {
                 window.alert("게시글이 성공적으로 등록되었습니다.");
-                navigate("/eduData/video-education"); // 성공 시 목록 페이지로 이동
+                navigate("/mealResource/meal-facility-equipment");
             })
             .catch((err) => {
                 console.error("게시글 등록 중 오류가 발생했습니다.", err);
                 setError("게시글 등록 중 문제가 발생했습니다. 다시 시도해주세요.");
             })
             .finally(() => {
-                setLoading(false); // 로딩 상태 종료
+                setLoading(false);
             });
-
     };
 
     return (
-        <div className="edu-write-container">
-            <div className="edu-card">
-                <div className="edu-card-body">
+        <div className="meal-resource-write-container">
+            <div className="meal-resource-card">
+                <div className="meal-resource-card-body">
                     <h2>새 게시글 작성</h2>
-                    {error && <div className="edu-error-message">{error}</div>}
-
+                    {error && <div className="meal-resource-error-message">{error}</div>}
                     <form onSubmit={handleSubmit}>
-                        <div className="edu-form-group">
+                        <div className="meal-resource-form-group">
                             <TextField
                                 label="제목"
                                 fullWidth
@@ -114,8 +107,7 @@ function VideoEducationWrite() {
                                 required
                             />
                         </div>
-
-                        <div className="edu-form-group">
+                        <div className="meal-resource-form-group">
                             <TextField
                                 label="작성자"
                                 fullWidth
@@ -124,8 +116,7 @@ function VideoEducationWrite() {
                                 disabled
                             />
                         </div>
-
-                        <div className="edu-form-group">
+                        <div className="meal-resource-form-group">
                             <TextField
                                 label="내용"
                                 fullWidth
@@ -136,34 +127,18 @@ function VideoEducationWrite() {
                                 required
                             />
                         </div>
-
-                        {/* 비디오 파일 업로드 */}
-                        <div className="edu-form-group">
-                            <label>영상 파일:</label>
+                        <div className="meal-resource-form-group">
+                            <label>첨부파일:</label>
                             <input
                                 type="file"
-                                accept="video/*" // 비디오 파일만 허용
-                                onChange={handleFileChange} // 수정된 부분
+                                accept="image/*, .pdf, .docx"
+                                onChange={handleFileChange}
                             />
                         </div>
-
-                        {/* 영상 미리보기 (업로드된 파일의 URL을 사용) */}
-                        {videoFile && (
-                            <div className="edu-video-preview">
-                                <h4>영상 미리보기:</h4>
-                                <video
-                                    controls // 재생 컨트롤러 표시
-                                    src={URL.createObjectURL(videoFile)} // 업로드된 파일의 로컬 URL
-                                >
-                                    브라우저가 비디오 태그를 지원하지 않습니다.
-                                </video>
-                            </div>
-                        )}
-
-                        <div className="edu-button-group">
+                        <div className="meal-resource-button-group">
                             <Button
                                 variant="contained"
-                                color="primary"
+                                color="success"
                                 type="submit"
                                 disabled={loading}
                             >
@@ -171,8 +146,8 @@ function VideoEducationWrite() {
                             </Button>
                             <Button
                                 variant="outlined"
-                                color="secondary"
-                                onClick={() => navigate("/eduData/video-education")}
+                                color="primary"
+                                onClick={() => navigate("/mealResource/meal-facility-equipment")}
                             >
                                 목록
                             </Button>
@@ -184,4 +159,4 @@ function VideoEducationWrite() {
     );
 }
 
-export default VideoEducationWrite;
+export default MealFacilityEquipmentWrite;

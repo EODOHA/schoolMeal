@@ -14,8 +14,11 @@ function LessonDemoVideoDetail() {
     const [lessonDemoVideo, setLessonDemoVideo] = useState(null);
     const [loading, setLoading] = useState(true); // 로딩 상태
     const [error, setError] = useState(null); // 오류 상태
-    const { isAdmin } = useAuth();  // 로그인 상태 확인
     const navigate = useNavigate();
+
+    // 권한설정
+    const { token, isAdmin, isBoardAdmin } = useAuth();
+    const [isAuthor, setIsAuthor] = useState(false);
 
     useEffect(() => {
         if (!id) {
@@ -28,13 +31,17 @@ function LessonDemoVideoDetail() {
             .get(`${SERVER_URL}lessonDemoVideos/${id}`) // API URL
             .then((response) => {
                 setLessonDemoVideo(response.data);
+                // 작성자 확인
+                const isAuthor = (isAdmin && response.data.writer === "관리자") ||
+                    (isBoardAdmin && response.data.writer === "담당자");
+                setIsAuthor(isAuthor);
                 setLoading(false);
             })
-            .catch((err) => {
+            .catch((error) => {
                 setError("데이터를 가져오는 중 오류가 발생했습니다.");
                 setLoading(false);
             });
-    }, [id]);
+    }, [id, isAdmin, isBoardAdmin]);
 
     if (loading) {
         return <div><LoadingSpinner /></div>;
@@ -59,8 +66,6 @@ function LessonDemoVideoDetail() {
     const update = () => {
         navigate(`/eduData/lesson-demo-video/update/${id}`); // 수정 페이지로 이동
     };
-
-    const token = sessionStorage.getItem('jwt'); // JWT 토큰 가져오기
 
     const deleteForm = () => {
         if (!window.confirm("삭제하시겠습니까?")) return;
@@ -148,7 +153,7 @@ function LessonDemoVideoDetail() {
                         )}
 
                         <div className="edu-button-group">
-                            {isAdmin && (
+                            {isAuthor && (
                                 <Button
                                     variant="outlined"
                                     color="success"
@@ -163,15 +168,16 @@ function LessonDemoVideoDetail() {
                             >
                                 목록
                             </Button>
-                            {isAdmin && (
+                            {((isAdmin || (isBoardAdmin && isAuthor)) && (
                                 <Button
                                     variant="contained"
                                     color="error"
                                     onClick={deleteForm}
+                                    disabled={!(isAdmin || (isBoardAdmin && isAuthor))}
                                 >
                                     삭제
                                 </Button>
-                            )}
+                            ))}
                         </div>
                     </form>
                 </div>

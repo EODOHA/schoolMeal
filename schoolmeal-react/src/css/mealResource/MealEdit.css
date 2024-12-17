@@ -56,8 +56,9 @@ textarea.meal-resource-form-control {
 /* 버튼 그룹 스타일 */
 .meal-resource-button-group {
     display: flex;
-    justify-content: space-between;
+    justify-content: center !important;
     margin-bottom: 30px; /* 버튼과 테이블 사이 간격 */
+    gap: 10px;
 }
 
 /* 에러 메시지 스타일 */

@@ -7,8 +7,8 @@ import axios from "axios";
 import { useAuth } from "../../sign/AuthContext";
 import LoadingSpinner from '../../common/LoadingSpinner';
 
-function MenuRecipeEdit() {
-    const [menuRecipe, setMenuRecipe] = useState({
+function SchoolMealCaseEdit() {
+    const [schoolMealCase, setSchoolMealCase] = useState({
         title: "",
         writer: "",
         createdDate: "",
@@ -43,14 +43,10 @@ function MenuRecipeEdit() {
     useEffect(() => {
         if (isAuth && isAdmin) {
             axios
-                .get(`${SERVER_URL}menuRecipes/${id}`, {
-                    headers: {
-                        Authorizatio: `${token}`,
-                    }
-                })
+                .get(`${SERVER_URL}schoolMealCases/${id}`)
                 .then((response) => {
                     const data = response.data;
-                    setMenuRecipe({
+                    setSchoolMealCase({
                         title: data.title,
                         writer: data.writer,
                         createdDate: data.createdDate,
@@ -77,15 +73,14 @@ function MenuRecipeEdit() {
                     alert("파일 크기가 너무 큽니다. 최대 10MB까지 지원됩니다.");
                     return;
                 }
-                console.log("Selected file:", file.name);
             }
-            setMenuRecipe({
-                ...menuRecipe,
+            setSchoolMealCase({
+                ...schoolMealCase,
                 file: file || null,
             });
         } else {
-            setMenuRecipe({
-                ...menuRecipe,
+            setSchoolMealCase({
+                ...schoolMealCase,
                 [e.target.name]: e.target.value,
             });
         }
@@ -93,29 +88,33 @@ function MenuRecipeEdit() {
 
     const handleSave = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
         const formData = new FormData();
-        formData.append("title", menuRecipe.title);
-        formData.append("writer", menuRecipe.writer);
-        formData.append("content", menuRecipe.content);
+        formData.append("title", schoolMealCase.title);
+        formData.append("writer", schoolMealCase.writer);
+        formData.append("content", schoolMealCase.content);
 
-        if (menuRecipe.file) {
-            formData.append("file", menuRecipe.file);
-        } else if (menuRecipe.fileId) {
-            formData.append("fileId", menuRecipe.fileId);
+        if (schoolMealCase.file) {
+            formData.append("file", schoolMealCase.file);
+        } else if (schoolMealCase.fileId) {
+            formData.append("fileId", schoolMealCase.fileId);
         }
+
         try {
-            await axios.put(`${SERVER_URL}menuRecipe/update/${id}`, formData, {
+            await axios.put(`${SERVER_URL}schoolMealCase/update/${id}`, formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "multipart/form-data",
                 },
             });
             alert("수정되었습니다.");
-            navigate("/mealResource/menu-recipe");
+            navigate("/mealResource/school-meal-case");
         } catch (err) {
-            console.error("Error updating:", err);
-            alert("수정에 실패했습니다: " + err.message);
+            console.error("Error updating post:", err);
+            setError("수정 중 오류가 발생했습니다. 다시 시도해주세요.");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -124,47 +123,46 @@ function MenuRecipeEdit() {
     }
 
     if (error) {
-        return <div className="meal-resource-error-message">{error}</div>;
+        return <div className="edu-error-message">{error}</div>;
     }
 
     return (
-        <div className="meal-resource-edit-container">
-            <div className="meal-resource-card">
-                <div className="meal-resource-card-body">
+        <div className="edu-edit-container">
+            <div className="edu-card">
+                <div className="edu-card-body">
                     <h2>게시글 수정</h2>
                     <form onSubmit={handleSave}>
-                        <div className="meal-resource-form-group">
-                            <label>제목</label>
+                        <div className="edu-form-group">
+                            <label>제목:</label>
                             <input
                                 type="text"
                                 name="title"
-                                value={menuRecipe.title}
+                                value={schoolMealCase.title}
                                 onChange={handleChange}
                                 required
                             />
                         </div>
-
-                        <div className="meal-resource-form-group">
-                            <label>작성자</label>
+                        <div className="edu-form-group">
+                            <label>작성자:</label>
                             <input
                                 type="text"
                                 name="writer"
-                                value={menuRecipe.writer}
+                                value={schoolMealCase.writer}
                                 onChange={handleChange}
                                 required
                             />
                         </div>
-                        <div className="meal-resource-form-group">
+                        <div className="edu-form-group">
                             <label>내용:</label>
                             <textarea
                                 name="content"
                                 rows={5}
-                                value={menuRecipe.content}
+                                value={schoolMealCase.content}
                                 onChange={handleChange}
                                 required
                             />
                         </div>
-                        <div className="meal-resource-form-group">
+                        <div className="edu-form-group">
                             <label>첨부파일</label>
                             <input
                                 type="file"
@@ -173,9 +171,13 @@ function MenuRecipeEdit() {
                                 onChange={handleChange}
                             />
                         </div>
-                        <div className="meal-resource-button-group">
-                            <Button variant="contained" color="success" type="submit">수정 저장</Button>
-                            <Button variant="outlined" onClick={() => navigate(`/mealResource/menu-recipe/${id}`)}>취소</Button>
+                        <div className="edu-button-group">
+                            <Button variant="contained" color="success" type="submit">
+                                수정 저장
+                            </Button>
+                            <Button variant="outlined" onClick={() => navigate(`/mealResource/school-meal-case/${id}`)}>
+                                취소
+                            </Button>
                         </div>
                     </form>
                 </div>
@@ -184,4 +186,4 @@ function MenuRecipeEdit() {
     );
 }
 
-export default MenuRecipeEdit;
+export default SchoolMealCaseEdit;
