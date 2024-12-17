@@ -6,6 +6,8 @@ import java.util.Date;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
+import com.example.schoolMeal.domain.entity.member.Role;
+
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -22,9 +24,10 @@ public class JwtService {
 	static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 	
 	// 서명된 JWT 토큰 생성
-	public String getToken(String memberId) {
+	public String getToken(String memberId, Role role) {
 		String token = Jwts.builder()
 				.setSubject(memberId)
+				.claim("role", role.name())  // role 정보를 claim에 추가
 				.setExpiration(new Date(System.currentTimeMillis()
 						+ EXPIRATIONTIME))
 				.signWith(key)
