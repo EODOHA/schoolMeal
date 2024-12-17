@@ -162,6 +162,9 @@ const HaccpInfoList = () => {
 
         // 페이지가 변경되면 선택된 항목 초기화
         setSelectedHaccps([]);
+
+        // 페이지가 변경되면 1페이지로 이동
+        setCurrentPage(1);
     };
 
 
@@ -309,10 +312,10 @@ const HaccpInfoList = () => {
             {/* 데이터 관리 버튼 목록 - 관리자에게만 보이도록 */}
             {isAdmin && (
                 <div className="ingredient-info-button-group">
-                    <Button variant="contained" color="primary" onClick={handleWriteClick}>
+                    <Button variant="outlined" color="primary" onClick={handleWriteClick}>
                         단일 데이터 추가
                     </Button>
-                    <Button variant="contained" color="secondary" onClick={handleUploadClick}>
+                    <Button variant="contained" color="primary" onClick={handleUploadClick}>
                         대용량 데이터 업로드
                     </Button>
 
@@ -330,31 +333,7 @@ const HaccpInfoList = () => {
                 </div>
             )}
 
-
-            {/*검색 창*/}
-            <div className='ingredient-info-search-and-page-select'>
-                <TextField
-                    label="업소명 검색"
-                    value={businessName}
-                    onChange={(e) => setBusinessName(e.target.value)}
-                    onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                            handleSearch();
-                        }
-                    }}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <SearchIcon />
-                            </InputAdornment>
-                        ),
-                    }}
-                    className="ingredient-filter-textfield"
-                />
-                {/* 검색 버튼 */}
-                <Button className="ingredient-filter-button" variant="contained" color="primary" onClick={handleSearch}>
-                    검색
-                </Button>
+            <div>
                 {/* 전체 선택메뉴, 다운로드메뉴 - 모든 권한 가능 */}
                 <div className="ingredient-info-button-group">
                     <Button variant={isAllSelected ? 'outlined' : 'contained'}
@@ -367,19 +346,46 @@ const HaccpInfoList = () => {
                         선택 항목 다운로드
                     </Button>
                 </div>
-
-
+                <div>
+                </div>
                 {/* 페이지 당 게시글 수 선택기 */}
                 <div className="ingredient-paging-selector">
-                    <label>페이지 당 게시글 수: </label>
-                    <Select
-                        value={pageSize}
-                        onChange={handlePageSizeChange}
-                    >
-                        <MenuItem value={5}>5개</MenuItem>
-                        <MenuItem value={10}>10개</MenuItem>
-                        <MenuItem value={20}>20개</MenuItem>
-                    </Select>
+                    <div className='ingredient-info-page-selector'>
+                        <label>페이지 당 게시글 수: </label>
+                        <Select
+                            value={pageSize}
+                            onChange={handlePageSizeChange}
+                        >
+                            <MenuItem value={5}>5개</MenuItem>
+                            <MenuItem value={10}>10개</MenuItem>
+                            <MenuItem value={20}>20개</MenuItem>
+                        </Select>
+                    </div>
+                    {/*검색 창*/}
+                    <div className='search-container'>
+                        <TextField
+                            label="업소명 검색"
+                            value={businessName}
+                            onChange={(e) => setBusinessName(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                    handleSearch();
+                                }
+                            }}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <SearchIcon />
+                                    </InputAdornment>
+                                ),
+                            }}
+                            className="ingredient-filter-textfield"
+                        />
+                        {/* 검색 버튼 */}
+                        <Button variant="contained" color="primary" onClick={handleSearch}>
+                            검색
+                        </Button>
+                    </div>
                 </div>
             </div>
 
@@ -392,7 +398,7 @@ const HaccpInfoList = () => {
                     height: '30vh' // 전체 화면 높이
                 }}>
                     <CircularProgress />
-                    <br/>
+                    <br />
                     <p>데이터를 불러오는 중입니다....⏰</p>
                 </div>
             ) : (

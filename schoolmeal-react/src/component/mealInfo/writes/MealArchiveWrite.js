@@ -9,12 +9,23 @@ function MealArchiveWrite({ writeArchive, error, handleBackToList }) {
     const [author, setAuthor] = useState('');
     const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
-    const {memberId} = useAuth();  //현재 로그인한 사용자의 memberId가져오기
+    const {role, memberId, isAdmin, isBoardAdmin} = useAuth();  //현재 로그인한 사용자의 memberId, 게시판 담당자 이상 권한 여부 가져오기
 
     //컴포넌트가 처음 렌더링될 때 author를 memberId로 설정 
     useEffect(()=>{
-        setAuthor(memberId);
-    },[memberId]);
+        let arcAuthor = role; //
+        console.log(role);
+        console.log(isBoardAdmin);
+        
+        if(isAdmin){
+            arcAuthor = "관리자";
+        }else if(isBoardAdmin){
+            arcAuthor = "게시판 담당자";
+        }
+
+        setAuthor(arcAuthor);
+
+    },[memberId, role]);
 
     // 파일 입력 변경 핸들러
     const handleFileChange = (e) => {
@@ -25,10 +36,11 @@ function MealArchiveWrite({ writeArchive, error, handleBackToList }) {
     const handleSubmit = async (e) => {
         e.preventDefault();     // 페이지 새로고침 방지
         setLoading(true);
+        
         const newArchive = {
             arc_title: title,
             arc_content: content,
-            arc_author: memberId,
+            arc_author: author,
         };
 
         try {

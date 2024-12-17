@@ -8,42 +8,40 @@ import { CircularProgress } from "@mui/material";
 
 const IngredientPriceEdit = () => {
     const [categories] = useState(["농산물", "축산물", "수산물", "공산품"]);
-    const [businessStatus] = useState(["영업중", "휴업중", "폐업"]);
+    const [districts] = useState(["서울", "부산", "대구", "인천", "광주", "대전", "울산", "세종", "수원", "춘천", "청주", "천안", "전주", "포항", "제주", "성남", "의정부", "순천"]);
+    const [grades] = useState(["상", "중상", "중", "중하", "하"]);
+
     const { token } = useAuth();
-    const { haccpId } = useParams();
+    const { priceId } = useParams();
     const navigate = useNavigate();
-    const [haccp, setHaccp] = useState(null);
+    const [price, setPrice] = useState(null);
 
     const [form, setForm] = useState({
-        haccpDesignationNumber: "",
         category: categories[0], // 기본값 설정
-        businessName: "",
-        address: "",
         productName: "",
-        businessStatus: businessStatus[0],
-        certificationEndDate: "",
-        createdDate: ""
+        grade: grades[0],
+        district: districts[0],
+        productPrice: "",
+        entryDate: ""
     });
 
     useEffect(() => {
         // 데이터 가져오기
-        fetch(`${SERVER_URL}haccp/${haccpId}`)
+        fetch(`${SERVER_URL}price/${priceId}`)
             .then((response) => response.json())
             .then((data) => {
-                setHaccp(data); // 받아온 데이터를 haccp에 저장
+                setPrice(data); // 받아온 데이터를 haccp에 저장
                 setForm({
-                    haccpDesignationNumber: data.haccpDesignationNumber,
-                    category: data.category || categories[0],
-                    businessName: data.businessName,
-                    address: data.address,
-                    productName: data.productName,
-                    businessStatus: data.businessStatus || businessStatus[0],
-                    certificationEndDate: data.certificationEndDate,
-                    createdDate: data.createdDate
+                    category: price.category || categories[0], // 기본값 설정
+                    productName: price.productName,
+                    grade: price.grarde || grades[0],
+                    district: price.district || districts[0],
+                    productPrice: price.productPrice,
+                    entryDate: price.entryDate
                 });
             })
             .catch((error) => console.error("Error fetching data:", error));
-    }, [businessStatus, categories, haccpId]);
+    }, [categories, districts, priceId]);
 
 
     const handleChange = (e) => {
@@ -52,12 +50,12 @@ const IngredientPriceEdit = () => {
     };
 
     const handleCancel = () => {
-        navigate("/ingredientInfo/haccp-info"); // 취소 시 목록 페이지로 이동
+        navigate("/ingredientInfo/ingredient-price"); // 취소 시 목록 페이지로 이동
     };
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        fetch(`${SERVER_URL}haccp/${haccpId}`, {
+        fetch(`${SERVER_URL}price/${priceId}`, {
             method: "PUT",
             headers: {
                 "Authorization": token,
@@ -72,8 +70,8 @@ const IngredientPriceEdit = () => {
                 return response.json();
             })
             .then(() => {
-                alert("HACCP 인증 정보가 수정되었습니다.");
-                navigate("/ingredientInfo/haccp-info"); // 수정 후 목록 페이지로 이동
+                alert("식재료 가격 정보가 수정되었습니다.");
+                navigate("/ingredientInfo/ingredient-price"); // 수정 후 목록 페이지로 이동
             })
             .catch((error) => {
                 console.error("수정 오류:", error);
@@ -92,7 +90,7 @@ const IngredientPriceEdit = () => {
 
     // };
 
-    if (!haccp) {
+    if (!price) {
         return (
             <div style={{
                 display: 'flex',
@@ -107,18 +105,8 @@ const IngredientPriceEdit = () => {
     return (
         <div className="ingredient-info-edit-container">
             <div className="ingredient-info-card">
-                <h2>HACCP 인증 정보 수정</h2>
+                <h2>식재료 가격 정보 수정</h2>
                 <form onSubmit={handleSubmit}>
-                    <div className="ingredient-info-form-group">
-                        <label>HACCP 지정번호</label>
-                        <input
-                            type="text"
-                            name="haccpDesignationNumber"
-                            value={form.haccpDesignationNumber}
-                            readOnly
-                            disabled
-                        />
-                    </div>
                     <div className="ingredient-info-form-group">
                         <label>카테고리</label>
                         <select
@@ -134,24 +122,6 @@ const IngredientPriceEdit = () => {
                         </select>
                     </div>
                     <div className="ingredient-info-form-group">
-                        <label>업소명</label>
-                        <input
-                            type="text"
-                            name="businessName"
-                            value={form.businessName}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div className="ingredient-info-form-group">
-                        <label>주소</label>
-                        <input
-                            type="text"
-                            name="address"
-                            value={form.address}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div className="ingredient-info-form-group">
                         <label>품목명</label>
                         <input
                             type="text"
@@ -161,25 +131,48 @@ const IngredientPriceEdit = () => {
                         />
                     </div>
                     <div className="ingredient-info-form-group">
-                        <label>영업상태</label>
+                        <label>등급</label>
                         <select
-                            name="businessStatus"
-                            value={form.businessStatus}
+                            name="grade"
+                            value={form.grade}
                             onChange={handleChange}
                         >
-                            {businessStatus.map((statusOption) => (
-                                <option key={statusOption} value={statusOption}>
-                                    {statusOption}
+                            {grades.map((gradeOption) => (
+                                <option key={gradeOption} value={gradeOption}>
+                                    {gradeOption}
                                 </option>
                             ))}
                         </select>
                     </div>
                     <div className="ingredient-info-form-group">
-                        <label>인증 종료일자</label>
+                        <label>생산지</label>
+                        <select
+                            name="district"
+                            value={form.district}
+                            onChange={handleChange}
+                        >
+                            {districts.map((districtOption) => (
+                                <option key={districtOption} value={districtOption}>
+                                    {districtOption}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="ingredient-info-form-group">
+                        <label>가격</label>
+                        <input
+                            type="number"
+                            name="productPrice"
+                            value={form.productPrice}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className="ingredient-info-form-group">
+                        <label>등록일</label>
                         <input
                             type="date"
-                            name="certificationEndDate"
-                            value={form.certificationEndDate}
+                            name="entryDate"
+                            value={form.entryDate}
                             onChange={handleChange}
                         />
                     </div>

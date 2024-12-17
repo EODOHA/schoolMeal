@@ -8,15 +8,18 @@ import MealArchiveList from '../lists/MealArchiveList';
 import MealExpertList from '../lists/MealExpertList';
 import MealArchiveDetail from '../details/MealArchiveDetail';
 import MealExpertDetail from '../details/MealExpertDetail';
+import BoardAdminRoute from '../../sign/BoardAdminRoute';
 
 const MealInfoRoutes = (
   <>
-    <Route path="mealInfo" element={<MealInfoMain />} />
-    <Route path="mealInfo/meal-menu" element={<MealMenuMain />} />
-    <Route path="mealInfo/meal-archive" element={<MealArchiveList />} />
-    <Route path="mealInfo/meal-expert" element={<MealExpertList />}/>
-    <Route path="mealInfo/meal-expert/:exp_id" element={<MealExpertDetail/>} />
-    <Route path="mealInfo/meal-archive/:id" element={<MealArchiveDetail />} />
+    <Route path="mealInfo/*">
+      <Route index element={<MealInfoMain />} />  {/* 기본경로 */}
+      <Route path="meal-menu" element={<MealMenuMain />} />
+      <Route path="meal-archive" element={<MealArchiveList />} />
+      <Route path="meal-expert" element={<MealExpertList />} />
+      <Route path="meal-expert/:exp_id" element={<MealExpertDetail />} />
+      <Route path="meal-archive/:id" element={<MealArchiveDetail />} />
+    </Route>
   </>
 );
 
