@@ -29,7 +29,6 @@ public class FileUrlService extends PathResolver {
 	private String mealHygienePath;
 	private String mealFacilityEquipmentPath;
 	private String schoolMealCasesPath;
-	private String eduOfficeMealDataPath;
 
 	// 교육자료
 	private String nutritionPath;
@@ -48,7 +47,6 @@ public class FileUrlService extends PathResolver {
 		mealHygienePath = buildPath("급식위생 자료실");
 		mealFacilityEquipmentPath = buildPath("급식 시설 및 설비 자료실");
 		schoolMealCasesPath = buildPath("학교급식 우수사례 자료실");
-		eduOfficeMealDataPath = buildPath("교육청 급식자료실");
 
 		nutritionPath = buildPath("영양·식생활 자료실");
 		videoEduPath = buildPath("교육영상 자료실");
@@ -63,7 +61,6 @@ public class FileUrlService extends PathResolver {
 	    servicePathMap.put("service4", mealHygienePath);
 	    servicePathMap.put("service5", mealFacilityEquipmentPath);
 	    servicePathMap.put("service6", schoolMealCasesPath);
-	    servicePathMap.put("service7", eduOfficeMealDataPath);
 	    servicePathMap.put("service8", nutritionPath);
 	    servicePathMap.put("service9", videoEduPath);
 	    servicePathMap.put("service10", lessonDemoPath);

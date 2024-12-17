@@ -9,8 +9,11 @@ import com.example.schoolMeal.domain.entity.eduData.EduMaterialSharing;
 import com.example.schoolMeal.domain.entity.eduData.LessonDemoVideo;
 import com.example.schoolMeal.domain.entity.eduData.NutritionDietEducation;
 import com.example.schoolMeal.domain.entity.eduData.VideoEducation;
+import com.example.schoolMeal.domain.entity.mealResource.MealFacilityEquipment;
+import com.example.schoolMeal.domain.entity.mealResource.MealHygiene;
 import com.example.schoolMeal.domain.entity.mealResource.MealPolicyOperation;
 import com.example.schoolMeal.domain.entity.mealResource.MenuRecipe;
+import com.example.schoolMeal.domain.entity.mealResource.SchoolMealCase;
 
 @Configuration
 public class RestConfig {
@@ -22,10 +25,9 @@ public class RestConfig {
         					MealPolicyOperation.class,
         					MenuRecipe.class,
 //        					NutritionManage.class,
-//        					MealHygiene.class,
-//        					MealFacilityEquipment.class,
-//        					SchoolMealCases.class,
-//        					EduOfficeMealData.class,
+        					MealHygiene.class,
+        					MealFacilityEquipment.class,
+        					SchoolMealCase.class,     
         					// 교육자료실
         					NutritionDietEducation.class,
         					VideoEducation.class,

@@ -63,7 +63,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 		}
 		
 		// 메인 페이지 "GET" 요청만 인증없도록 필터
-		if (request.getRequestURI().startsWith("/mealPolicyOperation") &&
+		if (request.getRequestURI().startsWith("/schoolMealCase") &&
 				request.getMethod().equals("GET")) {
 			filterChain.doFilter(request, response);
 			return;
