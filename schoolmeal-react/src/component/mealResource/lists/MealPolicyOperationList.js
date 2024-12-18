@@ -101,6 +101,7 @@ function MealPolicyOperationList() {
                 <div className="meal-resource-left-buttons">
                     {(isAdmin || isBoardAdmin) && (
                         <Button
+                            className="inner-Button"
                             variant="outlined"
                             onClick={() => navigate("/mealResource/meal-policy-operation/write")}
                         >
