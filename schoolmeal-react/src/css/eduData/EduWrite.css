@@ -37,8 +37,9 @@
 
 .edu-button-group {
     display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
+    justify-content: center !important;
+    margin-bottom: 30px; /* 버튼과 테이블 사이 간격 */
+    gap: 10px;
 }
 
 .edu-error-message {

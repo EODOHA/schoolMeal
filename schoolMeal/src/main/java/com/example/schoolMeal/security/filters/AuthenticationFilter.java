@@ -62,6 +62,13 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 			return;
 		}
 		
+		// 메인 페이지 "GET" 요청만 인증없도록 필터
+		if (request.getRequestURI().startsWith("/schoolMealCase") &&
+				request.getMethod().equals("GET")) {
+			filterChain.doFilter(request, response);
+			return;
+		}
+		
         //"급식정보, 식재료정보" "GET" 요청만 인증 없도록 필터
 		// 인증을 건너 뛸 엔드포인드들( 급식정보 엔드포인트 )
 		String[] getMealInfoURIs = {"/mealInfo", "/mealArchive"};

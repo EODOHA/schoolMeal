@@ -45,8 +45,8 @@ public class VideoEducationController {
     // 목록을 반환
     @GetMapping("/list")
     public ResponseEntity<List<VideoEducation>> videoEducationList() {
-        List<VideoEducation> mealPolicies = videoEducationService.videoEducationList();
-        return ResponseEntity.ok(mealPolicies);
+        List<VideoEducation> videoEdus = videoEducationService.videoEducationList();
+        return ResponseEntity.ok(videoEdus);
     }
 
     // 작성 처리

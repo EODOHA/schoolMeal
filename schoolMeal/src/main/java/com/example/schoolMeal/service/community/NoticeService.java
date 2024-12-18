@@ -193,4 +193,23 @@ public class NoticeService extends PathResolver {
                 origFileName
         );
     }
+    //검색기능
+    public List<NoticeResponseDTO> searchNotices(String keyword, String type) {
+        List<Notice> notices;
+
+        switch (type) {
+            case "title":
+                notices = noticeRepository.findByTitleContaining(keyword);
+                break;
+            case "content":
+                notices = noticeRepository.findByContentContaining(keyword);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid search type");
+        }
+
+        return notices.stream()
+                .map(this::mapToResponseDTO)
+                .collect(Collectors.toList());
+    }
 }

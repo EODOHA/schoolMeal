@@ -169,7 +169,7 @@ const IngredientPriceList = () => {
 
     // 수정 페이지
     const handleEditClick = (haccpId) => {
-        navigate(`/ingredientInfo/haccp-info/edit/${haccpId}`);
+        navigate(`/ingredientInfo/ingredient-price/edit/${haccpId}`);
     }
 
     // 단일 데이터 추가

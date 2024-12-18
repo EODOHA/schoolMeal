@@ -9,13 +9,15 @@ import { HiChevronLeft, HiChevronDoubleLeft, HiChevronRight, HiChevronDoubleRigh
 import "../../../css/page/Pagination.css";
 import { useAuth } from "../../sign/AuthContext";  // 권한설정
 import SearchBar from "../../common/SearchBar";  // 검색기능
+import MealPolicyFilterButton from "../filter/mealPolicy/MealPolicyFilterButton";
 
 function MealPolicyOperationList() {
     const [mealPolicyOperation, setMealPolicyOperation] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');  // 검색어 상태 추가
     const [selectedFilter, setSelectedFilter] = useState('전체'); // 필터 상태 추가
+    const [eduOfficeFilter, setEduOfficeFilter] = useState('');  // 교육청 필터 상태 추가
     const navigate = useNavigate();
-    const { isAdmin } = useAuth();  // 로그인 상태 확인
+    const { isAdmin, isBoardAdmin } = useAuth();  // 로그인 상태 확인
 
     // 페이지네이션 상태
     const [currentPage, setCurrentPage] = useState(1);  //현재 페이지 상태(기본값:1)
@@ -26,7 +28,6 @@ function MealPolicyOperationList() {
     const currentBlock = Math.ceil(currentPage / pageNumbersPerBlock); // 현재 블록 번호
     const startPage = (currentBlock - 1) * pageNumbersPerBlock + 1; //현재 블록의 첫 페이지 번호
     const endPage = Math.min(startPage + pageNumbersPerBlock - 1, totalPages);  //현재 블록의 마지막 페이지번호(전체 페이지 수를 넘지 않도록)
-
     // 현재 페이지의 게시물 추출
     const currentPosts = mealPolicyOperation.filter(item => {
         // 검색어 필터링 적용
@@ -34,6 +35,8 @@ function MealPolicyOperationList() {
             return item.title.toLowerCase().includes(searchQuery.toLowerCase());
         } else if (selectedFilter === '작성자') {
             return item.writer.toLowerCase().includes(searchQuery.toLowerCase());
+        } else if (selectedFilter === '시∙도 교육청' && eduOfficeFilter) {
+            return item.eduOffice === eduOfficeFilter;  // 교육청 필터 적용
         } else { // 전체
             return (
                 item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -91,14 +94,12 @@ function MealPolicyOperationList() {
         return parts[parts.length - 1];
     };
 
-    const totalLength = mealPolicyOperation.length;
-
     return (
         <div className="meal-resource-list-container">
             <h1 className="meal-resource-title">급식 정책 및 운영</h1>
             <div className="meal-resource-button-group">
-                <div className="meal-resource-write-btn">
-                    {isAdmin && (
+                <div className="meal-resource-left-buttons">
+                    {(isAdmin || isBoardAdmin) && (
                         <Button
                             variant="outlined"
                             onClick={() => navigate("/mealResource/meal-policy-operation/write")}
@@ -106,16 +107,24 @@ function MealPolicyOperationList() {
                             새 글 쓰기
                         </Button>
                     )}
+                    <MealPolicyFilterButton onFilterChange={(filterType, filterValue, eduOfficeType) => {
+                        setSelectedFilter(filterType);
+                        if (filterType === '시∙도 교육청') {
+                            setEduOfficeFilter(eduOfficeType);
+                        } else {
+                            setEduOfficeFilter('');
+                        }
+                    }} />
                 </div>
-                <div className="meal-resource-searchBox">
+                <div className="meal-resource-right-searchbar">
                     <SearchBar
                         searchQuery={searchQuery}
                         selectedFilter={selectedFilter}
                         setSelectedFilter={setSelectedFilter}
                         setSearchQuery={setSearchQuery}
                         onFilterChange={(filterType, filterValue) => {
-                            setSelectedFilter(filterType);  // 필터를 설정
-                            setSearchQuery(filterValue);  // 검색어를 필터에 맞게 설정
+                            setSelectedFilter(filterType);
+                            setSearchQuery(filterValue);
                         }}
                     />
                 </div>
@@ -137,8 +146,8 @@ function MealPolicyOperationList() {
                         </tr>
                     ) : (
                         currentPosts.map((mealPolicyOperation, index) => {
-                            // 파일 URL이 _links로 제공되는 경우
-                            const reversedIndex = totalLength - (currentPage - 1) * postsPerPage - index;
+                            // 필터링된 게시글의 역순 인덱스를 계산
+                            const reversedFilteredIndex = currentPosts.length - index;
 
                             return (
                                 <tr
@@ -146,14 +155,13 @@ function MealPolicyOperationList() {
                                     onClick={() => goToDetailPage(mealPolicyOperation)}
                                     style={{ cursor: "pointer" }}
                                 >
-                                    <td>{reversedIndex}</td>
+                                    <td>{reversedFilteredIndex}</td> {/* 필터링 후 역순 번호 */}
                                     <td>{mealPolicyOperation.title}</td>
                                     <td>{formatDate(mealPolicyOperation.createdDate)}</td>
                                     <td>{mealPolicyOperation.writer}</td>
                                     <td>
                                         {mealPolicyOperation.fileUrlId ? (
                                             <span className="meal-resource-attachment-icon"><MdAttachFile /></span>
-
                                         ) : (
                                             <span className="meal-resource-attachment-icon"><BsFileExcel /></span>
                                         )}

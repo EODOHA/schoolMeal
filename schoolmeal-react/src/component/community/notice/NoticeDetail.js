@@ -10,7 +10,7 @@ const NoticeDetail = () => {
   const navigate = useNavigate(); // 페이지 이동을 위한 useNavigate 사용
   const [notice, setNotice] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { isAdmin } = useAuth();  // 로그인 상태 확인
+  const { isAuth, isAdmin, token } = useAuth();  // 로그인 상태 확인
 
   // 공지사항을 가져오는 함수
   const fetchNotice = async () => {
@@ -39,7 +39,11 @@ const NoticeDetail = () => {
   const handleDelete = async () => {
     if (window.confirm('정말 이 공지사항을 삭제하시겠습니까?')) {
       try {
-        await axios.delete(`${SERVER_URL}notices/delete/${noticeId}`);
+        await axios.delete(`${SERVER_URL}notices/delete/${noticeId}`,  {
+          headers: {
+            Authorization : `${token}`,
+          },
+        });
         alert('공지사항이 삭제되었습니다.');
         navigate('/community/notices'); // 삭제 후 공지사항 목록으로 돌아가기
       } catch (error) {

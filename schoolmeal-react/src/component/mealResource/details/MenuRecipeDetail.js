@@ -6,6 +6,8 @@ import { SERVER_URL } from "../../../Constants";
 import "../../../css/mealResource/MealDetail.css"; // 스타일시트 적용
 import { MdOutlineFileDownload } from "react-icons/md";
 import { RiFileUnknowFill } from "react-icons/ri";
+import { useAuth } from "../../sign/AuthContext";
+import LoadingSpinner from '../../common/LoadingSpinner';
 
 function MenuRecipeDetail() {
     const { id } = useParams(); // URL에서 id 값을 받아옴
@@ -13,6 +15,10 @@ function MenuRecipeDetail() {
     const [loading, setLoading] = useState(true); // 로딩 상태
     const [error, setError] = useState(null); // 오류 상태
     const navigate = useNavigate();
+
+    // 권한설정
+    const { token, isAdmin, isBoardAdmin } = useAuth();
+    const [isAuthor, setIsAuthor] = useState(false);
 
     useEffect(() => {
         if (!id) {
@@ -25,16 +31,20 @@ function MenuRecipeDetail() {
             .get(`${SERVER_URL}menuRecipes/${id}`)
             .then((response) => {
                 setMenuRecipe(response.data);
+                // 작성자 확인
+                const isAuthor = (isAdmin && response.data.writer === "관리자") ||
+                    (isBoardAdmin && response.data.writer === "담당자");
+                setIsAuthor(isAuthor);
                 setLoading(false);
             })
-            .catch((err) => {
+            .catch((error) => {
                 setError("데이터를 가져오는 중 오류가 발생했습니다.");
                 setLoading(false);
             });
-    }, [id]);
+    }, [id, isAdmin, isBoardAdmin]);
 
     if (loading) {
-        return <div>데이터 로딩 중...</div>;
+        return <div><LoadingSpinner /></div>;
     }
 
     if (error) {
@@ -56,8 +66,6 @@ function MenuRecipeDetail() {
     const update = () => {
         navigate(`/mealResource/menu-recipe/update/${id}`); // 수정 페이지로 이동
     };
-
-    const token = sessionStorage.getItem('jwt'); // JWT 토큰 가져오기
 
     const deleteForm = () => {
         if (!window.confirm("삭제하시겠습니까?")) return;
@@ -125,13 +133,15 @@ function MenuRecipeDetail() {
                         </div><br />
 
                         <div className="meal-resource-button-group">
-                            <Button
-                                variant="outlined"
-                                color="success"
-                                onClick={update}
-                            >
-                                수정
-                            </Button>
+                            {isAuthor && (
+                                <Button
+                                    variant="outlined"
+                                    color="success"
+                                    onClick={update}
+                                >
+                                    수정
+                                </Button>
+                            )}
                             <Button
                                 variant="outlined"
                                 color="primary"
@@ -139,13 +149,16 @@ function MenuRecipeDetail() {
                             >
                                 목록
                             </Button>
-                            <Button
-                                variant="contained"
-                                color="error"
-                                onClick={deleteForm}
-                            >
-                                삭제
-                            </Button>
+                            {((isAdmin || (isBoardAdmin && isAuthor)) && (
+                                <Button
+                                    variant="contained"
+                                    color="error"
+                                    onClick={deleteForm}
+                                    disabled={!(isAdmin || (isBoardAdmin && isAuthor))}
+                                >
+                                    삭제
+                                </Button>
+                            ))}
                         </div>
                     </form>
                 </div>

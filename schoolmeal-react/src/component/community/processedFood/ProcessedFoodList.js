@@ -2,14 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { SERVER_URL } from "../../../Constants";
-import { useAuth } from "../../sign/AuthContext";  // 권한설정
+import { useAuth } from "../../sign/AuthContext";
 import "../../../css/community/ProcessedFoodList.css";
 
 const ProcessedFoodList = () => {
   const [foods, setFoods] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태 추가
+  const [filteredFoods, setFilteredFoods] = useState([]); // 필터링된 데이터 상태
   const navigate = useNavigate();
-  const { isAdmin , isAuth} = useAuth();  // 로그인 상태 확인
+  const { isAuth } = useAuth();
 
   const loadFoods = async () => {
     setLoading(true);
@@ -17,6 +19,7 @@ const ProcessedFoodList = () => {
       const response = await axios.get(`${SERVER_URL}processed-foods/list`);
       const sortedFoods = (response.data || []).sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
       setFoods(sortedFoods);
+      setFilteredFoods(sortedFoods); // 초기 데이터 설정
     } catch (error) {
       console.error('가공식품 목록 조회 실패:', error);
     } finally {
@@ -28,6 +31,14 @@ const ProcessedFoodList = () => {
     loadFoods();
   }, []);
 
+  // 검색 버튼 클릭 시 필터링
+  const handleSearch = () => {
+    const result = foods.filter((food) =>
+      food.productName.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredFoods(result);
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -35,10 +46,26 @@ const ProcessedFoodList = () => {
   return (
     <div className="processed-food-list-container">
       <h2>가공식품 정보 목록</h2>
+
+      {/* 검색 입력창 및 검색 버튼 */}
+      <div className="ProcessedFoodSearchContainer">
+          <input
+            type="text"
+            placeholder="상품명을 입력하세요"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="ProcessedFoodSearchInput"
+          />
+          <button onClick={handleSearch} className="ProcessedFoodSearchButton">
+            검색하기
+          </button>
+       </div>
+
+
       {isAuth && (
         <button onClick={() => navigate('/community/processed-foods/create')} className="processedfoodlistcreate-button">
-        가공식품 작성
-      </button>
+          가공식품 작성
+        </button>
       )}
       
       <table className="food-table">
@@ -53,10 +80,10 @@ const ProcessedFoodList = () => {
           </tr>
         </thead>
         <tbody>
-          {Array.isArray(foods) && foods.length > 0 ? (
-            foods.map((food, index) => (
+          {filteredFoods.length > 0 ? (
+            filteredFoods.map((food, index) => (
               <tr key={food.id} onClick={() => navigate(`/community/processed-foods/${food.id}`)}>
-                <td>{foods.length - index}</td>
+                <td>{filteredFoods.length - index}</td>
                 <td>
                   {food.imagePath ? (
                     <img
@@ -65,11 +92,11 @@ const ProcessedFoodList = () => {
                       className="food-thumbnail"
                       onError={(e) => {
                         e.target.onerror = null;
-                        e.target.src = "https://via.placeholder.com/100"; // 이미지 로드 실패 시 기본 이미지 표시
+                        e.target.src = "https://via.placeholder.com/100";
                       }}
                     />
                   ) : (
-                    <div className="no-image-placeholder">-</div> // 이미지가 없을 경우 빈 칸 혹은 대체 요소 표시
+                    <div className="no-image-placeholder">-</div>
                   )}
                 </td>
                 <td>{food.productName}</td>

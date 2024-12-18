@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { SERVER_URL } from "../../../Constants";
 import "../../../css/mealResource/MealList.css";
 import Button from "@mui/material/Button";
-import FilterButton from "../filter/FilterButton"; // FilterButton에 검색 포함
 import { MdAttachFile } from "react-icons/md";
 import { BsFileExcel } from "react-icons/bs";
-import { seasonTypeEnglish } from "../filter/seasonUtils";
+import MenuFilterButton from "../filter/menu/MenuFilterButton";
+import { seasonTypeEnglish } from "../filter/menu/SeasonUtils";
 import { HiChevronLeft, HiChevronDoubleLeft, HiChevronRight, HiChevronDoubleRight } from "react-icons/hi";
 import { useAuth } from "../../sign/AuthContext";  // 권한설정
 
@@ -15,7 +15,7 @@ function MenuRecipeList() {
     const [selectedFilter, setSelectedFilter] = useState("전체");
     const [selectedAgeGroup, setSelectedAgeGroup] = useState("");
     const [selectedSeason, setSelectedSeason] = useState("");
-    const { isAdmin } = useAuth();
+    const { isAdmin, isBoardAdmin } = useAuth();
     const navigate = useNavigate();
 
     const applyFilter = useCallback(() => {
@@ -85,13 +85,6 @@ function MenuRecipeList() {
     const [postsPerPage] = useState(5); // 페이지당 게시글 수
     const [pageNumbersPerBlock] = useState(4) // 한 블록당 표시할 페이지 번호 수
 
-    // 데이터가 없을 경우 currentPage가 1로 초기화되도록 설정
-    useEffect(() => {
-        if (filteredRecipes.length === 0) {
-            setCurrentPage(1); // 데이터가 없으면 페이지를 1로 설정
-        }
-    }, [filteredRecipes]);
-
     const totalPages = Math.ceil(filteredRecipes.length / postsPerPage); //전체 페이지 수
     const currentBlock = Math.ceil(currentPage / pageNumbersPerBlock); // 현재 블록 번호
     const startPage = (currentBlock - 1) * pageNumbersPerBlock + 1; //현재 블록의 첫 페이지 번호
@@ -127,20 +120,23 @@ function MenuRecipeList() {
         <div className="meal-resource-list-container">
             <h1 className="meal-resource-title">식단 및 레시피</h1>
             <div className="meal-resource-button-group">
-                <FilterButton
-                    variant="contained"
-                    onFilterChange={handleFilterChange}
-                    selectedFilter={selectedFilter}
-                />
-                {isAdmin && (
-                    <Button
-                        variant="outlined"
-                        onClick={handleWriteNew}
-                        style={{ marginLeft: "auto" }}
-                    >
-                        새 글 쓰기
-                    </Button>
-                )}
+                <div className="meal-resource-left-buttons">
+                    {(isAdmin || isBoardAdmin) && (
+                        <Button
+                            variant="outlined"
+                            onClick={handleWriteNew}
+                        >
+                            새 글 쓰기
+                        </Button>
+                    )}
+                </div>
+                <div className="meal-resource-right-searchbar">
+                    <MenuFilterButton
+                        variant="contained"
+                        onFilterChange={handleFilterChange}
+                        selectedFilter={selectedFilter}
+                    />
+                </div>
             </div>
             <table className="meal-resource-table">
                 <thead className="meal-resource-thead">

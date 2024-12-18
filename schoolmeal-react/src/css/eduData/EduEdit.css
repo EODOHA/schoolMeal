@@ -56,7 +56,8 @@ textarea.edu-form-control {
 /* 버튼 그룹 스타일 */
 .edu-button-group {
     display: flex;
-    justify-content: space-between;
+    justify-content: center !important;
+    margin-bottom: 30px; /* 버튼과 테이블 사이 간격 */
     gap: 10px;
 }
 

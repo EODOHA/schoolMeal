@@ -6,7 +6,7 @@ import { SERVER_URL } from "../../../Constants";
 import "../../../css/mealResource/MealDetail.css"; // 스타일시트 적용
 import { MdOutlineFileDownload } from "react-icons/md";
 import { RiFileUnknowFill } from "react-icons/ri";
-import { useAuth } from "../../sign/AuthContext";  
+import { useAuth } from "../../sign/AuthContext";
 import LoadingSpinner from '../../common/LoadingSpinner';
 
 function MealPolicyOperationDetail() {
@@ -14,8 +14,11 @@ function MealPolicyOperationDetail() {
     const [mealPolicyOperation, setMealPolicyOperation] = useState(null);
     const [loading, setLoading] = useState(true); // 로딩 상태
     const [error, setError] = useState(null); // 오류 상태
-    const { isAdmin } = useAuth();  // 로그인 상태 확인
     const navigate = useNavigate();
+
+    // 권한설정
+    const { token, isAdmin, isBoardAdmin } = useAuth();
+    const [isAuthor, setIsAuthor] = useState(false);
 
     useEffect(() => {
         if (!id) {
@@ -23,19 +26,23 @@ function MealPolicyOperationDetail() {
             setLoading(false);
             return;
         }
-    
+
         axios
             .get(`${SERVER_URL}mealPolicyOperations/${id}`)
             .then((response) => {
                 setMealPolicyOperation(response.data);
-                console.log(response.data);  // mealPolicyOperation의 데이터를 로그로 확인
+                // 작성자 확인
+                const isAuthor = (isAdmin && response.data.writer === "관리자") ||
+                    (isBoardAdmin && response.data.writer === "담당자");
+                setIsAuthor(isAuthor);
                 setLoading(false);
             })
-            .catch((err) => {
+            .catch((error) => {
                 setError("데이터를 가져오는 중 오류가 발생했습니다.");
                 setLoading(false);
             });
-    }, [id]);    
+    }, [id, isAdmin, isBoardAdmin]);
+
 
     if (loading) {
         return <div><LoadingSpinner /></div>;
@@ -64,12 +71,10 @@ function MealPolicyOperationDetail() {
     const deleteForm = () => {
         if (!window.confirm("삭제하시겠습니까?")) return;
 
-        const token = sessionStorage.getItem('jwt'); // JWT 토큰 가져오기
-
         axios
             .delete(`${SERVER_URL}mealPolicyOperation/delete/${id}`, {
                 headers: {
-                    Authorization: `${token}`, 
+                    Authorization: `${token}`,
                 },
             })
             .then((response) => {
@@ -132,7 +137,7 @@ function MealPolicyOperationDetail() {
                             />
                         </div><br />
                         <div className="meal-resource-button-group">
-                            {isAdmin && (
+                            {isAuthor && (
                                 <Button
                                     variant="outlined"
                                     color="success"
@@ -148,15 +153,16 @@ function MealPolicyOperationDetail() {
                             >
                                 목록
                             </Button>
-                            {isAdmin && (
+                            {((isAdmin || (isBoardAdmin && isAuthor)) && (
                                 <Button
                                     variant="contained"
                                     color="error"
                                     onClick={deleteForm}
+                                    disabled={!(isAdmin || (isBoardAdmin && isAuthor))}
                                 >
                                     삭제
                                 </Button>
-                            )}
+                            ))}
                         </div>
                     </form>
                 </div>

@@ -82,8 +82,9 @@ textarea.meal-info-form-control {
 /* 버튼 그룹 */
 .meal-info-button-group {
     display: flex;
-    justify-content: space-between;
+    justify-content: center !important;
     margin-top: 20px;
+    gap: 10px;
 }
 
 /* 첨부파일 섹션 스타일 */

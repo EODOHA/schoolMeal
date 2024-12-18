@@ -49,11 +49,11 @@ public class LoginController {
 						credentials.getPassword());
 				Authentication auth = authenticationManager.authenticate(creds);
 				
-				// 인증 성공 시, 토큰 생성
-				String jwts = jwtService.getToken(auth.getName());
-				
 				// 사용자 role 가져오기
 				Role role = memberService.getMemberRole(credentials.getMemberId());
+				
+				// 인증 성공 시, 토큰 생성
+				String jwts = jwtService.getToken(auth.getName(), role);
 				
 				// 이메일 인증 여부 확인
 	            boolean isEmailVerified = memberService.isEmailVerified(credentials.getMemberId());

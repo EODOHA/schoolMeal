@@ -4,7 +4,8 @@ import { Button, TextField, MenuItem, Select, FormControl, InputLabel } from "@m
 import axios from "axios";
 import { SERVER_URL } from "../../../Constants";
 import { useAuth } from "../../sign/AuthContext";
-import "../../../css/mealResource/MealWrite.css"; // 스타일시트 적용
+import "../../../css/mealResource/MealWrite.css";
+import LoadingSpinner from '../../common/LoadingSpinner';
 
 function MenuRecipeWrite() {
     const [title, setTitle] = useState("");
@@ -19,25 +20,41 @@ function MenuRecipeWrite() {
     const navigate = useNavigate();
 
     // AuthContext에서 인증 상태와 권한 정보 가져오기
-    const { isAuth, isAdmin, token } = useAuth();
+    const { isAuth, isAdmin, isBoardAdmin, token, role, memberId } = useAuth();
+
+    // 작성자를 memberId로 설정 
+    useEffect(() => {
+        let writer = role; 
+        console.log(role);
+        console.log(isBoardAdmin);
+
+        if (isAdmin) {
+            writer = "관리자";
+        } else if (isBoardAdmin) {
+            writer = "담당자";
+        }
+
+        setWriter(writer);
+
+    }, [memberId, role, isAdmin, isBoardAdmin]);
 
     useEffect(() => {
         // 인증 상태와 권한 정보가 변경될 때마다 실행
-        if (isAuth !== undefined && isAdmin !== undefined) {
+        if (isAuth !== undefined && isAdmin !== undefined && isBoardAdmin !== undefined) {
             setIsLoadingAuth(false); // 인증 상태가 로드된 후 로딩 상태를 false로 설정
         }
-    }, [isAuth, isAdmin]);
+    }, [isAuth, isAdmin, isBoardAdmin]);
 
     useEffect(() => {
-        // `isAuth`와 `isAdmin` 값이 `false`로 설정된 이후에만 실행되도록 체크
-        if (!isLoadingAuth && (isAuth === false || isAdmin === false)) {
+        // 인증 상태가 완전히 로딩된 후, 권한이 없을 경우 "unauthorized" 페이지로 리다이렉트
+        if (!isLoadingAuth && (!isAuth || (!isAdmin && !isBoardAdmin))) {
             navigate("/unauthorized");
         }
-    }, [isAuth, isAdmin, navigate, isLoadingAuth]);
+    }, [isAuth, isAdmin, isBoardAdmin, isLoadingAuth, navigate]);
 
-    // 로그인하지 않았거나 관리자가 아닌 경우에는 화면 렌더링을 하지 않음
-    if (isLoadingAuth || !isAuth || !isAdmin) {
-        return <div>로딩 중...</div>; // 로딩 상태일 경우 화면을 띄우지 않음
+    // 관리자가 아닌 경우에만 "unauthorized"로 리다이렉트
+    if (isLoadingAuth || !isAuth || (isAdmin === false && isBoardAdmin === false)) {
+        return <div><LoadingSpinner /></div>;
     }
 
     // 파일 입력 변경 핸들러
@@ -120,7 +137,7 @@ function MenuRecipeWrite() {
                                 fullWidth
                                 value={writer}
                                 onChange={(e) => setWriter(e.target.value)}
-                                required
+                                disabled
                             />
                         </div>
 

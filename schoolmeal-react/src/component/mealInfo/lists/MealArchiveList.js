@@ -18,7 +18,7 @@ function MealArchiveList() {
     const navigate = useNavigate(); // useNavigate 훅을 사용하여 페이지 이동
 
     // 게시판 권한 설정 - AuthContext에서 token과 isAdmin을 가져옴
-    const { token, isAdmin } = useAuth();
+    const { token, isAdmin, isBoardAdmin } = useAuth();
 
     // ------------------------------------------------- 페이지네이션  ------------------------------------------------- //
     const [currentPage, setCurrentPage] = useState(1);  //현재 페이지 상태(기본값:1)
@@ -132,9 +132,9 @@ function MealArchiveList() {
             ) : (
                 <div className="meal-info-list-container">
                     <h1 className='meal-info-title'>학교 급식 과거와 현재</h1>
-                    {/* isAdmin이 true일 때만 새 글 쓰기 버튼 표시 */}
-                    {isAdmin && (
-                        <div className='meal-info-button-group'>
+                    {/* isAdmin또는 isBoardAdmin이 true일 때만 새 글 쓰기 버튼 표시 */}
+                    {(isAdmin||isBoardAdmin) && (
+                        <div className='meal-info-list-button-group'>
                             {/* 새 글 쓰기 버튼을 누르면 isWriting을 true로 세팅 -> MealArchiveWrite 컴포넌트 렌더링 */}
                             < Button variant='outlined' onClick={handleNewPostClick}>새 글 쓰기</Button>
                         </div>
@@ -168,7 +168,7 @@ function MealArchiveList() {
                                             <td>{postNumber}</td>
                                             <td>{archive.arc_title}</td>
                                             <td>{new Date(archive.createdDate).toLocaleDateString()}</td>
-                                            <td>{archive.arc_author || '관리자'}</td>
+                                            <td>{archive.arc_author}</td>
                                             <td>
                                                 {archive.arc_files && archive.arc_files.length > 0 ? (
                                                     archive.arc_files.map(file => {

@@ -17,8 +17,8 @@ const HaccpFileUpload = () => {
         const file = e.target.files[0];
         setselectedFile(file);
         
-        // console.log(selectedFile); // 파일 객체가 제대로 출력되는지 확인
-        // console.log(file instanceof Blob); // true인지 확인
+        console.log(file); // 파일 객체가 제대로 출력되는지 확인
+        console.log(file instanceof Blob); // true인지 확인
         if (!file) {
             alert("파일을 선택해주세요.");
             return;

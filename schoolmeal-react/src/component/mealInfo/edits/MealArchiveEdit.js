@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { SERVER_URL } from '../../../Constants';
-import { Button } from '@mui/material';
+import { Button, CircularProgress } from '@mui/material';
 import '../../../css/mealInfo/MealInfoEdit.css';
 import { useAuth } from '../../sign/AuthContext';
-import LoadingSpinner from '../../common/LoadingSpinner';
+
 
 function MealArchiveEdit({ archive, setEditMode, setArchive }) {
     const [updatedArchive, setUpdatedArchive] = useState(archive); // 수정된 데이터를 관리
@@ -13,12 +13,24 @@ function MealArchiveEdit({ archive, setEditMode, setArchive }) {
     const [error, setError] = useState(null);
 
     // 권한 관련
-    const { token, isAdmin } = useAuth();
+    const { token, isAdmin, isBoardAdmin } = useAuth();
 
 
     useEffect(() => {
         setUpdatedArchive(archive); // archive prop가 변경되면 상태 업데이트
     }, [archive]);
+
+    // 게시글 작성자 확인
+    const isAuthor =
+        (isAdmin && archive.arc_author === "관리자") ||         // 작성자의 isAdmin이 true고 작성자가 "관리자"인 경우
+        (isBoardAdmin && archive.arc_author === "게시판 담당자");   // 작성자의 isBoardAdmin이 true고 작성자가 "게시판 담당자"인 경우
+
+    useEffect(() => {
+        if (!isAuthor) {
+            alert("작성자 본인이 게시한 글만 수정할 수 있습니다.");
+            setEditMode(false);
+        }
+    }, [isAuthor, setEditMode]);
 
     // 파일 선택 처리
     const handleFileChange = (e) => {
@@ -79,7 +91,7 @@ function MealArchiveEdit({ archive, setEditMode, setArchive }) {
     };
 
     if (loading) {
-        return <div><LoadingSpinner /></div>;
+        return <div><CircularProgress /></div>;
     }
     if (error) {
         return <div className="meal-info-error-message">{error}</div>;

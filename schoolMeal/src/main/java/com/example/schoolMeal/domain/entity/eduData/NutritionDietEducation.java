@@ -26,7 +26,7 @@ import lombok.Setter;
 public class NutritionDietEducation {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY) // 번호가 차례대로 늘어나도록
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(nullable = false, updatable = false)
 	private Long id;
 
@@ -35,11 +35,11 @@ public class NutritionDietEducation {
 	private String content;
 
 	// 제목 필드
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false)
 	private String title;
 
 	// 작성자 필드
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false)
 	private String writer;
 
 	// 생성 날짜와 시간을 저장하는 필드

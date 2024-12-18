@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Button, Menu, MenuItem, Stack, Popover } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import { seasonTypeEnglish } from "../filter/seasonUtils";
+import { seasonTypeEnglish } from "../menu/SeasonUtils";
 
-function FilterButton({ onFilterChange }) {
+function MenuFilterButton({ onFilterChange }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [ageAnchorEl, setAgeAnchorEl] = useState(null);
   const [seasonAnchorEl, setSeasonAnchorEl] = useState(null);
@@ -138,4 +138,4 @@ function FilterButton({ onFilterChange }) {
   );
 }
 
-export default FilterButton;
+export default MenuFilterButton;

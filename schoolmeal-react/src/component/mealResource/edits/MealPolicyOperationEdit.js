@@ -21,23 +21,23 @@ function MealPolicyOperationEdit() {
     const [error, setError] = useState(null);
     const { id } = useParams();
     const navigate = useNavigate();
-    const { isAuth, isAdmin, token } = useAuth(); // 인증 상태와 권한 여부 가져오기
+    const { isAuth, isAdmin, isBoardAdmin, token } = useAuth(); // 인증 상태와 권한 여부 가져오기
     const [isLoadingAuth, setIsLoadingAuth] = useState(true); // 인증 상태 로딩
     const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
     useEffect(() => {
         // 인증 상태와 권한 정보가 변경될 때마다 실행
-        if (isAuth !== undefined && isAdmin !== undefined) {
+        if (isAuth !== undefined && isAdmin !== undefined && isBoardAdmin !== undefined) {
             setIsLoadingAuth(false); // 인증 상태가 로드된 후 로딩 상태를 false로 설정
         }
-    }, [isAuth, isAdmin]);
+    }, [isAuth, isAdmin, isBoardAdmin]);
 
     useEffect(() => {
-        // `isAuth`와 `isAdmin` 값이 `false`로 설정된 이후에만 실행되도록 체크
-        if (!isLoadingAuth && (isAuth === false || isAdmin === false)) {
+        // 인증 상태가 완전히 로딩된 후, 권한이 없을 경우 "unauthorized" 페이지로 리다이렉트
+        if (!isLoadingAuth && (!isAuth || (!isAdmin && !isBoardAdmin))) {
             navigate("/unauthorized");
         }
-    }, [isAuth, isAdmin, navigate, isLoadingAuth]);
+    }, [isAuth, isAdmin, isBoardAdmin, isLoadingAuth, navigate]);
 
     // 데이터를 불러오는 useEffect
     useEffect(() => {

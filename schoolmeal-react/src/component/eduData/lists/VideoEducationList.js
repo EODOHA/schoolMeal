@@ -15,7 +15,7 @@ function VideoEducationList() {
     const [searchQuery, setSearchQuery] = useState('');  // 검색어 상태 추가
     const [selectedFilter, setSelectedFilter] = useState('전체'); // 필터 상태 추가
     const navigate = useNavigate();
-    const { isAdmin } = useAuth();  // 로그인 상태 확인
+    const { isAdmin, isBoardAdmin } = useAuth();  // 로그인 상태 확인
 
     // 페이지네이션 상태
     const [currentPage, setCurrentPage] = useState(1);  //현재 페이지 상태(기본값:1)
@@ -95,31 +95,32 @@ function VideoEducationList() {
         return parts[parts.length - 1];
     };
 
-    // 목록 길이
-    const totalLength = videoEducation.length;
-
     return (
         <div className="edu-list-container">
             <h1 className="edu-title">영상 교육자료</h1>
             <div className="edu-button-group">
-                {isAdmin && (
-                    <Button
-                        variant="outlined"
-                        onClick={() => navigate("/eduData/video-education/write")}
-                    >
-                        새 글 쓰기
-                    </Button>
-                )}
-                <SearchBar
-                    searchQuery={searchQuery}
-                    selectedFilter={selectedFilter}
-                    setSelectedFilter={setSelectedFilter}
-                    setSearchQuery={setSearchQuery}
-                    onFilterChange={(filterType, filterValue) => {
-                        setSelectedFilter(filterType);  // 필터를 설정
-                        setSearchQuery(filterValue);  // 검색어를 필터에 맞게 설정
-                    }}
-                />
+                <div className="edu-left-buttons">
+                    {(isAdmin || isBoardAdmin) && (
+                        <Button
+                            variant="outlined"
+                            onClick={() => navigate("/eduData/video-education/write")}
+                        >
+                            새 글 쓰기
+                        </Button>
+                    )}
+                </div>
+                <div className="edu-right-searchbar">
+                    <SearchBar
+                        searchQuery={searchQuery}
+                        selectedFilter={selectedFilter}
+                        setSelectedFilter={setSelectedFilter}
+                        setSearchQuery={setSearchQuery}
+                        onFilterChange={(filterType, filterValue) => {
+                            setSelectedFilter(filterType);
+                            setSearchQuery(filterValue);
+                        }}
+                    />
+                </div>
             </div>
             <table className="edu-table">
                 <thead className="edu-thead">
@@ -138,7 +139,7 @@ function VideoEducationList() {
                         </tr>
                     ) : (
                         currentPosts.map((videoEducation, index) => {
-                            const reversedIndex = totalLength - (currentPage - 1) * postsPerPage - index;
+                            const reversedIndex = currentPosts.length - index;
 
                             return (
                                 <tr

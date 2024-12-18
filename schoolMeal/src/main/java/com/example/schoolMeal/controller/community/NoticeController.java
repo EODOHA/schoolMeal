@@ -78,7 +78,7 @@ public class NoticeController {
             CommunityFile file = communityFileRepository.findById(notice.getFileId())
                     .orElseThrow(() -> new EntityNotFoundException("File not found"));
 
-            String filePath = "C:/uploadTest/공지사항/" + file.getOrigFileName(); // 저장된 파일 경로
+            String filePath = "C:/Files/공지사항/" + file.getOrigFileName(); // 저장된 파일 경로
             File downloadFile = new File(filePath);
 
             // 디버깅
@@ -114,5 +114,13 @@ public class NoticeController {
 
         System.out.println("파일 ID를 찾을 수 없습니다. 공지사항 ID: " + id);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+
+    //검색기능
+    @GetMapping("/search")
+    public List<NoticeResponseDTO> searchNotices(
+            @RequestParam("keyword") String keyword,
+            @RequestParam("type") String type) {
+        return noticeService.searchNotices(keyword, type);
     }
 }

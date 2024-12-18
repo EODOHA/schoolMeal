@@ -14,14 +14,14 @@ import LoadingSpinner from '../../common/LoadingSpinner';
 function MealArchiveDetails() {
     const { id } = useParams(); // arc_id URL 파라미터로 가져오기
     const [archive, setArchive] = useState(null); // 게시글 데이터
+    const [isAuthor, setIsAuthor] = useState(false);
     const [loading, setLoading] = useState(true); // 로딩 상태
     const [editMode, setEditMode] = useState(false); // 수정모드 상태
     const [error, setError] = useState(null); // 오류 상태
     const navigate = useNavigate();
 
-    // 권한설정 -> useAuth에서 token과 isAdmin을 가져옴
-    const { token, isAdmin } = useAuth();
-
+    // 권한설정 -> useAuth에서 token과 isAdmin, isBoardAdmin을 가져옴
+    const { token, isAdmin, isBoardAdmin } = useAuth();
     // console.log("URL에서 추출한 arc_id", id);
 
     // 상세 페이지 조회 API 호출
@@ -39,7 +39,18 @@ function MealArchiveDetails() {
         })
             .then(response => {
                 setArchive(response.data); // 데이터를 받아서 상태에 저장
-                // console.log("상세 페이지 정보", response.data);
+
+                // 작성자 확인 로직
+                const isAuthor =
+                    (isAdmin && response.data.arc_author === "관리자") ||
+                    (isBoardAdmin && response.data.arc_author === "게시판 관리자");
+                setIsAuthor(isAuthor);
+                console.log("isAdmin:", isAdmin);
+                console.log("isBoardAdmin:", isBoardAdmin);
+                console.log("isAuthor", isAuthor);
+
+
+                console.log("상세 페이지 정보", response.data);
                 setLoading(false);
             })
             .catch(error => {
@@ -47,7 +58,7 @@ function MealArchiveDetails() {
                 setError("데이터를 가져오는 중 오류가 발생했습니다.");
                 setLoading(false);
             });
-    }, [id]); // arc_id가 변경될 때마다 다시 호출
+    }, [id, isAdmin, isBoardAdmin]);
 
     // 로딩 중일 때 화면 표시
     if (loading) {
@@ -119,7 +130,7 @@ function MealArchiveDetails() {
                                 <label>작성자:</label>
                                 <input
                                     type="text"
-                                    value={archive.arc_author || '관리자'}
+                                    value={archive.arc_author}
                                     readOnly
                                     className="meal-info-form-control"
                                 />
@@ -133,40 +144,41 @@ function MealArchiveDetails() {
                                     className="meal-info-form-control"
                                 />
                             </div><br />
-                            <div className="meal-info-button-group">
-                                {/* 수정과 삭제버튼은 isAdmin일 경우에만 표시 */}
-                                {isAdmin && (
-                                    <>
-                                        <Button
-                                            variant="outlined"
-                                            color="success"
-                                            onClick={handleUpdate}
-                                            disabled={!isAdmin}
-                                        >
-                                            수정
-                                        </Button>
-                                        <Button
-                                            variant="contained"
-                                            color="error"
-                                            onClick={handleDelete}
-                                            disabled={!isAdmin}
-                                        >
-                                            삭제
-                                        </Button>
-                                    </>
-                                )}
+                        </form>
+                        <div className="meal-info-button-group">
+                            {/* 수정은 작성자 본인, 삭제는 관리자도 선택 가능 */}
+                            {isAuthor && (
                                 <Button
                                     variant="outlined"
-                                    color="primary"
-                                    onClick={() => navigate("/mealInfo/meal-archive")}
+                                    color="success"
+                                    onClick={handleUpdate}
+                                    disabled={!isAuthor}
                                 >
-                                    목록
+                                    수정
                                 </Button>
-                            </div>
-                        </form>
+                            )}
+                            {(isAuthor || isAdmin) && (
+                                <Button
+                                    variant="contained"
+                                    color="error"
+                                    onClick={handleDelete}
+                                    disabled={(!isAuthor && !isAdmin)}
+                                >
+                                    삭제
+                                </Button>
+                            )}
+                            <Button
+                                variant="outlined"
+                                color="primary"
+                                onClick={() => navigate("/mealInfo/meal-archive")}
+                            >
+                                목록
+                            </Button>
+                        </div>
                     </div>
                 </div>
-            )}
+            )
+            }
         </div >
     );
 }

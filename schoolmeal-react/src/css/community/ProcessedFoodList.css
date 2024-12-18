@@ -77,3 +77,39 @@ h2 {
     border-radius: 8px; /* 이미지 모서리를 둥글게 */
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* 약간의 그림자 추가로 강조 */
 }
+
+
+
+  /* 검색 컨테이너 */
+.ProcessedFoodSearchContainer {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  
+  /* 검색 입력창 */
+  .ProcessedFoodSearchInput {
+    padding: 8px;
+    width: 250px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+  }
+  
+  /* 검색 버튼 */
+  .ProcessedFoodSearchButton {
+    padding: 8px 12px;
+    font-size: 14px;
+    color: #fff;
+    background-color: #007bff; /* 파란색 */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .ProcessedFoodSearchButton:hover {
+    background-color: #0056b3; /* 진한 파란색 */
+  }

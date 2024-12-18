@@ -65,20 +65,22 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.GET, "/haccp-info/**", "/ingredient-price/**", "/ingredient-price/**").permitAll()
 				.requestMatchers(HttpMethod.GET, "/haccp/**", "/price/**", "/safety/**").permitAll()
 				// 급식자료실
-				.requestMatchers(HttpMethod.GET, "/mealPolicyOperations/**").permitAll()
-				.requestMatchers(HttpMethod.GET, "/mealPolicyOperation/download/**").permitAll()
-				.requestMatchers(HttpMethod.GET, "/mealPolicyOperation/**").permitAll()
-				.requestMatchers(HttpMethod.GET, "/menuRecipes/**").permitAll()
-				.requestMatchers(HttpMethod.GET, "/menuRecipe/**").permitAll()
-				.requestMatchers(HttpMethod.GET, "/menuRecipe/download/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/mealPolicyOperations/**", "/mealPolicyOperation/**", "/mealPolicyOperation/download/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/menuRecipes/**", "/menuRecipe/**", "/menuRecipe/download/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/nutritionManages/**", "/nutritionManage/**", "/nutritionManage/download/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/mealHygienes/**", "/mealHygiene/**", "/mealHygiene/download/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/mealFacilityEquipments/**", "/mealFacilityEquipment/**", "/mealFacilityEquipment/download/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/schoolMealCases/**", "/schoolMealCase/**", "/schoolMealCase/download/**").permitAll()
 				// 교육자료
-				.requestMatchers(HttpMethod.GET, "/videoEducations/**").permitAll()
-				.requestMatchers(HttpMethod.GET, "/videoEducation/**").permitAll()
-				.requestMatchers(HttpMethod.GET, "/videoEducation/download/**").permitAll()
-
+				.requestMatchers(HttpMethod.GET, "/videoEducations/**", "/videoEducation/**", "/videoEducation/download/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/nutritionDietEducations/**", "/nutritionDietEducation/**", "/nutritionDietEducation/download/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/lessonDemoVideos/**", "/lessonDemoVideo/**", "/lessonDemoVideo/download/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/eduMaterialSharings/**", "/eduMaterialSharing/**", "/eduMaterialSharing/download/**").permitAll()
 
 				// 커뮤니티 - 공지사항
-				.requestMatchers(HttpMethod.GET, "/notices/**", "/notices/download/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/notices/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/notices/download/**").permitAll()
+
 
 				// 커뮤니티 - 가공식품정보
 				.requestMatchers(HttpMethod.GET, "/processed-foods/**").permitAll()
@@ -90,7 +92,7 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.GET, "/crawling/**").permitAll()
 				// 커뮤니티 - 댓글기능
 				.requestMatchers(HttpMethod.GET, "/comments/**").permitAll()
-				
+
 				.requestMatchers(HttpMethod.POST, "/chat/sendMessage").permitAll()
 
 
