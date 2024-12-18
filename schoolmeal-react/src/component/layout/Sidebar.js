@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useNavLinks } from './NavLinksContext'; // NavLinksContext import
 import '../../css/layout/Sidebar.css';  // Sidebar.css 파일을 import
+import ChatApp from '../../ChatApp';
 
 const Sidebar = ({ isMemberManageOpen, isProfileUpdateOpen }) => {
+    const location = useLocation();
     const { navLinks, selectedParent, setSelectedParent } = useNavLinks();
 
     useEffect(() => {
@@ -18,6 +20,17 @@ const Sidebar = ({ isMemberManageOpen, isProfileUpdateOpen }) => {
             setSelectedParent(JSON.parse(storedSelectedParent));
         }
     }, [])
+
+    // 부모 게시판 자동 선택 로직 추가
+    useEffect(() => {
+        // 현재 경로에 해당하는 부모 게시판을 탐색
+        const parent = navLinks.find((link) => 
+            link.subLinks.some((subLink) => location.pathname.startsWith(subLink.path))
+        );
+        if (parent && parent !== selectedParent) {
+            setSelectedParent(parent);
+        }
+    }, [location.pathname, navLinks, selectedParent, setSelectedParent]);
 
     return (
         <div className="sidebar">
@@ -65,7 +78,7 @@ const Sidebar = ({ isMemberManageOpen, isProfileUpdateOpen }) => {
                             <Link to="/profileUpdate">회원정보수정</Link>
                         </li>
                         <li>
-                            <Link to="/test">테스트</Link>
+                            <Link to="/chat">채팅</Link>
                         </li>
                     </ul>
                 </div>

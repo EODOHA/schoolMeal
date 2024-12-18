@@ -331,9 +331,19 @@ const ChatApp = () => {
                 </div>
 
                 {/* 채팅방 목록 토글 버튼 */}
-                <button onClick={toggleChatRoomsVisibility} style={{ marginBottom: '10px', padding: '10px', width: '100%', borderRadius: '5px', backgroundColor: '#2196F3', color: 'white' }}>
+                <Button 
+                    onClick={toggleChatRoomsVisibility} 
+                    style={{ 
+                        marginBottom: '10px', 
+                        padding: '10px', 
+                        width: '100%', 
+                        borderRadius: '5px', 
+                        backgroundColor: '#2196F3', 
+                        color: 'white' 
+                    }}
+                >
                     {isChatRoomsVisible ? "채팅방 목록" : "채팅방 목록"}
-                </button>
+                </Button>
 
                 {/* 채팅방 목록 출력 */}
                 {isChatRoomsVisible && (
@@ -354,9 +364,10 @@ const ChatApp = () => {
                                         style={{
                                             display: 'flex',
                                             marginBottom: '10px',
+                                            gap: "20px",
                                         }}
                                     >
-                                        <button
+                                        <Button
                                             onClick={() => handleChatRoomSelect(room.id)}  // 채팅방 선택
                                             style={{
                                                 padding: '10px',
@@ -364,12 +375,11 @@ const ChatApp = () => {
                                                 borderRadius: '5px',
                                                 backgroundColor: '#2196F3',
                                                 color: 'white',
-                                                textAlign: 'left',
                                             }}
                                         >
                                             {room.title}
-                                        </button>
-                                        <button
+                                        </Button>
+                                        <Button
                                             onClick={() => deleteChatRoom(room.id)}
                                             style={{
                                                 width: '15%',
@@ -380,7 +390,7 @@ const ChatApp = () => {
                                             }}
                                         >
                                             삭제
-                                        </button>
+                                        </Button>
                                     </li>
                                 ))}
                             </ul>
@@ -444,6 +454,7 @@ const ChatApp = () => {
                                             ? '#ffeb3b' // SYSTEM 메시지 배경색 (예: 노란색)
                                             : '#e0e0e0',  // 받은 메시지는 회색
                                     color: msg.sender === memberId ? 'white' : 'black', // 보낸 메시지는 흰색, 받은 메시지는 검정색
+                                    textAlign: msg.sender === memberId ? 'left' : 'left', // 메시지 내용은 왼쪽 정렬
                                 }}
                             >
                                 {msg.content} {/* 말풍선 형태로 메시지 내용 출력 */}

@@ -28,6 +28,9 @@ const Layout = ({ hideHeaderFooter }) => {
 
   // 마이페이지 메뉴 표시 여부를 관리하는 상태 추가.
   const [isProfileUpdateOpen, setIsProfileUpdateOpen] = useState(false);
+  
+  // 메인 페이지 링크용 상태 추가: isSchoolMealCaseOpen
+  const [isSchoolMealCaseOpen, setIsSchoolMealCaseOpen] = useState(false);
 
   // resize 메시지 표시 여부.
   const [showResizeMessage, setShowResizeMessage] = useState(false);
@@ -55,6 +58,44 @@ const Layout = ({ hideHeaderFooter }) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (location.pathname.startsWith("/adminNoticeManager")) {
+        setTimeout(() => {
+            setIsMemberManageOpen(true); // 관리자 메뉴 열기
+        }, 0); // 즉시 실행
+    } else {
+        setTimeout(() => {
+            setIsMemberManageOpen(false); // 닫기
+        }, 0);
+    }
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (location.pathname.startsWith("/adminNoticeManager")) {
+      setIsMemberManageOpen(true);
+      setIsProfileUpdateOpen(false);
+    }
+  }, []); // 컴포넌트가 처음 렌더링될 때 한 번 실행
+
+  useEffect(() => {
+    if (location.pathname.startsWith("/profileUpdate")) {
+        setTimeout(() => {
+          setIsProfileUpdateOpen(true); // 관리자 메뉴 열기
+        }, 0); // 즉시 실행
+    } else {
+        setTimeout(() => {
+          setIsProfileUpdateOpen(false); // 닫기
+        }, 0);
+    }
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (location.pathname.startsWith("/profileUpdate")) {
+      setIsProfileUpdateOpen(true);
+      setIsMemberManageOpen(false);
+    }
+  }, []); // 컴포넌트가 처음 렌더링될 때 한 번 실행
+
   return (
     <div className={`layout-container ${isNoSidebarPage ? "" : "layout-with-sidebar"}`}>
       
@@ -62,9 +103,13 @@ const Layout = ({ hideHeaderFooter }) => {
         {/* 메인, 로그인, 회원가입 페이지가 아닌 경우에만 Sidebar 표시 */}
         {!isNoSidebarPage && (
           <Sidebar
-            isMemberManageOpen={isMemberManageOpen}
-            isProfileUpdateOpen={isProfileUpdateOpen}
-           />
+          isMemberManageOpen={location.pathname.startsWith("/adminNoticeManager") || 
+                              location.pathname.startsWith("/memberlist") || 
+                              location.pathname.startsWith("/mainManager")}
+          isProfileUpdateOpen={location.pathname.startsWith("/profileUpdate") ||
+                               location.pathname.startsWith("/chat")}
+          isSchoolMealCaseOpen={isSchoolMealCaseOpen}
+        />
         )}
 
         {/* 메인 컨텐츠 영역 */}
@@ -74,6 +119,7 @@ const Layout = ({ hideHeaderFooter }) => {
             <Header
               setIsMemberManageOpen={setIsMemberManageOpen}
               setIsProfileUpdateOpen={setIsProfileUpdateOpen}
+              setIsSchoolMealCaseOpen={setIsSchoolMealCaseOpen}
               />
             )}
           <main className="layout-content">

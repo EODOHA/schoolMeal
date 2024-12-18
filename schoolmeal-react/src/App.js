@@ -50,6 +50,7 @@ import RegionalCommunityDetail from './component/community/regionalCommunity/Reg
 // 커뮤니티-급식 뉴스와 학술 자료 컴포넌트 추가
 import SchoolMealNewsList from './component/community/schoolNews/SchoolMealNewsList';
 import AcademicMaterialsList from './component/community/materials/AcademicMaterialsList';
+import ChatApp from './ChatApp';
 
 
 
@@ -74,6 +75,7 @@ function App() {
               <Route path="emailVerification" element={<EmailVerification />} />
               <Route path="ReEmailVerification" element={<ReEmailVerification />} />
               <Route path="profileUpdate" element={<ProfileUpdate />} />
+              <Route path="chat" element={<ChatApp />} />
 
               {/* 권한으로 보호된 페이지 */}
               <Route path="memberlist" element={<AdminRoute element={<Memberlist />} />} />
