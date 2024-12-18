@@ -23,10 +23,10 @@ const ChatApp = () => {
     // 서버로부터 메시지를 실시간으로 받는 함수
     const connectToSse = () => {
         if (!chatRoomId) return; // 채팅방 ID가 없으면 연결하지 않음
-        
+
         eventSource = new EventSource(`${SERVER_URL}chat/stream/${chatRoomId}`);
-        
-        eventSource.onmessage = function(event) {
+
+        eventSource.onmessage = function (event) {
             try {
                 const message = JSON.parse(event.data);
                 setMessages((prevMessages) => [
@@ -38,7 +38,7 @@ const ChatApp = () => {
             }
         };
 
-        eventSource.onerror = function(error) {
+        eventSource.onerror = function (error) {
             console.error("Error occurred in SSE connection:", error);
             eventSource.close();
         };
@@ -55,7 +55,7 @@ const ChatApp = () => {
                     'Authorization': token,
                 },
             });
-            if(response.ok) {
+            if (response.ok) {
                 const data = await response.json();
                 setMessages(data); // 선택된 채팅방의 메시지로 상태 업데이트.
             } else {
@@ -69,11 +69,11 @@ const ChatApp = () => {
     // 채팅방 선택 시, 해당 채팅방의 메시지 불러오기.
     const handleChatRoomSelect = (roomId) => {
         setChatRoomId(roomId);
-        
+
         // 선택된 채팅방의 제목 가져오기
         const selectedRoom = chatRooms.find((room) => room.id === roomId);
         setChatRoomTitle(selectedRoom?.title || '채팅방 제목 없음');
-        
+
         fetchMessages(roomId); // 선택된 채팅방의 메시지 가져오기.
     };
 
@@ -130,14 +130,14 @@ const ChatApp = () => {
                     'Content-Type': 'application/json',
                     'Authorization': token,
                 },
-                body: JSON.stringify({ 
+                body: JSON.stringify({
                     title: chatRoomTitle,
                     memberId: memberId,
                     participantId: participantId, // 대상 ID
                 }),
                 mode: 'cors',
             });
-    
+
             if (!response.ok) {
                 const errorMessage = await response.text();
                 if (response.status === 404 && errorMessage === "존재하지 않는 회원입니다!") {
@@ -147,7 +147,7 @@ const ChatApp = () => {
                 }
                 return;
             }
-    
+
             const result = await response.json();
             const newChatRoomId = result.id;  // 서버에서 반환된 ID로 변경
             setChatRoomId(newChatRoomId);
@@ -161,9 +161,10 @@ const ChatApp = () => {
 
             setMessages((prevMessages) => [
                 ...prevMessages,
-                { content: "채팅방이 생성되었습니다.",
-                  sender: "SYSTEM",
-                  timestamp: new Date().toISOString()
+                {
+                    content: "채팅방이 생성되었습니다.",
+                    sender: "SYSTEM",
+                    timestamp: new Date().toISOString()
                 }
             ]);
         } catch (error) {
@@ -211,7 +212,7 @@ const ChatApp = () => {
                         ...prevMessages,
                         { content: "채팅방이 삭제되었습니다.", sender: "SYSTEM", timestamp: new Date().toISOString() }
                     ]);
-    
+
                     alert("채팅방이 삭제되었습니다.");
                     // 채팅방 삭제 후, 목록을 다시 불러옵니다.
                     chatRoomsList();
@@ -234,7 +235,7 @@ const ChatApp = () => {
         if (chatRoomId) {
             connectToSse();  // chatRoomId가 있을 때만 SSE 연결
         }
-        
+
         return () => {
             if (eventSource) {
                 eventSource.close();
@@ -286,47 +287,47 @@ const ChatApp = () => {
             <h1>실시간 채팅</h1>
             <div style={{ width: '400px', margin: '0 auto', border: '1px solid #ccc', padding: '10px', borderRadius: '10px' }}>
                 <div>
-                {/* '새 채팅방 만들기' 버튼 */}
-                <Button
-                variant="contained"
-                color={isDialogVisible ? "error" : "success"}
-                onClick={handleDialogOpen}
-                fullWidth
-                style={{ marginBottom: "10px" }}
-                >
-                    새 채팅방 만들기
-                </Button>
+                    {/* '새 채팅방 만들기' 버튼 */}
+                    <Button
+                        variant="contained"
+                        color={isDialogVisible ? "error" : "success"}
+                        onClick={handleDialogOpen}
+                        fullWidth
+                        style={{ marginBottom: "10px" }}
+                    >
+                        새 채팅방 만들기
+                    </Button>
 
-                {/* Dialog */}
-                <Dialog open={isDialogVisible} onClose={() => setIsDialogVisible(false)}>
-                    <DialogTitle>새 채팅방 만들기</DialogTitle>
-                    <DialogContent>
-                        {/* 채팅방 제목 입력 */}
-                        <TextField
-                            label="채팅방 제목"
-                            fullWidth
-                            margin="dense"
-                            value={chatRoomTitle}
-                            onChange={(e) => setChatRoomTitle(e.target.value)}
-                        />
-                        {/* 채팅에 참여할 대상 사용자의 ID 입력 */}
-                        <TextField
-                            label="참여할 사용자 ID"
-                            fullWidth
-                            margin="dense"
-                            value={participantId}
-                            onChange={(e) => setParticipantId(e.target.value)}
-                        />
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={() => setIsDialogVisible(false)} color="error">
-                            취소
-                        </Button>
-                        <Button onClick={createNewChatRoom} color="success" variant="contained">
-                            생성
-                        </Button>
-                    </DialogActions>
-                </Dialog>
+                    {/* Dialog */}
+                    <Dialog open={isDialogVisible} onClose={() => setIsDialogVisible(false)}>
+                        <DialogTitle>새 채팅방 만들기</DialogTitle>
+                        <DialogContent>
+                            {/* 채팅방 제목 입력 */}
+                            <TextField
+                                label="채팅방 제목"
+                                fullWidth
+                                margin="dense"
+                                value={chatRoomTitle}
+                                onChange={(e) => setChatRoomTitle(e.target.value)}
+                            />
+                            {/* 채팅에 참여할 대상 사용자의 ID 입력 */}
+                            <TextField
+                                label="참여할 사용자 ID"
+                                fullWidth
+                                margin="dense"
+                                value={participantId}
+                                onChange={(e) => setParticipantId(e.target.value)}
+                            />
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={() => setIsDialogVisible(false)} color="error">
+                                취소
+                            </Button>
+                            <Button onClick={createNewChatRoom} color="success" variant="contained">
+                                생성
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
                 </div>
 
                 {/* 채팅방 목록 토글 버튼 */}
@@ -348,9 +349,9 @@ const ChatApp = () => {
                                 }}
                             >
                                 {chatRooms.map((room) => (
-                                    <li 
-                                        key={room.id} 
-                                        style={{ 
+                                    <li
+                                        key={room.id}
+                                        style={{
                                             display: 'flex',
                                             marginBottom: '10px',
                                         }}
@@ -368,14 +369,14 @@ const ChatApp = () => {
                                         >
                                             {room.title}
                                         </button>
-                                        <button 
-                                            onClick={() => deleteChatRoom(room.id)} 
-                                            style={{ 
-                                                width: '15%', 
-                                                backgroundColor: 'red', 
-                                                color: 'white', 
-                                                border: 'none', 
-                                                borderRadius: '5px' 
+                                        <button
+                                            onClick={() => deleteChatRoom(room.id)}
+                                            style={{
+                                                width: '15%',
+                                                backgroundColor: 'red',
+                                                color: 'white',
+                                                border: 'none',
+                                                borderRadius: '5px'
                                             }}
                                         >
                                             삭제
@@ -405,18 +406,18 @@ const ChatApp = () => {
                         {chatRoomTitle} {/* 선택된 채팅방 제목 표시 */}
                     </div>
                 )}
-                
+
                 {/* 메시지 목록 출력 */}
-                <div 
+                <div
                     ref={messagesContainerRef}
-                    style={{ 
+                    style={{
                         height: '300px',
-                        overflowY: 'scroll', 
+                        overflowY: 'scroll',
                         marginBottom: '10px',
                         boxSizing: 'border-box',  // padding이 크기를 넘지 않게
                     }}>
                     {messages.map((msg, index) => (
-                        <div 
+                        <div
                             key={index}
                             style={{
                                 padding: '5px',
@@ -428,31 +429,31 @@ const ChatApp = () => {
                             {/* 보낸 사람이 나일 경우 이름을 출력하지 않음 */}
                             {msg.sender !== memberId && <strong>{msg.sender}</strong>} {/* 받은 메시지일 때만 sender 출력 */}
 
-                {/* 메시지 내용 출력 */}
-                <div
-                    style={{
-                        display: 'inline-block',
-                        padding: '10px',
-                        borderRadius: '15px',
-                        maxWidth: '60%',
-                        wordWrap: 'break-word',
-                        marginTop: '5px',
-                        backgroundColor: msg.sender === memberId 
-                        ? '#4CAF50' 
-                        : msg.sender === "SYSTEM" 
-                            ? '#ffeb3b' // SYSTEM 메시지 배경색 (예: 노란색)
-                            : '#e0e0e0',  // 받은 메시지는 회색
-                        color: msg.sender === memberId ? 'white' : 'black', // 보낸 메시지는 흰색, 받은 메시지는 검정색
-                    }}
-                >
-                    {msg.content} {/* 말풍선 형태로 메시지 내용 출력 */}
-                </div>
+                            {/* 메시지 내용 출력 */}
+                            <div
+                                style={{
+                                    display: 'inline-block',
+                                    padding: '10px',
+                                    borderRadius: '15px',
+                                    maxWidth: '60%',
+                                    wordWrap: 'break-word',
+                                    marginTop: '5px',
+                                    backgroundColor: msg.sender === memberId
+                                        ? '#4CAF50'
+                                        : msg.sender === "SYSTEM"
+                                            ? '#ffeb3b' // SYSTEM 메시지 배경색 (예: 노란색)
+                                            : '#e0e0e0',  // 받은 메시지는 회색
+                                    color: msg.sender === memberId ? 'white' : 'black', // 보낸 메시지는 흰색, 받은 메시지는 검정색
+                                }}
+                            >
+                                {msg.content} {/* 말풍선 형태로 메시지 내용 출력 */}
+                            </div>
 
-                {/* 시간 출력 */}
-                <div style={{ fontSize: '0.8em', color: '#888', marginTop: '5px' }}>
-                    {msg.timestamp} {/* 시간 표시 */}
-                </div>
-                        </div>  
+                            {/* 시간 출력 */}
+                            <div style={{ fontSize: '0.8em', color: '#888', marginTop: '5px' }}>
+                                {msg.timestamp} {/* 시간 표시 */}
+                            </div>
+                        </div>
                     ))}
                 </div>
 
@@ -465,9 +466,9 @@ const ChatApp = () => {
                             onChange={(e) => setNewMessage(e.target.value)}
                             onKeyDown={handleKeyDown} // 엔터키 감지.
                             placeholder="메시지를 입력하세요"
-                            style={{ 
-                                width: '100%', 
-                                padding: '10px', 
+                            style={{
+                                width: '100%',
+                                padding: '10px',
                                 borderRadius: '5px',
                                 boxSizing: 'border-box',  // padding이 크기를 넘지 않게
                             }}

@@ -522,7 +522,6 @@ const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setI
                   {/* 부모 게시판 */}
                   <Button
                     component={Link}
-                    to={link.path}
                     fullWidth
                     sx={{
                       fontWeight: "bold", // 부모 게시판을 강조
@@ -530,13 +529,7 @@ const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setI
                       backgroundColor: "#87D669",
                       color: "white",
                       padding: 1,
-                      "&:hover": {
-                        backgroundColor: "#9fe483",
-                      },
-                    }}
-                    onClick={() => {
-                      handleSelectParent(link);
-                      toggleDrawer(false);
+                      cursor: "default"
                     }}
                   >
                     {link.label}

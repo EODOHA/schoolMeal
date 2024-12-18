@@ -97,24 +97,28 @@ function MealPolicyOperationList() {
         <div className="meal-resource-list-container">
             <h1 className="meal-resource-title">급식 정책 및 운영</h1>
             <div className="meal-resource-button-group">
-                {isAdmin && (
-                    <Button
-                        variant="outlined"
-                        onClick={() => navigate("/mealResource/meal-policy-operation/write")}
-                    >
-                        새 글 쓰기
-                    </Button>
-                )}
-                <SearchBar
-                    searchQuery={searchQuery}
-                    selectedFilter={selectedFilter}
-                    setSelectedFilter={setSelectedFilter}
-                    setSearchQuery={setSearchQuery}
-                    onFilterChange={(filterType, filterValue) => {
-                        setSelectedFilter(filterType);  // 필터를 설정
-                        setSearchQuery(filterValue);  // 검색어를 필터에 맞게 설정
-                    }}
-                />
+                <div className="meal-resource-write-btn">
+                    {isAdmin && (
+                        <Button
+                            variant="outlined"
+                            onClick={() => navigate("/mealResource/meal-policy-operation/write")}
+                        >
+                            새 글 쓰기
+                        </Button>
+                    )}
+                </div>
+                <div className="meal-resource-searchBox">
+                    <SearchBar
+                        searchQuery={searchQuery}
+                        selectedFilter={selectedFilter}
+                        setSelectedFilter={setSelectedFilter}
+                        setSearchQuery={setSearchQuery}
+                        onFilterChange={(filterType, filterValue) => {
+                            setSelectedFilter(filterType);  // 필터를 설정
+                            setSearchQuery(filterValue);  // 검색어를 필터에 맞게 설정
+                        }}
+                    />
+                </div>
             </div>
             <table className="meal-resource-table">
                 <thead className="meal-resource-thead">

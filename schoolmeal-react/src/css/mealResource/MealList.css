@@ -20,6 +20,7 @@
     justify-content: space-between;
     gap: 10px; /* 버튼들 간 간격 */
     margin-bottom: 30px; /* 버튼과 테이블 사이 간격 */
+    align-items: center;
 }
 
 /* 테이블 스타일 */
