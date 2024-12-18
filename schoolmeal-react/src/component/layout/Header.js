@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { AppBar, Button, Toolbar, Typography, Box, Menu, MenuItem, Drawer, IconButton, DialogContent, DialogActions, Dialog, DialogTitle, TextField, List, ListItem, ListItemText } from '@mui/material';
+import { AppBar, Button, Toolbar, Typography, Box, Menu, MenuItem, Drawer, IconButton, DialogContent, DialogActions, Dialog, DialogTitle, TextField, List, ListItem, ListItemText, Tooltip } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../sign/AuthContext';
 import { useNavLinks } from './NavLinksContext'; // NavLinksContext import
@@ -520,20 +520,31 @@ const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setI
               {navLinks.map((link) => (
                 <Box key={link.path} sx={{ display: "flex", flexDirection: "column" }}>
                   {/* 부모 게시판 */}
-                  <Button
-                    component={Link}
-                    fullWidth
-                    sx={{
-                      fontWeight: "bold", // 부모 게시판을 강조
-                      textAlign: "left",
-                      backgroundColor: "#87D669",
-                      color: "white",
-                      padding: 1,
-                      cursor: "default"
-                    }}
-                  >
-                    {link.label}
-                  </Button>
+                  {/* <Tooltip title="가장 첫 번째 하위 게시판으로 이동합니다."> */}
+                    <Button
+                      component={Link}
+                      // to={link.path}
+                      fullWidth
+                      sx={{
+                        fontWeight: "bold", // 부모 게시판을 강조
+                        textAlign: "left",
+                        backgroundColor: "#87D669",
+                        color: "white",
+                        padding: 1,
+                        cursor: "default",
+                        "&:hover": {
+                          backgroundColor: "#9fe483",
+                        },
+                      }}
+                      onClick={() => {
+                        // 부모 게시판 선택 처리
+                        // handleSelectParent(link);
+                        // toggleDrawer(false);
+                      }}
+                    >
+                      {link.label}
+                    </Button>
+                  {/* </Tooltip> */}
                   {/* 자식 게시판 */}
                   {link.subLinks && (
                     <Box>
@@ -550,7 +561,10 @@ const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setI
                               backgroundColor: "#ccc"
                             },
                           }}
-                          onClick={() => toggleDrawer(false)} // 자식 선택 시 Drawer 닫기
+                          onClick={() => {
+                            handleSelectParent(link);
+                            toggleDrawer(false)
+                          }} // 자식 선택 시 Drawer 닫기
                         >
                           {subLink.label}
                         </Button>
