@@ -58,28 +58,28 @@
 }
 
 /* 각 열 너비 설정 */
+/* HACCP 지정번호 */
 .ingredient-info-upload-table th:nth-child(1),
 .ingredient-info-upload-table td:nth-child(1) {
     width: 13%;
-    /* HACCP 지정번호 */
 }
 
+/* 카테고리 */
 .ingredient-info-upload-table th:nth-child(2),
 .ingredient-info-upload-table td:nth-child(2) {
     width: 10%;
-    /* 카테고리 */
 }
 
+/* 업소명 */
 .ingredient-info-upload-table th:nth-child(3),
 .ingredient-info-upload-table td:nth-child(3) {
     width: 15%;
-    /* 업소명 */
 }
 
+/* 주소 */
 .ingredient-info-upload-table th:nth-child(4),
 .ingredient-info-upload-table td:nth-child(4) {
     width: 30%;
-    /* 주소 */
 }
 
 .ingredient-info-upload-table th:nth-child(5),
@@ -88,18 +88,51 @@
     /* 품목명 */
 }
 
+/* 영업상태 */
 .ingredient-info-upload-table th:nth-child(6),
 .ingredient-info-upload-table td:nth-child(6) {
     width: 10%;
-    /* 영업상태 */
 }
 
+/* 인증종료일자 */
 .ingredient-info-upload-table th:nth-child(7),
 .ingredient-info-upload-table td:nth-child(7) {
     width: 25%;
-    /* 인증종료일자 */
 }
 
+/* 분석결과(식품안정성 조사결과) */
+.product-safety .ingredient-info-upload-table th:nth-child(4),
+.product-safety .ingredient-info-upload-table td:nth-child(4) {
+    width: 11%;
+}
+
+/* 조사물질(식품안정성 조사결과) */
+.product-safety .ingredient-info-upload-table th:nth-child(6),
+.product-safety .ingredient-info-upload-table td:nth-child(6) {
+    width: 20%;
+}
+/* 생산지(식품안정성 조사결과) */
+.product-safety .ingredient-info-upload-table th:nth-child(7),
+.product-safety .ingredient-info-upload-table td:nth-child(7) {
+    width: 10%;
+}
+
+/* 카테고리(식재료 가격 정보) */
+.ingredient-price .ingredient-info-upload-table th:nth-child(1),
+.ingredient-price .ingredient-info-upload-table td:nth-child(1) {
+    width: 20%;
+}
+
+/* 품목명(식재료 가격 정보) */
+.ingredient-price .ingredient-info-upload-table th:nth-child(2),
+.ingredient-price .ingredient-info-upload-table td:nth-child(2) {
+    width: 20%;
+}
+/* 가격(식재료 가격 정보) */
+.ingredient-price .ingredient-info-upload-table th:nth-child(5),
+.ingredient-price .ingredient-info-upload-table td:nth-child(5) {
+    width: 20%;
+}
 
 /* 행 스타일 */
 .ingredient-info-upload-tbody tr:nth-child(even) {

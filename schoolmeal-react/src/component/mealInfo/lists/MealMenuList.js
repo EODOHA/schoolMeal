@@ -143,7 +143,7 @@ const MealMenuList = ({ meals, selectedMonth, monthStart }) => {
                 </table>
 
                 {/* 참고내용 */}
-                <div style={{ marginTop: '10px', fontSize: '16px' }}>
+                <div className="meal-menu-comment">
                     <h4>참고내용:</h4>
                     <p>
                         - 요리명에 표시된 번호: 알레르기를 유발할 수 있는 식재료입니다.
@@ -222,7 +222,7 @@ const MealMenuList = ({ meals, selectedMonth, monthStart }) => {
                         '&:hover': {
                             bgcolor: 'secondary.main', // 마우스 오버 시 색상 변경
                         },
-                    }}> {"< 지난 주"} </Button>
+                    }}> {"◀ 지난 주"} </Button>
                 <Typography variant="h6" mx={2}>
                     {startFormatted} - {endFormatted}
                 </Typography>
@@ -234,7 +234,7 @@ const MealMenuList = ({ meals, selectedMonth, monthStart }) => {
                         '&:hover': {
                             bgcolor: 'secondary.main', // 마우스 오버 시 색상 변경
                         },
-                    }}>{"다음 주 >"}</Button>
+                    }}>{"다음 주 ▶"}</Button>
             </Box>
             {renderWeek()}
         </div>

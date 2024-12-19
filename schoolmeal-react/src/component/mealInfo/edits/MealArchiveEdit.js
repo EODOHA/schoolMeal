@@ -23,7 +23,7 @@ function MealArchiveEdit({ archive, setEditMode, setArchive }) {
     // 게시글 작성자 확인
     const isAuthor =
         (isAdmin && archive.arc_author === "관리자") ||         // 작성자의 isAdmin이 true고 작성자가 "관리자"인 경우
-        (isBoardAdmin && archive.arc_author === "게시판 담당자");   // 작성자의 isBoardAdmin이 true고 작성자가 "게시판 담당자"인 경우
+        (isBoardAdmin && archive.arc_author === "담당자");   // 작성자의 isBoardAdmin이 true고 작성자가 "게시판 담당자"인 경우
 
     useEffect(() => {
         if (!isAuthor) {
@@ -118,10 +118,10 @@ function MealArchiveEdit({ archive, setEditMode, setArchive }) {
                             <input
                                 type="text"
                                 name="arc_author"
-                                value={updatedArchive.arc_author || "관리자"}
+                                value={updatedArchive.arc_author}
                                 onChange={handleChange}
-                                required
-                                disabled
+                                readOnly="true"
+                                
                             />
                         </div>
                         <div className="meal-info-form-group">

@@ -17,7 +17,7 @@ const HaccpInfoList = () => {
     const [error, setError] = useState(null);
     const [selectedHaccps, setSelectedHaccps] = useState([]);
     const [isAllSelected, setIsAllSelected] = useState(false); // 전체 선택 여부
-    const { token, isAdmin } = useAuth();
+    const { token, isAdmin, isBoardAdmin } = useAuth();
     const navigate = useNavigate();
     // console.log("token: ",token);
 
@@ -39,7 +39,7 @@ const HaccpInfoList = () => {
     // 데이터 목록 가져오기 -> 페이지와 크기 파라미터를 추가하여 전체 페이지 수 설정
     const fetchHaccpData = useCallback((page = currentPage - 1, size = pageSize) => {
         setLoading(true);
-        console.log(`페이지: ${page}, 페이지 당 게시글 수: ${size}`);
+        // console.log(`페이지: ${page}, 페이지 당 게시글 수: ${size}`);
 
         // 기본값
         let apiUrl = `${SERVER_URL}haccp`;
@@ -78,7 +78,7 @@ const HaccpInfoList = () => {
                 // console.log("pageSize:", pageSize);  // 페이지 당 항목 수
             })
             .catch((error) => {
-                console.error("fetchHaccpData error: ", error);
+                console.error("데이터 불러오기 오류: ", error);
                 setError(error);
                 setHaccpList([]);
             })
@@ -102,7 +102,7 @@ const HaccpInfoList = () => {
             .then((response) => {
                 if (response.ok) {
                     //삭제 성공 후, 데이터를 다시 로드
-                    fetchHaccpData(currentPage);
+                    fetchHaccpData();
                     checkAndAdjustPage(); // 삭제 후 페이지 조정
                 }
                 if (!response.ok) {
@@ -160,10 +160,10 @@ const HaccpInfoList = () => {
         // 새 페이지와 크기로 데이터 로드
         fetchHaccpData(newCurrentPage, newPageSize);
 
-        // 페이지가 변경되면 선택된 항목 초기화
+        // 페이지 크기가 변경되면 선택된 항목 초기화
         setSelectedHaccps([]);
 
-        // 페이지가 변경되면 1페이지로 이동
+        // 페이지 크기가 변경되면 1페이지로 이동
         setCurrentPage(1);
     };
 
@@ -176,12 +176,12 @@ const HaccpInfoList = () => {
 
     // 단일 데이터 추가
     const handleWriteClick = () => {
-        navigate(`/haccp-info/write`);
+        navigate(`/ingredientInfo/haccp-info/write`);
     }
 
     // 대용량 데이터 업로드
     const handleUploadClick = () => {
-        navigate("/haccp-info/write-file-upload");
+        navigate("/ingredientInfo/haccp-info/write-file-upload");
 
     }
     // 선택된 항목 토글 함수
@@ -268,12 +268,7 @@ const HaccpInfoList = () => {
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
-                    // 성공적인 삭제 후 목록에서 해당 항목 제거
-                    setHaccpList((prevList) =>
-                        prevList.filter(
-                            (haccp) => haccp._links.self.href.split("/").pop() !== haccpId
-                        )
-                    );
+                    fetchHaccpData(currentPage);
                 })
                 .catch((error) => {
                     console.error("삭제 오류:", error);
@@ -309,8 +304,8 @@ const HaccpInfoList = () => {
             <h1 className="ingredient-info-title">HACCP 인증 정보</h1>
 
 
-            {/* 데이터 관리 버튼 목록 - 관리자에게만 보이도록 */}
-            {isAdmin && (
+            {/* 데이터 관리 버튼 목록 - 관리자, 담당자 에게만 보이도록 */}
+            {(isAdmin || isBoardAdmin) && (
                 <div className="ingredient-info-button-group">
                     <Button variant="outlined" color="primary" onClick={handleWriteClick}>
                         단일 데이터 추가
@@ -405,90 +400,90 @@ const HaccpInfoList = () => {
                 //데이터가 없을 경우
                 haccpList.length === 0 ? (
                     <div>
-                        <p>HACCP 인증 정보가 없습니다.</p>
+                        <p>등록된 정보가 없습니다.</p>
                     </div>
                 ) : (
-                    <table className="ingredient-info-table">
-                        <thead className="ingredient-info-thead">
-                            <tr>
-                                <th>선택</th>
-                                <th>번호</th>
-                                <th>HACCP 지정번호</th>
-                                <th>카테고리</th>
-                                <th>업소명</th>
-                                <th>주소</th>
-                                <th>품목명</th>
-                                <th>영업상태</th>
-                                <th>인증종료일자</th>
+                    <div className='haccp-info'>
+                        <table className="ingredient-info-table">
+                            <thead className="ingredient-info-thead">
+                                <tr>
+                                    <th>선택</th>
+                                    <th>번호</th>
+                                    <th>HACCP 지정번호</th>
+                                    <th>카테고리</th>
+                                    <th>업소명</th>
+                                    <th>주소</th>
+                                    <th>품목명</th>
+                                    <th>영업상태</th>
+                                    <th>인증종료일자</th>
 
-                                {/* 관리자:수정, 삭제   그 외: 비고 */}
-                                {isAdmin ?
-                                    (<>
-                                        <th>수정</th>
-                                        <th>삭제</th>
-                                    </>
-                                    ) : (
-                                        <th>비고</th>
-                                    )}
-                            </tr>
-                        </thead>
-
-                        <tbody className="ingredient-info-tbody">
-                            {haccpList.map((haccp, index) => {
-                                const haccpId = haccp._links.self.href.split("/").pop(); // ID 추출
-                                return (
-                                    <tr key={haccpId}>
-
-                                        {/* 체크박스 */}
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                checked={selectedHaccps.includes(haccpId)}
-                                                onChange={() => toggleSelectHaccp(haccpId)}
-                                            />
-                                        </td>
-
-                                        <td>{calculateTotalNumber(index)}</td>
-                                        <td>{haccp.haccpDesignationNumber}</td>
-                                        <td>{haccp.category}</td>
-                                        <td>{haccp.businessName}</td>
-                                        <td>{haccp.address}</td>
-                                        <td>{haccp.productName}</td>
-                                        <td>{haccp.businessStatus}</td>
-                                        <td>{haccp.certificationEndDate}</td>
-
-                                        {/* 관리자 수정, 삭제    그 외: 공란 */}
-                                        {isAdmin ? (
-                                            <>
-                                                {/* 수정 */}
-                                                <td>
-                                                    <IconButton color="primary"
-                                                        onClick={() => handleEditClick(haccpId)}
-                                                        size="small" >
-                                                        <EditIcon />
-                                                    </IconButton>
-                                                </td>
-                                                {/* 삭제 */}
-                                                <td>
-                                                    <IconButton color="error"
-                                                        onClick={() => handleDelete(haccpId)}
-                                                        size="small">
-                                                        <DeleteIcon />
-                                                    </IconButton>
-                                                </td>
-                                            </>
+                                    {/* 관리자, 담당자:수정, 삭제   그 외: 비고 */}
+                                    {(isAdmin || isBoardAdmin) ?
+                                        (<>
+                                            <th>수정</th>
+                                            <th>삭제</th>
+                                        </>
                                         ) : (
-                                            <td> {/* 비고란 */} </td>
+                                            <th>비고</th>
                                         )}
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
-                )
-            )
-            }
-            <br></br>
+                                </tr>
+                            </thead>
+
+                            <tbody className="ingredient-info-tbody">
+                                {haccpList.map((haccp, index) => {
+                                    const haccpId = haccp._links.self.href.split("/").pop(); // ID 추출
+                                    return (
+                                        <tr key={haccpId}>
+
+                                            {/* 체크박스 */}
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={selectedHaccps.includes(haccpId)}
+                                                    onChange={() => toggleSelectHaccp(haccpId)}
+                                                />
+                                            </td>
+
+                                            <td>{calculateTotalNumber(index)}</td>
+                                            <td>{haccp.haccpDesignationNumber}</td>
+                                            <td>{haccp.category}</td>
+                                            <td>{haccp.businessName}</td>
+                                            <td>{haccp.address}</td>
+                                            <td>{haccp.productName}</td>
+                                            <td>{haccp.businessStatus}</td>
+                                            <td>{haccp.certificationEndDate}</td>
+
+                                            {/* 관리자,담당자: 수정, 삭제    그 외: 공란 */}
+                                            {(isAdmin || isBoardAdmin) ? (
+                                                <>
+                                                    {/* 수정 */}
+                                                    <td>
+                                                        <IconButton color="primary"
+                                                            onClick={() => handleEditClick(haccpId)}
+                                                            size="small" >
+                                                            <EditIcon />
+                                                        </IconButton>
+                                                    </td>
+                                                    {/* 삭제 */}
+                                                    <td>
+                                                        <IconButton color="error"
+                                                            onClick={() => handleDelete(haccpId)}
+                                                            size="small">
+                                                            <DeleteIcon />
+                                                        </IconButton>
+                                                    </td>
+                                                </>
+                                            ) : (
+                                                <td> {/* 비고란 */} </td>
+                                            )}
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                ))}
+            <br />
             {/* 페이지네이션 버튼 */}
             <div className="pagination-buttons" style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
                 <Pagination

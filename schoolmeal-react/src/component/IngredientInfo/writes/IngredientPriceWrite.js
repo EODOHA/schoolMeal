@@ -6,64 +6,30 @@ import '../../../css/ingredientInfo/IngredientInfoWrite.css';
 import { Button } from "@mui/material";
 
 
-const HaccpInfoWrite = () => {
+const IngredientPriceWrite = () => {
   const [categories] = useState(["농산물", "축산물", "수산물", "공산품"]);
-  const [businessStatus] = useState(["영업중", "휴업중", "폐업"]);
+  const [productDistricts] = useState(["서울", "부산", "대구", "인천", "광주", "대전", "울산", "세종", "수원", "춘천", "청주", "천안", "전주", "포항", "제주", "성남", "의정부", "순천"]);
+  const [grades] = useState(["상", "중상", "중", "중하", "하"]);
   const { token } = useAuth();
   const navigate = useNavigate();
 
 
   const [form, setForm] = useState({
-    haccpDesignationNumber: "",
     category: categories[0],
-    businessName: "",
-    address: "",
     productName: "",
-    businessStatus: businessStatus[0],
-    certificationEndDate: "",
+    grade: grades[0],
+    productDistrict: productDistricts[0],
+    productPrice: "",
   });
-
-  const [errors, setErrors] = useState({
-    haccpDesignationNumber: "",
-  });
-
-  const validateHaccpNumber = (number) => {
-    // HACCP 번호 형식 검사 (0000-00-0000)
-    const regex = /^\d{4}-\d{2}-\d{4}$/;
-    return regex.test(number);
-  };
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
-
-    // HACCP 번호 변경 시 유효성 검사
-    if (name === "haccpDesignationNumber" && value !== "") {
-      if (!validateHaccpNumber(value)) {
-        setErrors({
-          ...errors,
-          haccpDesignationNumber: "올바른 형식으로 입력해주세요 (0000-00-0000)",
-        });
-      } else {
-        setErrors({ ...errors, haccpDesignationNumber: "" });
-      }
-    }
-  };
-
+  }
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // HACCP 번호가 올바른지 확인 후 전송
-    if (!validateHaccpNumber(form.haccpDesignationNumber)) {
-      setErrors({
-        ...errors,
-        haccpDesignationNumber: "올바른 형식으로 입력해주세요 (0000-00-0000)",
-      });
-      return; // 유효하지 않으면 제출하지 않음
-    }
     try {
-      const response = await fetch(`${SERVER_URL}haccp`, {
+      const response = await fetch(`${SERVER_URL}price`, {
         method: "POST",
         headers: {
           Authorization: token,
@@ -73,9 +39,9 @@ const HaccpInfoWrite = () => {
       });
 
       if (response.ok) {
-        alert("HACCP 정보가 추가되었습니다!");
+        alert("식재료 가격 정보가 추가되었습니다!");
         // 목록 페이지로 이동
-        navigate("/ingredientInfo/haccp-info", { state: { refresh: true } });
+        navigate("/ingredientInfo/ingredient-price", { state: { refresh: true } });
       } else {
         alert("추가 중 오류가 발생했습니다.");
       }
@@ -85,29 +51,15 @@ const HaccpInfoWrite = () => {
     }
   };
   const handleBackToList = () => {
-    navigate('/ingredientInfo/haccp-info');
+    navigate('/ingredientInfo/ingredient-price');
   }
+
 
   return (
     <div className="ingredient-info-write-container">
       <div className="ingredient-info-card">
-        <h2>HACCP 인증정보 추가</h2>
+        <h2>식재료 가격 정보 추가</h2>
         <form onSubmit={handleSubmit}>
-          <div className="ingredient-info-form-group">
-            <label>HACCP 지정번호</label>
-            <input
-              type="text"
-              name="haccpDesignationNumber"
-              placeholder="HACCP 지정번호"
-              value={form.haccpDesignationNumber}
-              onChange={handleChange}
-            />
-            {errors.haccpDesignationNumber && (
-              <div className="ingredient-info-error-message">
-                {errors.haccpDesignationNumber}
-              </div>
-            )}
-          </div>
           <div className="ingredient-info-form-group">
             <label>카테고리</label>
             <select
@@ -123,55 +75,59 @@ const HaccpInfoWrite = () => {
             </select>
           </div>
           <div className="ingredient-info-form-group">
-            <label>업소명</label>
-            <input
-              name="businessName"
-              placeholder="업소명"
-              value={form.businessName}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="ingredient-info-form-group">
-            <label>주소</label>
-            <input
-              name="address"
-              placeholder="주소"
-              value={form.address}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="ingredient-info-form-group">
             <label>품목명</label>
             <input
               name="productName"
-              placeholder="품목명"
+              placeholder="품목명을 입력하세요."
+              required
               value={form.productName}
               onChange={handleChange}
             />
           </div>
           <div className="ingredient-info-form-group">
-            <label>영업상태</label>
+            <label>등급</label>
             <select
-              name="businessStatus"
-              value={form.businessStatus}
+              name="grade"
+              value={form.grade}
               onChange={handleChange}
             >
-              {businessStatus.map((statusOption) => (
-                <option key={statusOption} value={statusOption}>
-                  {statusOption}
+              {grades.map((gradeOption) => (
+                <option key={gradeOption} value={gradeOption}>
+                  {gradeOption}
                 </option>
               ))}
             </select>
           </div>
           <div className="ingredient-info-form-group">
-            <label>인증 종료일자</label>
-            <input
-              type="date"
-              name="certificationEndDate"
-              value={form.certificationEndDate}
+            <label>생산지</label>
+            <select
+              name="productDistrict"
+              value={form.productDistrict}
               onChange={handleChange}
+            >
+              {productDistricts.map((disctrictOption) => (
+                <option key={disctrictOption} value={disctrictOption}>
+                  {disctrictOption}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="ingredient-info-form-group">
+            <label>가격</label>
+            <input
+              type="number"
+              name="productPrice"
+              placeholder="가격을 숫자로 입력하세요."
+              value={form.productPrice}
+              required
+              onChange={(e) => handleChange(e)}
+              onInput={(e) => {
+                // 숫자만 입력 가능하게 제한 (정규식 사용)
+                e.target.value = e.target.value.replace(/[^0-9]/g, '');
+              }}
             />
           </div>
+
           <div className="ingredient-info-button-group">
             <Button type="submit" className="ingredient-info-button submit">
               저장하기
@@ -189,5 +145,4 @@ const HaccpInfoWrite = () => {
     </div>
   );
 };
-
-export default HaccpInfoWrite;
+export default IngredientPriceWrite;

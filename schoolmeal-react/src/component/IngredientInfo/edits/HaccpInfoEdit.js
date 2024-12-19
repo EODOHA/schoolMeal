@@ -80,17 +80,6 @@ const HaccpInfoEdit = () => {
                 alert("수정 중 오류가 발생하였습니다.");
             });
     };
-    // useEffect(() => {
-    //     if (!haccp) {
-    //         handleBackToList();
-    //     }
-    // }, [haccp]);
-
-    // const handleBackToList = () => {
-    //     alert("데이터가 존재하지 않습니다. 목록으로 돌아갑니다.");
-    //     navigate("/ingredientInfo/haccp-info");
-
-    // };
 
     if (!haccp) {
         return (

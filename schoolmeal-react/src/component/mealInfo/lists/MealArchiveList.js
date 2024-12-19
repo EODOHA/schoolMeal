@@ -1,12 +1,13 @@
+import '../../../css/mealInfo/MealInfoList.css';
 import React, { useEffect, useState } from 'react';
+import MealArchiveWrite from '../writes/MealArchiveWrite';
+import SearchBar from '../../common/SearchBar';     // 검색창 컴포넌트 임포트
 import axios from 'axios';
 import { SERVER_URL } from '../../../Constants';
 import { Button } from '@mui/material';
-import '../../../css/mealInfo/MealInfoList.css';
 import { MdAttachFile } from "react-icons/md";
 import { BsFileExcel } from "react-icons/bs";
 import { useNavigate } from 'react-router-dom';
-import MealArchiveWrite from '../writes/MealArchiveWrite';
 import { useAuth } from '../../sign/AuthContext';
 
 
@@ -14,8 +15,12 @@ function MealArchiveList() {
     const [archives, setArchives] = useState([]); // 전체 게시글 데이터
     const [isWriting, setIsWriting] = useState(false); // 새 글 작성 여부 상태 관리
     const [error, setError] = useState(null);
-    const [selectedId, setSelectedId] = useState(null);  //선택된 게시글의 ID 저장 상태
+    const [setSelectedId] = useState(null);  //선택된 게시글의 ID 저장 상태
     const navigate = useNavigate(); // useNavigate 훅을 사용하여 페이지 이동
+
+    // 검색창, 필터 버튼을 위한 설정
+    const [selectedFilter, setSelectedFilter] = useState('전체') // 필터 상태 추가 
+    const [searchQuery, setSearchQuery] = useState('') // 검색어 상태 추가
 
     // 게시판 권한 설정 - AuthContext에서 token과 isAdmin을 가져옴
     const { token, isAdmin, isBoardAdmin } = useAuth();
@@ -33,11 +38,23 @@ function MealArchiveList() {
 
     // 현재 페이지에 맞는 게시글 추출
     const currentPosts = archives.slice() // 원본 배열을 복사
+        .filter(item => {
+            if (selectedFilter === "제목") {
+                return item.title.toLowerCase().includes(searchQuery.toLowerCase());
+            } else if (selectedFilter === "작성자") {
+                return item.arc_author.toLowerCase().includes(searchQuery.toLowerCase());
+            } else {
+                return (
+                    item.arc_title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    item.arc_author.toLowerCase().includes(searchQuery.toLowerCase())
+                );
+            }
+        })
+        // } else if (selectedFilter === "내용") {
+        //     return item.arc_content.toLowerCase().includes(searchQuery.toLowerCase());
+        //     item.arc_content.toLowerCase().includes(searchQuery.toLocaleLowerCase())
         .reverse() //게시글을 최신 순으로 정렬
         .slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage); // 현재 페이지에 맞는 게시글만 슬라이싱
-    // console.log("현재 페이지:", currentPage);
-    // console.log("현재 게시글:", currentPosts);
-
 
     // 특정 페이지 번호 클릭 시 해당 페이지로 이동
     const handlePageClick = (pageNumber) => {
@@ -61,7 +78,7 @@ function MealArchiveList() {
             setCurrentPage(currentPage + 1);
         }
     };
-  // ------------------------------------------------- 페이지네이션  끝 ------------------------------------------------- //
+    // ------------------------------------------------- 페이지네이션  끝 ------------------------------------------------- //
 
     // 새 글 쓰기 버튼 클릭 시 상태 변경
     const handleNewPostClick = () => {
@@ -122,7 +139,23 @@ function MealArchiveList() {
             });
     }, []);
 
+    // 날짜 변환
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
 
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+        return (
+            <>
+                {`${year}년 ${month}월 ${day}일`}<br />
+                {`${hours}:${minutes}:${seconds}`}
+            </>
+        );
+    };
 
     return (
         <div className='meal-info-list'>
@@ -132,13 +165,29 @@ function MealArchiveList() {
             ) : (
                 <div className="meal-info-list-container">
                     <h1 className='meal-info-title'>학교 급식 과거와 현재</h1>
-                    {/* isAdmin또는 isBoardAdmin이 true일 때만 새 글 쓰기 버튼 표시 */}
-                    {(isAdmin||isBoardAdmin) && (
-                        <div className='meal-info-list-button-group'>
-                            {/* 새 글 쓰기 버튼을 누르면 isWriting을 true로 세팅 -> MealArchiveWrite 컴포넌트 렌더링 */}
-                            < Button variant='outlined' onClick={handleNewPostClick}>새 글 쓰기</Button>
+                    <div className='meal-info-list-button-group'>
+                        {/* isAdmin또는 isBoardAdmin이 true일 때만 새 글 쓰기 버튼 표시 */}
+                        {(isAdmin || isBoardAdmin) && (
+                            <div className='meal-info-list-write-button'>
+                                {/* 새 글 쓰기 버튼을 누르면 isWriting을 true로 세팅 -> MealArchiveWrite 컴포넌트 렌더링 */}
+                                < Button variant='outlined' onClick={handleNewPostClick}>새 글 쓰기</Button>
+                            </div>
+                        )}
+                        {/* 검색창 */}
+                        <div className='meal-info-right-searchbar'>
+                            <SearchBar
+                                searchQuery={searchQuery}
+                                selectedFilter={selectedFilter}
+                                setSelectedFilter={setSelectedFilter}
+                                setSearchQuery={setSearchQuery}
+                                onFilterChange={(filterType, filterValue) => {
+                                    setSelectedFilter(filterType);
+                                    setSearchQuery(filterValue);
+                                }}
+                            />
                         </div>
-                    )}
+                    </div>
+
                     <table className='meal-info-table'>
                         <thead className='meal-info-thead'>
                             <tr>
@@ -167,7 +216,7 @@ function MealArchiveList() {
                                         >
                                             <td>{postNumber}</td>
                                             <td>{archive.arc_title}</td>
-                                            <td>{new Date(archive.createdDate).toLocaleDateString()}</td>
+                                            <td>{formatDate(archive.createdDate)}</td>
                                             <td>{archive.arc_author}</td>
                                             <td>
                                                 {archive.arc_files && archive.arc_files.length > 0 ? (

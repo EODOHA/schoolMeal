@@ -36,7 +36,7 @@
 
 .meal-info-button-group {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     margin-top: 20px;
 }
 
@@ -44,4 +44,3 @@
     color: red;
     margin-bottom: 15px;
 }
-

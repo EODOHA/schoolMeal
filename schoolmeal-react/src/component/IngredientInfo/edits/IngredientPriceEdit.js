@@ -8,9 +8,8 @@ import { CircularProgress } from "@mui/material";
 
 const IngredientPriceEdit = () => {
     const [categories] = useState(["농산물", "축산물", "수산물", "공산품"]);
-    const [districts] = useState(["서울", "부산", "대구", "인천", "광주", "대전", "울산", "세종", "수원", "춘천", "청주", "천안", "전주", "포항", "제주", "성남", "의정부", "순천"]);
+    const [productDistricts] = useState(["서울", "부산", "대구", "인천", "광주", "대전", "울산", "세종", "수원", "춘천", "청주", "천안", "전주", "포항", "제주", "성남", "의정부", "순천"]);
     const [grades] = useState(["상", "중상", "중", "중하", "하"]);
-
     const { token } = useAuth();
     const { priceId } = useParams();
     const navigate = useNavigate();
@@ -20,9 +19,9 @@ const IngredientPriceEdit = () => {
         category: categories[0], // 기본값 설정
         productName: "",
         grade: grades[0],
-        district: districts[0],
+        productDistrict: productDistricts[0],
         productPrice: "",
-        entryDate: ""
+        createdDate: ""
     });
 
     useEffect(() => {
@@ -30,18 +29,18 @@ const IngredientPriceEdit = () => {
         fetch(`${SERVER_URL}price/${priceId}`)
             .then((response) => response.json())
             .then((data) => {
-                setPrice(data); // 받아온 데이터를 haccp에 저장
+                setPrice(data);
                 setForm({
-                    category: price.category || categories[0], // 기본값 설정
-                    productName: price.productName,
-                    grade: price.grarde || grades[0],
-                    district: price.district || districts[0],
-                    productPrice: price.productPrice,
-                    entryDate: price.entryDate
+                    category: data.category || categories[0],
+                    productName: data.productName,
+                    grade: data.grarde || grades[0],
+                    productDistrict: data.productDistrict || productDistricts[0],
+                    productPrice: data.productPrice,
+                    createdDate: data.createdDate
                 });
             })
             .catch((error) => console.error("Error fetching data:", error));
-    }, [categories, districts, priceId]);
+    }, [categories, productDistricts, priceId, grades]);
 
 
     const handleChange = (e) => {
@@ -78,17 +77,7 @@ const IngredientPriceEdit = () => {
                 alert("수정 중 오류가 발생하였습니다.");
             });
     };
-    // useEffect(() => {
-    //     if (!haccp) {
-    //         handleBackToList();
-    //     }
-    // }, [haccp]);
 
-    // const handleBackToList = () => {
-    //     alert("데이터가 존재하지 않습니다. 목록으로 돌아갑니다.");
-    //     navigate("/ingredientInfo/haccp-info");
-
-    // };
 
     if (!price) {
         return (
@@ -126,6 +115,7 @@ const IngredientPriceEdit = () => {
                         <input
                             type="text"
                             name="productName"
+                            required
                             value={form.productName}
                             onChange={handleChange}
                         />
@@ -147,11 +137,11 @@ const IngredientPriceEdit = () => {
                     <div className="ingredient-info-form-group">
                         <label>생산지</label>
                         <select
-                            name="district"
-                            value={form.district}
+                            name="productDistrict"
+                            value={form.productDistrict}
                             onChange={handleChange}
                         >
-                            {districts.map((districtOption) => (
+                            {productDistricts.map((districtOption) => (
                                 <option key={districtOption} value={districtOption}>
                                     {districtOption}
                                 </option>
@@ -164,16 +154,12 @@ const IngredientPriceEdit = () => {
                             type="number"
                             name="productPrice"
                             value={form.productPrice}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div className="ingredient-info-form-group">
-                        <label>등록일</label>
-                        <input
-                            type="date"
-                            name="entryDate"
-                            value={form.entryDate}
-                            onChange={handleChange}
+                            required
+                            onChange={(e) => handleChange(e)}
+                            onInput={(e) => {
+                                // 숫자만 입력 가능하게 제한 (정규식 사용)
+                                e.target.value = e.target.value.replace(/[^0-9]/g, '');
+                            }}
                         />
                     </div>
                     <div className="ingredient-info-button-group">

@@ -11,7 +11,7 @@ function MealArchiveWrite({ writeArchive, error, handleBackToList }) {
     const [loading, setLoading] = useState(false);
     const {role, memberId, isAdmin, isBoardAdmin} = useAuth();  //현재 로그인한 사용자의 memberId, 게시판 담당자 이상 권한 여부 가져오기
 
-    //컴포넌트가 처음 렌더링될 때 author를 memberId로 설정 
+    //컴포넌트가 처음 렌더링될 때 author를 권한에 따라 다르게 설정
     useEffect(()=>{
         let arcAuthor = role; //
         console.log(role);
@@ -20,12 +20,12 @@ function MealArchiveWrite({ writeArchive, error, handleBackToList }) {
         if(isAdmin){
             arcAuthor = "관리자";
         }else if(isBoardAdmin){
-            arcAuthor = "게시판 담당자";
+            arcAuthor = "담당자";
         }
 
         setAuthor(arcAuthor);
 
-    },[memberId, role]);
+    },[memberId, role, isAdmin, isBoardAdmin]);
 
     // 파일 입력 변경 핸들러
     const handleFileChange = (e) => {
@@ -74,7 +74,7 @@ function MealArchiveWrite({ writeArchive, error, handleBackToList }) {
                             fullWidth
                             value={author}
                             required
-                            read-only
+                            read-only="true"
                         />
                     </div>
                     <div className='meal-info-form-group'>
