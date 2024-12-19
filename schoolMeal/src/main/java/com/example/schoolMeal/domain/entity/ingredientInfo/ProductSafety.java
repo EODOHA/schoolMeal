@@ -1,8 +1,6 @@
 package com.example.schoolMeal.domain.entity.ingredientInfo;
 
-import java.time.LocalDate;
-
-import org.springframework.data.annotation.CreatedDate;
+import com.example.schoolMeal.common.entity.BaseEntity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,7 +22,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProductSafety {
+public class ProductSafety extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,10 +32,7 @@ public class ProductSafety {
 	private String producer;		//생산자
 	private String safetyResult;	//분석 결과
 	private String inspector;	//조사기관
-	private String inspectorMaterial;	//조사물질
+	private String inspectMaterial;	//조사물질
 	private String productDistrict;		// 생산지
-	
-	@CreatedDate
-	private LocalDate entryDate;	// 등록일
 
 }
