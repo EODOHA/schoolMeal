@@ -14,34 +14,91 @@ const ChatApp = () => {
     const [isDialogVisible, setIsDialogVisible] = useState(false);
     const [isChatRoomsVisible, setIsChatRoomsVisible] = useState(false);
 
+    // @로 참여자 ID 목록 가져오기.
+    const [participantList, setParticipantList] = useState([]);
+    const [filteredParticipants, setFilteredParticipants] = useState([]);
+    const [showAutocomplete, setShowAutocomplete] = useState(false);
+
     const messagesContainerRef = useRef(null);
 
     const { token, memberId } = useAuth();
 
-    let eventSource = null;
+    // let eventSource = null;
 
-    // 서버로부터 메시지를 실시간으로 받는 함수
+    const [eventSource, setEventSource] = useState(null); // SSE 연결 상태
+
+    const createHeaders = () => ({
+        'Content-Type': 'application/json',
+        'Authorization': token
+    });
+
+    // 참여자 목록 가져오기 -------------------------------------------------------------
+    useEffect(() => {
+        fetch(SERVER_URL + 'members', {
+            headers: createHeaders()
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log("서버로부터 받은 사용자 데이터:", data); // 디버깅 로그
+                // _embedded.members에서 memberId만 추출
+                const participantIds = data._embedded?.members.map((member) => member.memberId) || [];
+                setParticipantList(participantIds);  // memberId 배열로 상태 업데이트
+            })
+            .catch((error) => console.error("참여자 목록 가져오기 실패:", error));
+    }, []);
+
+    // @ 입력 감지 및 자동완성 목록 표시
+    const handleParticipantInputChange = (e) => {
+        const input = e.target.value;
+        setParticipantId(input);
+
+        const atIndex = input.lastIndexOf("@");
+        if (atIndex >= 0) {
+            const search = input.substring(atIndex + 1); // '@' 이후 텍스트
+            console.log("현재 participantList:", participantList); // 디버깅용 로그
+
+            if (Array.isArray(participantList)) {
+                const filtered = participantList.filter((user) =>
+                    user.toLowerCase().startsWith(search.toLowerCase())
+                );
+                setFilteredParticipants(filtered);
+                setShowAutocomplete(filtered.length > 0);
+            } else {
+                console.error("participantList가 배열이 아닙니다:", participantList);
+                setShowAutocomplete(false); // 목록 숨김
+            }
+        } else {
+            setShowAutocomplete(false);
+        }
+    };
+
+    // 자동완성 UI 추가.
+    const handleAutocompleteSelect = (selectedMember) => {
+        const atIndex = participantId.lastIndexOf("@");
+        const updatedInput = participantId.substring(0, atIndex + 1) + selectedMember;
+        setParticipantId(updatedInput);
+        setShowAutocomplete(false);
+    }
+
+    // 서버로부터 메시지를 실시간으로 받는 함수 ---------------------------------------------
     const connectToSse = () => {
         if (!chatRoomId) return; // 채팅방 ID가 없으면 연결하지 않음
 
-        eventSource = new EventSource(`${SERVER_URL}chat/stream/${chatRoomId}`);
+        const url = `${SERVER_URL}chat/stream/${chatRoomId}`;
+        const newEventSource = new EventSource(url);
 
-        eventSource.onmessage = function (event) {
-            try {
-                const message = JSON.parse(event.data);
-                setMessages((prevMessages) => [
-                    ...prevMessages,
-                    message
-                ]);
-            } catch (error) {
-                console.error("Error parsing the incoming message:", error);
-            }
-        };
+        // eventSource가 정상적으로 생성된 경우에만 onmessage 설정
+        if (newEventSource) {
+            newEventSource.onmessage = function (event) {
+                const newMessage = JSON.parse(event.data);  // 서버에서 보낸 메시지
+                setMessages((prevMessages) => [...prevMessages, newMessage]);  // 메시지 추가
+            };
 
-        eventSource.onerror = function (error) {
-            console.error("Error occurred in SSE connection:", error);
-            eventSource.close();
-        };
+            // 생성된 eventSource 상태 관리
+            setEventSource(newEventSource);
+        } else {
+            console.error('EventSource creation failed.');
+        }
     };
 
     // 선택된 채팅방의 메시지를 가져오는 함수.
@@ -113,6 +170,13 @@ const ChatApp = () => {
 
     // 새 채팅방 생성 함수
     const createNewChatRoom = async () => {
+        let participantName = participantId;
+
+        // @가 있는지 확인하고, 있을 때만 split
+        if (participantId.includes('@')) {
+            participantName = participantId.split("@")[1];
+        }
+        
         if (!chatRoomTitle) {
             alert('채팅방 제목을 입력해 주세요!');
             return;
@@ -133,7 +197,7 @@ const ChatApp = () => {
                 body: JSON.stringify({
                     title: chatRoomTitle,
                     memberId: memberId,
-                    participantId: participantId, // 대상 ID
+                    participantId: participantName, // 대상 ID
                 }),
                 mode: 'cors',
             });
@@ -299,7 +363,17 @@ const ChatApp = () => {
                     </Button>
 
                     {/* Dialog */}
-                    <Dialog open={isDialogVisible} onClose={() => setIsDialogVisible(false)}>
+                    <Dialog
+                        open={isDialogVisible}
+                        onClose={() => setIsDialogVisible(false)}
+                        sx={{
+                            "& .MuiDialog-paper": {
+                                height: "350px",
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }
+                        }}
+                    >
                         <DialogTitle>새 채팅방 만들기</DialogTitle>
                         <DialogContent>
                             {/* 채팅방 제목 입력 */}
@@ -312,15 +386,50 @@ const ChatApp = () => {
                             />
                             {/* 채팅에 참여할 대상 사용자의 ID 입력 */}
                             <TextField
-                                label="참여할 사용자 ID"
+                                label="참여할 사용자 ID / @ 입력 시 멘션 기능!"
                                 fullWidth
                                 margin="dense"
                                 value={participantId}
-                                onChange={(e) => setParticipantId(e.target.value)}
+                                onChange={handleParticipantInputChange}
                             />
+                            {/* 자동완성 목록 */}
+                            {showAutocomplete && (
+                                <div style={{
+                                    position: "absolute",
+                                    backgroundColor: "white",
+                                    border: "1px solid #ccc",
+                                    borderRadius: "5px",
+                                    maxHeight: "100px",
+                                    overflowY: "auto",
+                                    zIndex: 1000,
+                                }}>
+                                    {filteredParticipants.map((user, index) => (
+                                        <div
+                                            key={index}
+                                            onClick={() => handleAutocompleteSelect(user)}
+                                            style={{
+                                                padding: "10px",
+                                                cursor: "pointer",
+                                                borderBottom: "1px solid #eee",
+                                            }}
+                                            onMouseOver={(e) => e.target.style.backgroundColor = "#f0f0f0"}
+                                            onMouseOut={(e) => e.target.style.backgroundColor = "white"}
+                                        >
+                                            {user}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </DialogContent>
                         <DialogActions>
-                            <Button onClick={() => setIsDialogVisible(false)} color="error">
+                            <Button
+                                onClick={() => {
+                                    setIsDialogVisible(false)
+                                    setShowAutocomplete(false);
+                                }
+                                }
+                                color="error"
+                            >
                                 취소
                             </Button>
                             <Button onClick={createNewChatRoom} color="success" variant="contained">
@@ -331,15 +440,15 @@ const ChatApp = () => {
                 </div>
 
                 {/* 채팅방 목록 토글 버튼 */}
-                <Button 
-                    onClick={toggleChatRoomsVisibility} 
-                    style={{ 
-                        marginBottom: '10px', 
-                        padding: '10px', 
-                        width: '100%', 
-                        borderRadius: '5px', 
-                        backgroundColor: '#2196F3', 
-                        color: 'white' 
+                <Button
+                    onClick={toggleChatRoomsVisibility}
+                    style={{
+                        marginBottom: '10px',
+                        padding: '10px',
+                        width: '100%',
+                        borderRadius: '5px',
+                        backgroundColor: '#2196F3',
+                        color: 'white'
                     }}
                 >
                     {isChatRoomsVisible ? "채팅방 목록" : "채팅방 목록"}
