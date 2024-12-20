@@ -9,23 +9,23 @@ function MealArchiveWrite({ writeArchive, error, handleBackToList }) {
     const [author, setAuthor] = useState('');
     const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
-    const {role, memberId, isAdmin, isBoardAdmin} = useAuth();  //현재 로그인한 사용자의 memberId, 게시판 담당자 이상 권한 여부 가져오기
+    const { role, memberId, isAdmin, isBoardAdmin } = useAuth();  //현재 로그인한 사용자의 memberId, 게시판 담당자 이상 권한 여부 가져오기
 
     //컴포넌트가 처음 렌더링될 때 author를 권한에 따라 다르게 설정
-    useEffect(()=>{
+    useEffect(() => {
         let arcAuthor = role; //
         console.log(role);
         console.log(isBoardAdmin);
-        
-        if(isAdmin){
+
+        if (isAdmin) {
             arcAuthor = "관리자";
-        }else if(isBoardAdmin){
+        } else if (isBoardAdmin) {
             arcAuthor = "담당자";
         }
 
         setAuthor(arcAuthor);
 
-    },[memberId, role, isAdmin, isBoardAdmin]);
+    }, [memberId, role, isAdmin, isBoardAdmin]);
 
     // 파일 입력 변경 핸들러
     const handleFileChange = (e) => {
@@ -36,7 +36,7 @@ function MealArchiveWrite({ writeArchive, error, handleBackToList }) {
     const handleSubmit = async (e) => {
         e.preventDefault();     // 페이지 새로고침 방지
         setLoading(true);
-        
+
         const newArchive = {
             arc_title: title,
             arc_content: content,
@@ -46,7 +46,7 @@ function MealArchiveWrite({ writeArchive, error, handleBackToList }) {
         try {
             await writeArchive(newArchive, file);
             setLoading(false); // 성공 시 로딩 상태 해제
-        } catch(error){
+        } catch (error) {
             setLoading(false) // 오류 발생 시 로딩상태 해제
             // console.error(error);
         }
@@ -90,11 +90,13 @@ function MealArchiveWrite({ writeArchive, error, handleBackToList }) {
                     </div>
                     <div className="meal-info-form-group">
                         <label>첨부파일:</label>
-                        <input
-                            type="file"
-                            // accept="image/*, .pdf, .docx"  허용할 파일 형식
-                            onChange={handleFileChange}
-                        />
+                        <div className='meal-info-attachment-file'>
+                            <input
+                                type="file"
+                                // accept="image/*, .pdf, .docx"  허용할 파일 형식
+                                onChange={handleFileChange}
+                            />
+                        </div>
                     </div>
                     <div className="meal-info-button-group">
                         <Button

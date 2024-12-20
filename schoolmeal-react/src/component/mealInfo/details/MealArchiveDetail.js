@@ -17,7 +17,7 @@ function MealArchiveDetails() {
     const [isAuthor, setIsAuthor] = useState(false);
     const [loading, setLoading] = useState(true); // 로딩 상태
     const [editMode, setEditMode] = useState(false); // 수정모드 상태
-    const [error, setError] = useState(null); // 오류 상태
+    const [setError] = useState(null); // 오류 상태
     const navigate = useNavigate();
 
     // 권한설정 -> useAuth에서 token과 isAdmin, isBoardAdmin을 가져옴
@@ -46,13 +46,13 @@ function MealArchiveDetails() {
                     (isBoardAdmin && (response.data.arc_author === "담당자"))
                     ;
                 setIsAuthor(isAuthor);
-                console.log("isAdmin:", isAdmin);
-                console.log("isBoardAdmin:", isBoardAdmin);
-                console.log("isAuthor", isAuthor);
-                console.log("role:", role);
+                // console.log("isAdmin:", isAdmin);
+                // console.log("isBoardAdmin:", isBoardAdmin);
+                // console.log("isAuthor", isAuthor);
+                // console.log("role:", role);
 
 
-                console.log("상세 페이지 정보", response.data);
+                // console.log("상세 페이지 정보", response.data);
                 setLoading(false);
             })
             .catch(error => {
@@ -60,7 +60,7 @@ function MealArchiveDetails() {
                 setError("데이터를 가져오는 중 오류가 발생했습니다.");
                 setLoading(false);
             });
-    }, [id, isAdmin, isBoardAdmin]);
+    }, [id, isAdmin, isBoardAdmin, role, token, setError]);
 
     // 로딩 중일 때 화면 표시
     if (loading) {

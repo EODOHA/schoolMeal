@@ -33,7 +33,7 @@ const IngredientPriceEdit = () => {
                 setForm({
                     category: data.category || categories[0],
                     productName: data.productName,
-                    grade: data.grarde || grades[0],
+                    grade: data.grade || grades[0],
                     productDistrict: data.productDistrict || productDistricts[0],
                     productPrice: data.productPrice,
                     createdDate: data.createdDate

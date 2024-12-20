@@ -34,13 +34,21 @@
     text-align: center;  /* 텍스트와 이미지를 중앙 정렬 */
 }
 
+.meal-info-attachment-file {
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    display: block;
+}
+
 .meal-info-button-group {
     display: flex;
-    justify-content: center;
-    margin-top: 20px;
+    justify-content: center !important;
+    margin-bottom: 30px; /* 버튼과 테이블 사이 간격 */
+    gap: 10px;
 }
 
 .meal-info-error-message {
     color: red;
     margin-bottom: 15px;
 }
+

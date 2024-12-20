@@ -10,7 +10,7 @@ function MealArchiveEdit({ archive, setEditMode, setArchive }) {
     const [updatedArchive, setUpdatedArchive] = useState(archive); // 수정된 데이터를 관리
     const [newFile, setNewFile] = useState(null)
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [error] = useState(null);
 
     // 권한 관련
     const { token, isAdmin, isBoardAdmin } = useAuth();
