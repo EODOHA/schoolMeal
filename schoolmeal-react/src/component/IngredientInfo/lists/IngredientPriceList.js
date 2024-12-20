@@ -19,29 +19,21 @@ const IngredientPriceList = () => {
     const [isAllSelected, setIsAllSelected] = useState(false); // 전체 선택 여부
     const { token, isAdmin, isBoardAdmin } = useAuth();
     const navigate = useNavigate();
-    // console.log("token: ",token);
 
-    // ------------------------ 페이지네이션 관련 상태
+    // ------------------------ 페이지네이션 관련 설정
     const [currentPage, setCurrentPage] = useState(1);       // 현재 페이지 1부터 시작
     const [totalPages, setTotalPages] = useState();          // 전체 페이지 수(임베디드데이터 이름)
     const [pageSize, setPageSize] = useState(10);             // 페이지 당 게시글 수(임베디드데이터이름: size)
     const [totalElements, setTotalElements] = useState();    // 전체 게시글 수(임베디드데이터 이름)
 
-    // ------------------------ 검색 관련 상태
+    // ------------------------ 검색 관련 설정
     // const [category, setCategory] = useState("");  // 카테고리 검색
     const [productName, setProductName] = useState(""); // 품목명 검색
-    // console.log(token);
-
-    useEffect(() => {
-        fetchIngredientPrices();
-    }, [currentPage, pageSize, productName]);
 
 
     // 데이터 목록 가져오기 -> 페이지와 크기 파라미터를 추가하여 전체 페이지 수 설정
-    const fetchIngredientPrices = useCallback((page = currentPage - 1, size = pageSize) => {
+    const fetchIngredientPrices = useCallback(async (page = currentPage - 1, size = pageSize) => {
         setLoading(true);
-        console.log(`페이지: ${page}, 페이지 당 게시글 수: ${size}`);
-
         // 기본값
         let apiUrl = `${SERVER_URL}price`;
         // 업소명 검색 시 -> search api / 검색하지 않을 시 조회 api 호출
@@ -50,46 +42,82 @@ const IngredientPriceList = () => {
         } else {
             apiUrl += `?page=${page}&size=${size}&sort=createdDate,desc`;
         }
-
         // API URL 로그 출력
-        console.log("API URL:", apiUrl);
+        // console.log("API URL:", apiUrl);
+        try {
+            const response = await axios.get(apiUrl, {
+                headers: {
+                    "Authorization": token
+                }
+            });
+            const data = response.data;
+            setIngredientPrices(data._embedded.ingredientPrices || []);
+            // 전체 게시글 수
+            setTotalElements(data.page.totalElements);
 
+            // 전체 페이지 수
+            const totalPagesCalculated = Math.ceil(data.page.totalElements / size);
+            setTotalPages(totalPagesCalculated);
 
-        axios.get(apiUrl, {
-            headers: {
-                "Authorization": token
-            }
-        })
-            .then((response) => {
-                const data = response.data;
-                setIngredientPrices(data._embedded.ingredientPrices || []);
-
-                // 전체 게시글 수 설정
-                setTotalElements(data.page.totalElements);
-
-                // 전체 페이지 수 재계산
-                const totalPagesCalculated = Math.ceil(data.page.totalElements / size);
-
-                // 전체 페이지 수 설정
-                setTotalPages(totalPagesCalculated);
-                setLoading(false);
-
-                // console.log("totalPages:", totalPages);  // 전체 페이지 수
-                // console.log("totalElements:", totalElements);  // 전체 게시글 수
-                // console.log("pageSize:", pageSize);  // 페이지 당 항목 수
-            })
-            .catch((error) => {
-                console.error("데이터 불러오기 오류:", error);
-                setError(error);
-                setIngredientPrices([]);
-            })
-            .finally(() => setLoading(false))
+        } catch (error) {
+            console.error("데이터 불러오기 오류:", error);
+            setError(error);
+            setIngredientPrices([]);
+        } finally {
+            setLoading(false)
+        }
     }, [currentPage, pageSize, productName, token]);
 
+    useEffect(() => {
+        fetchIngredientPrices();
+    }, [currentPage, pageSize, productName, fetchIngredientPrices]);
+
+    // 페이지 번호 변경
+    const handlePageChange = (event, value) => {
+        setCurrentPage(value);
+        setSelectedPrices([]); // 페이지가 바뀌면 선택된 항목 초기화
+    };
+
+    // 페이지 크기 변경 처리 함수
+    const handlePageSizeChange = (e) => {
+        const newPageSize = Number(e.target.value);
+        setPageSize(newPageSize);
+        // 새로운 최대 페이지 계산
+        const newTotalPages = Math.ceil(totalElements / newPageSize);
+        setTotalPages(newTotalPages);
+        // 현재 페이지가 새로 계산된 페이지 범위 내에 있는 지 확인
+        const newCurrentPage = currentPage > newTotalPages ? newTotalPages : currentPage;
+        setCurrentPage(newCurrentPage);
+        // 새 페이지와 크기로 데이터 로드
+        fetchIngredientPrices(newCurrentPage, newPageSize);
+        // 페이지가 변경되면 선택된 항목 초기화
+        setSelectedPrices([]);
+        // 페이지가 변경되면 1페이지로 이동
+        setCurrentPage(1);
+    };
+    // 페이지가 비어있으면 이전 페이지로 자동 이동     
+    const handleAdjustPage = useCallback(() => {
+        if (currentPage > totalPages) {
+            setCurrentPage(totalPages > 0 ? totalPages : 1);
+        } else {
+            fetchIngredientPrices(currentPage - 1, pageSize);
+        }
+    }, [currentPage, totalPages, fetchIngredientPrices, pageSize]);
+
+    useEffect(() => {
+        handleAdjustPage();
+    }, [handleAdjustPage]);
+
+    // currentPage가 변경되면 선택 상태 초기화
+    useEffect(() => {
+        setIsAllSelected(false);
+        setSelectedPrices([]);
+    }, [currentPage]);
 
     const handleSearch = () => {
         fetchIngredientPrices(productName); // 필터 조건을 포함하여 데이터를 요청
-    }
+    };
+
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         const year = date.getFullYear();
@@ -113,9 +141,7 @@ const IngredientPriceList = () => {
         })
             .then((response) => {
                 if (response.ok) {
-                    //삭제 성공 후, 데이터를 다시 로드
-                    fetchIngredientPrices();
-                    checkAndAdjustPage(); // 삭제 후 페이지 조정
+                    handleAdjustPage(); // 삭제 후 페이지 조정
                 }
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -133,53 +159,6 @@ const IngredientPriceList = () => {
                 alert("삭제 중 오류가 발생했습니다.");
             });
     };
-
-    // 삭제 후 페이지가 비어있으면 이전 페이지로 자동 이동     
-    const checkAndAdjustPage = () => {
-
-        // 현재 페이지에 남은 게시글이 없다면
-        if (ingredientPrices.length === 0 && currentPage > 0) {
-
-            //이전페이지로 이동
-            setCurrentPage(currentPage - 1);
-        }
-    }
-
-    // 페이지 번호 변경
-    const handlePageChange = (event, value) => {
-        setCurrentPage(value);
-        fetchIngredientPrices(value, pageSize); // 새로운 페이지 데이터 로드
-        setSelectedPrices([]); // 페이지가 바뀌면 선택된 항목 초기화
-    };
-
-    // 페이지 크기 변경 처리 함수
-    const handlePageSizeChange = (e) => {
-
-        // 페이지 크기 업데이트
-        const newPageSize = Number(e.target.value);
-        setPageSize(newPageSize);
-
-        // 새로운 최대 페이지 계산
-        const newTotalPages = Math.ceil(totalElements / newPageSize);
-        setTotalPages(newTotalPages);
-
-        // 현재 페이지가 새로 계산된 페이지 범위 내에 있는 지 확인
-        const newCurrentPage = currentPage > newTotalPages ? newTotalPages : currentPage;
-
-        // 페이지 번호를 업데이트하고, 해당 페이지의 데이터 로드
-        setCurrentPage(newCurrentPage);
-
-        // 새 페이지와 크기로 데이터 로드
-        fetchIngredientPrices(newCurrentPage, newPageSize);
-
-        // 페이지가 변경되면 선택된 항목 초기화
-        setSelectedPrices([]);
-
-        // 페이지가 변경되면 1페이지로 이동
-        setCurrentPage(1);
-    };
-
-
 
     // 수정 페이지
     const handleEditClick = (priceId) => {
@@ -200,15 +179,12 @@ const IngredientPriceList = () => {
     const toggleSelectPrices = (priceId) => {
         setSelectedPrices((prevSelectedPrices) =>
             prevSelectedPrices.includes(priceId)
-
                 //이미 선택된 항목이면 해제 
                 ? prevSelectedPrices.filter((id) => id !== priceId)
-
                 //선택되지 않은 항목이면 추가
                 : [...prevSelectedPrices, priceId]
         );
     };
-
 
     // 전체 선택/해제 처리
     const handleSelectAll = () => {
@@ -217,15 +193,13 @@ const IngredientPriceList = () => {
         } else {
             const allPrices = ingredientPrices.map((price) => price._links.self.href.split("/").pop()); // 전체 priceId 가져오기
             setSelectedPrices(allPrices); // 모든 항목을 선택
-
         }
         setIsAllSelected(!isAllSelected);
     }
 
-
     // 선택된 항목들을 다운로드(모든 권한)
     const downloadSelectedPrices = () => {
-        // 선택된 Haccp 정보만 필터링
+        // 선택된 정보만 필터링
         const selectedData = ingredientPrices.filter(price => selectedPrices.includes(price._links.self.href.split("/").pop()));
 
         // 원하는 필드만 추출
@@ -275,10 +249,7 @@ const IngredientPriceList = () => {
                             (price) => price._links.self.href.split("/").pop() !== priceId
                         )
                     );
-                })
-                .catch((error) => {
-                    console.error("삭제 오류:", error);
-                    throw new Error("삭제 중 오류가 발생했습니다."); // 오류를 처리하고 메시지를 던짐
+                    handleAdjustPage();
                 })
         );
 
@@ -286,9 +257,9 @@ const IngredientPriceList = () => {
         Promise.all(deletePromises)
             .then(() => {
                 setSelectedPrices([]); // 삭제 후 선택된 항목 초기화
-                fetchIngredientPrices();
                 alert("삭제가 완료되었습니다."); // 한 번만 알림 띄우기
                 setIsAllSelected(false); // 선택 토글 해제
+                fetchIngredientPrices(currentPage - 1, pageSize);
             })
             .catch(() => {
                 alert("삭제 중 오류가 발생했습니다.");  // 한 번만 오류 알림
@@ -299,12 +270,9 @@ const IngredientPriceList = () => {
     const calculateTotalNumber = (index) => {
         return totalElements - ((currentPage - 1) * pageSize + index);    // 페이지가 1부터 시작하도록 수정
     };
-
     if (error) {
         return <h3 style={{ textAlign: 'center' }}>데이터를 가져오는 중 오류가 발생했습니다: {error.message}</h3>;
     }
-
-
     return (
         <div className="ingredient-info-list-container">
             <h1 className="ingredient-info-title">식재료 가격 정보</h1>

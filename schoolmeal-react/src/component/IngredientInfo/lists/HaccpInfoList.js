@@ -19,7 +19,6 @@ const HaccpInfoList = () => {
     const [isAllSelected, setIsAllSelected] = useState(false); // 전체 선택 여부
     const { token, isAdmin, isBoardAdmin } = useAuth();
     const navigate = useNavigate();
-    // console.log("token: ",token);
 
     // ------------------------ 페이지네이션 관련 상태
     const [currentPage, setCurrentPage] = useState(1);       // 현재 페이지 1부터 시작
@@ -29,18 +28,10 @@ const HaccpInfoList = () => {
 
     // ------------------------ 검색 관련 상태
     const [businessName, setBusinessName] = useState("");
-    // console.log(token);
-
-    useEffect(() => {
-        fetchHaccpData();
-    }, [currentPage, pageSize, businessName]);
-
 
     // 데이터 목록 가져오기 -> 페이지와 크기 파라미터를 추가하여 전체 페이지 수 설정
-    const fetchHaccpData = useCallback((page = currentPage - 1, size = pageSize) => {
+    const fetchHaccpData = useCallback(async (page = currentPage - 1, size = pageSize) => {
         setLoading(true);
-        // console.log(`페이지: ${page}, 페이지 당 게시글 수: ${size}`);
-
         // 기본값
         let apiUrl = `${SERVER_URL}haccp`;
         // 업소명 검색 시 -> search api / 검색하지 않을 시 조회 api 호출
@@ -49,42 +40,76 @@ const HaccpInfoList = () => {
         } else {
             apiUrl += `?page=${page}&size=${size}&sort=createdDate,desc`;
         }
-
-        // API URL 로그 출력
-        console.log("API URL:", apiUrl);
-
-
-        axios.get(apiUrl, {
-            headers: {
-                "Authorization": token
-            }
-        })
-            .then((response) => {
-                const data = response.data;
-                setHaccpList(data._embedded.haccpInfoes || []);
-
-                // 전체 게시글 수 설정
-                setTotalElements(data.page.totalElements);
-
-                // 전체 페이지 수 재계산
-                const totalPagesCalculated = Math.ceil(data.page.totalElements / size);
-
-                // 전체 페이지 수 설정
-                setTotalPages(totalPagesCalculated);
-                setLoading(false);
-
-                // console.log("totalPages:", totalPages);  // 전체 페이지 수
-                // console.log("totalElements:", totalElements);  // 전체 게시글 수
-                // console.log("pageSize:", pageSize);  // 페이지 당 항목 수
-            })
-            .catch((error) => {
-                console.error("데이터 불러오기 오류: ", error);
-                setError(error);
-                setHaccpList([]);
-            })
-            .finally(() => setLoading(false))
+        try {
+            const response = await axios.get(apiUrl, {
+                headers: {
+                    "Authorization": token
+                }
+            });
+            const data = response.data;
+            setHaccpList(data._embedded.haccpInfoes || []);
+            // 전체 게시글 수
+            setTotalElements(data.page.totalElements);
+            // 전체 페이지 수
+            const totalPagesCalculated = Math.ceil(data.page.totalElements / size);
+            setTotalPages(totalPagesCalculated);
+            setLoading(false);
+        } catch (error) {
+            console.error("데이터 불러오기 오류: ", error);
+            setError(error);
+            setHaccpList([]);
+        } finally {
+            setLoading(false);
+        }
     }, [currentPage, pageSize, businessName, token]);
 
+    useEffect(() => {
+        fetchHaccpData();
+    }, [currentPage, pageSize, businessName, fetchHaccpData]);
+
+    // 페이지 번호 변경
+    const handlePageChange = (event, value) => {
+        setCurrentPage(value);
+        setSelectedHaccps([]); // 페이지가 바뀌면 선택된 항목 초기화
+    };
+
+    // 페이지 크기 변경 처리 함수
+    const handlePageSizeChange = (e) => {
+        const newPageSize = Number(e.target.value);
+        setPageSize(newPageSize);
+        // 새로운 최대 페이지 계산
+        const newTotalPages = Math.ceil(totalElements / newPageSize);
+        setTotalPages(newTotalPages);
+        // 현재 페이지가 새로 계산된 페이지 범위 내에 있는 지 확인
+        const newCurrentPage = currentPage > newTotalPages ? newTotalPages : currentPage;
+        // 페이지 번호를 업데이트하고, 해당 페이지의 데이터 로드
+        setCurrentPage(newCurrentPage);
+        // 새 페이지와 크기로 데이터 로드
+        fetchHaccpData(newCurrentPage, newPageSize);
+        // 페이지 크기가 변경되면 선택된 항목 초기화
+        setSelectedHaccps([]);
+        // 페이지 크기가 변경되면 1페이지로 이동
+        setCurrentPage(1);
+    };
+
+    // 페이지가 비어있으면 이전 페이지로 자동 이동     
+    const handleAdjustPage = useCallback(() => {
+        if (currentPage > totalPages) {
+            setCurrentPage(totalPages > 0 ? totalPages : 1);
+        } else {
+            fetchHaccpData(currentPage - 1, pageSize);
+        }
+    }, [currentPage, totalPages, fetchHaccpData, pageSize]);
+
+    useEffect(() => {
+        handleAdjustPage();
+    }, [handleAdjustPage]);
+
+    // currentPage가 변경되면 선택 상태 초기화
+    useEffect(() => {
+        setIsAllSelected(false);
+        setSelectedHaccps([]);
+    }, [currentPage]);
 
     const handleSearch = () => {
         fetchHaccpData(businessName); // 필터 조건을 포함하여 데이터를 요청
@@ -101,9 +126,7 @@ const HaccpInfoList = () => {
         })
             .then((response) => {
                 if (response.ok) {
-                    //삭제 성공 후, 데이터를 다시 로드
-                    fetchHaccpData();
-                    checkAndAdjustPage(); // 삭제 후 페이지 조정
+                    handleAdjustPage(); // 삭제 후 페이지 조정
                 }
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -121,53 +144,6 @@ const HaccpInfoList = () => {
                 alert("삭제 중 오류가 발생했습니다.");
             });
     };
-
-    // 삭제 후 페이지가 비어있으면 이전 페이지로 자동 이동     
-    const checkAndAdjustPage = () => {
-
-        // 현재 페이지에 남은 게시글이 없다면
-        if (haccpList.length === 0 && currentPage > 0) {
-
-            //이전페이지로 이동
-            setCurrentPage(currentPage - 1);
-        }
-    }
-
-    // 페이지 번호 변경
-    const handlePageChange = (event, value) => {
-        setCurrentPage(value);
-        fetchHaccpData(value, pageSize); // 새로운 페이지 데이터 로드
-        setSelectedHaccps([]); // 페이지가 바뀌면 선택된 항목 초기화
-    };
-
-    // 페이지 크기 변경 처리 함수
-    const handlePageSizeChange = (e) => {
-
-        // 페이지 크기 업데이트
-        const newPageSize = Number(e.target.value);
-        setPageSize(newPageSize);
-
-        // 새로운 최대 페이지 계산
-        const newTotalPages = Math.ceil(totalElements / newPageSize);
-        setTotalPages(newTotalPages);
-
-        // 현재 페이지가 새로 계산된 페이지 범위 내에 있는 지 확인
-        const newCurrentPage = currentPage > newTotalPages ? newTotalPages : currentPage;
-
-        // 페이지 번호를 업데이트하고, 해당 페이지의 데이터 로드
-        setCurrentPage(newCurrentPage);
-
-        // 새 페이지와 크기로 데이터 로드
-        fetchHaccpData(newCurrentPage, newPageSize);
-
-        // 페이지 크기가 변경되면 선택된 항목 초기화
-        setSelectedHaccps([]);
-
-        // 페이지 크기가 변경되면 1페이지로 이동
-        setCurrentPage(1);
-    };
-
-
 
     // 수정 페이지
     const handleEditClick = (haccpId) => {
@@ -188,10 +164,8 @@ const HaccpInfoList = () => {
     const toggleSelectHaccp = (haccpId) => {
         setSelectedHaccps((prevSelectedHaccps) =>
             prevSelectedHaccps.includes(haccpId)
-
                 //이미 선택된 항목이면 해제 
                 ? prevSelectedHaccps.filter((id) => id !== haccpId)
-
                 //선택되지 않은 항목이면 추가
                 : [...prevSelectedHaccps, haccpId]
         );
@@ -205,15 +179,13 @@ const HaccpInfoList = () => {
         } else {
             const allHaccps = haccpList.map((haccp) => haccp._links.self.href.split("/").pop()); // 전체 haccpId 가져오기
             setSelectedHaccps(allHaccps); // 모든 항목을 선택
-
         }
         setIsAllSelected(!isAllSelected);
     }
 
-
     // 선택된 항목들을 다운로드(모든 권한)
     const downloadSelectedHaccps = () => {
-        // 선택된 Haccp 정보만 필터링
+        // 선택된 정보만 필터링
         const selectedData = haccpList.filter(haccp => selectedHaccps.includes(haccp._links.self.href.split("/").pop()));
 
         // 원하는 필드만 추출
@@ -240,17 +212,7 @@ const HaccpInfoList = () => {
 
         // 엑셀 파일 다운로드
         XLSX.writeFile(workBook, 'selected_haccps.xlsx');
-
-        // //Blob 객체로 파일 생성
-        // const blob = new Blob([jsonString], { type: 'application/json' });
-
-        // //다운로드 링크 생성
-        // const link = document.createElement('a');
-        // link.href = URL.createObjectURL(blob);
-        // link.download = 'selected_haccps.json'; //다운로드할 파일 이름 설정
-        // link.click();
     }
-
 
     // 선택된 항목 삭제(관리자 권한)
     const handleDeleteSelected = () => {
@@ -268,21 +230,22 @@ const HaccpInfoList = () => {
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
-                    fetchHaccpData(currentPage);
-                })
-                .catch((error) => {
-                    console.error("삭제 오류:", error);
-                    throw new Error("삭제 중 오류가 발생했습니다."); // 오류를 처리하고 메시지를 던짐
+                    // 성공적인 삭제 후 목록에서 해당 항목 제거
+                    setHaccpList((prevList) =>
+                        prevList.filter(
+                            (haccp) => haccp._links.self.href.split("/").pop() !== haccpId
+                        )
+                    );
+                    handleAdjustPage();
                 })
         );
-
         // 모든 삭제 요청이 완료될 때까지 기다리기
         Promise.all(deletePromises)
             .then(() => {
                 setSelectedHaccps([]); // 삭제 후 선택된 항목 초기화
-                fetchHaccpData();
-                alert("삭제가 완료되었습니다."); // 한 번만 알림 띄우기
+                alert("선택한 항목이 삭제되었습니다."); // 한 번만 알림 띄우기
                 setIsAllSelected(false); // 선택 토글 해제
+                fetchHaccpData(currentPage - 1, pageSize);
             })
             .catch(() => {
                 alert("삭제 중 오류가 발생했습니다.");  // 한 번만 오류 알림
@@ -293,16 +256,12 @@ const HaccpInfoList = () => {
     const calculateTotalNumber = (index) => {
         return totalElements - ((currentPage - 1) * pageSize + index);    // 페이지가 1부터 시작하도록 수정
     };
-
     if (error) {
         return <h3 style={{ textAlign: 'center' }}>데이터를 가져오는 중 오류가 발생했습니다: {error.message}</h3>;
     }
-
-
     return (
         <div className="ingredient-info-list-container">
             <h1 className="ingredient-info-title">HACCP 인증 정보</h1>
-
 
             {/* 데이터 관리 버튼 목록 - 관리자, 담당자 에게만 보이도록 */}
             {(isAdmin || isBoardAdmin) && (

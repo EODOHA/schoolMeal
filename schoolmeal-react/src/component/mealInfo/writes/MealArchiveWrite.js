@@ -90,13 +90,11 @@ function MealArchiveWrite({ writeArchive, error, handleBackToList }) {
                     </div>
                     <div className="meal-info-form-group">
                         <label>첨부파일:</label>
-                        <div className='meal-info-attachment-file'>
-                            <input
-                                type="file"
-                                // accept="image/*, .pdf, .docx"  허용할 파일 형식
-                                onChange={handleFileChange}
-                            />
-                        </div>
+                        <input
+                            type="file"
+                            // accept="image/*, .pdf, .docx"  허용할 파일 형식
+                            onChange={handleFileChange}
+                        />
                     </div>
                     <div className="meal-info-button-group">
                         <Button

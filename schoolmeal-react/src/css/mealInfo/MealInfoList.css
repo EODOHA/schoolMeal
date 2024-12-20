@@ -26,6 +26,7 @@
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
+    align-items: center;
 }
 .meal-info-right-searchbar {
     margin-left: auto; /* 오른쪽 끝으로 정렬 */
