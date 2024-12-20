@@ -47,8 +47,17 @@ const ProcessedFoodList = () => {
     <div className="processed-food-list-container">
       <h2>가공식품 정보 목록</h2>
 
-      {/* 검색 입력창 및 검색 버튼 */}
+      {/* 검색 입력창 및 검색 버튼 + 글 작성 버튼 */}
       <div className="ProcessedFoodSearchContainer">
+        {/* 글 작성 버튼 */}
+        {isAuth && (
+          <button onClick={() => navigate('/community/processed-foods/create')} className="processedfoodlistcreate-button">
+            가공식품 작성
+          </button>
+        )}
+
+        {/* 검색 영역 */}
+        <div className="SearchWrapper">
           <input
             type="text"
             placeholder="상품명을 입력하세요"
@@ -59,15 +68,9 @@ const ProcessedFoodList = () => {
           <button onClick={handleSearch} className="ProcessedFoodSearchButton">
             검색하기
           </button>
-       </div>
+        </div>
+      </div>
 
-
-      {isAuth && (
-        <button onClick={() => navigate('/community/processed-foods/create')} className="processedfoodlistcreate-button">
-          가공식품 작성
-        </button>
-      )}
-      
       <table className="food-table">
         <thead>
           <tr>

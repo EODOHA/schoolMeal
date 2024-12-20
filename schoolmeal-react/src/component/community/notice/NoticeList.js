@@ -65,39 +65,42 @@ const NoticeList = () => {
     <div className="communitynotice-list-container">
       <h2>공지사항 목록</h2>
 
-      {/* 검색 입력창 및 버튼 */}
+      {/* 검색 입력창 및 버튼 + 글 작성 버튼 */}
       <div className="CommunitySearchContainer">
-        <select
-          value={searchType}
-          onChange={(e) => setSearchType(e.target.value)}
-          className="CommunitySearchSelect"
-        >
-          <option value="title">제목</option>
-          <option value="content">내용</option>
-        </select>
+        {/* 글 작성 버튼 */}
+        {isAdmin && (
+          <button
+            onClick={() => navigate('/community/notices/create')}
+            className="communitycreate-button"
+          >
+            글 작성
+          </button>
+        )}
 
-        <input
-          type="text"
-          placeholder="검색어를 입력하세요"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="CommunitySearchInput"
-        />
+        {/* 검색 영역 */}
+        <div className="SearchWrapper">
+          <select
+            value={searchType}
+            onChange={(e) => setSearchType(e.target.value)}
+            className="CommunitySearchSelect"
+          >
+            <option value="title">제목</option>
+            <option value="content">내용</option>
+          </select>
 
-        <button onClick={handleSearch} className="CommunitySearchButton">
-          검색
-        </button>
+          <input
+            type="text"
+            placeholder="검색어를 입력하세요"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="CommunitySearchInput"
+          />
+
+          <button onClick={handleSearch} className="CommunitySearchButton">
+            검색
+          </button>
+        </div>
       </div>
-
-      {/* 글 작성 버튼 */}
-      {isAdmin && (
-        <button
-          onClick={() => navigate('/community/notices/create')}
-          className="communitycreate-button"
-        >
-          글 작성
-        </button>
-      )}
 
       {/* 공지사항 테이블 */}
       <table className="communitynotice-table">

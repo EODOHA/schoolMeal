@@ -22,27 +22,31 @@ public class RegionalCommunityService {
     public RegionalCommunityResponseDTO createPost(RegionalCommunityRequestDTO dto) {
         RegionalCommunity post = new RegionalCommunity(dto.getTitle(), dto.getContent(), dto.getAuthor(), dto.getRegion());
         RegionalCommunity savedPost = regionalCommunityRepository.save(post);
-        return new RegionalCommunityResponseDTO(savedPost.getId(), savedPost.getTitle(), savedPost.getContent(), savedPost.getAuthor(), savedPost.getCreatedDate(), savedPost.getUpdatedDate(), savedPost.getRegion());
+        return new RegionalCommunityResponseDTO(savedPost.getId(), savedPost.getTitle(), savedPost.getContent(), savedPost.getAuthor(),
+                savedPost.getCreatedDate(), savedPost.getUpdatedDate(), savedPost.getRegion());
     }
 
     // 특정 게시글 조회 메서드
     public RegionalCommunityResponseDTO getPost(Long id) {
         RegionalCommunity post = regionalCommunityRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Post not found"));
-        return new RegionalCommunityResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getAuthor(), post.getCreatedDate(), post.getUpdatedDate(), post.getRegion());
+        return new RegionalCommunityResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getAuthor(), post.getCreatedDate(),
+                post.getUpdatedDate(), post.getRegion());
     }
 
     // 모든 게시글 조회 메서드
     public List<RegionalCommunityResponseDTO> getAllPosts() {
         return regionalCommunityRepository.findAll().stream()
-                .map(post -> new RegionalCommunityResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getAuthor(), post.getCreatedDate(), post.getUpdatedDate(), post.getRegion()))
+                .map(post -> new RegionalCommunityResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getAuthor(),
+                        post.getCreatedDate(), post.getUpdatedDate(), post.getRegion()))
                 .collect(Collectors.toList());
     }
 
     // 특정 지역의 게시글 조회 메서드 (추가된 메서드)
     public List<RegionalCommunityResponseDTO> getPostsByRegion(RegionCategory region) {
         return regionalCommunityRepository.findByRegion(region).stream()
-                .map(post -> new RegionalCommunityResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getAuthor(), post.getCreatedDate(), post.getUpdatedDate(), post.getRegion()))
+                .map(post -> new RegionalCommunityResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getAuthor(),
+                        post.getCreatedDate(), post.getUpdatedDate(), post.getRegion()))
                 .collect(Collectors.toList());
     }
 

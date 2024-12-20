@@ -1,115 +1,116 @@
 /* 전체 테이블 컨테이너 */
 .food-list-container {
-    width: 70%;
-    margin: 30px auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  width: 70%;
+  margin: 30px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
 /* 제목 스타일 */
 h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    font-weight: bold;
-    color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: bold;
+  color: #666;
 }
 
 /* 전체 글 목록 테이블 스타일 */
 .food-table {
-    width: 100%;
-    border-collapse: collapse;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
 }
 
 .food-table th, .food-table td {
-    border: 1px solid #ddd;
-    padding: 12px;
-    text-align: center;
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: center;
 }
 
 .food-table th {
-    background-color: #007bff;
-    color: #fff;
-    font-weight: bold;
+  background-color: #ddd;
+  color: #000000;
+  font-weight: bold;
 }
 
 .food-table td {
-    background-color: #fff;
-    cursor: pointer;
+  background-color: #fff;
+  cursor: pointer;
 }
 
 .food-table tr:nth-child(even) {
-    background-color: #f9f9f9;
+  background-color: #f9f9f9;
 }
 
 .food-table tr:hover {
-    background-color: #e9e9e9;
+  background-color: #e9e9e9;
 }
 
 /* 글 작성 버튼 */
 .processedfoodlistcreate-button {
-    position: fixed;
-  bottom: 30px;
-  right: 30px;
-  padding: 15px 30px;
-  background-color: #28a745;
-  color: #fff;
-  border: none;
-  border-radius: 50px;
+  padding: 8px 20px;
+  background-color: #ffffff;
+  color: #1e46f8;
+  border: 1px solid #1e46f8;
+  border-radius: 4px;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 14px;
+  margin-right: 20px; /* 검색 영역과 간격 */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
 .processedfoodlistcreate-button:hover {
-    background-color: #218838;
+  background-color: #95bfff;
 }
 
 /* 썸네일 이미지 스타일 */
 .food-thumbnail {
-    width: 80px; /* 이미지 너비를 제한 */
-    height: 80px; /* 이미지 높이를 제한 */
-    object-fit: cover; /* 이미지를 비율 유지하면서 셀 크기에 맞추어 자름 */
-    border-radius: 8px; /* 이미지 모서리를 둥글게 */
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* 약간의 그림자 추가로 강조 */
+  width: 80px; /* 이미지 너비를 제한 */
+  height: 80px; /* 이미지 높이를 제한 */
+  object-fit: cover; /* 이미지를 비율 유지하면서 셀 크기에 맞추어 자름 */
+  border-radius: 8px; /* 이미지 모서리를 둥글게 */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* 약간의 그림자 추가로 강조 */
 }
 
-
-
-  /* 검색 컨테이너 */
+/* 검색 컨테이너 */
 .ProcessedFoodSearchContainer {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    margin-bottom: 20px;
-  }
+  display: flex;
+  justify-content: space-between; /* 검색 영역과 글 작성 버튼 양쪽 정렬 */
+  align-items: center;
+  margin-bottom: 20px;
+}
 
-  
-  /* 검색 입력창 */
-  .ProcessedFoodSearchInput {
-    padding: 8px;
-    width: 250px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-right: 10px;
-  }
-  
-  /* 검색 버튼 */
-  .ProcessedFoodSearchButton {
-    padding: 8px 12px;
-    font-size: 14px;
-    color: #fff;
-    background-color: #007bff; /* 파란색 */
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .ProcessedFoodSearchButton:hover {
-    background-color: #0056b3; /* 진한 파란색 */
-  }
+/* 검색 영역 전체 */
+.SearchWrapper {
+  display: flex;
+  align-items: center;
+}
+
+/* 검색 입력창 */
+.ProcessedFoodSearchInput {
+  padding: 8px;
+  width: 250px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+/* 검색 버튼 */
+.ProcessedFoodSearchButton {
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #fff;
+  background-color: #007bff; /* 파란색 */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.ProcessedFoodSearchButton:hover {
+  background-color: #0056b3; /* 진한 파란색 */
+}
