@@ -34,7 +34,7 @@ public class MealFacilityEquipmentService extends PathResolver {
 
 	@PostConstruct
 	public void init() {
-		mealFacilityEquipmentPath = buildPath("급식위생 자료실");
+		mealFacilityEquipmentPath = buildPath("급식 시설 및 설비 자료실");
 
 		// 저장 경로의 유효성 검사
 		File saveDir = new File(mealFacilityEquipmentPath);
@@ -62,7 +62,8 @@ public class MealFacilityEquipmentService extends PathResolver {
 			}
 
 			// 게시글 저장
-			MealFacilityEquipment savedMealFacilityEquipment = mealFacilityEquipmentRepository.save(mealFacilityEquipment);
+			MealFacilityEquipment savedMealFacilityEquipment = mealFacilityEquipmentRepository
+					.save(mealFacilityEquipment);
 			System.out.println("DB에 저장된 MealFacilityEquipment ID: " + savedMealFacilityEquipment.getId());
 		} catch (IOException e) {
 			throw new RuntimeException("파일 업로드 중 오류가 발생했습니다. 자세한 내용을 확인하세요.", e);
@@ -134,7 +135,7 @@ public class MealFacilityEquipmentService extends PathResolver {
 					.orElseThrow(() -> new IllegalArgumentException("해당 ID의 게시글이 존재하지 않습니다: " + id));
 
 			if (mealFacilityEquipment.getFileUrl() != null) {
-				FileUrl fileUrl = fileUrlRepository.findById(mealFacilityEquipment.getFileUrl().getId()).orElse(null);																							// 처리
+				FileUrl fileUrl = fileUrlRepository.findById(mealFacilityEquipment.getFileUrl().getId()).orElse(null); // 처리
 				mealFacilityEquipment.setFileUrl(fileUrl); // MealFacilityEquipment에 FileUrl 설정
 			}
 

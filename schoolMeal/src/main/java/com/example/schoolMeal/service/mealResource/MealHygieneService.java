@@ -34,7 +34,7 @@ public class MealHygieneService extends PathResolver {
 
 	@PostConstruct
 	public void init() {
-		mealHygienePath = buildPath("급식위생 자료실");
+		mealHygienePath = buildPath("급식 위생 자료실");
 
 		// 저장 경로의 유효성 검사
 		File saveDir = new File(mealHygienePath);
@@ -134,7 +134,7 @@ public class MealHygieneService extends PathResolver {
 					.orElseThrow(() -> new IllegalArgumentException("해당 ID의 게시글이 존재하지 않습니다: " + id));
 
 			if (mealHygiene.getFileUrl() != null) {
-				FileUrl fileUrl = fileUrlRepository.findById(mealHygiene.getFileUrl().getId()).orElse(null);																							// 처리
+				FileUrl fileUrl = fileUrlRepository.findById(mealHygiene.getFileUrl().getId()).orElse(null); // 처리
 				mealHygiene.setFileUrl(fileUrl); // MealHygiene에 FileUrl 설정
 			}
 
@@ -189,8 +189,7 @@ public class MealHygieneService extends PathResolver {
 
 	// 게시글 수정
 	@Transactional
-	public void mealHygieneUpdate(MealHygiene mealHygiene, MultipartFile file)
-			throws IOException {
+	public void mealHygieneUpdate(MealHygiene mealHygiene, MultipartFile file) throws IOException {
 		try {
 			if (file != null && !file.isEmpty()) {
 				FileUrl existingFile = mealHygiene.getFileUrl(); // 기존 파일 정보 가져오기

@@ -2,7 +2,8 @@ package com.example.schoolMeal.domain.entity.mealResource;
 
 import java.time.LocalDateTime;
 
-import com.example.schoolMeal.domain.entity.FileUrl; // FileUrl import 추가
+import com.example.schoolMeal.domain.entity.FileUrl;
+import com.example.schoolMeal.domain.entity.ImageUrl;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -46,7 +47,7 @@ public class SchoolMealCase {
 	@Column(nullable = false)
 	private LocalDateTime createdDate = LocalDateTime.now(); // 기본값을 현재 시간으로 설정
 
-	// 파일 정보와의 1:1 관계 (MealPolicy와 FileUrl)
+	// 파일 정보와의 1:1 관계 
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "file_id", referencedColumnName = "id")
 	private FileUrl fileUrl;
@@ -57,5 +58,17 @@ public class SchoolMealCase {
 		}
 		return null;
 	}
+	
+	// 이미지 URL과의 1:1 관계 추가
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id", referencedColumnName = "id")
+    private ImageUrl imageUrl;
+    
+    public Long getImageUrlId() {
+        if (imageUrl != null) {
+            return imageUrl.getId();
+        }
+        return null;
+    }
 
 }

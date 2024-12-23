@@ -35,7 +35,7 @@ public class MenuRecipeService extends PathResolver {
 
 	@PostConstruct
 	public void init() {
-		menuRecipePath = buildPath("식단 및 레시피");
+		menuRecipePath = buildPath("식단 및 레시피 자료실");
 	}
 
 	// 게시글 저장

@@ -34,7 +34,7 @@ public class MealPolicyOperationService extends PathResolver {
 
 	@PostConstruct
 	public void init() {
-		mealPolicyOperationPath = buildPath("급식 자료실");
+		mealPolicyOperationPath = buildPath("급식 정책 및 운영 자료실");
 
 		// 저장 경로의 유효성 검사
 		File saveDir = new File(mealPolicyOperationPath);
@@ -139,7 +139,7 @@ public class MealPolicyOperationService extends PathResolver {
 					.orElseThrow(() -> new IllegalArgumentException("해당 ID의 게시글이 존재하지 않습니다: " + id));
 
 			if (mealPolicyOperation.getFileUrl() != null) {
-				FileUrl fileUrl = fileUrlRepository.findById(mealPolicyOperation.getFileUrl().getId()).orElse(null);																							// 처리
+				FileUrl fileUrl = fileUrlRepository.findById(mealPolicyOperation.getFileUrl().getId()).orElse(null); // 처리
 				mealPolicyOperation.setFileUrl(fileUrl); // MealPolicyOperation에 FileUrl 설정
 			}
 

@@ -12,9 +12,9 @@ import com.example.schoolMeal.domain.entity.mealResource.MenuRecipe;
 @Repository
 public interface MenuRecipeRepository extends JpaRepository<MenuRecipe, Long> {
 
-	// 연령대 필터링 쿼리
-    List<MenuRecipe> findByAgeGroup(String ageGroup);
-    
-    // 시기별 필터링 뭐리
-    List<MenuRecipe> findBySeason(String season);
+	// 연령대 필터링
+	List<MenuRecipe> findByAgeGroup(String ageGroup);
+
+	// 시기별 필터링
+	List<MenuRecipe> findBySeason(String season);
 }
