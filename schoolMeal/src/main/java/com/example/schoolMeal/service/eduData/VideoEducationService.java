@@ -36,7 +36,7 @@ public class VideoEducationService extends PathResolver {
 
 	@PostConstruct
 	public void init() {
-		videoEduPath = buildPath("영상교육 자료실");
+		videoEduPath = buildPath("영상 교육자료실");
 
 		// 저장 경로의 유효성 검사
 		File saveDir = new File(videoEduPath);
@@ -56,11 +56,11 @@ public class VideoEducationService extends PathResolver {
 
 	// 특정 파일 정보 조회
 	public FileUrl getFileUrlByVideoEduId(Long id) {
-		// 해당 ID의 MealPolicyOperation 조회
+		// 해당 ID 조회
 		VideoEducation videoEducation = videoEducationRepository.findById(id)
 				.orElseThrow(() -> new IllegalArgumentException("해당 ID의 게시글이 존재하지 않습니다: " + id));
 
-		// MealPolicyOperation에 연결된 FileUrl 조회
+		// FileUrl 조회
 		return videoEducation.getFileUrl(); // 파일이 없으면 null 반환
 	}
 
@@ -140,10 +140,7 @@ public class VideoEducationService extends PathResolver {
 					.orElseThrow(() -> new IllegalArgumentException("해당 ID의 게시글이 존재하지 않습니다: " + id));
 
 			if (videoEducation.getFileUrl() != null) {
-				FileUrl fileUrl = fileUrlRepository.findById(videoEducation.getFileUrl().getId()).orElse(null); // 파일이
-																												// 없을 경우
-																												// null
-																												// 처리
+				FileUrl fileUrl = fileUrlRepository.findById(videoEducation.getFileUrl().getId()).orElse(null);
 				videoEducation.setFileUrl(fileUrl);
 			}
 
@@ -240,7 +237,7 @@ public class VideoEducationService extends PathResolver {
 
 	// ID로 영상 데이터를 스트리밍할 수 있도록 URL을 반환
 	public String getVideoAsBase64(Long id) throws IOException {
-		VideoEducation videoEducation = getPostWithFileDetails(id); // getPostWithFileDetails 사용
+		VideoEducation videoEducation = getPostWithFileDetails(id);
 
 		if (videoEducation == null || videoEducation.getFileUrl() == null) {
 			throw new IllegalArgumentException("해당 영상이 존재하지 않습니다.");
