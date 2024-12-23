@@ -96,7 +96,7 @@ const NoticeDetail = () => {
         <tbody>
           <tr>
             <th>작성자</th>
-            <td>{notice.author}</td>
+            <td>{"관리자"}</td>
           </tr>
           <tr>
             <th>작성일자</th>
