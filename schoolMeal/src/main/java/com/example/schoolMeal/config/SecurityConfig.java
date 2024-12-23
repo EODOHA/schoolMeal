@@ -60,7 +60,7 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.GET, "/adminNotice/**").permitAll()
 				// 급식정보
 				.requestMatchers(HttpMethod.GET, "/mealArchive/**").permitAll()
-				.requestMatchers(HttpMethod.GET, "/mealInfo/experts/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/mealExpert/**").permitAll()
 				// 식재료정보
 				.requestMatchers(HttpMethod.GET, "/haccp-info/**", "/ingredient-price/**", "/ingredient-price/**").permitAll()
 				.requestMatchers(HttpMethod.GET, "/haccp/**", "/price/**", "/safety/**").permitAll()

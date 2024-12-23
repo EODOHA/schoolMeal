@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.schoolMeal.common.entity.BaseEntity;
+import com.example.schoolMeal.domain.entity.ImageUrl;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
@@ -12,6 +13,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -38,10 +40,8 @@ public class MealExpert extends BaseEntity {
 	private String exp_department; // 소속
 	private String exp_position; // 직책
 	private String exp_email; // 이메일
-	private String exp_author;
-
-	// 전문가의 이력(1:N 연관관계) -> 한 전문가는 여러 개의 이력을 가질 수 있다. 부모객체: mealExpert, 자식객체: ExpertHistory
 	
+	// 전문가의 이력(1:N 연관관계) -> 한 전문가는 여러 개의 이력을 가질 수 있다. 부모객체: mealExpert, 자식객체: ExpertHistory
 	@OneToMany(mappedBy = "mealExpert",
 			fetch = FetchType.EAGER, 
 			cascade = CascadeType.ALL,
@@ -58,10 +58,6 @@ public class MealExpert extends BaseEntity {
 	@JsonManagedReference // @OneToMany 관계에서 주로 사용, 부모객체에서 자식 객체를 직렬화할때 자식객체를 포함시키도록 지정
 	private List<ExpertQualification> qualifications = new ArrayList<>();
 
-	 @OneToOne(mappedBy = "mealExpert", cascade = CascadeType.ALL)  // 연관된 이미지의 삭제도 자동 처리
-	    private ExpertProfileImage profileImage;  // 프로필 이미지와의 연관 관계 설정
-	 
-	 
 	 // 연관관계 편의 메서드(MealExpert에 다수의 history/qualificationd을 저장)
     public void addHistory(ExpertHistory history) {
         histories.add(history);

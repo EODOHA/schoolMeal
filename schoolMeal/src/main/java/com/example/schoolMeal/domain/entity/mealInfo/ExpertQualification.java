@@ -19,13 +19,9 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-//@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExpertQualification{
-
-	public ExpertQualification(String exp_qual_description, MealExpert expert) {
-	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

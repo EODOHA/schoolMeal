@@ -12,14 +12,13 @@ import com.example.schoolMeal.domain.repository.mealInfo.MealExpertRepository;
 import jakarta.transaction.Transactional;
 
 @Service
-public class MealExpertService {
-
-	/* @@@@@@@@@@@@@@@@@@@@@@@ 급식 전문 인력관리 게시판 @@@@@@@@@@@@@@@@@@@@@@@ */
+public class MealExpertService{
 
 	@Autowired
 	private MealExpertRepository mealExpertRepository;
 
-	// 모든 전문인력 리스트 조회
+
+	// 리스트 조회
 	public List<MealExpert> findAllExperts() {
 		return mealExpertRepository.findAll();
 	}
@@ -39,5 +38,5 @@ public class MealExpertService {
 	public void deleteExpert(Long exp_id) {
 		mealExpertRepository.deleteById(exp_id);
 	}
-	
+
 }

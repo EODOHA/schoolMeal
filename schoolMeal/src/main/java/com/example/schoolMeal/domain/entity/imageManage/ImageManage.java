@@ -27,7 +27,7 @@ public class ImageManage {
 	private String mimeType;
 	
 	@Lob
-	@Column(nullable = true)
+	@Column(nullable = true, columnDefinition="LONGBLOB") //충분히 큰 크기의 BLOB 설정
 	private byte[] data;
 	
 	
