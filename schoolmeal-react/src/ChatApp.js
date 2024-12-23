@@ -462,6 +462,7 @@ const ChatApp = () => {
                             {/* 채팅에 참여할 대상 사용자의 ID 입력 */}
                             <TextField
                                 label="참여할 사용자 ID / @ 입력 시 멘션 기능!"
+                                placeholder="영양상담을 원할 경우, admin이나 boardadmin에게 채팅!"
                                 fullWidth
                                 margin="dense"
                                 value={participantId}

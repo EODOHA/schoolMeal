@@ -4,6 +4,8 @@ import "./css/main/MainPage.css";
 import { SERVER_URL } from "./Constants";
 import { useNavLinks } from "./component/layout/NavLinksContext";
 import ChatApp from "./ChatApp";
+import { useAuth } from "./component/sign/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const MainPage = () => {
     const [images, setImages] = useState([]);
@@ -21,11 +23,19 @@ const MainPage = () => {
     const [isAdminNoticeLoading, setIsAdminNoticeLoading] = useState(true);
     const [isResourcesLoading, setIsResourcesLoading] = useState(true); // 로딩 상태
 
+    const { isAuth } = useAuth();
+    const navigate = useNavigate();
+
     // 채팅 팝업 관련 상태
     const [isChatOpen, setIsChatOpen] = useState(false);
 
     const toggleChatPopup = () => {
-        setIsChatOpen(!isChatOpen);
+        if (!isAuth) {
+            alert("로그인 후 이용 가능합니다.");
+            navigate("/"); // 로그인 선택 페이지로 이동.
+        } else {
+            setIsChatOpen(!isChatOpen);
+        }
     };
 
     const token = sessionStorage.getItem("jwt");
