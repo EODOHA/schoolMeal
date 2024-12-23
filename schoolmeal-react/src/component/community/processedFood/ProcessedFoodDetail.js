@@ -11,7 +11,7 @@ const ProcessedFoodDetail = () => {
   const navigate = useNavigate();
   const [food, setFood] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { isAuth } = useAuth();  // 로그인 상태 확인
+  const { isAdmin , isBoardAdmin , token} = useAuth();  // 로그인 상태 확인
 
   useEffect(() => {
     // 가공식품 정보 조회 요청
@@ -35,7 +35,12 @@ const ProcessedFoodDetail = () => {
 
   const handleDelete = () => {
     if (window.confirm('정말 이 가공식품 정보를 삭제하시겠습니까?')) {
-      axios.delete(`${SERVER_URL}processed-foods/delete/${foodId}`)
+      axios
+        .delete(`${SERVER_URL}processed-foods/delete/${foodId}`, {
+          headers: {
+            Authorization: `${token}`, // 인증 토큰 추가
+          },
+        })
         .then(() => {
           alert('가공식품 정보가 삭제되었습니다.');
           navigate('/community/processed-foods'); // 삭제 후 목록으로 돌아가기
@@ -111,11 +116,11 @@ const ProcessedFoodDetail = () => {
       </table>
 
       <div className="processedFoodDetailbutton-group">
-        {isAuth && (
+        {(isAdmin || isBoardAdmin) && (
           <button onClick={() => navigate(`/community/processed-foods/edit/${foodId}`)} className="processedFoodDetailedit-btn">수정</button>
         )}
 
-        {isAuth && (
+        {(isAdmin || isBoardAdmin) && (
           <button onClick={handleDelete} className="processedFoodDetaildelete-btn">삭제</button>
         )}
 

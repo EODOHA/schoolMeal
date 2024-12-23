@@ -17,7 +17,7 @@ const CreateProcessedFood = () => {
   const [imageFile, setImageFile] = useState(null);
 
   // AuthContext에서 인증 상태와 권한 정보 가져오기
-  const { isAuth, isAdmin, token } = useAuth();
+  const { isBoardAdmin, isAdmin, token } = useAuth();
 
   useEffect(() => {
     if (id) {

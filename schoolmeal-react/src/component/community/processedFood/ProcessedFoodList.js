@@ -11,7 +11,7 @@ const ProcessedFoodList = () => {
   const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태 추가
   const [filteredFoods, setFilteredFoods] = useState([]); // 필터링된 데이터 상태
   const navigate = useNavigate();
-  const { isAuth } = useAuth();
+  const { isAdmin , isBoardAdmin  } = useAuth();
 
   const loadFoods = async () => {
     setLoading(true);
@@ -50,7 +50,7 @@ const ProcessedFoodList = () => {
       {/* 검색 입력창 및 검색 버튼 + 글 작성 버튼 */}
       <div className="ProcessedFoodSearchContainer">
         {/* 글 작성 버튼 */}
-        {isAuth && (
+        {(isAdmin || isBoardAdmin) && (
           <button onClick={() => navigate('/community/processed-foods/create')} className="processedfoodlistcreate-button">
             가공식품 작성
           </button>
