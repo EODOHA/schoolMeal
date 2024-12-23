@@ -21,11 +21,14 @@ const ChatApp = () => {
 
     const messagesContainerRef = useRef(null);
 
+    const [isSending, setIsSending] = useState(false);
+
     const { token, memberId } = useAuth();
 
     // let eventSource = null;
 
     const [eventSource, setEventSource] = useState(null); // SSE 연결 상태
+    // const [isSseConnected, setIsSseConnected] = useState(true);
 
     const createHeaders = () => ({
         'Content-Type': 'application/json',
@@ -81,25 +84,83 @@ const ChatApp = () => {
     }
 
     // 서버로부터 메시지를 실시간으로 받는 함수 ---------------------------------------------
+    let eventSourceInstance = null; // EventSource 객체를 전역에서 관리
+
     const connectToSse = () => {
         if (!chatRoomId) return; // 채팅방 ID가 없으면 연결하지 않음
 
-        const url = `${SERVER_URL}chat/stream/${chatRoomId}`;
-        const newEventSource = new EventSource(url);
+        if (eventSourceInstance && eventSourceInstance.readyState !== EventSource.CLOSED) {
+            // 연결이 이미 되어있고, 연결 상태가 CLOSED가 아니라면 재연결 하지 않음
+            return;
+        }
+
+        const newEventSource = new EventSource(`${SERVER_URL}chat/stream/${chatRoomId}`, {
+            headers: {
+                Authorization: token,
+            }
+        });
 
         // eventSource가 정상적으로 생성된 경우에만 onmessage 설정
         if (newEventSource) {
             newEventSource.onmessage = function (event) {
                 const newMessage = JSON.parse(event.data);  // 서버에서 보낸 메시지
-                setMessages((prevMessages) => [...prevMessages, newMessage]);  // 메시지 추가
+                // 중복 메시지 필터링
+                setMessages((prevMessages) => {
+                    if (prevMessages.some((msg) => msg.id === newMessage.id)) {
+                        return prevMessages; // 이미 있는 메시지는 추가하지 않음
+                    }
+                    return [...prevMessages, newMessage];
+                });
             };
 
-            // 생성된 eventSource 상태 관리
-            setEventSource(newEventSource);
-        } else {
-            console.error('EventSource creation failed.');
-        }
+            // 연결이 끊어졌을 때 (EventSource.CLOSED 상태 감지)
+            newEventSource.onerror = function () {
+                if (newEventSource.readyState === EventSource.CLOSED) {
+                    console.log('SSE connection closed. Attempting to reconnect...');
+                    // 3초 후 재연결 시도
+                    setTimeout(connectToSse, 3000);
+                }
+            };
+
+            // 새로운 EventSource 객체 저장
+            eventSourceInstance = newEventSource;
+        };
     };
+
+    // useEffect(() => {
+    //     const eventSource = new EventSource(`${SERVER_URL}chat/stream/${chatRoomId}`, {
+    //         headers: {
+    //             Authorization: token,
+    //         }
+    //     });
+
+    //     eventSource.onmessage = (event) => {
+    //         const newMessage = JSON.parse(event.data);
+    //         setMessages((prevMessages) => [...prevMessages, newMessage]);
+    //     };
+
+    //     eventSource.onerror = () => {
+    //         console.error("SSE connection error.");
+    //         eventSource.close();
+    //     };
+
+    //     return () => {
+    //         eventSource.close();
+    //     };
+    // }, [chatRoomId]);
+
+    // useEffect(() => {
+    //     if (!isSseConnected) {
+    //         const interval = setInterval(() => {
+    //             fetch(SERVER_URL + `chat/${chatRoomId}/messages`)
+    //                 .then((response) => response.json())
+    //                 .then((data) => setMessages(data))
+    //                 .catch((error) => console.error('Polling failed:', error));
+    //         }, 1000);
+
+    //         return () => clearInterval(interval);
+    //     }
+    // }, [isSseConnected]);
 
     // 선택된 채팅방의 메시지를 가져오는 함수.
     const fetchMessages = async (roomId) => {
@@ -136,34 +197,48 @@ const ChatApp = () => {
 
     // 메시지 전송 함수 (API 호출)
     const sendMessage = async () => {
-        if (newMessage && chatRoomId) {
+        if (newMessage && chatRoomId && !isSending) {
+            setIsSending(true); // 전송 중 상태로 설정.
+
             // 현재 시간을 timestamp로 설정 (서버에서 처리하기에 맞춰서)
             const timestamp = new Date().toISOString();
 
-            // 메시지 전송 API 호출
-            const response = await fetch(`${SERVER_URL}chat/sendMessage`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': token,
-                },
-                body: JSON.stringify({
-                    chatRoomId: chatRoomId,
-                    sender: memberId,
-                    content: newMessage,
-                    timestamp: timestamp,
-                }),
-            });
+            try {
+                // 메시지 전송 API 호출
+                const response = await fetch(`${SERVER_URL}chat/sendMessage`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token,
+                    },
+                    body: JSON.stringify({
+                        chatRoomId: chatRoomId,
+                        sender: memberId,
+                        content: newMessage,
+                        timestamp: timestamp,
+                    }),
+                });
 
-            if (response.ok) {
-                const result = await response.json();
-                setMessages((prevMessages) => [
-                    ...prevMessages,
-                    result // 서버에서 반환된 메시지 내용 추가
-                ]);
-                setNewMessage(''); // 입력란 비우기
-            } else {
-                console.error('Message sending failed');
+                if (response.ok) {
+                    const result = await response.json();
+
+                    /// 메시지 중복 추가 방지: 이전 메시지와 동일한 메시지가 추가되지 않도록 체크
+                    setMessages((prevMessages) => {
+                        const isDuplicate = prevMessages.some(msg => msg.timestamp === result.timestamp);
+                        if (!isDuplicate) {
+                            return [...prevMessages, result]; // 메시지가 중복되지 않으면 추가
+                        }
+                        return prevMessages; // 중복되면 기존 메시지 그대로 유지
+                    });
+
+                    setNewMessage(''); // 입력란 비우기
+                } else {
+                    console.error('Message sending failed');
+                }
+            } catch (error) {
+                console.error("Message sending failed");
+            } finally {
+                setIsSending(false); // 전송 완료 후 상태 초기화.
             }
         }
     };
@@ -176,7 +251,7 @@ const ChatApp = () => {
         if (participantId.includes('@')) {
             participantName = participantId.split("@")[1];
         }
-        
+
         if (!chatRoomTitle) {
             alert('채팅방 제목을 입력해 주세요!');
             return;
@@ -340,7 +415,7 @@ const ChatApp = () => {
     // 채팅 전송 엔터키 감지 함수.
     const handleKeyDown = (e) => {
         // 엔터가 눌렸을 때.
-        if (e.key === "Enter") {
+        if (e.key === "Enter" && newMessage.trim() && !isSending) {
             e.preventDefault(); // 기본 동작(줄 바꿈)을 방지.
             sendMessage();
         }

@@ -1,0 +1,31 @@
+.analyzer-container {
+    max-width: 800px;
+    margin: auto;
+    text-align: center;
+  }
+  
+  .news-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .news-item {
+    margin-bottom: 20px;
+    text-align: left;
+  }
+  
+  .news-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .news-description {
+    font-size: 0.9em;
+    color: #666;
+  }
+  
+  .chart-container {
+    margin-top: 30px;
+  }
+  
