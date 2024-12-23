@@ -82,7 +82,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 			}
 		}
 		// 인증을 건너 뛸 엔드포인드들( 식재료 정보 엔드포인트 )
-		String[] getIngredientInfoURIs = {"/haccp","/haccp-info","price","/ingredient-price", "/safety","/product-safety"};
+		String[] getIngredientInfoURIs = {"/haccp","/haccp-info","/price","/ingredient-price", "/safety","/product-safety"};
 		
 		// 향상된 for문으로 일괄 처리
 		for(String uri : getIngredientInfoURIs) {

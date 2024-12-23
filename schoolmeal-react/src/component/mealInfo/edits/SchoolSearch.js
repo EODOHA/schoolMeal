@@ -17,7 +17,7 @@ const SchoolSearch = ({ onSchoolSelect }) => {
         }
         try {
             const results = await fetchSchoolCode(schoolName);
-            if (results.length === 0) {
+            if (results && results.length === 0) {
                 alert("검색된 학교가 없습니다.")
                 setSchoolName(''); //검색창 초기화
                 setSearchResults([]); //결과 초기화
@@ -26,6 +26,7 @@ const SchoolSearch = ({ onSchoolSelect }) => {
                 setOpenModal(true); // 모달 열기
             }
         } catch (err) {
+            console.log(err);
             alert('학교 검색 중 오류가 발생했습니다.');
             setSchoolName(''); // 검색창 초기화
             setSearchResults([]); // 결과 초기화
@@ -53,6 +54,7 @@ const SchoolSearch = ({ onSchoolSelect }) => {
     };
     const handleCloseModal = () => {
         setOpenModal(false); // 모달 닫기
+        setSearchResults([]); //검색결과 초기화
         setSchoolName(''); // 검색창 초기화
     };
 

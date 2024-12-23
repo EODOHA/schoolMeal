@@ -1,41 +1,144 @@
-/* 전체 테이블 스타일 */
+/* 테이블 스타일 */
 .meal-menu-table {
     width: 100%;
     border-collapse: collapse;
     margin: 20px 0;
-    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    table-layout: fixed; /* 셀의 너비 고정 */
+}
+/* 첫 번째 열을 좁게 설정 */
+.meal-menu-table th:nth-child(1),
+.meal-menu-table td:nth-child(1) {
+    width: 30px; /* 첫 번째 열 너비를 좁게 설정 */
+    word-wrap: break-word;
+    white-space: nowrap; /* 첫 번째 열은 줄바꿈 없이 텍스트 한 줄로 */
 }
 
-/* 테이블 헤더 */
-.meal-menu-table th {
-    padding: 10px;
-    border: 1px solid #ccc;
-    background-color: #f0f0f0;
-    width: 100px; /* 각 셀 너비 일정하게 설정 */
-}
-
-/* 테이블 데이터 셀 */
+/* 나머지 열은 일정 간격 유지 */
+.meal-menu-table th,
 .meal-menu-table td {
+    text-align: center;
     padding: 10px;
-    border: 1px solid #ccc;
-    width: 100px; /* 모든 데이터 셀의 너비를 동일하게 설정 */
-    word-wrap: break-word; /* 텍스트가 길어지면 자동으로 줄 바꿈 */
+    border: 1px solid #ddd;
+    word-wrap: break-word;
+}
+/* 나머지 열들의 너비 고정 */
+.meal-menu-table th:nth-child(n+2),
+.meal-menu-table td:nth-child(n+2) {
+    width: calc(100% / 7); /* 나머지 열은 7등분하여 고정 너비 */
 }
 
-.meal-menu-table th:nth-child(2), /* 일요일 */
-.meal-menu-table td:nth-child(2) { /* 일요일 */
-    background-color: #f8d7da; 
+.meal-menu-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+    color: #333;
 }
 
-.meal-menu-table th:nth-child(8), /* 토요일 */
-.meal-menu-table td:nth-child(8) { /* 토요일 */
-    background-color: #d1ecf1;
+.meal-menu-table td {
+    background-color: #fff;
+    color: #555;
+}
+/* 테이블 첫 번째 열의 구분선 진하게 설정 */
+.meal-menu-table tr:nth-child(1) td{
+    border-top: 2px solid #666; /* 첫 번째 열의 구분선을 진하게 설정 */
+}
+/* 각 열에 마우스를 올렸을 때 회색 hover 효과 */
+.meal-menu-table td:hover {
+    background-color: #f0f0f0; /* 배경색을 연한 회색으로 설정 */
 }
 
-/* 급식 항목 (조식, 중식, 석식) 스타일 */
+/* 테이블 헤더와 데이터 셀의 구분선 설정 */
+.meal-menu-table th, 
+.meal-menu-table td {
+    border-bottom: 1px solid #ccc; /* 기본적인 구분선 색 */
+    border-right: 1px solid #ccc;  /* 각 셀의 오른쪽 구분선 */
+}
+/* 주말(토요일, 일요일) 배경 색 다르게 */
+.meal-menu-table td:nth-child(8) {
+    background-color: #bbdefb; 
+    color: #0d47a1; 
+}
+
+.meal-menu-table td:nth-child(2) {
+    background-color: #ffebee;
+    color: #b71c1c; 
+}
 .meal-menu-table td div {
-    margin-bottom: 5px;
-    padding: 5px 0;
+    white-space: pre-line; /* 개행을 유지 */
 }
 
+/* 주 버튼 스타일 */
+.meal-menu-button {
+    margin: 0 8px;
+    padding: 10px 20px;
+    font-size: 16px;
+    text-transform: none;
+    border-radius: 8px;
+}
 
+.meal-menu-button:hover {
+    background-color: #1976d2;
+}
+
+/* 참고내용 */
+.meal-menu-comment {
+    width:100%;
+    padding:10px;
+    background-color: #f9f9f9;
+    box-sizing: border-box; /* padding을 포함한 너비 계산 */
+    margin-top: 20px; /* 표와의 간격 */
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align:left;
+}
+
+.meal-menu-comment h4 {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.meal-menu-comment p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #555;
+}
+
+* 이전/다음 주 버튼을 포함한 중앙 배치 */
+.meal-menu-week-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.meal-menu-week-nav button {
+    font-size: 16px;
+    padding: 8px 16px;
+    border-radius: 5px;
+    margin: 0 10px;
+}
+
+.meal-menu-week-nav button:disabled {
+    background-color: #e0e0e0;
+    cursor: not-allowed;
+}
+
+.meal-menu-week-nav button:hover:not(:disabled) {
+    background-color: #1565c0;
+}
+
+/* 날짜 칸의 크기와 디자인 */
+.meal-menu-week-nav .MuiTypography-root {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 10px;
+}
+
+/* 달력 디자인 개선 */
+.meal-menu-table th {
+    background-color: #f9f9f9; /* 달력의 제목 배경색 */
+    color: black;
+    font-weight: bold;
+    text-align: center;
+    padding: 15px 10px;
+}

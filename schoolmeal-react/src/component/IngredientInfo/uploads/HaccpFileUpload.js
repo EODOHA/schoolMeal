@@ -16,15 +16,19 @@ const HaccpFileUpload = () => {
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         setselectedFile(file);
-        
-        console.log(file); // 파일 객체가 제대로 출력되는지 확인
-        console.log(file instanceof Blob); // true인지 확인
         if (!file) {
             alert("파일을 선택해주세요.");
             return;
         }
-        readExcelFile(selectedFile);
+        readExcelFile(file);
     };
+
+    // useEffect(() => {
+    //     if (selectedFile) {
+    // console.log("선택된 파일:", selectedFile); // 선택된 파일 정보 출력
+    // console.log("파일 객체 여부:", selectedFile instanceof Blob); // Blob 객체 여부 확인
+    //     }
+    // }, [selectedFile]);
 
     // 파일 초기화
     const handleFileReset = () => {
@@ -34,9 +38,9 @@ const HaccpFileUpload = () => {
 
 
     //excel 파일 파싱
-    const readExcelFile = (file) => {
+    const readExcelFile = (selectedFile) => {
 
-        if (!(file instanceof Blob)) {
+        if (!(selectedFile instanceof Blob)) {
             console.error("올바르지 않은 파일 형식입니다.");
             alert("올바르지 않은 파일 형식입니다. 다시 시도하세요.");
             return;
@@ -59,6 +63,7 @@ const HaccpFileUpload = () => {
 
             //시트 데이터를 JSON으로 변환
             const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });   //첫번째 행을 헤더로 사용
+            // console.log("jsonData:", jsonData);
 
             //첫번째 행(헤더)를 제외하고, 두번째 행부터 매핑
             // 데이터 필터링 및 매핑
@@ -78,7 +83,7 @@ const HaccpFileUpload = () => {
             setHaccpData(haccpData);
         };
 
-        reader.readAsArrayBuffer(file);
+        reader.readAsArrayBuffer(selectedFile);
     };
     const convertExcelDate = (excelDate) => {
         if (excelDate) {
@@ -118,9 +123,9 @@ const HaccpFileUpload = () => {
         })
             .then(response => response.json())
             .then(data => {
-                // console.log('성공:', data);
+                console.log('성공:', data);
                 alert('업로드가 완료되었습니다! 목록페이지로 돌아갑니다.');
-                navigate('../ingredientInfo/haccp-info');
+                navigate('../haccp-info');
 
             })
             .catch((error) => {
@@ -139,7 +144,7 @@ const HaccpFileUpload = () => {
 
     // 목록으로 돌아가기
     const handleBackToList = () => {
-        navigate('../ingredientInfo/haccp-info');
+        navigate('../haccp-info');
     };
 
     return (
@@ -176,6 +181,7 @@ const HaccpFileUpload = () => {
             {/* 파일 업로드 */}
             <div style={{ marginBottom: '20px' }}>
                 <input
+                    key={selectedFile ? selectedFile.name : "file-input"}
                     type="file"
                     accept=".xlsx, .xls"
                     onChange={handleFileChange}
@@ -200,32 +206,34 @@ const HaccpFileUpload = () => {
 
             {/* 파싱된 데이터 출력 */}
             <h2 className="ingredient-info-upload-title">업로드된 데이터</h2>
-            <table className="ingredient-info-upload-table">
-                <thead className="ingredient-info-upload-thead">
-                    <tr>
-                        <th>HACCP 지정번호</th>
-                        <th>카테고리</th>
-                        <th>업소명</th>
-                        <th>주소</th>
-                        <th>품목명</th>
-                        <th>영업상태</th>
-                        <th>인증 종료일자</th>
-                    </tr>
-                </thead>
-                <tbody className="ingredient-info-upload-tbody">
-                    {haccpData.map((row, index) => (
-                        <tr key={index}>
-                            <td>{row.haccpDesignationNumber}</td>
-                            <td>{row.category}</td>
-                            <td>{row.businessName}</td>
-                            <td>{row.address}</td>
-                            <td>{row.productName}</td>
-                            <td>{row.businessStatus}</td>
-                            <td>{row.certificationEndDate}</td>
+            <div className="haccp-info">
+                <table className="ingredient-info-upload-table">
+                    <thead className="ingredient-info-upload-thead">
+                        <tr>
+                            <th>HACCP 지정번호</th>
+                            <th>카테고리</th>
+                            <th>업소명</th>
+                            <th>주소</th>
+                            <th>품목명</th>
+                            <th>영업상태</th>
+                            <th>인증 종료일자</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody className="ingredient-info-upload-tbody">
+                        {haccpData.map((row, index) => (
+                            <tr key={index}>
+                                <td>{row.haccpDesignationNumber}</td>
+                                <td>{row.category}</td>
+                                <td>{row.businessName}</td>
+                                <td>{row.address}</td>
+                                <td>{row.productName}</td>
+                                <td>{row.businessStatus}</td>
+                                <td>{row.certificationEndDate}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div >
     );
 };

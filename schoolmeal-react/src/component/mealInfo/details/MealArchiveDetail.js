@@ -17,11 +17,11 @@ function MealArchiveDetails() {
     const [isAuthor, setIsAuthor] = useState(false);
     const [loading, setLoading] = useState(true); // 로딩 상태
     const [editMode, setEditMode] = useState(false); // 수정모드 상태
-    const [error, setError] = useState(null); // 오류 상태
+    const [setError] = useState(null); // 오류 상태
     const navigate = useNavigate();
 
     // 권한설정 -> useAuth에서 token과 isAdmin, isBoardAdmin을 가져옴
-    const { token, isAdmin, isBoardAdmin } = useAuth();
+    const { token, isAdmin, isBoardAdmin, role } = useAuth();
     // console.log("URL에서 추출한 arc_id", id);
 
     // 상세 페이지 조회 API 호출
@@ -42,15 +42,17 @@ function MealArchiveDetails() {
 
                 // 작성자 확인 로직
                 const isAuthor =
-                    (isAdmin && response.data.arc_author === "관리자") ||
-                    (isBoardAdmin && response.data.arc_author === "게시판 관리자");
+                    (isAdmin && (response.data.arc_author === "관리자")) ||
+                    (isBoardAdmin && (response.data.arc_author === "담당자"))
+                    ;
                 setIsAuthor(isAuthor);
-                console.log("isAdmin:", isAdmin);
-                console.log("isBoardAdmin:", isBoardAdmin);
-                console.log("isAuthor", isAuthor);
+                // console.log("isAdmin:", isAdmin);
+                // console.log("isBoardAdmin:", isBoardAdmin);
+                // console.log("isAuthor", isAuthor);
+                // console.log("role:", role);
 
 
-                console.log("상세 페이지 정보", response.data);
+                // console.log("상세 페이지 정보", response.data);
                 setLoading(false);
             })
             .catch(error => {
@@ -58,7 +60,7 @@ function MealArchiveDetails() {
                 setError("데이터를 가져오는 중 오류가 발생했습니다.");
                 setLoading(false);
             });
-    }, [id, isAdmin, isBoardAdmin]);
+    }, [id, isAdmin, isBoardAdmin, role, token, setError]);
 
     // 로딩 중일 때 화면 표시
     if (loading) {
@@ -93,8 +95,21 @@ function MealArchiveDetails() {
                 alert("삭제 중 오류가 발생하였습니다.");
             })
     }
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
 
-
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+        return (
+            <>
+                {`${year}년 ${month}월 ${day}일 ${hours}:${minutes}:${seconds}`}
+            </>
+        );
+    };
     return (
         <div className="meal-info-detail-container">
             {editMode ? (   //editMode가 true면 MealArchive 컴포넌트 호출
@@ -105,8 +120,8 @@ function MealArchiveDetails() {
                         <h2>{archive.arc_title}</h2>
                         <hr />
                         <div className="meal-info-header">
-                            <span className="meal-info-id">ID: {archive.arc_id}</span>
-                            <span className="meal-info-date">작성일: {new Date(archive.createdDate).toLocaleDateString()}</span>
+                            <span className="meal-info-id">글번호: {archive.arc_id}</span>
+                            <span className="meal-info-date">작성일: {formatDate(archive.createdDate)}</span>
                         </div>
 
                         <div className="meal-info-attachment">

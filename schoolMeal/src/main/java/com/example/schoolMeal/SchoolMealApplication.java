@@ -95,7 +95,6 @@ public class SchoolMealApplication implements CommandLineRunner {
         product1.setGrade("상");
         product1.setProductDistrict("경기도");
         product1.setProductPrice(45000);
-        product1.setEntryDate(LocalDate.of(2024, 11, 28));
 
         IngredientPrice product2 = new IngredientPrice();
         product2.setCategory("수산물");
@@ -103,7 +102,6 @@ public class SchoolMealApplication implements CommandLineRunner {
         product2.setGrade("특");
         product2.setProductDistrict("전라남도");
         product2.setProductPrice(25000);
-        product2.setEntryDate(LocalDate.of(2024, 11, 28));
 
         IngredientPrice product3 = new IngredientPrice();
         product3.setCategory("축산물");
@@ -111,7 +109,6 @@ public class SchoolMealApplication implements CommandLineRunner {
         product3.setGrade("중");
         product3.setProductDistrict("충청남도");
         product3.setProductPrice(12000);
-        product3.setEntryDate(LocalDate.of(2024, 11, 28));
 
         priceRepository.save(product1);
         priceRepository.save(product2);
@@ -152,36 +149,33 @@ public class SchoolMealApplication implements CommandLineRunner {
         haccpRepository.save(cert3);
         
         ProductSafety inspection1 = ProductSafety.builder()
-                .category("농")
+                .category("농산물")
                 .productName("쌀")
                 .producer("경기도 농부")
                 .safetyResult("합격")
                 .inspector("농산물 검사기관")
-                .inspectorMaterial("농약 잔류물")
+                .inspectMaterial("농약 잔류물")
                 .productDistrict("경기도")
-                .entryDate(LocalDate.of(2024, 11, 28))
                 .build();
 
         ProductSafety inspection2 = ProductSafety.builder()
-                .category("축")
+                .category("축산물")
                 .productName("돼지고기")
                 .producer("축산업체 B")
                 .safetyResult("불합격")
                 .inspector("축산물 검사기관")
-                .inspectorMaterial("항생제 잔류물")
+                .inspectMaterial("항생제 잔류물")
                 .productDistrict("충청남도")
-                .entryDate(LocalDate.of(2024, 11, 28))
                 .build();
 
         ProductSafety inspection3 = ProductSafety.builder()
-                .category("수")
+                .category("수산물")
                 .productName("광어")
                 .producer("수산업체 C")
                 .safetyResult("합격")
                 .inspector("수산물 검사기관")
-                .inspectorMaterial("중금속")
+                .inspectMaterial("중금속")
                 .productDistrict("전라남도")
-                .entryDate(LocalDate.of(2024, 11, 28))
                 .build();
 
         safetyRepository.save(inspection1);

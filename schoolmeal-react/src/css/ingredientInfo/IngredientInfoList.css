@@ -54,47 +54,114 @@
     width: 5%;
 }
 
-/* HACCP 지정번호 */
-.ingredient-info-table th:nth-child(3),
-.ingredient-info-table td:nth-child(3) {
-    width: 15%;
+/* 카테고리(식재료 가격정보) */
+.ingredient-price .ingredient-info-table th:nth-child(3),
+.ingredient-price .ingredient-info-table td:nth-child(3) {
+    width: 13%;
 }
-
-/* 카테고리 */
-.ingredient-info-table th:nth-child(4),
-.ingredient-info-table td:nth-child(4) {
-    width: 9%;
-}
-
-/* 업소명 */
-.ingredient-info-table th:nth-child(5),
-.ingredient-info-table td:nth-child(5) {
+/* 번호(식재료 가격정보) */
+.ingredient-price .ingredient-info-table th:nth-child(2),
+.ingredient-price .ingredient-info-table td:nth-child(2) {
     width: 10%;
 }
 
-/* 주소 */
-.ingredient-info-table th:nth-child(6),
-.ingredient-info-table td:nth-child(6) {
-    width: 28%;
+/* 번호(식품안정성 조사결과정보) */
+.product-safety .ingredient-info-table th:nth-child(2),
+.product-safety .ingredient-info-table td:nth-child(2) {
+    width: 5%;
 }
-
-/* 품목명 */
-.ingredient-info-table th:nth-child(7),
-.ingredient-info-table td:nth-child(7) {
+/* 카테고리(식품안정성 조사결과정보) */
+.product-safety .ingredient-info-table th:nth-child(3),
+.product-safety .ingredient-info-table td:nth-child(3) {
     width: 8%;
 }
+/* 생산자(식품안정성 조사결과정보) */
+.product-safety .ingredient-info-table th:nth-child(5),
+.product-safety .ingredient-info-table td:nth-child(5) {
+    width: 10%;
+}
+/* 분석결과(식품안정성 조사결과정보) */
+.product-safety .ingredient-info-table th:nth-child(6),
+.product-safety .ingredient-info-table td:nth-child(6) {
+    width: 8%;
+}
+/* 조사기관(식품안정성 조사결과정보) */
+.product-safety .ingredient-info-table th:nth-child(7),
+.product-safety .ingredient-info-table td:nth-child(7) {
+    width: 12%;
+}
+/* 조사물질(식품안정성 조사결과정보) */
+.product-safety .ingredient-info-table th:nth-child(8),
+.product-safety .ingredient-info-table td:nth-child(8) {
+    width: 15%;
+}
+/* 생산지(식품안정성 조사결과정보) */
+.product-safety .ingredient-info-table th:nth-child(9),
+.product-safety .ingredient-info-table td:nth-child(9) {
+    width: 8%;
+}
+/* 등록일자(식품안정성 조사결과정보) */
+.product-safety .ingredient-info-table th:nth-child(10),
+.product-safety .ingredient-info-table td:nth-child(10) {
+    width: 15%;
+}
+/* 비고(식품안정성 조사결과정보) */
+.product-safety .ingredient-info-table th:nth-child(11),
+.product-safety .ingredient-info-table td:nth-child(11) {
+    width: 5%;
+}
+/* HACCP 지정번호(HACCP 정보) */
+.haccp-info .ingredient-info-table th:nth-child(3),
+.haccp-info .ingredient-info-table td:nth-child(3) {
+    width: 13%;
+}
+/* 카테고리(HACCP 정보) */
+.haccp-info .ingredient-info-table th:nth-child(4),
+.haccp-info .ingredient-info-table td:nth-child(4) {
+    width: 10%;
+}
 
-/* 영업상태 */
-.ingredient-info-table th:nth-child(8),
-.ingredient-info-table td:nth-child(8) {
+/* 영업상태(HACCP 정보) */
+.haccp-info .ingredient-info-table th:nth-child(8),
+.haccp-info .ingredient-info-table td:nth-child(8) {
     width: 9%;
 }
 
-/* 인증 종료일자 */
-.ingredient-info-table th:nth-child(9),
-.ingredient-info-table td:nth-child(9) {
-    width: 13%;
+/* 인증 종료일자(HACCP 정보) */
+.haccp-info .ingredient-info-table th:nth-child(9),
+.haccp-info .ingredient-info-table td:nth-child(9) {
+    width: 11%;
 }
+/* 비고(HACCP 인증정보) */
+.haccp-info .ingredient-info-table th:nth-child(10),
+.haccp-info .ingredient-info-table td:nth-child(10) {
+    width: 7%;
+}
+
+/* 업소명(HACCP 정보) */
+.haccp-info .ingredient-info-table th:nth-child(5),
+.haccp-info .ingredient-info-table td:nth-child(5) {
+    width: 10%;
+}
+
+/* 주소(HACCP 정보) */
+.haccp-info .ingredient-info-table th:nth-child(6),
+.haccp-info .ingredient-info-table td:nth-child(6) {
+    width: 23%;
+}
+
+/* 품목명(HACCP 정보) */
+.haccp-info .ingredient-info-table th:nth-child(7),
+.haccp-info .ingredient-info-table td:nth-child(7) {
+    width: 8%;
+}
+
+/* 등록일자(식재료가격정보) */
+.ingredient-price .ingredient-info-table th:nth-child(7),
+.ingredient-price .ingredient-info-table td:nth-child(7) {
+    width: 10%;
+}
+
 
 /* 수정 */
 .ingredient-info-table th:nth-child(10),

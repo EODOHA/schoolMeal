@@ -26,6 +26,10 @@
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
+    align-items: center;
+}
+.meal-info-right-searchbar {
+    margin-left: auto; /* 오른쪽 끝으로 정렬 */
 }
 
 /* 테이블 스타일 */
@@ -53,34 +57,34 @@
 }
 
 /* 각 열 너비 설정 */
+/* 번호 열의 너비 */
 .meal-info-table th:nth-child(1),
 .meal-info-table td:nth-child(1) {
     width: 10%;
-    /* 번호 열의 너비 */
 }
 
+/* 제목 열의 너비*/
 .meal-info-table th:nth-child(2),
 .meal-info-table td:nth-child(2) {
-    width: 40%;
-    /* 제목 열의 너비 (가장 넓게 설정) */
+    width: 35%;
 }
 
+/* 등록일 열의 너비 */
 .meal-info-table th:nth-child(3),
 .meal-info-table td:nth-child(3) {
-    width: 20%;
-    /* 등록일 열의 너비 */
+    width: 25%;
 }
 
+/* 작성자 열의 너비 */
 .meal-info-table th:nth-child(4),
 .meal-info-table td:nth-child(4) {
     width: 15%;
-    /* 작성자 열의 너비 */
 }
 
+/* 첨부파일 열의 너비 */
 .meal-info-table th:nth-child(5),
 .meal-info-table td:nth-child(5) {
     width: 15%;
-    /* 첨부파일 열의 너비 */
 }
 
 /* 행 스타일 */

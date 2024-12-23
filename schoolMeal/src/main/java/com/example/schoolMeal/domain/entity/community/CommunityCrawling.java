@@ -17,7 +17,7 @@ public class CommunityCrawling {
 
     private String title;
     private String link;
-    private String description;
+    private String description;  // 화면에 보일 요약? 내용
     private String pubDate;
     private String keyword;  // 예: "급식" 또는 "연구"
 }

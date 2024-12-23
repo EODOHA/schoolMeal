@@ -7,7 +7,7 @@ import { Button } from "@mui/material";
 import '../../../css/ingredientInfo/IngredientInfoUpload.css';
 
 const IngredientPriceUpload = () => {
-    const [haccpData, setHaccpData] = useState([]);
+    const [priceData, setPriceData] = useState([]);
     const [selectedFile, setselectedFile] = useState(null);
     const { token } = useAuth();
     const navigate = useNavigate();
@@ -16,35 +16,39 @@ const IngredientPriceUpload = () => {
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         setselectedFile(file);
-        
-        console.log(selectedFile); // 파일 객체가 제대로 출력되는지 확인
-        console.log(file instanceof Blob); // true인지 확인
         if (!file) {
             alert("파일을 선택해주세요.");
             return;
         }
-        readExcelFile(selectedFile);
+        readExcelFile(file);
     };
+
+    // useEffect(() => {
+    //     if (selectedFile) {
+    // console.log("선택된 파일:", selectedFile); // 선택된 파일 정보 출력
+    // console.log("파일 객체 여부:", selectedFile instanceof Blob); // Blob 객체 여부 확인
+    //     }
+    // }, [selectedFile]);
 
     // 파일 초기화
     const handleFileReset = () => {
         setselectedFile(null);  // 파일 상태 초기화
-        setHaccpData([]);       // 파싱된 데이터 초기화
+        setPriceData([]);       // 파싱된 데이터 초기화
     }
 
 
     //excel 파일 파싱
-    const readExcelFile = (file) => {
+    const readExcelFile = (selectedFile) => {
 
-        if (!(file instanceof Blob)) {
+        if (!(selectedFile instanceof Blob)) {
             // console.error("올바르지 않은 파일 형식입니다.");
             alert("올바르지 않은 파일 형식입니다. 다시 시도하세요.");
             return;
         }
         const reader = new FileReader();
-        reader.onloadstart = () => console.log("파일 읽기 시작...");
-        reader.onloadend = () => console.log("파일 읽기 완료!");
-        reader.onerror = (err) => console.error("파일 읽기 중 오류 발생:", err);
+        // reader.onloadstart = () => console.log("파일 읽기 시작...");
+        // reader.onloadend = () => console.log("파일 읽기 완료!");
+        // reader.onerror = (err) => console.error("파일 읽기 중 오류 발생:", err);
 
 
         reader.onload = (e) => {
@@ -59,45 +63,28 @@ const IngredientPriceUpload = () => {
 
             //시트 데이터를 JSON으로 변환
             const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });   //첫번째 행을 헤더로 사용
+            // console.log("jsonData:",jsonData);
 
             //첫번째 행(헤더)를 제외하고, 두번째 행부터 매핑
             // 데이터 필터링 및 매핑
-            const haccpData = jsonData.slice(1).filter(row =>
+            const priceData = jsonData.slice(1).filter(row =>
                 row.every(cell => cell !== null && cell !== undefined && cell !== '') // 모든 셀 값이 null, undefined, 빈 문자열이 아닌지 체크
             ).map((row) => ({
-                haccpDesignationNumber: row[0],
-                category: row[1],
-                businessName: row[2],
-                address: row[3],
-                productName: row[4],
-                businessStatus: row[5],
-                //날짜를 숫자에서 날짜 형식으로 변환
-                certificationEndDate: convertExcelDate(row[6]),
+                category: row[0],
+                productName: row[1],
+                grade: row[2],
+                productDistrict: row[3],
+                productPrice: row[4],
             }));
 
-            setHaccpData(haccpData);
+            setPriceData(priceData);
         };
 
-        reader.readAsArrayBuffer(file);
+        reader.readAsArrayBuffer(selectedFile);
     };
-    const convertExcelDate = (excelDate) => {
-        if (excelDate) {
-            // 엑셀 날짜는 1900년 1월 1일부터 시작되므로, 이를 JavaScript 날짜로 변환
-            const date = new Date((excelDate - 25569) * 86400 * 1000);  //밀리초로 변환
-            // 'YYYY-MM-DD' 형식으로 날짜를 변환
-            const yyyy = date.getFullYear();
-            const mm = (date.getMonth() + 1).toString().padStart(2, '0');  // 월은 0부터 시작하므로 +1
-            const dd = date.getDate().toString().padStart(2, '0');
-
-            return `${yyyy}-${mm}-${dd}`;
-        }
-        return null;
-    };
-
-
     // 서버로 데이터 전송
     const handleSubmit = () => {
-        if (haccpData.length === 0) {
+        if (priceData.length === 0) {
             alert("파싱된 데이터가 없습니다. 파일을 올바르게 선택했는지 확인하세요.");
             return;
         }
@@ -108,19 +95,19 @@ const IngredientPriceUpload = () => {
             return; // 취소하면 업로드 진행하지 않음
         }
 
-        fetch(`${SERVER_URL}haccp-info/bulk-upload`, {
+        fetch(`${SERVER_URL}ingredient-price/bulk-upload`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': token
             },
-            body: JSON.stringify(haccpData),
+            body: JSON.stringify(priceData),
         })
             .then(response => response.json())
             .then(data => {
-                // console.log('성공:', data);
+                console.log('성공:', data);
                 alert('업로드가 완료되었습니다! 목록페이지로 돌아갑니다.');
-                navigate('../ingredientInfo/haccp-info');
+                navigate('../ingredient-price');
 
             })
             .catch((error) => {
@@ -132,19 +119,19 @@ const IngredientPriceUpload = () => {
     // 서식파일 다운로드 함수
     const handleDownloadTemplate = () => {
         const link = document.createElement('a');
-        link.href = '/ingredientInfo/haccp-template.xlsx';
-        link.download = 'haccp-template.xlsx'; // 다운로드 파일명
+        link.href = '/ingredientInfo/price-template.xlsx';
+        link.download = 'price-template.xlsx'; // 다운로드 파일명
         link.click();
     }
 
     // 목록으로 돌아가기
     const handleBackToList = () => {
-        navigate('../ingredientInfo/haccp-info');
+        navigate('../ingredient-price');
     };
 
     return (
         <div className="ingredient-info-upload-container">
-            <h2 className="ingredient-info-title">HACCP 데이터 업로드</h2>
+            <h2 className="ingredient-info-title">식재료 가격정보 데이터 업로드</h2>
             {/* 상단 버튼 그룹 */}
             <div className="ingredient-info-button-group">
                 {/* 서식파일 다운로드 버튼 */}
@@ -176,6 +163,7 @@ const IngredientPriceUpload = () => {
             {/* 파일 업로드 */}
             <div style={{ marginBottom: '20px' }}>
                 <input
+                    key={selectedFile ? selectedFile.name : "file-input"}
                     type="file"
                     accept=".xlsx, .xls"
                     onChange={handleFileChange}
@@ -200,32 +188,30 @@ const IngredientPriceUpload = () => {
 
             {/* 파싱된 데이터 출력 */}
             <h2 className="ingredient-info-upload-title">업로드된 데이터</h2>
-            <table className="ingredient-info-upload-table">
-                <thead className="ingredient-info-upload-thead">
-                    <tr>
-                        <th>HACCP 지정번호</th>
-                        <th>카테고리</th>
-                        <th>업소명</th>
-                        <th>주소</th>
-                        <th>품목명</th>
-                        <th>영업상태</th>
-                        <th>인증 종료일자</th>
-                    </tr>
-                </thead>
-                <tbody className="ingredient-info-upload-tbody">
-                    {haccpData.map((row, index) => (
-                        <tr key={index}>
-                            <td>{row.haccpDesignationNumber}</td>
-                            <td>{row.category}</td>
-                            <td>{row.businessName}</td>
-                            <td>{row.address}</td>
-                            <td>{row.productName}</td>
-                            <td>{row.businessStatus}</td>
-                            <td>{row.certificationEndDate}</td>
+            <div className="ingredient-price">
+                <table className="ingredient-info-upload-table">
+                    <thead className="ingredient-info-upload-thead">
+                        <tr>
+                            <th>카테고리</th>
+                            <th>품목명</th>
+                            <th>등급</th>
+                            <th>생산지역</th>
+                            <th>가격</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody className="ingredient-info-upload-tbody">
+                        {priceData.map((row, index) => (
+                            <tr key={index}>
+                                <td>{row.category}</td>
+                                <td>{row.productName}</td>
+                                <td>{row.grade}</td>
+                                <td>{row.productDistrict}</td>
+                                <td>{row.productPrice}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div >
     );
 };

@@ -12,7 +12,7 @@ const RegionalCommunityList = () => {
   const navigate = useNavigate();
  
   // AuthContext에서 인증 상태와 권한 정보 가져오기
-  const { isAuth, isAdmin, token } = useAuth();
+  const { isAuth } = useAuth();
 
   // 지역별 커뮤니티 게시글 목록을 서버에서 불러오는 함수
   const loadPosts = async (region) => {
@@ -50,18 +50,27 @@ const RegionalCommunityList = () => {
   return (
     <div className="community-list-container">
       <h2>지역별 커뮤니티 게시글 목록</h2>
-      
-      {/* 지역 선택 드롭다운 */}
-      <div className="region-filter">
-        <label>지역 선택: </label>
-        <select value={selectedRegion} onChange={handleRegionChange}>
-          <option value="ALL">전체</option>
-          <option value="SEOUL">서울</option>
-          <option value="DAEJEON">대전</option>
-          <option value="INCHEON">인천</option>
-          <option value="BUSAN">부산</option>
-          <option value="GANGWONDO">강원도</option>
-        </select>
+
+      <div className="filter-container">
+        {/* 커뮤니티 글 작성 버튼 */}
+        {isAuth && (
+          <button onClick={() => navigate('/community/regions/create')} className="regionCommunitylistcreate-button">
+            커뮤니티 글 작성
+          </button>
+        )}
+
+        {/* 지역 선택 드롭다운 */}
+        <div className="region-filter">
+          <label>지역 선택: </label>
+          <select value={selectedRegion} onChange={handleRegionChange} className="region-select">
+            <option value="ALL">전체</option>
+            <option value="SEOUL">서울</option>
+            <option value="DAEJEON">대전</option>
+            <option value="INCHEON">인천</option>
+            <option value="BUSAN">부산</option>
+            <option value="GANGWONDO">강원도</option>
+          </select>
+        </div>
       </div>
 
       <table className="regioncommunity-table">
@@ -92,10 +101,6 @@ const RegionalCommunityList = () => {
           )}
         </tbody>
       </table>
-      {isAuth && (
-        <button onClick={() => navigate('/community/regions/create')} className="regionCommunitylistcreate-button">커뮤니티 글 작성</button>
-      )}
-      
     </div>
   );
 };

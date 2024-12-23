@@ -10,7 +10,7 @@ function MealArchiveEdit({ archive, setEditMode, setArchive }) {
     const [updatedArchive, setUpdatedArchive] = useState(archive); // 수정된 데이터를 관리
     const [newFile, setNewFile] = useState(null)
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [error] = useState(null);
 
     // 권한 관련
     const { token, isAdmin, isBoardAdmin } = useAuth();
@@ -23,7 +23,7 @@ function MealArchiveEdit({ archive, setEditMode, setArchive }) {
     // 게시글 작성자 확인
     const isAuthor =
         (isAdmin && archive.arc_author === "관리자") ||         // 작성자의 isAdmin이 true고 작성자가 "관리자"인 경우
-        (isBoardAdmin && archive.arc_author === "게시판 담당자");   // 작성자의 isBoardAdmin이 true고 작성자가 "게시판 담당자"인 경우
+        (isBoardAdmin && archive.arc_author === "담당자");   // 작성자의 isBoardAdmin이 true고 작성자가 "게시판 담당자"인 경우
 
     useEffect(() => {
         if (!isAuthor) {
@@ -55,7 +55,7 @@ function MealArchiveEdit({ archive, setEditMode, setArchive }) {
             formData.append("file", newFile);
             // console.log("전송될 파일:", newFile); // 추가된 파일 로그
         } else {
-            console.log("새로운 파일이 선택되지 않았습니다.");
+            // console.log("새로운 파일이 선택되지 않았습니다.");
         }
 
         // 수정된 게시글 데이터 전송
@@ -69,7 +69,7 @@ function MealArchiveEdit({ archive, setEditMode, setArchive }) {
                 setEditMode(false); // 수정 완료 후 수정모드 비활성화
                 alert("수정이 완료되었습니다.");
                 setArchive(response.data); //부모 컴포넌트의 상태 갱신
-                console.log("수정할 데이터", response.data);
+                // console.log("수정할 데이터", response.data);
             })
             .catch((error) => {
                 setLoading(false);
@@ -99,11 +99,11 @@ function MealArchiveEdit({ archive, setEditMode, setArchive }) {
 
     return (
         <div className="meal-info-edit-container">
-            <div className="meal-info-card">
-                <div className="meal-info-card-body">
+            <div className="meal-info-edit-card">
+                <div className="meal-info-edit-card-body">
                     <h2>게시글 수정</h2>
                     <form onSubmit={handleSave}>
-                        <div className="meal-info-form-group">
+                        <div className="meal-info-edit-form-group">
                             <label>제목:</label>
                             <input
                                 type="text"
@@ -113,18 +113,18 @@ function MealArchiveEdit({ archive, setEditMode, setArchive }) {
                                 required
                             />
                         </div>
-                        <div className="meal-info-form-group">
+                        <div className="meal-info-edit-form-group">
                             <label>작성자:</label>
                             <input
                                 type="text"
                                 name="arc_author"
-                                value={updatedArchive.arc_author || "관리자"}
+                                value={updatedArchive.arc_author}
                                 onChange={handleChange}
-                                required
-                                disabled
+                                readOnly="true"
+                                
                             />
                         </div>
-                        <div className="meal-info-form-group">
+                        <div className="meal-info-edit-form-group">
                             <label>내용:</label>
                             <textarea
                                 name="arc_content"
@@ -134,7 +134,7 @@ function MealArchiveEdit({ archive, setEditMode, setArchive }) {
                                 required
                             />
                         </div>
-                        <div className="meal-info-form-group">
+                        <div className="meal-info-edit-form-group">
                             <label>첨부파일:</label>
                             <input
                                 type="file"
@@ -149,7 +149,7 @@ function MealArchiveEdit({ archive, setEditMode, setArchive }) {
                                 </div>
                             )}
                         </div>
-                        <div className="meal-info-button-group">
+                        <div className="meal-info-edit-button-group">
                             <Button variant="contained" color="success" type="submit">수정 완료</Button>
                             <Button variant="outlined" onClick={handleCancel}>취소</Button>
                         </div>

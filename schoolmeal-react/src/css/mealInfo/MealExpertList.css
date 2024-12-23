@@ -1,74 +1,136 @@
-/* ExpertList.css  */
-
- .expert-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 20px;
+/* mealInfo/MealExpertList.css
+.meal-expert-list-container {
+    width: 100%;
     padding: 20px;
-    justify-items: center;
-    box-sizing: border-box;
+}
+
+/* 제목 스타일 */
+.meal-info-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.expert-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    /* 2개의 카드가 한 줄에 배치 */
+    gap: 20px;
+    margin-top: 20px;
 }
 
 .expert-card {
-    display: flex;
-    align-items: center;
-    border: 1px solid #ccc;
-    border-radius: 10px;
+    /* width: 500px;
+    height: 250px;
+    line-height: 1.1;
+    background-color: #f2f2f2;
     padding: 15px;
-    width: 100%;
-    background-color: #f9f9f9;
-    box-sizing: border-box;
-    max-width: 500px;
-    max-height: 800px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: left;
+    text-overflow: ellipsis; */
+    /* 텍스트가 영역을 넘어갈 경우 '...'으로 표시 */
+    overflow: hidden;
+    /* 텍스트가 영역을 넘지 않게 숨김 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+
+}
+
+/* '상세보기' 버튼 우측 하단 고정 */
+.expert-card button {
+    /* position: absolute;
+    bottom: 10px;
+    right: 10px;
+    padding: 8px 15px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold; */
+    z-index: 1;
+    /* 버튼이 카드 내의 다른 내용보다 위에 표시되도록 설정 */
+}
+
+.expert-card img {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+}
+
+.expert-profile-info {
+    margin-top: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.expert-profile-info-multi-line {
+    margin-top: 10px;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    /* 최대 2줄로 제한하고 넘칠 경우 '...' 표시 */
+    overflow: hidden;
     position: relative;
 }
 
-.expert-profile-text {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    margin-right: 15px; 
+/* ... 표시를 가상 요소로 추가 */
+.expert-profile-info-multi-line::after {
+    content: '...';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #f2f2f2;
+    padding: 0 5px;
+    font-weight: bold;
+    font-size: 14px;
+    text-align: center;
+    color: #888;
 }
-
-
-/* 프로필 정보 스타일 */
- /* .profile-info {
-    font-size: 0.9em;
-    color: #333;
-    margin-bottom: 8px;
-    line-height: 1.5;
-    display: flex;
-    align-items: center;
-} */
 
 .expert-info-label {
-    display: inline-block;
-    width: 70px; /* 라벨 간격을 일정하게 유지하기 위한 넓이 조절 */
     font-weight: bold;
-    color: #666;
-    white-space: nowrap;
 }
 
-.expert-profile-info ul {
-    margin: 0;
-    padding-left: 18px;
-    list-style-type: disc;
-}
-
-/* 버튼 스타일 */
-.expert-card button {
-    align-self: flex-end;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    cursor: pointer;
-    border-radius: 5px;
-    margin-top: 10px;
-}
 .expert-buttons-container {
     display: flex;
-    justify-content: space-between; /* 수정하기 버튼과 삭제하기 버튼을 양쪽 끝으로 배치 */
-    width: 100%;
-    margin-top: 10px;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.detail-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 8px 15px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    z-index: 1;
+}
+
+/* 페이지네이션 버튼 스타일 */
+.pagination {
+    display: flex;
+    justify-content: center;
+    /* 페이지네이션 버튼을 가로로 중앙 정렬 */
+    margin-top: 20px;
+}
+
+/* 페이지네이션 버튼 스타일 */
+.pagination button {
+    border: none;
+    padding: 10px 15px;
+    margin: 0 5px;
+    cursor: pointer;
 }
