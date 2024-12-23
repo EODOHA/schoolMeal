@@ -29,9 +29,9 @@ function MealFacilityEquipmentEdit() {
         // 인증 상태와 권한 정보가 변경될 때마다 실행
         if (isAuth !== undefined && isAdmin !== undefined && isBoardAdmin !== undefined) {
             setIsLoadingAuth(false); // 인증 상태가 로드된 후 로딩 상태를 false로 설정
-        } 
+        }
     }, [isAuth, isAdmin, isBoardAdmin]);
-    
+
     useEffect(() => {
         // 인증 상태가 완전히 로딩된 후, 권한이 없을 경우 "unauthorized" 페이지로 리다이렉트
         if (!isLoadingAuth && (!isAuth || (!isAdmin && !isBoardAdmin))) {
@@ -43,7 +43,7 @@ function MealFacilityEquipmentEdit() {
         // 데이터를 불러오는 로직
         if (isAuth && isAdmin) {
             axios
-                .get(`${SERVER_URL}mealFacilityEquipments/${id}`)
+                .get(`${SERVER_URL}mealFacilityEquipment/${id}`)
                 .then((response) => {
                     const data = response.data;
                     setMealFacilityEquipment({
@@ -149,14 +149,14 @@ function MealFacilityEquipmentEdit() {
                                 name="writer"
                                 value={mealFacilityEquipment.writer}
                                 onChange={handleChange}
-                                required
+                                disabled
                             />
                         </div>
                         <div className="meal-resource-form-group">
                             <label>내용:</label>
                             <textarea
                                 name="content"
-                                rows={5}
+                                rows={1}
                                 value={mealFacilityEquipment.content}
                                 onChange={handleChange}
                                 required
@@ -167,7 +167,7 @@ function MealFacilityEquipmentEdit() {
                             <input
                                 type="file"
                                 name="file"
-                                accept="image/*,application/pdf,.docx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                accept="image/*, .pdf, .docx, .xlsx, .hwp"
                                 onChange={handleChange}
                             />
                         </div>

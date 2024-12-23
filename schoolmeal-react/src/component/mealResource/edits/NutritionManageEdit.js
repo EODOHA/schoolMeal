@@ -43,7 +43,7 @@ function NutritionManageEdit() {
     useEffect(() => {
         if (isAuth && isAdmin) {
             axios
-                .get(`${SERVER_URL}nutritionManages/${id}`)
+                .get(`${SERVER_URL}nutritionManage/${id}`)
                 .then((response) => {
                     const data = response.data;
                     setNutritionManage({
@@ -118,21 +118,21 @@ function NutritionManageEdit() {
         }
     };
 
-    if (loading) {
-        return <div><LoadingSpinner /></div>;
+    if (isLoadingAuth || loading) {
+        return <LoadingSpinner />;
     }
 
     if (error) {
-        return <div className="edu-error-message">{error}</div>;
+        return <div className="meal-resource-error-message">{error}</div>;
     }
 
     return (
-        <div className="edu-edit-container">
-            <div className="edu-card">
-                <div className="edu-card-body">
+        <div className="meal-resource-edit-container">
+            <div className="meal-resource-card">
+                <div className="meal-resource-card-body">
                     <h2>게시글 수정</h2>
                     <form onSubmit={handleSave}>
-                        <div className="edu-form-group">
+                        <div className="meal-resource-form-group">
                             <label>제목:</label>
                             <input
                                 type="text"
@@ -142,36 +142,36 @@ function NutritionManageEdit() {
                                 required
                             />
                         </div>
-                        <div className="edu-form-group">
+                        <div className="meal-resource-form-group">
                             <label>작성자:</label>
                             <input
                                 type="text"
                                 name="writer"
                                 value={nutritionManage.writer}
                                 onChange={handleChange}
-                                required
+                                disabled
                             />
                         </div>
-                        <div className="edu-form-group">
+                        <div className="meal-resource-form-group">
                             <label>내용:</label>
                             <textarea
                                 name="content"
-                                rows={5}
+                                rows={1}
                                 value={nutritionManage.content}
                                 onChange={handleChange}
                                 required
                             />
                         </div>
-                        <div className="edu-form-group">
+                        <div className="meal-resource-form-group">
                             <label>첨부파일</label>
                             <input
                                 type="file"
                                 name="file"
-                                accept="image/*,application/pdf,.docx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                accept="image/*, .pdf, .docx, .xlsx, .hwp"
                                 onChange={handleChange}
                             />
                         </div>
-                        <div className="edu-button-group">
+                        <div className="meal-resource-button-group">
                             <Button variant="contained" color="success" type="submit">
                                 수정 저장
                             </Button>

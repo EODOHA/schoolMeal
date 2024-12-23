@@ -43,7 +43,7 @@ function MenuRecipeEdit() {
     useEffect(() => {
         if (isAuth && isAdmin) {
             axios
-                .get(`${SERVER_URL}menuRecipes/${id}`, {
+                .get(`${SERVER_URL}menuRecipe/${id}`, {
                     headers: {
                         Authorizatio: `${token}`,
                     }
@@ -119,8 +119,8 @@ function MenuRecipeEdit() {
         }
     };
 
-    if (loading) {
-        return <div><LoadingSpinner /></div>;
+    if (isLoadingAuth || loading) {
+        return <LoadingSpinner />;
     }
 
     if (error) {
@@ -151,14 +151,14 @@ function MenuRecipeEdit() {
                                 name="writer"
                                 value={menuRecipe.writer}
                                 onChange={handleChange}
-                                required
+                                disabled
                             />
                         </div>
                         <div className="meal-resource-form-group">
                             <label>내용:</label>
                             <textarea
                                 name="content"
-                                rows={5}
+                                rows={1}
                                 value={menuRecipe.content}
                                 onChange={handleChange}
                                 required
@@ -169,7 +169,7 @@ function MenuRecipeEdit() {
                             <input
                                 type="file"
                                 name="file"
-                                accept="image/*,application/pdf,.docx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                accept="image/*, .pdf, .docx, .xlsx, .hwp"
                                 onChange={handleChange}
                             />
                         </div>

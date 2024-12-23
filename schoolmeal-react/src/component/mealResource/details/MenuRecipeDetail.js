@@ -28,7 +28,7 @@ function MenuRecipeDetail() {
         }
 
         axios
-            .get(`${SERVER_URL}menuRecipes/${id}`)
+            .get(`${SERVER_URL}menuRecipe/${id}`)
             .then((response) => {
                 setMenuRecipe(response.data);
                 // 작성자 확인
@@ -71,7 +71,7 @@ function MenuRecipeDetail() {
         if (!window.confirm("삭제하시겠습니까?")) return;
 
         axios
-            .delete(`${SERVER_URL}menuRecipes/${id}`, {
+            .delete(`${SERVER_URL}menuRecipe/delete/${id}`, {
                 headers: {
                     Authorization: `${token}`,
                 },
@@ -125,13 +125,13 @@ function MenuRecipeDetail() {
                         <div className="meal-resource-form-group">
                             <label>내용:</label>
                             <textarea
-                                rows={5}
+                                rows={1}
                                 value={menuRecipe.content}
                                 readOnly
                                 className="meal-resource-form-control"
                             />
-                        </div><br />
-
+                        </div>
+                        <br />
                         <div className="meal-resource-button-group">
                             {isAuthor && (
                                 <Button

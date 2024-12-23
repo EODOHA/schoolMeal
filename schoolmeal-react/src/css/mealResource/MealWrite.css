@@ -46,3 +46,17 @@
     margin-bottom: 15px;
 }
 
+.meal-resource-image-preview-container {
+    text-align: center; /* 영상 중앙 정렬 */
+    margin-top: 20px;
+}
+
+.meal-resource-image-preview {
+    max-width: 250px; /* 영상 최대 너비 */
+    max-height: 300px; /* 영상 최대 높이 */
+    object-fit: cover; /* 비율 유지하면서 크기 맞추기 */
+    border-radius: 8px; /* 영상 모서리 둥글게 처리 */
+    margin-top: 10px;
+}
+
+

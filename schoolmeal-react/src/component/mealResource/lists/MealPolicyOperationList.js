@@ -35,12 +35,15 @@ function MealPolicyOperationList() {
             return item.title.toLowerCase().includes(searchQuery.toLowerCase());
         } else if (selectedFilter === '작성자') {
             return item.writer.toLowerCase().includes(searchQuery.toLowerCase());
+        } else if (selectedFilter === '내용') {
+            return item.content.toLowerCase().includes(searchQuery.toLowerCase());
         } else if (selectedFilter === '시∙도 교육청' && eduOfficeFilter) {
             return item.eduOffice === eduOfficeFilter;  // 교육청 필터 적용
         } else { // 전체
             return (
                 item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                item.writer.toLowerCase().includes(searchQuery.toLowerCase())
+                item.writer.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                item.content.toLowerCase().includes(searchQuery.toLowerCase())
             );
         }
     })
@@ -107,7 +110,7 @@ function MealPolicyOperationList() {
                             새 글 쓰기
                         </Button>
                     )}
-                    <MealPolicyFilterButton onFilterChange={(filterType, filterValue, eduOfficeType) => {
+                    <MealPolicyFilterButton onFilterChange={(filterType, eduOfficeType) => {
                         setSelectedFilter(filterType);
                         if (filterType === '시∙도 교육청') {
                             setEduOfficeFilter(eduOfficeType);

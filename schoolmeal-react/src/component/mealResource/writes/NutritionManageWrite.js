@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, TextField } from "@mui/material";
+import { Button, TextField, MenuItem, Select, FormControl, InputLabel } from "@mui/material";
 import axios from "axios";
 import { SERVER_URL } from "../../../Constants";
 import { useAuth } from "../../sign/AuthContext";
@@ -14,6 +14,7 @@ function NutritionManageWrite() {
     const [file, setFile] = useState(null); // 파일 상태
     const [loading, setLoading] = useState(false); // 로딩 상태
     const [error, setError] = useState(null); // 오류 상태
+    const [position, setPosition] = useState("");  // 영양사∙영양교사
     const [isLoadingAuth, setIsLoadingAuth] = useState(true); // 인증 상태 로딩
     const navigate = useNavigate();
 
@@ -22,18 +23,13 @@ function NutritionManageWrite() {
 
     // 작성자를 memberId로 설정 
     useEffect(() => {
-        let writer = role; 
-        console.log(role);
-        console.log(isBoardAdmin);
-
+        let writer = role;
         if (isAdmin) {
             writer = "관리자";
         } else if (isBoardAdmin) {
             writer = "담당자";
         }
-
         setWriter(writer);
-
     }, [memberId, role, isAdmin, isBoardAdmin]);
 
     useEffect(() => {
@@ -50,7 +46,6 @@ function NutritionManageWrite() {
         }
     }, [isAuth, isAdmin, isBoardAdmin, isLoadingAuth, navigate]);
 
-    // 관리자가 아닌 경우에만 "unauthorized"로 리다이렉트
     if (isLoadingAuth || !isAuth || (isAdmin === false && isBoardAdmin === false)) {
         return <div><LoadingSpinner /></div>;
     }
@@ -58,6 +53,11 @@ function NutritionManageWrite() {
     // 파일 입력 변경 핸들러
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
+    };
+
+    // 영양사∙영양교사 선택 변경 핸들러
+    const handlePositionChange = (e) => {
+        setPosition(e.target.value);
     };
 
     // 폼 제출 핸들러
@@ -68,6 +68,7 @@ function NutritionManageWrite() {
         formData.append("title", title);
         formData.append("writer", writer);
         formData.append("content", content);
+        formData.append("position", position);
 
         if (file) {
             formData.append("file", file);
@@ -92,13 +93,13 @@ function NutritionManageWrite() {
     };
 
     return (
-        <div className="edu-write-container">
-            <div className="edu-card">
-                <div className="edu-card-body">
+        <div className="meal-resource-write-container">
+            <div className="meal-resource-card">
+                <div className="meal-resource-card-body">
                     <h2>새 게시글 작성</h2>
-                    {error && <div className="edu-error-message">{error}</div>}
+                    {error && <div className="meal-resource-error-message">{error}</div>}
                     <form onSubmit={handleSubmit}>
-                        <div className="edu-form-group">
+                        <div className="meal-resource-form-group">
                             <TextField
                                 label="제목"
                                 fullWidth
@@ -107,7 +108,7 @@ function NutritionManageWrite() {
                                 required
                             />
                         </div>
-                        <div className="edu-form-group">
+                        <div className="meal-resource-form-group">
                             <TextField
                                 label="작성자"
                                 fullWidth
@@ -116,7 +117,7 @@ function NutritionManageWrite() {
                                 disabled
                             />
                         </div>
-                        <div className="edu-form-group">
+                        <div className="meal-resource-form-group">
                             <TextField
                                 label="내용"
                                 fullWidth
@@ -127,15 +128,28 @@ function NutritionManageWrite() {
                                 required
                             />
                         </div>
-                        <div className="edu-form-group">
+                        <div className="meal-resource-form-group">
+                            <FormControl fullWidth required>
+                                <InputLabel>직급 선택</InputLabel>
+                                <Select
+                                    value={position}
+                                    onChange={handlePositionChange}
+                                    label="영양사∙영양교사"
+                                >
+                                    <MenuItem value="dietitian">영양사</MenuItem>
+                                    <MenuItem value="teacher">영양교사</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </div>
+                        <div className="meal-resource-form-group">
                             <label>첨부파일:</label>
                             <input
                                 type="file"
-                                accept="image/*, .pdf, .docx"
+                                accept="image/*, .pdf, .docx, .xlsx, .hwp"
                                 onChange={handleFileChange}
                             />
                         </div>
-                        <div className="edu-button-group">
+                        <div className="meal-resource-button-group">
                             <Button
                                 variant="contained"
                                 color="success"

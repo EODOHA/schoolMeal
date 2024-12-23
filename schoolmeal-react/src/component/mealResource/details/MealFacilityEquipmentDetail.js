@@ -28,7 +28,7 @@ function MealFacilityEquipmentDetail() {
         }
 
         axios
-            .get(`${SERVER_URL}mealFacilityEquipments/${id}`)
+            .get(`${SERVER_URL}mealFacilityEquipment/${id}`)
             .then((response) => {
                 setMealFacilityEquipment(response.data);
                 // 작성자 확인
@@ -129,12 +129,13 @@ function MealFacilityEquipmentDetail() {
                         <div className="meal-resource-form-group">
                             <label>내용:</label>
                             <textarea
-                                rows={5}
+                                rows={1}
                                 value={mealFacilityEquipment.content}
                                 readOnly
                                 className="meal-resource-form-control"
                             />
-                        </div><br />
+                        </div>
+                        <br />
                         <div className="meal-resource-button-group">
                             {/* 수정은 작성자 본인, 삭제는 관리자도 선택 가능 */}
                             {isAuthor && (
