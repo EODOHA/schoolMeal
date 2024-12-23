@@ -634,7 +634,6 @@ const MainPage = () => {
                 </div>
             </section>
 
-            {/* 스크롤을 따라다니는 아이콘 */}
             <div className="chat-icon" onClick={toggleChatPopup}>
                 <div className="chat-tooltip">영양상담 채팅하기</div>
                     <div className="chat-icon-img">💬</div>

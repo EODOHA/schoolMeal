@@ -90,7 +90,14 @@ const SchoolMealNewsAnalyzer = () => {
                 item.title.includes("사망") ||
                 item.title.includes("불행") ||
                 item.title.includes("실패") ||
-                item.title.includes("사고")
+                item.title.includes("사고") ||
+                item.title.includes("불량") ||
+                item.title.includes("썩은") ||
+                item.title.includes("맛없다") ||
+                item.title.includes("더럽다") ||
+                item.title.includes("상한") ||
+                item.title.includes("음식물 쓰레기") ||
+                item.title.includes("식중독")
             ) {
                 return 0; // 부정
             }
@@ -150,7 +157,14 @@ const SchoolMealNewsAnalyzer = () => {
                 item.title.includes("사망") ||
                 item.title.includes("불행") ||
                 item.title.includes("실패") ||
-                item.title.includes("사고")
+                item.title.includes("사고") ||
+                item.title.includes("불량") ||
+                item.title.includes("썩은") ||
+                item.title.includes("맛없다") ||
+                item.title.includes("더럽다") ||
+                item.title.includes("상한") ||
+                item.title.includes("음식물 쓰레기") ||
+                item.title.includes("식중독")
             ) {
                 return 0; // 부정
             }
