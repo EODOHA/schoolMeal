@@ -6,10 +6,14 @@
 }
 
 h2 {
-    white-space: nowrap; /* 텍스트가 줄바꿈되지 않도록 설정 */
-    overflow: hidden; /* 넘치는 텍스트 숨기기 */
-    text-overflow: ellipsis; /* 넘치는 텍스트에 '...' 추가 */
+    white-space: nowrap;
+    /* 텍스트가 줄바꿈되지 않도록 설정 */
+    overflow: hidden;
+    /* 넘치는 텍스트 숨기기 */
+    text-overflow: ellipsis;
+    /* 넘치는 텍스트에 '...' 추가 */
 }
+
 /* 상단 영역 --------------------------------------------------- */
 /* 상단 영역 */
 .top-section {
@@ -18,8 +22,11 @@ h2 {
     gap: 20px;
 }
 
-.slider-container, .notice-container, .resource-container {
-    flex: 1; /* 각 섹션이 균등하게 배치되도록 */
+.slider-container,
+.notice-container,
+.resource-container {
+    flex: 1;
+    /* 각 섹션이 균등하게 배치되도록 */
     border: 1px solid #ccc;
     padding: 10px;
     border-radius: 8px;
@@ -41,19 +48,23 @@ h2 {
 }
 
 .single-image-slider img {
-    position: absolute; /* 모든 이미지가 동일한 위치에 겹치도록 설정 */
+    position: absolute;
+    /* 모든 이미지가 동일한 위치에 겹치도록 설정 */
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
     border-radius: 8px;
-    opacity: 0; /* 기본적으로 이미지는 보이지 않게 설정 */
-    transition: opacity 0.5s ease-in-out; /* 이미지 전환 시 부드럽게 */
+    opacity: 0;
+    /* 기본적으로 이미지는 보이지 않게 설정 */
+    transition: opacity 0.5s ease-in-out;
+    /* 이미지 전환 시 부드럽게 */
 }
 
 .single-image-slider img.visible {
-    opacity: 1; /* 보이는 이미지만 opacity 1로 설정 */
+    opacity: 1;
+    /* 보이는 이미지만 opacity 1로 설정 */
 }
 
 /* 좌우 버튼 */
@@ -78,10 +89,13 @@ h2 {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7);  /* 배경 어두워지게 */
+    background-color: rgba(0, 0, 0, 0.7);
+    /* 배경 어두워지게 */
     display: flex;
-    justify-content: center; /* 수평 중앙 */
-    z-index: 888;  /* 다른 요소 위에 띄우기 */
+    justify-content: center;
+    /* 수평 중앙 */
+    z-index: 888;
+    /* 다른 요소 위에 띄우기 */
 }
 
 /* 팝업 내용 */
@@ -89,9 +103,12 @@ h2 {
     position: relative;
     background-color: white;
     padding: 30px;
-    max-width: 50%;  /* 최대 너비 설정 */
-    max-height: 25%; /* 최대 높이 설정 */
-    overflow: auto;  /* 내용이 많으면 스크롤이 생김 */
+    max-width: 50%;
+    /* 최대 너비 설정 */
+    max-height: 25%;
+    /* 최대 높이 설정 */
+    overflow: auto;
+    /* 내용이 많으면 스크롤이 생김 */
     overflow-x: hidden;
     overflow-y: scroll;
     border-radius: 8px;
@@ -103,7 +120,8 @@ h2 {
     width: 100%;
     max-height: 50%;
     margin-top: 10px;
-    max-height: 70vh; /* 이미지의 최대 높이를 화면의 70%로 제한 */
+    max-height: 70vh;
+    /* 이미지의 최대 높이를 화면의 70%로 제한 */
     object-fit: contain;
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -128,9 +146,12 @@ h2 {
 /* ---------------------------------------------------------------------------------- */
 
 .notice-container {
-    width: 100%; /* 또는 원하는 너비를 명시적으로 설정 */
-    max-width: 500px; /* 예시로 최대 너비를 설정 */
-    overflow: hidden; /* 넘치는 부분을 숨기기 */
+    width: 100%;
+    /* 또는 원하는 너비를 명시적으로 설정 */
+    max-width: 500px;
+    /* 예시로 최대 너비를 설정 */
+    overflow: hidden;
+    /* 넘치는 부분을 숨기기 */
 }
 
 .notice-container ul {
@@ -140,20 +161,28 @@ h2 {
     list-style: none;
 }
 
-.notice-container ul > li {
-    white-space: nowrap; /* 텍스트가 줄바꿈되지 않도록 설정 */
-    overflow: hidden; /* 넘치는 텍스트 숨기기 */
-    text-overflow: ellipsis; /* 넘치는 텍스트에 '...' 추가 */
-    width: 100%; /* li의 너비가 부모 요소에 맞도록 설정 */
-    display: block; /* li 요소를 블록으로 설정 */
+.notice-container ul>li {
+    white-space: nowrap;
+    /* 텍스트가 줄바꿈되지 않도록 설정 */
+    overflow: hidden;
+    /* 넘치는 텍스트 숨기기 */
+    text-overflow: ellipsis;
+    /* 넘치는 텍스트에 '...' 추가 */
+    width: 100%;
+    /* li의 너비가 부모 요소에 맞도록 설정 */
+    display: block;
+    /* li 요소를 블록으로 설정 */
 }
 
 /* ---------------------------------------------------------------------------------- */
 
 .resource-container {
-    width: 100%; /* 또는 원하는 너비를 명시적으로 설정 */
-    max-width: 500px; /* 예시로 최대 너비를 설정 */
-    overflow: hidden; /* 넘치는 부분을 숨기기 */
+    width: 100%;
+    /* 또는 원하는 너비를 명시적으로 설정 */
+    max-width: 500px;
+    /* 예시로 최대 너비를 설정 */
+    overflow: hidden;
+    /* 넘치는 부분을 숨기기 */
 }
 
 .resource-container ul {
@@ -163,31 +192,41 @@ h2 {
     list-style: none;
 }
 
-.resource-container ul > li {
-    white-space: nowrap; /* 텍스트가 줄바꿈되지 않도록 설정 */
-    overflow: hidden; /* 넘치는 텍스트 숨기기 */
-    text-overflow: ellipsis; /* 넘치는 텍스트에 '...' 추가 */
-    width: 100%; /* li의 너비가 부모 요소에 맞도록 설정 */
-    display: block; /* li 요소를 블록으로 설정 */
+.resource-container ul>li {
+    white-space: nowrap;
+    /* 텍스트가 줄바꿈되지 않도록 설정 */
+    overflow: hidden;
+    /* 넘치는 텍스트 숨기기 */
+    text-overflow: ellipsis;
+    /* 넘치는 텍스트에 '...' 추가 */
+    width: 100%;
+    /* li의 너비가 부모 요소에 맞도록 설정 */
+    display: block;
+    /* li 요소를 블록으로 설정 */
 }
 
-.notice-container ul, .resource-container ul {
+.notice-container ul,
+.resource-container ul {
     list-style: none;
     padding: 0;
 }
 
-.notice-container li, .resource-container li {
+.notice-container li,
+.resource-container li {
     margin: 10px 0;
 }
 
-.notice-container a, .resource-container a {
+.notice-container a,
+.resource-container a {
     text-decoration: none;
     color: #007bff;
 }
 
-.notice-container a:hover, .resource-container a:hover {
+.notice-container a:hover,
+.resource-container a:hover {
     text-decoration: underline;
 }
+
 /* 중단 영역 --------------------------------------------------- */
 /* 중단 영역: 자주 찾는 서비스 */
 .service-section {
@@ -206,8 +245,10 @@ h2 {
     display: flex;
     align-items: center;
     position: relative;
-    overflow: hidden; /* 내용 넘치지 않게 숨기기 */
-    width: 100%; /* 슬라이드의 너비를 100%로 설정 */
+    overflow: hidden;
+    /* 내용 넘치지 않게 숨기기 */
+    width: 100%;
+    /* 슬라이드의 너비를 100%로 설정 */
 }
 
 /* 슬라이더 영역 */
@@ -220,19 +261,24 @@ h2 {
 
 /* 각 서비스 항목 */
 .service-item {
-    flex: 0 0 auto; /* 항목들이 기본 크기를 유지하며 가로로 배치되도록 설정 */
-    width: 220px; /* 각 항목의 고정 너비 */
+    flex: 0 0 auto;
+    /* 항목들이 기본 크기를 유지하며 가로로 배치되도록 설정 */
+    width: 220px;
+    /* 각 항목의 고정 너비 */
     border: 1px solid #ddd;
     padding: 10px;
     border-radius: 8px;
     background-color: #f1f1f1;
-    transition: background-color 0.3s ease; /* 배경색 변화에 부드러운 전환 추가 */
+    transition: background-color 0.3s ease;
+    /* 배경색 변화에 부드러운 전환 추가 */
     cursor: pointer;
 }
 
 .service-item p {
-    margin-top: 0; /* 위쪽 마진 제거 */
-    margin-bottom: 5px; /* 아래쪽 마진을 5px로 설정 (원하는 값으로 조정) */
+    margin-top: 0;
+    /* 위쪽 마진 제거 */
+    margin-bottom: 5px;
+    /* 아래쪽 마진을 5px로 설정 (원하는 값으로 조정) */
     color: #555;
 }
 
@@ -241,8 +287,10 @@ h2 {
 }
 
 .service-link {
-    text-decoration: none; /* 링크의 기본 밑줄 제거 */
-    color: inherit; /* 링크 색상을 부모 요소 색상으로 상속 */
+    text-decoration: none;
+    /* 링크의 기본 밑줄 제거 */
+    color: inherit;
+    /* 링크 색상을 부모 요소 색상으로 상속 */
 }
 
 /* 좌우 버튼 */
@@ -304,19 +352,26 @@ h2 {
     border-radius: 8px;
     width: 100%;
     height: 200px;
-    position: relative;  /* 자식 요소의 위치를 상대적으로 설정 */
+    position: relative;
+    /* 자식 요소의 위치를 상대적으로 설정 */
     overflow: hidden;
 }
 
 .video-input {
     display: flex;
-    position: absolute;  /* 절대 위치 지정 */
-    top: 50%;            /* 부모의 50% 지점 */
-    left: 50%;           /* 부모의 50% 지점 */
-    transform: translate(-50%, -50%);  /* 정확한 중앙을 맞추기 위해 */
-    max-width: 400px;          /* 원하는 너비 */
+    position: absolute;
+    /* 절대 위치 지정 */
+    top: 50%;
+    /* 부모의 50% 지점 */
+    left: 50%;
+    /* 부모의 50% 지점 */
+    transform: translate(-50%, -50%);
+    /* 정확한 중앙을 맞추기 위해 */
+    max-width: 400px;
+    /* 원하는 너비 */
     min-width: 200px;
-    height: 90%;         /* 원하는 높이 */
+    height: 90%;
+    /* 원하는 높이 */
     border-radius: 8px;
     overflow: hidden;
     transition: transform 0.3s ease;
@@ -332,7 +387,8 @@ h2 {
 /* 마우스가 들어갔을 때 */
 .video-input:hover {
     cursor: pointer;
-    transform: translate(-50%, -50%) scale(0.9); /* 위치는 그대로 두고 scale만 적용 */
+    transform: translate(-50%, -50%) scale(0.9);
+    /* 위치는 그대로 두고 scale만 적용 */
 }
 
 /* 영상 팝업 내용 */
@@ -347,7 +403,8 @@ h2 {
     align-items: center;
     background-color: white;
     padding: 30px;
-    overflow: auto;  /* 내용이 많으면 스크롤이 생김 */
+    overflow: auto;
+    /* 내용이 많으면 스크롤이 생김 */
     width: 70%;
     height: 30%;
     overflow-x: hidden;
@@ -388,13 +445,13 @@ li {
             padding: 40px 0;
 
             &.original {
-                animation: 150s linear infinite normal none running
-                    infiniteAnimation1;
+                animation: 150s linear infinite normal none running infiniteAnimation1;
             }
+
             &.clone {
-                animation: 150s linear infinite 
-                    infiniteAnimation2;
+                animation: 150s linear infinite infiniteAnimation2;
             }
+
             &.stop {
                 animation-play-state: paused;
             }
@@ -410,24 +467,101 @@ li {
     }
 }
 
+/* 채팅 팝업 관련 css */
+.chat-icon {
+    position: absolute; /* 화면에 고정 */
+    top: 35%; /* 화면 중간에 고정 */
+    right: 0; /* 화면 오른쪽에 고정 */
+    margin-right: 18px;
+    transform: translateY(-50%);
+    /* 정확히 중간에 배치 */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #007bff;
+    border-radius: 50%;
+    padding: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s;
+    z-index: 5;
+    /* 다른 요소들 위에 표시되도록 */
+}
+
+.chat-tooltip {
+    visibility: hidden;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute;
+    bottom: 50px;
+    /* 툴팁이 아이콘 위로 보이게 위치 */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+}
+
+.chat-icon:hover .chat-tooltip {
+    visibility: visible;
+}
+
+.chat-icon-img {
+    font-size: 24px;
+    color: #fff;
+}
+
+/* 팝업 스타일 */
+.chat-popup {
+    position: fixed;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 50%;
+    background-color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.close-chat {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #ff4444;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
 @keyframes infiniteAnimation1 {
     0% {
         transform: translateX(0%);
     }
+
     50% {
         transform: translateX(-100%);
     }
+
     50.00000001% {
         transform: translateX(100%);
     }
+
     100% {
         transform: translateX(0%);
     }
 }
+
 @keyframes infiniteAnimation2 {
     0% {
         transform: translateX(0%);
     }
+
     100% {
         transform: translateX(-200%);
     }

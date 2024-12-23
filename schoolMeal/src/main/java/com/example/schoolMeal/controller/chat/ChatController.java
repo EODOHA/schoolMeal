@@ -75,18 +75,19 @@ public class ChatController {
 	
 	// 새로운 메세지를 클라이언트로 전송.
 	private void sendToClients(Long chatRoomId, Message message) {
-		List<SseEmitter> emitters = emittersByChatRoom.get(chatRoomId);
-		if (emitters != null) {
-			String messageJson = convertMessageToJson(message);
-			for (SseEmitter emitter : emitters) {
-				try {
-					// 메세지를 클라이언트로 전송.
-					emitter.send(message);
-				} catch (IOException e) {
-					emitter.completeWithError(e);
-				}
-			}
-		}
+	    List<SseEmitter> emitters = emittersByChatRoom.get(chatRoomId);
+	    if (emitters != null) {
+	        String messageJson = convertMessageToJson(message);
+	        for (SseEmitter emitter : new ArrayList<>(emitters)) { // ConcurrentModification 방지
+	            try {
+	                emitter.send(SseEmitter.event()
+	                    .name("message")
+	                    .data(messageJson));
+	            } catch (IOException e) {
+	                emitters.remove(emitter); // 실패한 emitter 제거
+	            }
+	        }
+	    }
 	}
 	
 	// Message 객체를 JSON 문자열로 변환하는 메서드.

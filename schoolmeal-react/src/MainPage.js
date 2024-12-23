@@ -13,13 +13,20 @@ const MainPage = () => {
     const [imageKey, setImageKey] = useState(0); // 이미지 키값 변경용
     const [adminNotices, setAdminNotices] = useState([]);
     const [resources, setResources] = useState([]); // 급식 자료실 목록
-    
+
     // 각각의 로딩 상태 추가
     const [isImagesLoading, setIsImagesLoading] = useState(true);
     const [isAgenciesLoading, setIsAgenciesLoading] = useState(true);
     const [isVideosLoading, setIsVideosLoading] = useState(true);
     const [isAdminNoticeLoading, setIsAdminNoticeLoading] = useState(true);
     const [isResourcesLoading, setIsResourcesLoading] = useState(true); // 로딩 상태
+
+    // 채팅 팝업 관련 상태
+    const [isChatOpen, setIsChatOpen] = useState(false);
+
+    const toggleChatPopup = () => {
+        setIsChatOpen(!isChatOpen);
+    };
 
     const token = sessionStorage.getItem("jwt");
 
@@ -167,8 +174,8 @@ const MainPage = () => {
         setModalVideoUrl(""); // URL 초기화.
     }
 
-     // 비디오 팝업 위치 조정용
-     useLayoutEffect(() => {
+    // 비디오 팝업 위치 조정용
+    useLayoutEffect(() => {
         if (showVideoModal) {
             const modalElement = document.querySelector('.video-modal-content');
             if (modalElement) {
@@ -196,7 +203,7 @@ const MainPage = () => {
         const interval = setInterval(() => {
             handleImageChange("next");
         }, 5000); // 5초마다 변경
-        
+
         // 컴포넌트 언마운트 시, interval 정리
         return () => clearInterval(interval);
     }, [currentIndex]);
@@ -208,20 +215,20 @@ const MainPage = () => {
             method: 'GET',
             headers: createHeaders(),
         })
-        .then(response => {
-            // 응답 상태 코드가 200번이 아니면, 에러 던짐.
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json(); // JSON으로 응답을 파싱.
-        })
-        .then(data => {
-            console.log("Fetched adminNotices:", data); // 확인용 로그
-            setAdminNotices(data); // 데이터를 그대로 저장
-            setIsAdminNoticeLoading(false);
-        })
-        .catch((error) => console.error("Error fetching adminNotices:", error))
-        .finally(() => setIsAdminNoticeLoading(false));
+            .then(response => {
+                // 응답 상태 코드가 200번이 아니면, 에러 던짐.
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json(); // JSON으로 응답을 파싱.
+            })
+            .then(data => {
+                console.log("Fetched adminNotices:", data); // 확인용 로그
+                setAdminNotices(data); // 데이터를 그대로 저장
+                setIsAdminNoticeLoading(false);
+            })
+            .catch((error) => console.error("Error fetching adminNotices:", error))
+            .finally(() => setIsAdminNoticeLoading(false));
     }, []); // 컴포넌트 마운트 시 한 번만 실행.
 
     // 학교급식 우수사례 목록을 가져오기 ------------------------------------
@@ -231,21 +238,21 @@ const MainPage = () => {
             method: 'GET',
             headers: createHeaders(),
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log("Fetched Resource:", data);
-            setResources(data._embedded?.schoolMealCases || []);  // 데이터가 없으면 빈 배열로 설정
-            setIsResourcesLoading(false);  // 로딩 완료 상태로 설정
-        })
-        .catch((error) => {
-            console.error("Error fetching Resources:", error);
-            setIsResourcesLoading(false);  // 로딩 실패 상태로 설정
-        });
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Fetched Resource:", data);
+                setResources(data._embedded?.schoolMealCases || []);  // 데이터가 없으면 빈 배열로 설정
+                setIsResourcesLoading(false);  // 로딩 완료 상태로 설정
+            })
+            .catch((error) => {
+                console.error("Error fetching Resources:", error);
+                setIsResourcesLoading(false);  // 로딩 실패 상태로 설정
+            });
     }, []); // 컴포넌트가 마운트될 때 한 번만 실행
 
 
@@ -291,9 +298,9 @@ const MainPage = () => {
                 if (!prevItems.some((item) => item.name === selectedParent.label)) {
                     const newItems = [
                         ...prevItems,
-                        { 
-                            id: prevItems.length + 1, 
-                            name: selectedParent.label, 
+                        {
+                            id: prevItems.length + 1,
+                            name: selectedParent.label,
                             description1: `${selectedParent.label} 관련`,
                             description2: '메인 게시판으로 이동합니다.',
                             path: selectedParent.path || '#', // selectedParent.path를 item에 추가
@@ -369,9 +376,9 @@ const MainPage = () => {
         <div className="main-container">
             <section className="top-section">
                 <div className="slider-container">
-                <h2>한 눈의 소식</h2>
-                {isImagesLoading ? (
-                    <p>로딩 중입니다... ⏳</p>
+                    <h2>한 눈의 소식</h2>
+                    {isImagesLoading ? (
+                        <p>로딩 중입니다... ⏳</p>
                     ) : (
                         <div className="single-image-slider">
                             {/* 좌측 버튼 */}
@@ -391,12 +398,12 @@ const MainPage = () => {
                             ) : (
                                 <p>이미지 자료가 없습니다. 🧐</p> // 데이터가 없을 때 표시될 메시지
                             )}
-                        {/* 우측 버튼 */}
-                        <button onClick={() => handleImageChange("next")} className="slider-btn next-btn">▶</button>
-                    </div>
+                            {/* 우측 버튼 */}
+                            <button onClick={() => handleImageChange("next")} className="slider-btn next-btn">▶</button>
+                        </div>
                     )}
                 </div>
-                    
+
                 {/* 이미지 팝업 모달 */}
                 {showModal && (
                     <div className="modal-overlay" onClick={closeModal}>
@@ -413,25 +420,25 @@ const MainPage = () => {
                     </Link>
                     <ul>
                         {isAdminNoticeLoading ? (
-                        <p>로딩 중입니다... ⏳</p>
-                    ) : (
-                        <ul>
-                            {adminNotices.length > 0 ? (
-                                // 역순 출력 위해 .reverse() 사용.
-                                // 복사본을 생성한 뒤 reverse() 사용
-                                // 개수 제한 .slice(x, y) 사용
-                                [...adminNotices].reverse().slice(0, 10).map((adminNotices) => (
-                                    <li key={adminNotices.id}>
-                                        <Link to={`/adminNoticeManager/detail/${adminNotices.id}`}>
-                                            {adminNotices.title} {/* title을 올바르게 출력 */}
-                                        </Link>
-                                    </li>
-                                ))
-                            ) : (
-                                <p>자료가 없습니다. 🧐</p> // 데이터가 없을 때 표시될 메시지
-                            )}
-                        </ul>
-                    )}
+                            <p>로딩 중입니다... ⏳</p>
+                        ) : (
+                            <ul>
+                                {adminNotices.length > 0 ? (
+                                    // 역순 출력 위해 .reverse() 사용.
+                                    // 복사본을 생성한 뒤 reverse() 사용
+                                    // 개수 제한 .slice(x, y) 사용
+                                    [...adminNotices].reverse().slice(0, 10).map((adminNotices) => (
+                                        <li key={adminNotices.id}>
+                                            <Link to={`/adminNoticeManager/detail/${adminNotices.id}`}>
+                                                {adminNotices.title} {/* title을 올바르게 출력 */}
+                                            </Link>
+                                        </li>
+                                    ))
+                                ) : (
+                                    <p>자료가 없습니다. 🧐</p> // 데이터가 없을 때 표시될 메시지
+                                )}
+                            </ul>
+                        )}
                     </ul>
                 </div>
 
@@ -464,13 +471,13 @@ const MainPage = () => {
                 </div>
             </section>
 
-            <ChatApp></ChatApp>
+            {/* <ChatApp></ChatApp> */}
 
             <section className="service-section">
                 <h2>자주 찾는 서비스</h2>
                 <div className="service-slider-wrapper">
-                    <button 
-                        className="slider-btn prev-btn" 
+                    <button
+                        className="slider-btn prev-btn"
                         onClick={() => handleSlide(-1)}
                     >
                         ◀
@@ -478,7 +485,7 @@ const MainPage = () => {
                     <div
                         className="service-slider"
                         ref={sliderRef}
-                        style={{ 
+                        style={{
                             transform: `translateX(-${position}px)`,
                             transition: "transform 0.5s ease",
                         }} // 부드러운 전환 추가
@@ -487,7 +494,7 @@ const MainPage = () => {
                             items.map((item, index) => (
                                 <Link to={item.path || '#'} className="service-link">
                                     <div key={`${item.id}-${index}`} className="service-item">
-                                    {/* react-router-dom의 Link 컴포넌트를 사용하여 href 대신 path로 이동 */}
+                                        {/* react-router-dom의 Link 컴포넌트를 사용하여 href 대신 path로 이동 */}
                                         <h3>{item.name}</h3>
                                         <p>{item.description1}</p>
                                         <p>{item.description2}</p>
@@ -495,11 +502,11 @@ const MainPage = () => {
                                 </Link>
                             ))
                         ) : (
-                            <p style={{marginLeft: "70px"}}>아직 방문한 게시판이 없습니다. 🧐</p>
+                            <p style={{ marginLeft: "70px" }}>아직 방문한 게시판이 없습니다. 🧐</p>
                         )}
                     </div>
-                    <button 
-                        className="slider-btn next-btn" 
+                    <button
+                        className="slider-btn next-btn"
                         onClick={() => handleSlide(1)}
                     >
                         ▶
@@ -537,14 +544,14 @@ const MainPage = () => {
             {showVideoModal && (
                 <div className="modal-overlay" onClick={closeVideoModal}>
                     <div className="video-modal-content">
-                            <video
-                                width="90%"
-                                height="90%"
-                                controls
-                                autoPlay
-                            >
+                        <video
+                            width="90%"
+                            height="90%"
+                            controls
+                            autoPlay
+                        >
                             <source src={modalVideoUrl} type="video/mp4" />
-                            </video>
+                        </video>
                         <button className="modal-close-btn" onClick={closeVideoModal}>X
                         </button>
                     </div>
@@ -616,6 +623,20 @@ const MainPage = () => {
                     </div>
                 </div>
             </section>
+
+            {/* 스크롤을 따라다니는 아이콘 */}
+            <div className="chat-icon" onClick={toggleChatPopup}>
+                <div className="chat-tooltip">영양상담 채팅하기</div>
+                    <div className="chat-icon-img">💬</div>
+            </div>
+
+            {/* 팝업 형태로 ChatApp을 표시 */}
+            {isChatOpen && (
+                <div className="chat-popup">
+                    <ChatApp />
+                    <button className="close-chat" onClick={toggleChatPopup}>닫기</button>
+                </div>
+            )}
         </div>
     );
 };
