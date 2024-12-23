@@ -30,31 +30,24 @@ function MealArchiveList() {
     // 페이지네이션 관련 함수.
     const indexOfLastPost = currentPage * postsPerPage;
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
-
-
-    // const totalPages = Math.ceil(archives.length / postsPerPage); //전체 페이지 수
-    // const totalBlocks = Math.ceil(totalPages / pageNumbersPerBlock); // 전체 블록수
-    // const currentBlock = Math.ceil(currentPage / pageNumbersPerBlock); // 현재 블록 번호
-    // const startPage = (currentBlock - 1) * pageNumbersPerBlock + 1; //현재 블록의 첫 페이지 번호
-    // const endPage = Math.min(startPage + pageNumbersPerBlock - 1, totalPages);  //현재 블록의 마지막 페이지번호(전체 페이지 수를 넘지 않도록)
-
+    
     // 현재 페이지에 맞는 게시글 추출
     const currentPosts = archives.slice() // 원본 배열을 복사
         .filter(item => {
             if (selectedFilter === "제목") {
-                return item.title.toLowerCase().includes(searchQuery.toLowerCase());
+                return item.arc_title.toLowerCase().includes(searchQuery.toLowerCase());
             } else if (selectedFilter === "작성자") {
                 return item.arc_author.toLowerCase().includes(searchQuery.toLowerCase());
+            } else if (selectedFilter === "내용") {
+                return item.arc_content.toLowerCase().includes(searchQuery.toLowerCase());
             } else {
                 return (
                     item.arc_title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    item.arc_author.toLowerCase().includes(searchQuery.toLowerCase())
+                    item.arc_author.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    item.arc_content.toLowerCase().includes(searchQuery.toLocaleLowerCase())
                 );
             }
         })
-        // } else if (selectedFilter === "내용") {
-        //     return item.arc_content.toLowerCase().includes(searchQuery.toLowerCase());
-        //     item.arc_content.toLowerCase().includes(searchQuery.toLocaleLowerCase())
         .reverse() //게시글을 최신 순으로 정렬
         .slice(indexOfFirstPost, indexOfLastPost); // 현재 페이지에 맞는 게시글만 슬라이싱
 
