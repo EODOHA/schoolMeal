@@ -41,30 +41,30 @@ public class FileUrlService extends PathResolver {
 
 	@PostConstruct
 	public void init() {
-		mealPolicyOperationPath = buildPath("급식 정책 자료실");
-		menuRecipePath = buildPath("메뉴 및 레시피 자료실");
-		nutritionManagePath = buildPath("영양관리 자료실");
-		mealHygienePath = buildPath("급식위생 자료실");
+		mealPolicyOperationPath = buildPath("급식 정책 및 운영 자료실");
+		menuRecipePath = buildPath("식단 및 레시피 자료실");
+		nutritionManagePath = buildPath("영양 관리 자료실");
+		mealHygienePath = buildPath("급식 위생 자료실");
 		mealFacilityEquipmentPath = buildPath("급식 시설 및 설비 자료실");
 		schoolMealCasesPath = buildPath("학교급식 우수사례 자료실");
 
 		nutritionPath = buildPath("영양·식생활 자료실");
-		videoEduPath = buildPath("교육영상 자료실");
+		videoEduPath = buildPath("영상 교육자료실");
 		lessonDemoPath = buildPath("수업&시연 영상 자료실");
 		eduMaterialSharingPath = buildPath("교육자료 나눔 자료실");
 
 		// HashMap을 사용하여 서비스별 경로 맵핑
-	    servicePathMap = new HashMap<>();
-	    servicePathMap.put("service1", mealPolicyOperationPath);
-	    servicePathMap.put("service2", menuRecipePath);
-	    servicePathMap.put("service3", nutritionManagePath);
-	    servicePathMap.put("service4", mealHygienePath);
-	    servicePathMap.put("service5", mealFacilityEquipmentPath);
-	    servicePathMap.put("service6", schoolMealCasesPath);
-	    servicePathMap.put("service8", nutritionPath);
-	    servicePathMap.put("service9", videoEduPath);
-	    servicePathMap.put("service10", lessonDemoPath);
-	    servicePathMap.put("service11", eduMaterialSharingPath);
+		servicePathMap = new HashMap<>();
+		servicePathMap.put("service1", mealPolicyOperationPath);
+		servicePathMap.put("service2", menuRecipePath);
+		servicePathMap.put("service3", nutritionManagePath);
+		servicePathMap.put("service4", mealHygienePath);
+		servicePathMap.put("service5", mealFacilityEquipmentPath);
+		servicePathMap.put("service6", schoolMealCasesPath);
+		servicePathMap.put("service8", nutritionPath);
+		servicePathMap.put("service9", videoEduPath);
+		servicePathMap.put("service10", lessonDemoPath);
+		servicePathMap.put("service11", eduMaterialSharingPath);
 	}
 
 	@Transactional

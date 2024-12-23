@@ -13,4 +13,11 @@ public abstract class PathResolver {
     protected String buildPath(String directoryName) {
         return fileUploadPath + directoryName + File.separator;
     }
+    
+    @Value("${image.upload.path}")
+    private String imageUploadPath;
+
+    protected String buildPath2(String directoryName) {
+        return imageUploadPath + directoryName + File.separator;
+    }
 }
