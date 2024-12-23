@@ -22,18 +22,13 @@ function NutritionDietEducationWrite() {
 
     // 작성자를 memberId로 설정 
     useEffect(() => {
-        let writer = role; 
-        console.log(role);
-        console.log(isBoardAdmin);
-
+        let writer = role;
         if (isAdmin) {
             writer = "관리자";
         } else if (isBoardAdmin) {
             writer = "담당자";
         }
-
         setWriter(writer);
-
     }, [memberId, role, isAdmin, isBoardAdmin]);
 
     useEffect(() => {
@@ -50,7 +45,6 @@ function NutritionDietEducationWrite() {
         }
     }, [isAuth, isAdmin, isBoardAdmin, isLoadingAuth, navigate]);
 
-    // 관리자가 아닌 경우에만 "unauthorized"로 리다이렉트
     if (isLoadingAuth || !isAuth || (isAdmin === false && isBoardAdmin === false)) {
         return <div><LoadingSpinner /></div>;
     }
@@ -97,7 +91,6 @@ function NutritionDietEducationWrite() {
                 <div className="edu-card-body">
                     <h2>새 게시글 작성</h2>
                     {error && <div className="edu-error-message">{error}</div>}
-
                     <form onSubmit={handleSubmit}>
                         <div className="edu-form-group">
                             <TextField
@@ -108,7 +101,6 @@ function NutritionDietEducationWrite() {
                                 required
                             />
                         </div>
-
                         <div className="edu-form-group">
                             <TextField
                                 label="작성자"
@@ -118,7 +110,6 @@ function NutritionDietEducationWrite() {
                                 disabled
                             />
                         </div>
-
                         <div className="edu-form-group">
                             <TextField
                                 label="내용"
@@ -130,7 +121,6 @@ function NutritionDietEducationWrite() {
                                 required
                             />
                         </div>
-
                         <div className="edu-form-group">
                             <label>첨부파일:</label>
                             <input
@@ -139,7 +129,6 @@ function NutritionDietEducationWrite() {
                                 onChange={handleFileChange}
                             />
                         </div>
-
                         <div className="edu-button-group">
                             <Button
                                 variant="contained"

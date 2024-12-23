@@ -126,3 +126,18 @@ textarea.edu-form-control {
     margin-top: 10px;
 }
 
+.edu-image {
+    text-align: center; /* 중앙 정렬 */
+    margin-top: 20px;
+    width: 100%; /* 컨테이너 크기 맞추기 */
+    height: auto; /* 비율 유지 */
+}
+
+.edu-image img {
+    max-width: 100%; /* 영상 너비를 부모 컨테이너에 맞게 100%로 설정 */
+    max-height: 360px; 
+    object-fit: cover; /* 비율을 유지하면서 크기를 맞춤 */
+    border-radius: 8px; /* 영상 모서리 둥글게 처리 */
+    margin-top: 10px;
+}
+

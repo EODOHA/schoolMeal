@@ -11,29 +11,26 @@ function EduMaterialSharingWrite() {
     const [title, setTitle] = useState("");
     const [writer, setWriter] = useState("");
     const [content, setContent] = useState("");
-    const [videoFile, setVideoFile] = useState(null); // 비디오 파일 상태
+    const [file, setFile] = useState(null); // 일반 파일 상태
+    const [image, setImage] = useState(null); // 이미지 상태
     const [loading, setLoading] = useState(false); // 로딩 상태
     const [error, setError] = useState(null); // 오류 상태
     const [isLoadingAuth, setIsLoadingAuth] = useState(true); // 인증 상태 로딩
+    const [imagePreview, setImagePreview] = useState(null); // 이미지 미리보기 상태
     const navigate = useNavigate();
 
     // AuthContext에서 인증 상태와 권한 정보 가져오기
     const { isAuth, isAdmin, isBoardAdmin, token, role, memberId } = useAuth();
 
-    // 작성자를 memberId로 설정 
+    // 작성자를 memberId로 설정
     useEffect(() => {
-        let writer = role; 
-        console.log(role);
-        console.log(isBoardAdmin);
-
+        let writer = role;
         if (isAdmin) {
             writer = "관리자";
         } else if (isBoardAdmin) {
             writer = "담당자";
         }
-
         setWriter(writer);
-
     }, [memberId, role, isAdmin, isBoardAdmin]);
 
     useEffect(() => {
@@ -50,51 +47,78 @@ function EduMaterialSharingWrite() {
         }
     }, [isAuth, isAdmin, isBoardAdmin, isLoadingAuth, navigate]);
 
-    // 관리자가 아닌 경우에만 "unauthorized"로 리다이렉트
     if (isLoadingAuth || !isAuth || (isAdmin === false && isBoardAdmin === false)) {
         return <div><LoadingSpinner /></div>;
     }
 
-    // 비디오 파일 입력 변경 핸들러
+    // 파일 입력 변경 핸들러
     const handleFileChange = (e) => {
-        setVideoFile(e.target.files[0]);
+        setFile(e.target.files[0]);
+    };
+
+    // 이미지 입력 변경 핸들러
+    const handleImageChange = (e) => {
+        const selectedImage = e.target.files[0];
+        setImage(selectedImage);
+
+        // 이미지 미리보기 설정
+        if (selectedImage) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(reader.result); // 미리보기 이미지 설정
+            };
+            reader.readAsDataURL(selectedImage); // 파일을 데이터 URL로 읽음
+        }
     };
 
     // 폼 제출 핸들러
     const handleSubmit = (e) => {
         e.preventDefault();
-        setError(null); // 기존 오류 메시지 초기화
+        setLoading(true);
 
-        if (!videoFile) {
-            setError("영상을 업로드해주세요.");
-            return;
+        if (!file) {
+            alert("파일을 업로드해 주세요.");
+            setLoading(false); // 로딩 상태를 종료
+            return; // 폼 제출을 중단
         }
 
         const formData = new FormData();
         formData.append("title", title);
         formData.append("writer", writer);
         formData.append("content", content);
-        formData.append("file", videoFile);
 
-        // POST 요청
-        axios
-            .post(`${SERVER_URL}eduMaterialSharing/writepro`, formData, {
-                headers: {
-                    Authorization: `${token}`, // Bearer 토큰 형식으로 수정
-                },
-            })
+        if (file) {
+            formData.append("file", file); // 일반 파일 추가
+        }
+
+        if (image) {
+            formData.append("image", image); // 이미지 파일 추가
+        }
+
+        axios.post(`${SERVER_URL}eduMaterialSharing/writepro`, formData, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
             .then((response) => {
-                window.alert("게시글이 성공적으로 등록되었습니다.");
-                navigate("/eduData/edu-material-sharing"); // 성공 시 목록 페이지로 이동
+                console.log("응답 데이터: ", response.data);  // 응답 전체 로그 출력
+                const { fileUrl, imageUrl } = response.data;  // 서버 응답에서 fileUrl과 imageUrl 추출
+
+                // 응답에 fileUrl과 imageUrl이 존재하는지 체크
+                if (fileUrl && imageUrl) {
+                    window.alert("게시글이 성공적으로 등록되었습니다.");
+                    navigate("/eduData/edu-material-sharing");
+                } else {
+                    window.alert("파일 또는 이미지 URL이 잘못 반환되었습니다.");
+                }
             })
             .catch((err) => {
                 console.error("게시글 등록 중 오류가 발생했습니다.", err);
                 setError("게시글 등록 중 문제가 발생했습니다. 다시 시도해주세요.");
             })
             .finally(() => {
-                setLoading(false); // 로딩 상태 종료
+                setLoading(false);
             });
-
     };
 
     return (
@@ -103,7 +127,6 @@ function EduMaterialSharingWrite() {
                 <div className="edu-card-body">
                     <h2>새 게시글 작성</h2>
                     {error && <div className="edu-error-message">{error}</div>}
-
                     <form onSubmit={handleSubmit}>
                         <div className="edu-form-group">
                             <TextField
@@ -114,7 +137,6 @@ function EduMaterialSharingWrite() {
                                 required
                             />
                         </div>
-
                         <div className="edu-form-group">
                             <TextField
                                 label="작성자"
@@ -124,7 +146,6 @@ function EduMaterialSharingWrite() {
                                 disabled
                             />
                         </div>
-
                         <div className="edu-form-group">
                             <TextField
                                 label="내용"
@@ -136,34 +157,32 @@ function EduMaterialSharingWrite() {
                                 required
                             />
                         </div>
-
-                        {/* 비디오 파일 업로드 */}
                         <div className="edu-form-group">
-                            <label>영상 파일:</label>
+                            <label>첨부파일(필수):</label>
                             <input
                                 type="file"
-                                accept="video/*" // 비디오 파일만 허용
-                                onChange={handleFileChange} // 수정된 부분
+                                accept=".pdf, .docx, .xlsx, .hwp"
+                                onChange={handleFileChange}
                             />
                         </div>
-
-                        {/* 영상 미리보기 (업로드된 파일의 URL을 사용) */}
-                        {videoFile && (
-                            <div className="edu-video-preview">
-                                <h4>영상 미리보기:</h4>
-                                <video
-                                    controls // 재생 컨트롤러 표시
-                                    src={URL.createObjectURL(videoFile)} // 업로드된 파일의 로컬 URL
-                                >
-                                    브라우저가 비디오 태그를 지원하지 않습니다.
-                                </video>
-                            </div>
-                        )}
-
+                        {/* 이미지 미리보기 추가 */}
+                        <div className="edu-form-group">
+                            <label>이미지:</label>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={handleImageChange}
+                            />
+                            {imagePreview && (
+                                <div className="edu-image-preview-container">
+                                    <img src={imagePreview} alt="미리보기" className="edu-image-preview" />
+                                </div>
+                            )}
+                        </div>
                         <div className="edu-button-group">
                             <Button
                                 variant="contained"
-                                color="primary"
+                                color="success"
                                 type="submit"
                                 disabled={loading}
                             >
@@ -171,7 +190,7 @@ function EduMaterialSharingWrite() {
                             </Button>
                             <Button
                                 variant="outlined"
-                                color="secondary"
+                                color="primary"
                                 onClick={() => navigate("/eduData/edu-material-sharing")}
                             >
                                 목록

@@ -25,7 +25,7 @@ function VideoEducationDetail() {
         }
 
         axios
-            .get(`${SERVER_URL}videoEducations/${id}`) // API URL
+            .get(`${SERVER_URL}videoEducation/${id}`) // API URL
             .then((response) => {
                 setVideoEducation(response.data);
                 setLoading(false);
@@ -66,7 +66,7 @@ function VideoEducationDetail() {
         if (!window.confirm("삭제하시겠습니까?")) return;
 
         axios
-            .delete(`${SERVER_URL}videoEducations/${id}`, {
+            .delete(`${SERVER_URL}videoEducation/delete/${id}`, {
                 headers: {
                     Authorization: `${token}`,
                 },
@@ -127,7 +127,7 @@ function VideoEducationDetail() {
                         <div className="edu-form-group">
                             <label>내용:</label>
                             <textarea
-                                rows={5}
+                                rows={1}
                                 value={videoEducation.content}
                                 readOnly
                                 className="edu-form-control"
@@ -146,7 +146,7 @@ function VideoEducationDetail() {
                                 </video>
                             </div>
                         )}
-
+                        <br />
                         <div className="edu-button-group">
                             {isAdmin && (
                                 <Button

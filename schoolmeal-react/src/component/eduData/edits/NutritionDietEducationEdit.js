@@ -43,7 +43,7 @@ function NutritionDietEducationEdit() {
     useEffect(() => {
         if (isAuth && isAdmin) {
             axios
-                .get(`${SERVER_URL}nutritionDietEducations/${id}`)
+                .get(`${SERVER_URL}nutritionDietEducation/${id}`)
                 .then((response) => {
                     const data = response.data;
                     setNutritionDietEducation({
@@ -118,8 +118,8 @@ function NutritionDietEducationEdit() {
         }
     };
 
-    if (loading) {
-        return <div><LoadingSpinner /></div>;
+    if (isLoadingAuth || loading) {
+        return <LoadingSpinner />;
     }
 
     if (error) {
@@ -149,14 +149,14 @@ function NutritionDietEducationEdit() {
                                 name="writer"
                                 value={nutritionDietEducation.writer}
                                 onChange={handleChange}
-                                required
+                                disabled
                             />
                         </div>
                         <div className="edu-form-group">
                             <label>내용:</label>
                             <textarea
                                 name="content"
-                                rows={5}
+                                rows={1}
                                 value={nutritionDietEducation.content}
                                 onChange={handleChange}
                                 required
@@ -167,7 +167,7 @@ function NutritionDietEducationEdit() {
                             <input
                                 type="file"
                                 name="file"
-                                accept="image/*,application/pdf,.docx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                accept="image/*, .pdf, .docx, .xlsx, .hwp"
                                 onChange={handleChange}
                             />
                         </div>

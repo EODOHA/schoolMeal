@@ -23,15 +23,11 @@ function VideoEducationWrite() {
     // 작성자를 memberId로 설정 
     useEffect(() => {
         let writer = role;
-        console.log(role);
-        console.log(isBoardAdmin);
-
         if (isAdmin) {
             writer = "관리자";
         } else if (isBoardAdmin) {
             writer = "담당자";
         }
-
         setWriter(writer);
 
     }, [memberId, role, isAdmin, isBoardAdmin]);
@@ -50,7 +46,6 @@ function VideoEducationWrite() {
         }
     }, [isAuth, isAdmin, isBoardAdmin, isLoadingAuth, navigate]);
 
-    // 관리자가 아닌 경우에만 "unauthorized"로 리다이렉트
     if (isLoadingAuth || !isAuth || (isAdmin === false && isBoardAdmin === false)) {
         return <div><LoadingSpinner /></div>;
     }
@@ -66,8 +61,9 @@ function VideoEducationWrite() {
         setError(null); // 기존 오류 메시지 초기화
 
         if (!videoFile) {
-            setError("영상을 업로드해주세요.");
-            return;
+            alert("비디오를 업로드해 주세요.");
+            setLoading(false); // 로딩 상태를 종료
+            return; // 폼 제출을 중단
         }
 
         const formData = new FormData();
@@ -103,7 +99,6 @@ function VideoEducationWrite() {
                 <div className="edu-card-body">
                     <h2>새 게시글 작성</h2>
                     {error && <div className="edu-error-message">{error}</div>}
-
                     <form onSubmit={handleSubmit}>
                         <div className="edu-form-group">
                             <TextField
@@ -114,7 +109,6 @@ function VideoEducationWrite() {
                                 required
                             />
                         </div>
-
                         <div className="edu-form-group">
                             <TextField
                                 label="작성자"
@@ -124,7 +118,6 @@ function VideoEducationWrite() {
                                 disabled
                             />
                         </div>
-
                         <div className="edu-form-group">
                             <TextField
                                 label="내용"
@@ -136,17 +129,15 @@ function VideoEducationWrite() {
                                 required
                             />
                         </div>
-
                         {/* 비디오 파일 업로드 */}
                         <div className="edu-form-group">
-                            <label>영상 파일:</label>
+                            <label>영상 파일(필수):</label>
                             <input
                                 type="file"
                                 accept="video/*" // 비디오 파일만 허용
                                 onChange={handleFileChange} // 수정된 부분
                             />
                         </div>
-
                         {/* 영상 미리보기 (업로드된 파일의 URL을 사용) */}
                         {videoFile && (
                             <div className="edu-video-preview">
@@ -159,7 +150,7 @@ function VideoEducationWrite() {
                                 </video>
                             </div>
                         )}
-
+                        <br />
                         <div className="edu-button-group">
                             <Button
                                 variant="contained"
