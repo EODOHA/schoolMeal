@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { SERVER_URL } from "../../../Constants";
 import "../../../css/community/SchoolMealNewsList.css"; 
+import SchoolMealNewsAnalyzer from '../../artificial_intelligence/SchoolMealNewsAnalyzer';
 
 const SchoolMealNewsList = () => {
   const [news, setNews] = useState([]);
@@ -30,6 +31,7 @@ const SchoolMealNewsList = () => {
 
   return (
     <div className="news-list-container">
+      <SchoolMealNewsAnalyzer />
       <h2>급식 뉴스</h2>
       <ul className="news-list">
         {news.map((item, index) => (
