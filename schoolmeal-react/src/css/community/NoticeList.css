@@ -30,12 +30,14 @@ h2 {
   text-align: center;
 }
 
+/* 테이블색깔 */
 .communitynotice-table th {
   background-color: #ddd;
   color: #000000;
   font-weight: bold;
 }
 
+/* 테이블내용색깔 */
 .communitynotice-table td {
   background-color: #fff;
   cursor: pointer;

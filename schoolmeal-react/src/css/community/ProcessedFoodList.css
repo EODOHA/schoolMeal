@@ -1,11 +1,11 @@
 /* 전체 테이블 컨테이너 */
-.food-list-container {
-  width: 70%;
-  margin: 30px auto;
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+.processed-food-list-container {
+  width: 90%; 
+  margin: 30px auto; 
+  padding: 20px; 
+  background-color: #f9f9f9; 
+  border-radius: 8px; 
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); 
 }
 
 /* 제목 스타일 */
@@ -69,11 +69,11 @@ h2 {
 
 /* 썸네일 이미지 스타일 */
 .food-thumbnail {
-  width: 80px; /* 이미지 너비를 제한 */
-  height: 80px; /* 이미지 높이를 제한 */
-  object-fit: cover; /* 이미지를 비율 유지하면서 셀 크기에 맞추어 자름 */
+  width: 160px; 
+  height: auto; 
+  object-fit: cover; 
   border-radius: 8px; /* 이미지 모서리를 둥글게 */
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* 약간의 그림자 추가로 강조 */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); 
 }
 
 /* 검색 컨테이너 */
