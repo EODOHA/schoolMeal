@@ -3,7 +3,7 @@ import { Button, Menu, MenuItem, Stack, Popover } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { eduOfficeTypeEnglish } from "../mealPolicy/EduOfficeUtils";
 
-function MealPolicycyFilterButton({ onFilterChange }) {
+function MealPolicyFilterButton({ onFilterChange }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [eduOfficeAnchorEl, setEduOfficeAnchorEl] = useState(null);
   const [selectedFilter, setSelectedFilter] = useState("전체");
@@ -25,7 +25,7 @@ function MealPolicycyFilterButton({ onFilterChange }) {
   const handleEduOfficeClick = (eduOffice) => {
     const eduOfficeType = eduOfficeTypeEnglish(eduOffice);
     setSelectedFilter(eduOffice);
-    onFilterChange('시∙도 교육청', eduOffice, eduOfficeType);
+    onFilterChange('시∙도 교육청', eduOfficeType);
     handleEduOfficeClose();
     handleClose();
   };
@@ -108,4 +108,4 @@ function MealPolicycyFilterButton({ onFilterChange }) {
   );
 }
 
-export default MealPolicycyFilterButton;
+export default MealPolicyFilterButton;

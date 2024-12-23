@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { SERVER_URL } from "../../../Constants";
-import "../../../css/community/AcademicMaterialsList.css"; 
+import "../../../css/community/AcademicMaterialsList.css";
 
 const AcademicMaterialsList = () => {
   const [materialsList, setMaterialsList] = useState([]);

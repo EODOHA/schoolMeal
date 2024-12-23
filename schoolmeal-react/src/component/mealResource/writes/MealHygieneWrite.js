@@ -23,17 +23,12 @@ function MealHygieneWrite() {
     // 작성자를 memberId로 설정 
     useEffect(() => {
         let writer = role; 
-        console.log(role);
-        console.log(isBoardAdmin);
-
         if (isAdmin) {
             writer = "관리자";
         } else if (isBoardAdmin) {
             writer = "담당자";
         }
-
         setWriter(writer);
-
     }, [memberId, role, isAdmin, isBoardAdmin]);
 
     useEffect(() => {
@@ -50,7 +45,6 @@ function MealHygieneWrite() {
         }
     }, [isAuth, isAdmin, isBoardAdmin, isLoadingAuth, navigate]);
 
-    // 관리자가 아닌 경우에만 "unauthorized"로 리다이렉트
     if (isLoadingAuth || !isAuth || (isAdmin === false && isBoardAdmin === false)) {
         return <div><LoadingSpinner /></div>;
     }
@@ -92,13 +86,13 @@ function MealHygieneWrite() {
     };
 
     return (
-        <div className="edu-write-container">
-            <div className="edu-card">
-                <div className="edu-card-body">
+        <div className="meal-resource-write-container">
+            <div className="meal-resource-card">
+                <div className="meal-resource-card-body">
                     <h2>새 게시글 작성</h2>
-                    {error && <div className="edu-error-message">{error}</div>}
+                    {error && <div className="meal-resource-error-message">{error}</div>}
                     <form onSubmit={handleSubmit}>
-                        <div className="edu-form-group">
+                        <div className="meal-resource-form-group">
                             <TextField
                                 label="제목"
                                 fullWidth
@@ -107,7 +101,7 @@ function MealHygieneWrite() {
                                 required
                             />
                         </div>
-                        <div className="edu-form-group">
+                        <div className="meal-resource-form-group">
                             <TextField
                                 label="작성자"
                                 fullWidth
@@ -116,7 +110,7 @@ function MealHygieneWrite() {
                                 disabled
                             />
                         </div>
-                        <div className="edu-form-group">
+                        <div className="meal-resource-form-group">
                             <TextField
                                 label="내용"
                                 fullWidth
@@ -127,15 +121,15 @@ function MealHygieneWrite() {
                                 required
                             />
                         </div>
-                        <div className="edu-form-group">
+                        <div className="meal-resource-form-group">
                             <label>첨부파일:</label>
                             <input
                                 type="file"
-                                accept="image/*, .pdf, .docx"
+                                accept="image/*, .pdf, .docx, .xlsx, .hwp"
                                 onChange={handleFileChange}
                             />
                         </div>
-                        <div className="edu-button-group">
+                        <div className="meal-resource-button-group">
                             <Button
                                 variant="contained"
                                 color="success"

@@ -109,7 +109,7 @@ function App() {
 
               {/* 커뮤니티-급식 뉴스 및 학술 자료 관련 라우팅 추가 */}
               <Route path="community/crawling/school-news" element={<SchoolMealNewsList />} />
-              <Route path="community/crawling/academic-materials" element={<AcademicMaterialsList />} />
+              <Route path="community/crawling/materials" element={<AcademicMaterialsList />} />
 
            
              

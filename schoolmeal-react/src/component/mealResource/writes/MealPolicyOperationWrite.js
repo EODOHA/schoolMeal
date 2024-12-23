@@ -24,17 +24,12 @@ function MealPolicyOperationWrite() {
     // 작성자를 memberId로 설정 
     useEffect(() => {
         let writer = role;
-        console.log(role);
-        console.log(isBoardAdmin);
-
         if (isAdmin) {
             writer = "관리자";
         } else if (isBoardAdmin) {
             writer = "담당자";
         }
-
         setWriter(writer);
-
     }, [memberId, role, isAdmin, isBoardAdmin]);
 
     useEffect(() => {
@@ -51,7 +46,6 @@ function MealPolicyOperationWrite() {
         }
     }, [isAuth, isAdmin, isBoardAdmin, isLoadingAuth, navigate]);
 
-    // 관리자가 아닌 경우에만 "unauthorized"로 리다이렉트
     if (isLoadingAuth || !isAuth || (isAdmin === false && isBoardAdmin === false)) {
         return <div><LoadingSpinner /></div>;
     }
@@ -104,7 +98,6 @@ function MealPolicyOperationWrite() {
                 <div className="meal-resource-card-body">
                     <h2>새 게시글 작성</h2>
                     {error && <div className="meal-resource-error-message">{error}</div>}
-
                     <form onSubmit={handleSubmit}>
                         <div className="meal-resource-form-group">
                             <TextField
@@ -115,7 +108,6 @@ function MealPolicyOperationWrite() {
                                 required
                             />
                         </div>
-
                         <div className="meal-resource-form-group">
                             <TextField
                                 label="작성자"
@@ -125,7 +117,6 @@ function MealPolicyOperationWrite() {
                                 disabled
                             />
                         </div>
-
                         <div className="meal-resource-form-group">
                             <TextField
                                 label="내용"
@@ -137,7 +128,6 @@ function MealPolicyOperationWrite() {
                                 required
                             />
                         </div>
-
                         <div className="meal-resource-form-group">
                             <FormControl fullWidth required>
                                 <InputLabel>시∙도 교육청</InputLabel>
@@ -166,7 +156,6 @@ function MealPolicyOperationWrite() {
                                 </Select>
                             </FormControl>
                         </div>
-
                         <div className="meal-resource-form-group">
                             <label>첨부파일:</label>
                             <input
@@ -175,7 +164,6 @@ function MealPolicyOperationWrite() {
                                 onChange={handleFileChange}
                             />
                         </div>
-
                         <div className="meal-resource-button-group">
                             <Button
                                 variant="contained"

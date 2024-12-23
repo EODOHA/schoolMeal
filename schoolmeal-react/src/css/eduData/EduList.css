@@ -27,6 +27,8 @@
 .edu-left-buttons {
     display: flex;
     gap: 10px; /* 새 글 쓰기 버튼과 필터 버튼 사이 여백 */
+    justify-content: center;
+    align-items: center;
 }
 
 .edu-right-searchbar {

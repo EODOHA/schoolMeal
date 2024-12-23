@@ -28,7 +28,7 @@ function MealPolicyOperationDetail() {
         }
 
         axios
-            .get(`${SERVER_URL}mealPolicyOperations/${id}`)
+            .get(`${SERVER_URL}mealPolicyOperation/${id}`)
             .then((response) => {
                 setMealPolicyOperation(response.data);
                 // 작성자 확인
@@ -130,12 +130,13 @@ function MealPolicyOperationDetail() {
                         <div className="meal-resource-form-group">
                             <label>내용:</label>
                             <textarea
-                                rows={5}
+                                rows={1}
                                 value={mealPolicyOperation.content}
                                 readOnly
                                 className="meal-resource-form-control"
                             />
-                        </div><br />
+                        </div>
+                        <br />
                         <div className="meal-resource-button-group">
                             {isAuthor && (
                                 <Button

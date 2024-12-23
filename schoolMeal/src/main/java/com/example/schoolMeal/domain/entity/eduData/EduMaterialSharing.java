@@ -3,6 +3,7 @@ package com.example.schoolMeal.domain.entity.eduData;
 import java.time.LocalDateTime;
 
 import com.example.schoolMeal.domain.entity.FileUrl;
+import com.example.schoolMeal.domain.entity.ImageUrl;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -54,6 +55,18 @@ public class EduMaterialSharing {
 	public Long getFileUrlId() {
 		if (fileUrl != null) {
 			return fileUrl.getId();
+		}
+		return null;
+	}
+
+	// 이미지 URL과의 1:1 관계 추가
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name = "image_id", referencedColumnName = "id")
+	private ImageUrl imageUrl;
+
+	public Long getImageUrlId() {
+		if (imageUrl != null) {
+			return imageUrl.getId();
 		}
 		return null;
 	}

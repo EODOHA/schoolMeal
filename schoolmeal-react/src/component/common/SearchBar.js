@@ -8,7 +8,7 @@ function SearchBar({ onFilterChange }) {
     const [anchorEl, setAnchorEl] = useState(null);  // 필터 메뉴 앵커
     const [selectedFilter, setSelectedFilter] = useState("전체");  // 선택된 필터
 
-    const filterOptions = ["전체", "제목", "작성자"];  // 필터 옵션
+    const filterOptions = ["전체", "제목", "작성자", "내용"];  // 필터 옵션
 
     // 검색어가 변경될 때마다 호출
     const handleSearchChange = (e) => {

@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { SERVER_URL } from "../../../Constants";
 import "../../../css/mealResource/MealList.css";
 import Button from "@mui/material/Button";
-import { MdAttachFile } from "react-icons/md";
-import { BsFileExcel } from "react-icons/bs";
+import { CiImageOn, CiImageOff } from "react-icons/ci";
 import { HiChevronLeft, HiChevronDoubleLeft, HiChevronRight, HiChevronDoubleRight } from "react-icons/hi";
 import "../../../css/page/Pagination.css";
 import { useAuth } from "../../sign/AuthContext";  // 권한설정
@@ -16,7 +15,6 @@ function SchoolMealCaseList() {
     const [selectedFilter, setSelectedFilter] = useState('전체'); // 필터 상태 추가
     const navigate = useNavigate();
     const { isAdmin, isBoardAdmin } = useAuth();  // 로그인 상태 확인
-
     // 페이지네이션 상태
     const [currentPage, setCurrentPage] = useState(1);  //현재 페이지 상태(기본값:1)
     const [postsPerPage] = useState(5); // 페이지당 게시글 수
@@ -34,10 +32,13 @@ function SchoolMealCaseList() {
             return item.title.toLowerCase().includes(searchQuery.toLowerCase());
         } else if (selectedFilter === '작성자') {
             return item.writer.toLowerCase().includes(searchQuery.toLowerCase());
+        } else if (selectedFilter === '내용') {
+            return item.content.toLowerCase().includes(searchQuery.toLowerCase());
         } else { // 전체
             return (
                 item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                item.writer.toLowerCase().includes(searchQuery.toLowerCase())
+                item.writer.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                item.content.toLowerCase().includes(searchQuery.toLowerCase())
             );
         }
     })
@@ -126,7 +127,7 @@ function SchoolMealCaseList() {
                         <th>제목</th>
                         <th>등록일</th>
                         <th>작성자</th>
-                        <th>첨부파일</th>
+                        <th>이미지</th>
                     </tr>
                 </thead>
                 <tbody className="meal-resource-tbody">
@@ -150,10 +151,10 @@ function SchoolMealCaseList() {
                                     <td>{formatDate(schoolMealCase.createdDate)}</td>
                                     <td>{schoolMealCase.writer}</td>
                                     <td>
-                                        {schoolMealCase.fileUrlId ? (
-                                            <span className="meal-resource-attachment-icon"><MdAttachFile /></span>
+                                        {schoolMealCase.imageUrlId ? (
+                                            <span className="meal-resource-attachment-icon"><CiImageOn /></span>
                                         ) : (
-                                            <span className="meal-resource-attachment-icon"><BsFileExcel /></span>
+                                            <span className="meal-resource-attachment-icon"><CiImageOff /></span>
                                         )}
                                     </td>
                                 </tr>

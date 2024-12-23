@@ -34,10 +34,13 @@ function NutritionDietEducationList() {
             return item.title.toLowerCase().includes(searchQuery.toLowerCase());
         } else if (selectedFilter === '작성자') {
             return item.writer.toLowerCase().includes(searchQuery.toLowerCase());
+        } else if (selectedFilter === '내용') {
+            return item.content.toLowerCase().includes(searchQuery.toLowerCase());
         } else { // 전체
             return (
                 item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                item.writer.toLowerCase().includes(searchQuery.toLowerCase())
+                item.writer.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                item.content.toLowerCase().includes(searchQuery.toLowerCase())
             );
         }
     })
@@ -94,7 +97,7 @@ function NutritionDietEducationList() {
 
     return (
         <div className="edu-list-container">
-            <h1 className="edu-title">영양·식생활 교육자료</h1>
+            <h1 className="edu-title">영양 및 식생활 교육자료</h1>
             <div className="edu-button-group">
                 <div className="edu-left-buttons">
                     {(isAdmin || isBoardAdmin) && (

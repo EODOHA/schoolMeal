@@ -43,11 +43,7 @@ function MealPolicyOperationEdit() {
     useEffect(() => {
         if (isAuth && isAdmin) {
             axios
-                .get(`${SERVER_URL}mealPolicyOperations/${id}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                })
+                .get(`${SERVER_URL}mealPolicyOperation/${id}`)
                 .then((response) => {
                     const data = response.data;
                     setMealPolicyOperation({
@@ -122,8 +118,8 @@ function MealPolicyOperationEdit() {
         }
     };
 
-    if (loading) {
-        return <div><LoadingSpinner /></div>;
+    if (isLoadingAuth || loading) {
+        return <LoadingSpinner />;
     }
 
     if (error) {
@@ -153,14 +149,14 @@ function MealPolicyOperationEdit() {
                                 name="writer"
                                 value={mealPolicyOperation.writer}
                                 onChange={handleChange}
-                                required
+                                disabled
                             />
                         </div>
                         <div className="meal-resource-form-group">
                             <label>내용:</label>
                             <textarea
                                 name="content"
-                                rows={5}
+                                rows={1}
                                 value={mealPolicyOperation.content}
                                 onChange={handleChange}
                                 required
@@ -171,7 +167,7 @@ function MealPolicyOperationEdit() {
                             <input
                                 type="file"
                                 name="file"
-                                accept="image/*,application/pdf,.docx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                accept="image/*, .pdf, .docx, .xlsx, .hwp"
                                 onChange={handleChange}
                             />
                         </div>

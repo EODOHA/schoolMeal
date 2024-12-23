@@ -23,17 +23,12 @@ function MealFacilityEquipmentWrite() {
     // 작성자를 memberId로 설정 
     useEffect(() => {
         let writer = role; 
-        console.log(role);
-        console.log(isBoardAdmin);
-
         if (isAdmin) {
             writer = "관리자";
         } else if (isBoardAdmin) {
             writer = "담당자";
         }
-
         setWriter(writer);
-
     }, [memberId, role, isAdmin, isBoardAdmin]);
 
     useEffect(() => {
@@ -50,7 +45,6 @@ function MealFacilityEquipmentWrite() {
         }
     }, [isAuth, isAdmin, isBoardAdmin, isLoadingAuth, navigate]);
 
-    // 관리자가 아닌 경우에만 "unauthorized"로 리다이렉트
     if (isLoadingAuth || !isAuth || (isAdmin === false && isBoardAdmin === false)) {
         return <div><LoadingSpinner /></div>;
     }
@@ -131,7 +125,7 @@ function MealFacilityEquipmentWrite() {
                             <label>첨부파일:</label>
                             <input
                                 type="file"
-                                accept="image/*, .pdf, .docx"
+                                accept="image/*, .pdf, .docx, .xlsx, .hwp"
                                 onChange={handleFileChange}
                             />
                         </div>

@@ -17,27 +17,37 @@ function LessonDemoVideoWrite() {
     const [isLoadingAuth, setIsLoadingAuth] = useState(true); // 인증 상태 로딩
     const navigate = useNavigate();
 
-    // AuthContext에서 인증 상태와 권한 정보 가져오기
-    const { isAuth, isAdmin, token } = useAuth();
+     // AuthContext에서 인증 상태와 권한 정보 가져오기
+     const { isAuth, isAdmin, isBoardAdmin, token, role, memberId } = useAuth();
 
-    useEffect(() => {
-        // 인증 상태와 권한 정보가 변경될 때마다 실행
-        if (isAuth !== undefined && isAdmin !== undefined) {
-            setIsLoadingAuth(false); // 인증 상태가 로드된 후 로딩 상태를 false로 설정
-        }
-    }, [isAuth, isAdmin]);
-
-    useEffect(() => {
-        // `isAuth`와 `isAdmin` 값이 `false`로 설정된 이후에만 실행되도록 체크
-        if (!isLoadingAuth && (isAuth === false || isAdmin === false)) {
-            navigate("/unauthorized");
-        }
-    }, [isAuth, isAdmin, navigate, isLoadingAuth]);
-
-    // 로그인하지 않았거나 관리자가 아닌 경우에는 화면 렌더링을 하지 않음
-    if (isLoadingAuth || !isAuth || !isAdmin) {
-        return <div><LoadingSpinner /></div>;
-    }
+     // 작성자를 memberId로 설정
+     useEffect(() => {
+         let writer = role;
+         if (isAdmin) {
+             writer = "관리자";
+         } else if (isBoardAdmin) {
+             writer = "담당자";
+         }
+         setWriter(writer);
+     }, [memberId, role, isAdmin, isBoardAdmin]);
+ 
+     useEffect(() => {
+         // 인증 상태와 권한 정보가 변경될 때마다 실행
+         if (isAuth !== undefined && isAdmin !== undefined && isBoardAdmin !== undefined) {
+             setIsLoadingAuth(false); // 인증 상태가 로드된 후 로딩 상태를 false로 설정
+         }
+     }, [isAuth, isAdmin, isBoardAdmin]);
+ 
+     useEffect(() => {
+         // 인증 상태가 완전히 로딩된 후, 권한이 없을 경우 "unauthorized" 페이지로 리다이렉트
+         if (!isLoadingAuth && (!isAuth || (!isAdmin && !isBoardAdmin))) {
+             navigate("/unauthorized");
+         }
+     }, [isAuth, isAdmin, isBoardAdmin, isLoadingAuth, navigate]);
+ 
+     if (isLoadingAuth || !isAuth || (isAdmin === false && isBoardAdmin === false)) {
+         return <div><LoadingSpinner /></div>;
+     }
 
     // 비디오 파일 입력 변경 핸들러
     const handleFileChange = (e) => {
@@ -50,8 +60,9 @@ function LessonDemoVideoWrite() {
         setError(null); // 기존 오류 메시지 초기화
 
         if (!videoFile) {
-            setError("영상을 업로드해주세요.");
-            return;
+            alert("비디오를 업로드해 주세요.");
+            setLoading(false); // 로딩 상태를 종료
+            return; // 폼 제출을 중단
         }
 
         const formData = new FormData();
@@ -87,7 +98,6 @@ function LessonDemoVideoWrite() {
                 <div className="edu-card-body">
                     <h2>새 게시글 작성</h2>
                     {error && <div className="edu-error-message">{error}</div>}
-
                     <form onSubmit={handleSubmit}>
                         <div className="edu-form-group">
                             <TextField
@@ -98,17 +108,15 @@ function LessonDemoVideoWrite() {
                                 required
                             />
                         </div>
-
                         <div className="edu-form-group">
                             <TextField
                                 label="작성자"
                                 fullWidth
                                 value={writer}
                                 onChange={(e) => setWriter(e.target.value)}
-                                required
+                                disabled
                             />
                         </div>
-
                         <div className="edu-form-group">
                             <TextField
                                 label="내용"
@@ -120,17 +128,15 @@ function LessonDemoVideoWrite() {
                                 required
                             />
                         </div>
-
                         {/* 비디오 파일 업로드 */}
                         <div className="edu-form-group">
-                            <label>영상 파일:</label>
+                            <label>영상 파일(필수):</label>
                             <input
                                 type="file"
                                 accept="video/*" // 비디오 파일만 허용
                                 onChange={handleFileChange} // 수정된 부분
                             />
                         </div>
-
                         {/* 영상 미리보기 (업로드된 파일의 URL을 사용) */}
                         {videoFile && (
                             <div className="edu-video-preview">
@@ -143,7 +149,7 @@ function LessonDemoVideoWrite() {
                                 </video>
                             </div>
                         )}
-
+                        <br />
                         <div className="edu-button-group">
                             <Button
                                 variant="contained"

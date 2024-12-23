@@ -55,7 +55,7 @@ public class MealPolicyOperationController {
 			// 시∙도 교육청 필터링
 			mealPolicies = mealPolicyOperationService.mealPolicyOperationByEduOffice(eduOffice);
 		} else {
-			// 연령대 및 시기 필터링 없이 모든 게시글 반환
+			// 시∙도 교육청 필터링 없이 모든 게시글 반환
 			mealPolicies = mealPolicyOperationService.mealPolicyOperationList();
 		}
 		return ResponseEntity.ok(mealPolicies);

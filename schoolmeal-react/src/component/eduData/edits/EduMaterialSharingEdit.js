@@ -1,186 +1,261 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { Button, TextField } from "@mui/material";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { SERVER_URL } from "../../../Constants";
 import "../../../css/eduData/EduEdit.css";
+import Button from "@mui/material/Button";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 import { useAuth } from "../../sign/AuthContext";
-
 import LoadingSpinner from '../../common/LoadingSpinner';
 
 function EduMaterialSharingEdit() {
-    const [title, setTitle] = useState("");
-    const [writer, setWriter] = useState("");
-    const [content, setContent] = useState("");
-    const [videoFile, setVideoFile] = useState(null); // 새로 선택한 파일
-    const [existingVideo, setExistingVideo] = useState(""); // 기존 비디오 URL
-    const [previewVideoUrl, setPreviewVideoUrl] = useState(null); // 미리보기 URL
+    const [eduMaterialSharing, setEduMaterialSharing] = useState({
+        title: "",
+        writer: "",
+        createdDate: "",
+        content: "",
+        fileId: null,
+        file: null,
+        fileUrl: null,
+        image: null,
+        imagePreview: null,
+        imageUrlId: null,
+        imageUrl: null,
+    });
+
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const { isAuth, isAdmin, isBoardAdmin, token } = useAuth(); // 인증 상태와 권한 여부 가져오기
     const [isLoadingAuth, setIsLoadingAuth] = useState(true); // 인증 상태 로딩
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const navigate = useNavigate();
     const { id } = useParams();
+    const navigate = useNavigate();
+    const MAX_FILE_SIZE = 10 * 1024 * 1024; // Max file size 10MB
 
     useEffect(() => {
-            // 인증 상태와 권한 정보가 변경될 때마다 실행
-            if (isAuth !== undefined && isAdmin !== undefined && isBoardAdmin !== undefined) {
-                setIsLoadingAuth(false); // 인증 상태가 로드된 후 로딩 상태를 false로 설정
-            }
-        }, [isAuth, isAdmin, isBoardAdmin]);
-    
-        useEffect(() => {
-            // 인증 상태가 완전히 로딩된 후, 권한이 없을 경우 "unauthorized" 페이지로 리다이렉트
-            if (!isLoadingAuth && (!isAuth || (!isAdmin && !isBoardAdmin))) {
-                navigate("/unauthorized");
-            }
-        }, [isAuth, isAdmin, isBoardAdmin, isLoadingAuth, navigate]);
+        // 인증 상태와 권한 정보가 변경될 때마다 실행
+        if (isAuth !== undefined && isAdmin !== undefined && isBoardAdmin !== undefined) {
+            setIsLoadingAuth(false); // 인증 상태가 로드된 후 로딩 상태를 false로 설정
+        }
+    }, [isAuth, isAdmin, isBoardAdmin]);
 
-    // 기존 데이터 로드
+    useEffect(() => {
+        // 인증 상태가 완전히 로딩된 후, 권한이 없을 경우 "unauthorized" 페이지로 리다이렉트
+        if (!isLoadingAuth && (!isAuth || (!isAdmin && !isBoardAdmin))) {
+            navigate("/unauthorized");
+        }
+    }, [isAuth, isAdmin, isBoardAdmin, isLoadingAuth, navigate]);
+
     useEffect(() => {
         axios
             .get(`${SERVER_URL}eduMaterialSharing/${id}`)
             .then((response) => {
                 const data = response.data;
-                setTitle(data.title);
-                setWriter(data.writer);
-                setContent(data.content);
-                // 기존 비디오 URL을 http://localhost:8090/eduMaterialSharing/video/{id}로 설정
-                if (data.id) {
-                    setExistingVideo(`${SERVER_URL}eduMaterialSharing/video/${data.id}`);
+                setEduMaterialSharing({
+                    title: data.title,
+                    writer: data.writer,
+                    createdDate: data.createdDate,
+                    content: data.content,
+                    fileId: data.fileId || null,
+                    file: null,
+                    fileUrl: data.fileUrl || null,
+                    imageUrlId: data.imageUrlId || null,
+                    imageUrl: data.imageUrl || null,
+                    image: null,
+                    imagePreview: data.imageUrl || null, // 기본 이미지 URL 설정
+                });
+
+                // imageUrlId가 있을 때 이미지를 가져오는 부분
+                // 이미지 URL이 갱신되었으므로, imageUrlId를 이용해 이미지를 가져옵니다.
+                if (data.imageUrlId) {
+                    axios.get(`${SERVER_URL}eduMaterialSharing/image/${data.imageUrlId}`)
+                        .then(response => {
+                            const imageUrl = response.data.imageUrl;
+                            setEduMaterialSharing((prevState) => ({
+                                ...prevState,
+                                imagePreview: imageUrl,  // 갱신된 image_url을 상태에 반영
+                            }));
+                        })
+                        .catch(error => {
+                            console.error("Error fetching image:", error);
+                        });
                 }
+
+                setLoading(false);
             })
             .catch((err) => {
-                console.error("데이터 로드 실패:", err);
-                setError("데이터를 불러오는 중 문제가 발생했습니다.");
+                console.error("Error fetching post:", err);
+                setError("게시글을 불러오는 중 오류가 발생했습니다.");
+                setLoading(false);
             });
-    }, [id]);
+    }, [id, token]);
 
-    // 새로 선택된 파일의 미리보기 URL 생성
-    useEffect(() => {
-        if (videoFile) {
-            const tempUrl = URL.createObjectURL(videoFile);
-            setPreviewVideoUrl(tempUrl);
-            return () => URL.revokeObjectURL(tempUrl); // 메모리 해제
+    const handleChange = (e) => {
+        const { name, files } = e.target;
+        const file = files ? files[0] : null;
+
+        if (name === "file") {
+            if (file && file.size > MAX_FILE_SIZE) {
+                alert("파일 크기가 너무 큽니다. 최대 10MB까지 지원됩니다.");
+                return;
+            }
+            setEduMaterialSharing({
+                ...eduMaterialSharing,
+                file,
+            });
+        } else if (name === "image") {
+            if (file && file.size > MAX_FILE_SIZE) {
+                alert("이미지 크기가 너무 큽니다. 최대 10MB까지 지원됩니다.");
+                return;
+            }
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    setEduMaterialSharing({
+                        ...eduMaterialSharing,
+                        image: file,
+                        imagePreview: reader.result, // 새 이미지 미리보기
+                    });
+                };
+                reader.readAsDataURL(file);
+            } else {
+                setEduMaterialSharing({
+                    ...eduMaterialSharing,
+                    image: null,
+                    imagePreview: null,
+                });
+            }
+        } else {
+            setEduMaterialSharing({
+                ...eduMaterialSharing,
+                [name]: e.target.value,
+            });
         }
-        setPreviewVideoUrl(null);
-    }, [videoFile]);
+    };
 
-    const handleUpdateVideo = async () => {
+    const handleSave = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+
         const formData = new FormData();
-        formData.append("title", title);
-        formData.append("writer", writer);
-        formData.append("content", content);
-        if (videoFile) formData.append("file", videoFile);
+        formData.append("title", eduMaterialSharing.title);
+        formData.append("writer", eduMaterialSharing.writer);
+        formData.append("content", eduMaterialSharing.content);
 
+        if (eduMaterialSharing.file) {
+            formData.append("file", eduMaterialSharing.file);
+        } else if (eduMaterialSharing.fileId) {
+            formData.append("fileId", eduMaterialSharing.fileId);
+        }
+
+        if (eduMaterialSharing.image) {
+            formData.append("image", eduMaterialSharing.image);
+        }
+
+        // Axios 요청 보내기
         try {
-            setLoading(true);
-            const response = await axios.put(
-                `${SERVER_URL}eduMaterialSharing/update/${id}`, formData, {
+            const response = await axios.put(`${SERVER_URL}eduMaterialSharing/update/${id}`, formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "multipart/form-data",
                 },
             });
-
             if (response.status === 200) {
-                alert("게시글이 성공적으로 수정되었습니다.");
+                alert("수정되었습니다.");
                 navigate("/eduData/edu-material-sharing");
+            } else {
+                throw new Error("Unexpected response status");
             }
         } catch (err) {
-            console.error("수정 실패:", err);
-            setError("게시글 수정 중 오류가 발생했습니다.");
-        } finally {
-            setLoading(false);
+            console.error("Error updating post:", err);
+            setError("수정 중 오류가 발생했습니다. 다시 시도해주세요.");
         }
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        handleUpdateVideo();
-    };
+    if (isLoadingAuth || loading) {
+        return <LoadingSpinner />;
+    }
+    
+    if (error) {
+        return <div className="edu-error-message">{error}</div>;
+    }
 
     return (
         <div className="edu-edit-container">
             <div className="edu-card">
                 <div className="edu-card-body">
                     <h2>게시글 수정</h2>
-                    {error && <div className="edu-error-message">{error}</div>}
-                    <form onSubmit={handleSubmit}>
-                        <TextField
-                            label="제목"
-                            fullWidth
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            required
-                        />
-                        <TextField
-                            label="작성자"
-                            fullWidth
-                            value={writer}
-                            onChange={(e) => setWriter(e.target.value)}
-                            required
-                        />
-                        <TextField
-                            label="내용"
-                            fullWidth
-                            multiline
-                            rows={1}
-                            value={content}
-                            onChange={(e) => setContent(e.target.value)}
-                            required
-                        />
+                    <form onSubmit={handleSave}>
                         <div className="edu-form-group">
-                            <label>영상 파일:</label>
-                            <div>
-                                <input
-                                    type="file"
-                                    accept="video/*"
-                                    onChange={(e) => {
-                                        const file = e.target.files[0];
-                                        if (file) {
-                                            const tempUrl = URL.createObjectURL(file);
-                                            setVideoFile(file);
-                                            setPreviewVideoUrl(tempUrl); // URL 갱신
-                                        }
-                                    }}
-                                />
-                                <div className="edu-video-preview">
-                                    {previewVideoUrl ? (
-                                        <>
-                                            <h4>새 영상 미리보기:</h4>
-                                            <video controls src={previewVideoUrl}>
-                                                브라우저가 비디오 태그를 지원하지 않습니다.
-                                            </video>
-                                        </>
-                                    ) : existingVideo ? (
-                                        <>
-                                            <h4>기존 영상:</h4>
-                                            <video controls src={existingVideo}>
-                                                브라우저가 비디오 태그를 지원하지 않습니다.
-                                            </video>
-                                        </>
-                                    ) : (
-                                        <p>업로드된 영상이 없습니다.</p>
-                                    )}
+                            <label>제목:</label>
+                            <input
+                                type="text"
+                                name="title"
+                                value={eduMaterialSharing.title}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <div className="edu-form-group">
+                            <label>작성자:</label>
+                            <input
+                                type="text"
+                                name="writer"
+                                value={eduMaterialSharing.writer}
+                                onChange={handleChange}
+                                disabled
+                            />
+                        </div>
+                        <div className="edu-form-group">
+                            <label>내용:</label>
+                            <textarea
+                                name="content"
+                                rows={1}
+                                value={eduMaterialSharing.content}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <div className="edu-form-group">
+                            <label>첨부파일</label>
+                            <input
+                                type="file"
+                                name="file"
+                                accept=".pdf, .docx, .xlsx, .hwp"
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className="edu-form-group">
+                            <label>이미지</label>
+                            <input
+                                type="file"
+                                name="image"
+                                accept="image/*"
+                                onChange={handleChange}
+                            />
+                            {eduMaterialSharing.imagePreview ? (
+                                <div className="edu-image-preview-container">
+                                    <img
+                                        src={eduMaterialSharing.imagePreview} // imagePreview로 이미지 경로 설정
+                                        alt="이미지 미리보기"
+                                        className="edu-image-preview"
+                                    />
                                 </div>
-                            </div>
+                            ) : eduMaterialSharing.imageUrlId ? (
+                                <div className="edu-image-preview-container">
+                                    <img
+                                        src={`${SERVER_URL}eduMaterialSharing/image/${eduMaterialSharing.imageUrlId}`} // 서버에서 이미지 URL을 동적으로 불러오기
+                                        alt="기존 이미지"
+                                        className="edu-image-preview"
+                                    />
+                                </div>
+                            ) : null}
                         </div>
                         <div className="edu-button-group">
-                            <Button
-                                variant="outlined"
-                                color="success"
-                                type="submit"
-                                disabled={loading}
-                            >
-                                {loading ? "수정 중..." : "수정"}
+                            <Button variant="contained" color="success" type="submit">
+                                수정 저장
                             </Button>
-                            <Button
-                                variant="outlined"
-                                color="secondary"
-                                onClick={() => navigate("/eduData/edu-material-sharing")}
-                            >
-                                목록
+                            <Button variant="outlined" onClick={() => navigate(`/eduData/edu-material-sharing`)} >
+                                취소
                             </Button>
                         </div>
                     </form>

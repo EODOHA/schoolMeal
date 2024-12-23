@@ -5,7 +5,6 @@ import axios from "axios";
 import { SERVER_URL } from "../../../Constants";
 import "../../../css/mealResource/MealDetail.css"; // 스타일시트 적용
 import { MdOutlineFileDownload } from "react-icons/md";
-import { RiFileUnknowFill } from "react-icons/ri";
 import { useAuth } from "../../sign/AuthContext";
 import LoadingSpinner from '../../common/LoadingSpinner';
 
@@ -91,51 +90,75 @@ function SchoolMealCaseDetail() {
     };
 
     return (
-        <div className="edu-detail-container">
-            <div className="edu-card">
-                <div className="edu-card-body">
+        <div className="meal-resource-detail-container">
+            <div className="meal-resource-card">
+                <div className="meal-resource-card-body">
                     <h2>{schoolMealCase.title}</h2>
                     <hr />
-                    <div className="edu-header">
-                        <div className="edu-id">ID: {schoolMealCase.id}</div>
-                        <div className="edu-date">작성일: {formatDate(schoolMealCase.createdDate)}</div>
+                    <div className="meal-resource-header">
+                        <div className="meal-resource-id">ID: {schoolMealCase.id}</div>
+                        <div className="meal-resource-date">작성일: {formatDate(schoolMealCase.createdDate)}</div>
                     </div>
-                    <div className="edu-attachment">
-                        {/* 파일 URL을 사용하여 다운로드 링크를 생성 */}
-                        <div className="edu-attachment">
-                            {schoolMealCase.fileUrlId ? (
+                    <div className="meal-resource-attachment">
+                        {/* 이미지 다운로드 버튼 추가 */}
+                        {schoolMealCase.imageUrlId ? (
+                            <div className="meal-resource-attachment">
                                 <a
-                                    href={`${SERVER_URL}schoolMealCase/download/${schoolMealCase.id}`} // id를 사용하여 다운로드 URL 완성
+                                    href={`${SERVER_URL}schoolMealCase/download/image/${schoolMealCase.id}`} // 이미지 다운로드 URL
                                     download
-                                    className="edu-attachment-link"
+                                    className="meal-resource-attachment-link"
+                                >
+                                    이미지 다운로드 &nbsp; <MdOutlineFileDownload />
+                                </a>
+                            </div>
+                        ) : (
+                            <span></span>
+                        )}
+                        {/* 첨부파일 다운로드 버튼 */}
+                        {schoolMealCase.fileUrlId ? (
+                            <div className="meal-resource-attachment">
+                                <a
+                                    href={`${SERVER_URL}schoolMealCase/download/file/${schoolMealCase.id}`} // 파일 다운로드 URL 완성
+                                    download
+                                    className="meal-resource-attachment-link"
                                 >
                                     첨부파일 &nbsp; <MdOutlineFileDownload />
                                 </a>
-                            ) : (
-                                <span>첨부파일 없음 &nbsp; <RiFileUnknowFill /></span>
-                            )}
-                        </div>
-                    </div><br />
+                            </div>
+                        ) : (
+                            <span></span>
+                        )}
+                    </div>
                     <form>
-                        <div className="edu-form-group">
+                        <div className="meal-resource-form-group">
                             <label>작성자:</label>
                             <input
                                 type="text"
                                 value={schoolMealCase.writer}
                                 readOnly
-                                className="edu-form-control"
+                                className="meal-resource-form-control"
                             />
                         </div><br />
-                        <div className="edu-form-group">
+                        <div className="meal-resource-form-group">
                             <label>내용:</label>
                             <textarea
-                                rows={5}
+                                rows={1}
                                 value={schoolMealCase.content}
                                 readOnly
-                                className="edu-form-control"
+                                className="meal-resource-form-control"
                             />
-                        </div><br />
-                        <div className="edu-button-group">
+                        </div>
+                        {/* 이미지가 있으면 이미지 표시 */}
+                        {schoolMealCase.imageUrl && (
+                            <div className="meal-resource-image">
+                                <img
+                                    src={`${SERVER_URL}schoolMealCase/download/image/${schoolMealCase.id}`} // 이미지 다운로드 경로 수정
+                                    alt="이미지"
+                                />
+                            </div>
+                        )}
+                        <br />
+                        <div className="meal-resource-button-group">
                             {isAuthor && (
                                 <Button
                                     variant="outlined"

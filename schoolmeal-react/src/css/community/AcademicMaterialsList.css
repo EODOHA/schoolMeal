@@ -1,53 +1,67 @@
-.list-container {
-    width: 80%;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-  }
-  
-  h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #333;
-    font-weight: bold;
-  }
-  
-  .news-list, .materials-list {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .news-item, .materials-item {
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    background-color: #fff;
-    transition: box-shadow 0.3s ease-in-out;
-  }
-  
-  .news-item:hover, .materials-item:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  }
-  
-  .news-title, .materials-title {
-    font-size: 18px;
-    font-weight: bold;
-    color: #007bff;
-    text-decoration: none;
-  }
-  
-  .news-description, .materials-description {
-    font-size: 14px;
-    margin: 10px 0;
-    color: #555;
-  }
-  
-  .news-date, .materials-date {
-    font-size: 12px;
-    color: #999;
-  }
-  
+/* 컨테이너 스타일 */
+.materials-list-container {
+  width: 80%; 
+  margin: 20px auto; 
+  padding: 20px; 
+  background-color: #f9f9f9; 
+  border-radius: 8px; 
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); 
+}
+
+/* 제목 스타일 */
+.materials-list-container h2 {
+  text-align: center; 
+  margin-bottom: 20px; 
+  color: #333; 
+  font-weight: bold; 
+}
+
+/* 학술 자료 리스트 스타일 */
+.materials-list {
+  list-style-type: none; 
+  padding: 0; 
+  margin: 0; 
+}
+
+/* 학술 자료 항목 스타일 */
+.material-item {
+  padding: 15px; 
+  border: 1px solid #ddd; 
+  border-radius: 8px; 
+  margin-bottom: 15px; 
+  background-color: #fff; 
+  transition: box-shadow 0.3s ease-in-out; 
+}
+
+/* 항목 호버 효과 */
+.material-item:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); 
+}
+
+/* 제목 링크 스타일 */
+.material-title {
+  font-size: 18px; 
+  font-weight: bold; 
+  color: #007bff; 
+  text-decoration: none; 
+}
+
+/* 제목 링크 호버 효과 */
+.material-title:hover {
+  text-decoration: underline; 
+}
+
+/* 설명 스타일 */
+.material-description {
+  font-size: 14px; 
+  margin: 10px 0; 
+  color: #555; 
+  line-height: 1.5; 
+}
+
+/* 날짜 스타일 */
+.material-date {
+  font-size: 12px; 
+  color: #999; 
+  margin-top: 10px; 
+}

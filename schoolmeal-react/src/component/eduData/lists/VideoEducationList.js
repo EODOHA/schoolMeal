@@ -29,15 +29,18 @@ function VideoEducationList() {
 
     // 현재 페이지의 게시물 추출
     const currentPosts = videoEducation.filter(item => {
-        // 검색어 필터링 적용
-        if (selectedFilter === '제목') {
+         // 검색어 필터링 적용
+         if (selectedFilter === '제목') {
             return item.title.toLowerCase().includes(searchQuery.toLowerCase());
         } else if (selectedFilter === '작성자') {
             return item.writer.toLowerCase().includes(searchQuery.toLowerCase());
+        } else if (selectedFilter === '내용') {
+            return item.content.toLowerCase().includes(searchQuery.toLowerCase());
         } else { // 전체
             return (
                 item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                item.writer.toLowerCase().includes(searchQuery.toLowerCase())
+                item.writer.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                item.content.toLowerCase().includes(searchQuery.toLowerCase())
             );
         }
     })

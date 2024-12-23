@@ -46,7 +46,7 @@ public class MealFacilityEquipment {
 	@Column(nullable = false)
 	private LocalDateTime createdDate = LocalDateTime.now(); // 기본값을 현재 시간으로 설정
 
-	// 파일 정보와의 1:1 관계 (MealPolicy와 FileUrl)
+	// 파일 정보와의 1:1 관계
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "file_id", referencedColumnName = "id")
 	private FileUrl fileUrl;

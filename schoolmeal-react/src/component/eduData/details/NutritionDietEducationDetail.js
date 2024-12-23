@@ -28,7 +28,7 @@ function NutritionDietEducationDetail() {
         }
 
         axios
-            .get(`${SERVER_URL}nutritionDietEducations/${id}`)
+            .get(`${SERVER_URL}nutritionDietEducation/${id}`)
             .then((response) => {
                 setNutritionDietEducation(response.data);
                 // 작성자 확인
@@ -129,12 +129,13 @@ function NutritionDietEducationDetail() {
                         <div className="edu-form-group">
                             <label>내용:</label>
                             <textarea
-                                rows={5}
+                                rows={1}
                                 value={nutritionDietEducation.content}
                                 readOnly
                                 className="edu-form-control"
                             />
-                        </div><br />
+                        </div>
+                        <br />
                         <div className="edu-button-group">
                             {isAuthor && (
                                 <Button

@@ -1,18 +1,17 @@
 package com.example.schoolMeal.controller.eduData;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -33,45 +32,35 @@ import com.example.schoolMeal.domain.entity.eduData.NutritionDietEducation;
 import com.example.schoolMeal.domain.repository.eduData.NutritionDietEducationRepository;
 import com.example.schoolMeal.service.eduData.NutritionDietEducationService;
 
-/*   교육 자료 - 영양 및 식생활 교육자료   */
 @RestController
-@RequestMapping(value = "/nutritionDietEducation")
+@RequestMapping("/nutritionDietEducation")
 public class NutritionDietEducationController {
 
 	@Autowired
-	private NutritionDietEducationRepository nutritionDietEducationRepository;
+    private NutritionDietEducationRepository nutritionDietEducationRepository;
+	
+    @Autowired
+    private NutritionDietEducationService nutritionDietEducationService;
 
-	@Autowired
-	private NutritionDietEducationService nutritionDietEducationService;
-
-	// 목록을 반환
+    // 목록을 반환
     @GetMapping("/list")
     public ResponseEntity<List<NutritionDietEducation>> nutritionDietEducationList() {
-        List<NutritionDietEducation> Nutritions = nutritionDietEducationService.nutritionDietEducationList();
-        return ResponseEntity.ok(Nutritions);
+        List<NutritionDietEducation> nutritionDiets = nutritionDietEducationService.nutritionDietEducationList();
+        return ResponseEntity.ok(nutritionDiets);
     }
 
     // 작성 처리
     @PostMapping("/writepro")
     public String nutritionDietEducationWritePro(@RequestParam("title") String title,
-                                      @RequestParam("writer") String writer,
-                                      @RequestParam("content") String content,
-                                      @RequestParam(value = "file", required = false) MultipartFile file,
-                                      RedirectAttributes redirectAttributes) throws IOException {
+                                         @RequestParam("writer") String writer,
+                                         @RequestParam("content") String content,
+                                         @RequestParam(value = "file", required = false) MultipartFile file,
+                                         RedirectAttributes redirectAttributes) throws IOException {
         NutritionDietEducation nutritionDietEducation = new NutritionDietEducation();
         nutritionDietEducation.setTitle(title);
         nutritionDietEducation.setWriter(writer);
         nutritionDietEducation.setContent(content);
 
-        // 파일 디버깅 출력
-        if (file != null && !file.isEmpty()) {
-            System.out.println("파일 이름: " + file.getOriginalFilename());
-            System.out.println("파일 크기: " + file.getSize());
-        } else {
-            System.out.println("첨부된 파일이 없습니다.");
-        }
-
-        // 파일 처리 로직
         nutritionDietEducationService.write(nutritionDietEducation, file);
 
         redirectAttributes.addFlashAttribute("message", "게시글이 성공적으로 작성되었습니다.");
@@ -87,32 +76,22 @@ public class NutritionDietEducationController {
 
     // 수정 처리하는 PUT 요청
     @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateNutritionDietEducation(
-            @PathVariable Long id,
-            @RequestParam(value = "title", required = false) String title,
-            @RequestParam(value = "content", required = false) String content,
-            @RequestParam(value = "writer", required = false) String writer,
-            @RequestParam(value = "file", required = false) MultipartFile file) {
+    public ResponseEntity<String> updateNutritionDietEducation(@PathVariable Long id,
+                                                       @RequestParam(value = "title", required = false) String title,
+                                                       @RequestParam(value = "content", required = false) String content,
+                                                       @RequestParam(value = "writer", required = false) String writer,
+                                                       @RequestParam(value = "file", required = false) MultipartFile file) {
         try {
-            // 기존 데이터 조회
             NutritionDietEducation existingNutritionDietEducation = nutritionDietEducationService.getPostWithFileDetails(id);
             if (existingNutritionDietEducation == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("게시글이 존재하지 않습니다.");
             }
 
-            // 필드 업데이트
             if (title != null) existingNutritionDietEducation.setTitle(title);
             if (content != null) existingNutritionDietEducation.setContent(content);
             if (writer != null) existingNutritionDietEducation.setWriter(writer);
 
-            // 파일 처리 로직
-            if (file != null && !file.isEmpty()) {
-                System.out.println("첨부된 파일: " + file.getOriginalFilename());
-                nutritionDietEducationService.nutritionDietEducationUpdate(existingNutritionDietEducation, file);
-            } else {
-                System.out.println("첨부된 파일이 없습니다.");
-                nutritionDietEducationService.nutritionDietEducationUpdate(existingNutritionDietEducation, null);
-            }
+            nutritionDietEducationService.nutritionDietEducationUpdate(existingNutritionDietEducation, file);
 
             return ResponseEntity.ok("수정되었습니다.");
         } catch (Exception e) {
@@ -174,4 +153,72 @@ public class NutritionDietEducationController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+    
+    // 영상 데이터 Base64로 반환
+    @GetMapping("/video/{id}")
+    public ResponseEntity<Resource> getVideo(@PathVariable Long id) {
+        try {
+            NutritionDietEducation nutritionDietEducation = nutritionDietEducationService.getPostWithFileDetails(id);
+
+            if (nutritionDietEducation == null || nutritionDietEducation.getFileUrl() == null) {
+                throw new IllegalArgumentException("해당 영상이 존재하지 않습니다.");
+            }
+
+            String videoUrl = nutritionDietEducation.getFileUrl().getFilePath();
+            Path path = Paths.get(videoUrl);  // 실제 경로로 변경
+
+            if (!Files.exists(path)) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            Resource resource = new InputStreamResource(Files.newInputStream(path)); // IOException 발생 가능
+            String contentType = Files.probeContentType(path); // IOException 발생 가능
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + path.getFileName().toString() + "\"")
+                    .body(resource);
+
+        } catch (IOException e) {
+            // IOException이 발생하면 500 Internal Server Error를 반환
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null); // 또는 적절한 오류 메시지를 반환할 수 있습니다.
+        } catch (IllegalArgumentException e) {
+            // 영상이 존재하지 않는 경우 404 Not Found 반환
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+    
+    // 영상 파일 스트리밍
+    @GetMapping("/videos/{id}")
+    public ResponseEntity<byte[]> streamVideo(@PathVariable Long id) {
+        try {
+            String videoPath = nutritionDietEducationService.getPostWithFileDetails(id).getFileUrl().getFilePath();
+
+            // 파일이 저장된 디렉터리와 실제 파일 경로를 결합
+            Path path = Paths.get(videoPath);
+            File videoFile = path.toFile();
+
+            if (!videoFile.exists()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(null);
+            }
+
+            // 파일의 MIME 타입을 자동으로 결정
+            String mimeType = Files.probeContentType(path);
+            byte[] videoBytes = Files.readAllBytes(path);
+
+            // Content-Type 헤더 설정 (파일의 MIME 타입)
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Type", mimeType);
+            headers.add("Content-Length", String.valueOf(videoFile.length()));
+
+            return new ResponseEntity<>(videoBytes, headers, HttpStatus.OK);
+
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null);
+        }
+    }
+
 }

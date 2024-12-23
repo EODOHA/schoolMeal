@@ -12,30 +12,30 @@ import lombok.Setter;
 @Entity
 @Getter @Setter
 @NoArgsConstructor  
-public class FileUrl {
+public class ImageUrl {
 
     @Id
     @GeneratedValue
     private Long id;
 
     @Column(nullable = false)
-    private String origFileName;  // 원본 파일 이름
+    private String origImgName;  // 원본 이미지 이름
 
     @Column(nullable = false)
-    private String fileName;  // 저장된 파일 이름 (서버에서 고유하게 생성된 파일 이름)
+    private String imgName;  // 저장된 이미지 이름 (서버에서 고유하게 생성된 이미지 이름)
 
     @Column(nullable = false)
-    private String filePath;  // 파일 경로
+    private String imgPath;  // 이미지 경로
 
     @Column(nullable = false)
-    private Long fileSize;  // 파일 크기 (바이트 단위)
+    private Long imgSize;  // 이미지 크기 (바이트 단위)
 
     @Builder
-    public FileUrl(Long id, String origFileName, String fileName, String filePath, Long fileSize) {
+    public ImageUrl(Long id, String origImgName, String imgName, String imgPath, Long imgSize) {
         this.id = id;
-        this.origFileName = origFileName;
-        this.fileName = fileName;
-        this.filePath = filePath;
-        this.fileSize = fileSize;
+        this.origImgName = origImgName;
+        this.imgName = imgName;
+        this.imgPath = imgPath;
+        this.imgSize = imgSize;
     }
 }

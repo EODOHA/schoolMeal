@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { SERVER_URL } from "../../../Constants";
 import "../../../css/eduData/EduList.css";
 import Button from "@mui/material/Button";
-import { TfiVideoClapper } from "react-icons/tfi";
+import { MdAttachFile } from "react-icons/md";
 import { BsFileExcel } from "react-icons/bs";
 import { HiChevronLeft, HiChevronDoubleLeft, HiChevronRight, HiChevronDoubleRight } from "react-icons/hi";
 import "../../../css/page/Pagination.css";
@@ -16,7 +16,6 @@ function EduMaterialSharingList() {
     const [selectedFilter, setSelectedFilter] = useState('전체'); // 필터 상태 추가
     const navigate = useNavigate();
     const { isAdmin, isBoardAdmin } = useAuth();  // 로그인 상태 확인
-
     // 페이지네이션 상태
     const [currentPage, setCurrentPage] = useState(1);  //현재 페이지 상태(기본값:1)
     const [postsPerPage] = useState(5); // 페이지당 게시글 수
@@ -34,10 +33,13 @@ function EduMaterialSharingList() {
             return item.title.toLowerCase().includes(searchQuery.toLowerCase());
         } else if (selectedFilter === '작성자') {
             return item.writer.toLowerCase().includes(searchQuery.toLowerCase());
+        } else if (selectedFilter === '내용') {
+            return item.content.toLowerCase().includes(searchQuery.toLowerCase());
         } else { // 전체
             return (
                 item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                item.writer.toLowerCase().includes(searchQuery.toLowerCase())
+                item.writer.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                item.content.toLowerCase().includes(searchQuery.toLowerCase())
             );
         }
     })
@@ -63,7 +65,6 @@ function EduMaterialSharingList() {
         }
     };
 
-    // 컴포넌트가 마운트되면 목록을 가져옴
     useEffect(() => {
         fetch(SERVER_URL + "eduMaterialSharings")
             .then(response => response.json())
@@ -73,7 +74,6 @@ function EduMaterialSharingList() {
             .catch(err => console.error("Error fetching data:", err));
     }, []);
 
-    // 날짜 포맷팅 함수
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
@@ -89,7 +89,6 @@ function EduMaterialSharingList() {
         navigate(`/eduData/edu-material-sharing/${eduMaterialSharingId}`);
     };
 
-    // URL에서 ID를 추출하는 함수
     const extractIdFromHref = (href) => {
         const parts = href.split('/');
         return parts[parts.length - 1];
@@ -139,7 +138,8 @@ function EduMaterialSharingList() {
                         </tr>
                     ) : (
                         currentPosts.map((eduMaterialSharing, index) => {
-                            const reversedIndex = currentPosts.length - index;
+                            // 필터링된 게시글의 역순 인덱스를 계산
+                            const reversedFilteredIndex = currentPosts.length - index;
 
                             return (
                                 <tr
@@ -147,13 +147,13 @@ function EduMaterialSharingList() {
                                     onClick={() => goToDetailPage(eduMaterialSharing)}
                                     style={{ cursor: "pointer" }}
                                 >
-                                    <td>{reversedIndex}</td>
+                                    <td>{reversedFilteredIndex}</td> {/* 필터링 후 역순 번호 */}
                                     <td>{eduMaterialSharing.title}</td>
                                     <td>{formatDate(eduMaterialSharing.createdDate)}</td>
                                     <td>{eduMaterialSharing.writer}</td>
                                     <td>
                                         {eduMaterialSharing.fileUrlId ? (
-                                            <span className="edu-attachment-icon"><TfiVideoClapper /></span>
+                                            <span className="edu-attachment-icon"><MdAttachFile /></span>
                                         ) : (
                                             <span className="edu-attachment-icon"><BsFileExcel /></span>
                                         )}

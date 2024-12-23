@@ -70,7 +70,7 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.GET, "/nutritionManages/**", "/nutritionManage/**", "/nutritionManage/download/**").permitAll()
 				.requestMatchers(HttpMethod.GET, "/mealHygienes/**", "/mealHygiene/**", "/mealHygiene/download/**").permitAll()
 				.requestMatchers(HttpMethod.GET, "/mealFacilityEquipments/**", "/mealFacilityEquipment/**", "/mealFacilityEquipment/download/**").permitAll()
-				.requestMatchers(HttpMethod.GET, "/schoolMealCases/**", "/schoolMealCase/**", "/schoolMealCase/download/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/schoolMealCases/**", "/schoolMealCase/**").permitAll()
 				// 교육자료
 				.requestMatchers(HttpMethod.GET, "/videoEducations/**", "/videoEducation/**", "/videoEducation/download/**").permitAll()
 				.requestMatchers(HttpMethod.GET, "/nutritionDietEducations/**", "/nutritionDietEducation/**", "/nutritionDietEducation/download/**").permitAll()

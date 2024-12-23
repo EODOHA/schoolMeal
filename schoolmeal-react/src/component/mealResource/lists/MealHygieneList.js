@@ -34,10 +34,13 @@ function MealHygieneList() {
             return item.title.toLowerCase().includes(searchQuery.toLowerCase());
         } else if (selectedFilter === '작성자') {
             return item.writer.toLowerCase().includes(searchQuery.toLowerCase());
+        } else if (selectedFilter === '내용') {
+            return item.content.toLowerCase().includes(searchQuery.toLowerCase());
         } else { // 전체
             return (
                 item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                item.writer.toLowerCase().includes(searchQuery.toLowerCase())
+                item.writer.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                item.content.toLowerCase().includes(searchQuery.toLowerCase())
             );
         }
     })
@@ -94,7 +97,7 @@ function MealHygieneList() {
 
     return (
         <div className="meal-resource-list-container">
-            <h1 className="meal-resource-title">급식위생</h1>
+            <h1 className="meal-resource-title">급식 위생</h1>
             <div className="meal-resource-button-group">
                 <div className="meal-resource-left-buttons">
                     {(isAdmin || isBoardAdmin) && (

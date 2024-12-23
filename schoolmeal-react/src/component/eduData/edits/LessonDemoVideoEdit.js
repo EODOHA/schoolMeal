@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Button, TextField } from "@mui/material";
+import { Button } from "@mui/material";
 import axios from "axios";
 import { SERVER_URL } from "../../../Constants";
 import "../../../css/eduData/EduEdit.css";
@@ -8,9 +8,12 @@ import { useAuth } from "../../sign/AuthContext";
 import LoadingSpinner from '../../common/LoadingSpinner';
 
 function LessonDemoVideoEdit() {
-    const [title, setTitle] = useState("");
-    const [writer, setWriter] = useState("");
-    const [content, setContent] = useState("");
+    const [lessonDemoVideo, setLessonDemoVideo] = useState({
+        titlr: "",
+        writer: "",
+        createdDate: "",
+        content: "",
+    });
     const [videoFile, setVideoFile] = useState(null); // 새로 선택한 파일
     const [existingVideo, setExistingVideo] = useState(""); // 기존 비디오 URL
     const [previewVideoUrl, setPreviewVideoUrl] = useState(null); // 미리보기 URL
@@ -20,6 +23,7 @@ function LessonDemoVideoEdit() {
     const [error, setError] = useState(null);
     const navigate = useNavigate();
     const { id } = useParams();
+    const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
 
     useEffect(() => {
         // 인증 상태와 권한 정보가 변경될 때마다 실행
@@ -34,26 +38,31 @@ function LessonDemoVideoEdit() {
             navigate("/unauthorized");
         }
     }, [isAuth, isAdmin, isBoardAdmin, isLoadingAuth, navigate]);
-    
+
     // 기존 데이터 로드
     useEffect(() => {
-        axios
-            .get(`${SERVER_URL}lessonDemoVideo/${id}`)
-            .then((response) => {
-                const data = response.data;
-                setTitle(data.title);
-                setWriter(data.writer);
-                setContent(data.content);
-                // 기존 비디오 URL을 http://localhost:8090/lessonDemoVideo/video/{id}로 설정
-                if (data.id) {
-                    setExistingVideo(`${SERVER_URL}lessonDemoVideo/video/${data.id}`);
-                }
-            })
-            .catch((err) => {
-                console.error("데이터 로드 실패:", err);
-                setError("데이터를 불러오는 중 문제가 발생했습니다.");
-            });
-    }, [id]);
+        if (isAuth && isAdmin) {
+            axios
+                .get(`${SERVER_URL}lessonDemoVideo/${id}`)
+                .then((response) => {
+                    const data = response.data;
+                    setLessonDemoVideo({
+                        title: data.title,
+                        writer: data.writer,
+                        createdDate: data.createdDate,
+                        content: data.content,
+                    })
+                    // 기존 비디오 URL을 http://localhost:8090/lessonDemoVideo/video/{id}로 설정
+                    if (data.id) {
+                        setExistingVideo(`${SERVER_URL}lessonDemoVideo/video/${data.id}`);
+                    }
+                })
+                .catch((err) => {
+                    console.error("데이터 로드 실패:", err);
+                    setError("데이터를 불러오는 중 문제가 발생했습니다.");
+                });
+        }
+    }, [id, isAuth, isAdmin]);
 
     // 새로 선택된 파일의 미리보기 URL 생성
     useEffect(() => {
@@ -65,11 +74,32 @@ function LessonDemoVideoEdit() {
         setPreviewVideoUrl(null);
     }, [videoFile]);
 
-    const handleUpdateVideo = async () => {
+    const handleChange = (e) => {
+        if (e.target.name === "file") {
+            const videoFile = e.target.files[0];
+            if (videoFile) {
+                if (videoFile.size > MAX_FILE_SIZE) {
+                    alert("파일 크기가 너무 큽니다. 최대 10MB까지 지원됩니다.");
+                    return;
+                }
+            }
+            setLessonDemoVideo({
+                ...lessonDemoVideo,
+                videoFile: videoFile || null,
+            });
+        } else {
+            setLessonDemoVideo({
+                ...lessonDemoVideo,
+                [e.target.name]: e.target.value,
+            });
+        }
+    };
+
+    const handleSave = async () => {
         const formData = new FormData();
-        formData.append("title", title);
-        formData.append("writer", writer);
-        formData.append("content", content);
+        formData.append("title", lessonDemoVideo.title);
+        formData.append("writer", lessonDemoVideo.writer);
+        formData.append("content", lessonDemoVideo.content);
         if (videoFile) formData.append("file", videoFile);
 
         try {
@@ -94,41 +124,50 @@ function LessonDemoVideoEdit() {
         }
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        handleUpdateVideo();
-    };
+    if (isLoadingAuth || loading) {
+        return <LoadingSpinner />;
+    }
+
+    if (error) {
+        return <div className="edu-error-message">{error}</div>;
+    }
 
     return (
         <div className="edu-edit-container">
             <div className="edu-card">
                 <div className="edu-card-body">
                     <h2>게시글 수정</h2>
-                    {error && <div className="edu-error-message">{error}</div>}
-                    <form onSubmit={handleSubmit}>
-                        <TextField
-                            label="제목"
-                            fullWidth
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            required
-                        />
-                        <TextField
-                            label="작성자"
-                            fullWidth
-                            value={writer}
-                            onChange={(e) => setWriter(e.target.value)}
-                            required
-                        />
-                        <TextField
-                            label="내용"
-                            fullWidth
-                            multiline
-                            rows={1}
-                            value={content}
-                            onChange={(e) => setContent(e.target.value)}
-                            required
-                        />
+                    <form onSubmit={handleSave}>
+                        <div className="edu-form-group">
+                            <label>제목:</label>
+                            <input
+                                type="text"
+                                name="title"
+                                value={lessonDemoVideo.title}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <div className="edu-form-group">
+                            <label>작성자:</label>
+                            <input
+                                type="text"
+                                name="writer"
+                                value={lessonDemoVideo.writer}
+                                onChange={handleChange}
+                                disabled
+                            />
+                        </div>
+                        <div className="edu-form-group">
+                            <label>내용</label>
+                            <textarea
+                                name="content"
+                                rows={1}
+                                value={lessonDemoVideo.content}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
                         <div className="edu-form-group">
                             <label>영상 파일:</label>
                             <div>

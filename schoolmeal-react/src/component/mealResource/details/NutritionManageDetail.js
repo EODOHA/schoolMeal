@@ -28,7 +28,7 @@ function NutritionManageDetail() {
         }
 
         axios
-            .get(`${SERVER_URL}nutritionManages/${id}`)
+            .get(`${SERVER_URL}nutritionManage/${id}`)
             .then((response) => {
                 setNutritionManage(response.data);
                 // 작성자 확인
@@ -91,23 +91,23 @@ function NutritionManageDetail() {
     };
 
     return (
-        <div className="edu-detail-container">
-            <div className="edu-card">
-                <div className="edu-card-body">
+        <div className="meal-resource-detail-container">
+            <div className="meal-resource-card">
+                <div className="meal-resource-card-body">
                     <h2>{nutritionManage.title}</h2>
                     <hr />
-                    <div className="edu-header">
-                        <div className="edu-id">ID: {nutritionManage.id}</div>
-                        <div className="edu-date">작성일: {formatDate(nutritionManage.createdDate)}</div>
+                    <div className="meal-resource-header">
+                        <div className="meal-resource-id">ID: {nutritionManage.id}</div>
+                        <div className="meal-resource-date">작성일: {formatDate(nutritionManage.createdDate)}</div>
                     </div>
-                    <div className="edu-attachment">
+                    <div className="meal-resource-attachment">
                         {/* 파일 URL을 사용하여 다운로드 링크를 생성 */}
-                        <div className="edu-attachment">
+                        <div className="meal-resource-attachment">
                             {nutritionManage.fileUrlId ? (
                                 <a
                                     href={`${SERVER_URL}nutritionManage/download/${nutritionManage.id}`} // id를 사용하여 다운로드 URL 완성
                                     download
-                                    className="edu-attachment-link"
+                                    className="meal-resource-attachment-link"
                                 >
                                     첨부파일 &nbsp; <MdOutlineFileDownload />
                                 </a>
@@ -117,25 +117,26 @@ function NutritionManageDetail() {
                         </div>
                     </div><br />
                     <form>
-                        <div className="edu-form-group">
+                        <div className="meal-resource-form-group">
                             <label>작성자:</label>
                             <input
                                 type="text"
                                 value={nutritionManage.writer}
                                 readOnly
-                                className="edu-form-control"
+                                className="meal-resource-form-control"
                             />
                         </div><br />
-                        <div className="edu-form-group">
+                        <div className="meal-resource-form-group">
                             <label>내용:</label>
                             <textarea
-                                rows={5}
+                                rows={1}
                                 value={nutritionManage.content}
                                 readOnly
-                                className="edu-form-control"
+                                className="meal-resource-form-control"
                             />
-                        </div><br />
-                        <div className="edu-button-group">
+                        </div>
+                        <br />
+                        <div className="meal-resource-button-group">
                             {isAuthor && (
                                 <Button
                                     variant="outlined"
