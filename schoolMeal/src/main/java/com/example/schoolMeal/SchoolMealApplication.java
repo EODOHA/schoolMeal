@@ -181,48 +181,48 @@ public class SchoolMealApplication implements CommandLineRunner {
         safetyRepository.save(inspection1);
         safetyRepository.save(inspection2);
         safetyRepository.save(inspection3);
-        
-        // MenuRecipe 데이터 삽입 예시
-        MenuRecipe menuRecipe1 = new MenuRecipe();
-        menuRecipe1.setContent("쌀밥, 돼지고기 볶음, 김치");
-        menuRecipe1.setTitle("점심 메뉴");
-        menuRecipe1.setWriter("이순신");
-        menuRecipe1.setAgeGroup("20대");
-        menuRecipe1.setSeason("winter");
-        menuRecipe1.setCreatedDate(LocalDateTime.now());
-        menuRecipe1.setFileUrl(null);  // 파일은 null로 설정
-        
-        MenuRecipe menuRecipe2 = new MenuRecipe();
-        menuRecipe2.setContent("광어회, 미소된장국, 시금치 무침");
-        menuRecipe2.setTitle("저녁 메뉴");
-        menuRecipe2.setWriter("홍길동");
-        menuRecipe2.setAgeGroup("30대");
-        menuRecipe2.setSeason("autumn");
-        menuRecipe2.setCreatedDate(LocalDateTime.now());
-        menuRecipe2.setFileUrl(null);  // 파일은 null로 설정
 
-        MenuRecipe menuRecipe3 = new MenuRecipe();
-        menuRecipe3.setContent("김치찌개, 계란말이, 밥");
-        menuRecipe3.setTitle("아침 메뉴");
-        menuRecipe3.setWriter("김유신");
-        menuRecipe3.setAgeGroup("40대 이상");
-        menuRecipe3.setSeason("spring");
-        menuRecipe3.setCreatedDate(LocalDateTime.now());
-        menuRecipe3.setFileUrl(null);  // 파일은 null로 설정
+		// MenuRecipe 데이터 삽입 예시
+		MenuRecipe menuRecipe1 = new MenuRecipe();
+		menuRecipe1.setContent("쌀밥, 돼지고기 볶음, 김치");
+		menuRecipe1.setTitle("점심 메뉴");
+		menuRecipe1.setWriter("관리자");
+		menuRecipe1.setAgeGroup("20대");
+		menuRecipe1.setSeason("winter");
+		menuRecipe1.setCreatedDate(LocalDateTime.now());
+		menuRecipe1.setFileUrl(null); // 파일은 null로 설정
 
-        MenuRecipe menuRecipe4 = new MenuRecipe();
-        menuRecipe4.setContent("불고기, 된장찌개, 밥");
-        menuRecipe4.setTitle("점심 메뉴");
-        menuRecipe4.setWriter("유재석");
-        menuRecipe4.setAgeGroup("10대");
-        menuRecipe4.setSeason("four_seasons");
-        menuRecipe4.setCreatedDate(LocalDateTime.now());
-        menuRecipe4.setFileUrl(null);  // 파일은 null로 설정
+		MenuRecipe menuRecipe2 = new MenuRecipe();
+		menuRecipe2.setContent("광어회, 미소된장국, 시금치 무침");
+		menuRecipe2.setTitle("저녁 메뉴");
+		menuRecipe2.setWriter("관리자");
+		menuRecipe2.setAgeGroup("30대");
+		menuRecipe2.setSeason("autumn");
+		menuRecipe2.setCreatedDate(LocalDateTime.now());
+		menuRecipe2.setFileUrl(null); // 파일은 null로 설정
 
-        menuRecipeRepository.save(menuRecipe1);
-        menuRecipeRepository.save(menuRecipe2);
-        menuRecipeRepository.save(menuRecipe3);
-        menuRecipeRepository.save(menuRecipe4);
+		MenuRecipe menuRecipe3 = new MenuRecipe();
+		menuRecipe3.setContent("김치찌개, 계란말이, 밥");
+		menuRecipe3.setTitle("아침 메뉴");
+		menuRecipe3.setWriter("담당자");
+		menuRecipe3.setAgeGroup("40대 이상");
+		menuRecipe3.setSeason("spring");
+		menuRecipe3.setCreatedDate(LocalDateTime.now());
+		menuRecipe3.setFileUrl(null); // 파일은 null로 설정
+
+		MenuRecipe menuRecipe4 = new MenuRecipe();
+		menuRecipe4.setContent("불고기, 된장찌개, 밥");
+		menuRecipe4.setTitle("점심 메뉴");
+		menuRecipe4.setWriter("담당자");
+		menuRecipe4.setAgeGroup("10대");
+		menuRecipe4.setSeason("four_seasons");
+		menuRecipe4.setCreatedDate(LocalDateTime.now());
+		menuRecipe4.setFileUrl(null); // 파일은 null로 설정
+
+		menuRecipeRepository.save(menuRecipe1);
+		menuRecipeRepository.save(menuRecipe2);
+		menuRecipeRepository.save(menuRecipe3);
+		menuRecipeRepository.save(menuRecipe4);
 
 	}
 }
