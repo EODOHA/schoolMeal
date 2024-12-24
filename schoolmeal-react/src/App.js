@@ -52,6 +52,20 @@ import SchoolMealNewsList from './component/community/schoolNews/SchoolMealNewsL
 import AcademicMaterialsList from './component/community/materials/AcademicMaterialsList';
 import ChatApp from './ChatApp';
 
+//영양상담 - 자료실
+import MealCounselWrite from './component/mealCounsel/writes/MealCounselWrite';
+import MealCounselDetail from './component/mealCounsel/details/MealCounselDetail';
+import MealCounselEdit from './component/mealCounsel/edits/MealCounselEdit';
+import MealCounselList from './component/mealCounsel/lists/MealCounselList';
+
+//영양상담 - 진단페이지 이동
+import Counsel from './component/mealCounsel/routes/Counsel';
+
+//영양상담 - 상담내역
+import CounselHistoryList from './component/mealCounsel/lists/CounselHistoryList';
+// import CounselHistoryWrite from './component/mealCounsel/writes/CounselHistoryWrite';
+// import CounselHistoryEdit from './component/mealCounsel/edits/CounselHistoryEdit';
+// import CounselHistoryDetail from './component/mealCounsel/details/CounselHistoryDetail';
 
 
 function App() {
@@ -111,7 +125,21 @@ function App() {
               <Route path="community/crawling/school-news" element={<SchoolMealNewsList />} />
               <Route path="community/crawling/materials" element={<AcademicMaterialsList />} />
 
-           
+              {/*영양상담 자료실*/}
+              <Route path="mealcounsel/list" element={<MealCounselList />} />
+              <Route path="mealcounsel/writepost" element={<MealCounselWrite />} />
+              <Route path="mealcounsel/edit/:id" element={<MealCounselEdit />} />
+              <Route path="mealcounsel/detail/:id" element={<MealCounselDetail />} />
+
+              {/*영양상담 진단 페이지*/}
+              <Route path="Counsel" element={<Counsel />}/>
+
+              {/*영양상담 상담내역 페이지*/}
+              <Route path="mealcounsel/CounselHistoryList" element={<CounselHistoryList />}/>
+              {/* <Route path="mealcounsel/counselHistory/counselwrite" element={<CounselHistoryWrite />}/>
+              <Route path="mealcounsel//counselHistory/counseledit/:id" element={<CounselHistoryEdit />}/>
+              <Route path="mealcounsel//counselHistory/counseldetail/:id" element={<CounselHistoryDetail />}/> */}
+              
              
             </Route>
 

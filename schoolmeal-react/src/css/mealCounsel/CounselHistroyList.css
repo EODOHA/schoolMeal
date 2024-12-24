@@ -1,0 +1,112 @@
+/* src/css/mealCounsel/MealCounselList.css */
+
+/* Container Style */
+.meal-list-container {
+    padding: 20px;
+    margin: 0 auto;
+    max-width: 1200px;
+    font-family: Arial, sans-serif;
+    text-align: center;
+  }
+  
+  /* Title */
+  .meal-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 15px;
+  }
+  
+  /* Button Group */
+  .meal-button-group {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px; /* 버튼들 간 간격 */
+    margin-bottom: 30px; /* 버튼과 테이블 사이 간격 */
+  }
+  
+  /* Table Styles */
+  .meal-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  /*Table Header Style*/
+  .meal-thead {
+    background-color: #f2f2f2;
+    border-bottom: 2px solid #ccc;
+  }
+  
+  /*Cell Style*/
+  .meal-table th, .meal-table td {
+    padding: 10px;
+    text-align: center;
+  }
+  
+  /*Column Width Style*/
+  .meal-table th:nth-child(1), .meal-table td:nth-child(1) {
+    width: 10%;
+  }
+  
+  .meal-table th:nth-child(2), .meal-table td:nth-child(2) {
+    width: 40%;
+  }
+  
+  .meal-table th:nth-child(3), .meal-table td:nth-child(3) {
+    width: 20%;
+  }
+  
+  .meal-table th:nth-child(4), .meal-table td:nth-child(4) {
+    width: 15%;
+  }
+  
+  .meal-table th:nth-child(5), .meal-table td:nth-child(5) {
+    width: 15%;
+  }
+  
+  /* Row Style */
+  .meal-tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .meal-tbody tr:hover {
+    background-color: #f1f1f1 !important;
+  }
+  
+  /* Row margin */
+  .meal-tbody tr {
+    margin-bottom: 10px;
+  }
+  
+  /* Attachment Icon */
+  .meal-attachment-icon {
+    font-size: 18px;
+    color: #007bff;
+    cursor: pointer;
+  }
+  
+  /*더 필요하면 .meal-search-container나 .meal-search-input를추가하기*/
+  /* 검색 바 form css */
+  .meal-search-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .meal-search-form input {
+    padding: 8px;
+    font-size: 16px;
+  }
+  
+  .meal-search-form button {
+    padding: 8px 16px;
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  

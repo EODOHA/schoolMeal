@@ -54,7 +54,7 @@ public class CounselHistoryService {
         existing.setAuthor(updatedCounselHistory.getAuthor());
         existing.setCounselContent(updatedCounselHistory.getCounselContent());
         existing.setCounselResult(updatedCounselHistory.getCounselResult());
-        existing.setSpecialNotes(updatedCounselHistory.getSpecialNotes());
+        existing.setSignificant(updatedCounselHistory.getSignificant());
         existing.setStudentHistory(updatedCounselHistory.getStudentHistory());
         existing.setCounselDate(updatedCounselHistory.getCounselDate());
 

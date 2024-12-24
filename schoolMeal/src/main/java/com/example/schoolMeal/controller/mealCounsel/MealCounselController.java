@@ -1,131 +1,163 @@
 package com.example.schoolMeal.controller.mealCounsel;
 
 // 영양상담 자료실 게시판 Controller
+import com.example.schoolMeal.domain.entity.mealCounsel.MealCounsel;
 import com.example.schoolMeal.dto.mealCounsel.MealCounselRequestDTO;
 import com.example.schoolMeal.dto.mealCounsel.MealCounselResponseDTO;
-import com.example.schoolMeal.service.mealCounsel.FileStorageService;
 import com.example.schoolMeal.service.mealCounsel.MealCounselService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.access.annotation.Secured;
+import org.springframework.http.MediaType;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.util.List;
-
-//파일 다운로드 엔드포인트를 위한 import
-import org.springframework.http.MediaType;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
-import org.springframework.core.io.Resource;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/mealcounsel")
 public class MealCounselController {
 
     private final MealCounselService mealCounselService;
-    private final FileStorageService fileStorageService;
 
     @Autowired
-    public MealCounselController(MealCounselService mealCounselService,  FileStorageService fileStorageService) {
+    public MealCounselController(MealCounselService mealCounselService) {
         this.mealCounselService = mealCounselService;
-        this.fileStorageService = fileStorageService;
     }
 
-    // 모든 게시글 조회
-    @GetMapping
+    //모든 게시글을 조회합니다. 인증 없이 접근 가능합니다.
+    @GetMapping("/list")
     public ResponseEntity<List<MealCounselResponseDTO>> getAllMealCounsel() {
-        List<MealCounselResponseDTO> mealCounsels = mealCounselService.getAllCounselPosts();
-        return ResponseEntity.ok(mealCounsels);
-    }
-
-    // 게시글 ID로 조회
-    @GetMapping("/{id}")
-    public ResponseEntity<MealCounselResponseDTO> getMealCounselById(@PathVariable Long id) {
-        MealCounselResponseDTO mealCounsel = mealCounselService.getCounselPostById(id);
+        List<MealCounselResponseDTO> mealCounsel = mealCounselService.getAllCounselPosts();
         return ResponseEntity.ok(mealCounsel);
     }
 
-    //제목, 내용, 작성자, 생성일자로 검색
-    @GetMapping("/search")
-    public ResponseEntity<List<MealCounselResponseDTO>> searchMealCounsels(
-            @RequestParam(required = false) String title,
-            @RequestParam(required = false) String content,
-            @RequestParam(required = false) String author,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate createdAt) {
-
-        List<MealCounselResponseDTO> results = mealCounselService.searchMealCounsels(title, content, author, createdAt);
-        return ResponseEntity.ok(results);
-    }
-
-    // 새로운 게시글 추가 (ADMIN 권한만 가능)
-    @Secured("ROLE_ADMIN")
-    @PostMapping
-    public ResponseEntity<MealCounselResponseDTO> addMealCounsel(
-            @ModelAttribute @Valid MealCounselRequestDTO requestDTO,
-            @AuthenticationPrincipal UserDetails userDetails) {
-        String username = userDetails.getUsername();
-        MealCounselResponseDTO createdMealCounsel = mealCounselService.saveCounselPost(requestDTO, username);
-        return ResponseEntity.status(201).body(createdMealCounsel);
-    }
-
-    // 게시글 수정 (ADMIN 권한만 가능)
-    @Secured("ROLE_ADMIN")
-    @PutMapping("/{id}")
-    public ResponseEntity<MealCounselResponseDTO> updateMealCounsel(
+    //단일 게시글 조회
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getMealCounselById(
             @PathVariable Long id,
-            @ModelAttribute @Valid MealCounselRequestDTO requestDTO,
-            @AuthenticationPrincipal UserDetails userDetails) {
-        String username = userDetails.getUsername();
-        MealCounselResponseDTO updatedMealCounsel = mealCounselService.updateCounselPost(id, requestDTO, username);
-        return ResponseEntity.ok(updatedMealCounsel);
-    }
+            @AuthenticationPrincipal UserDetails userDetails)
+    {
 
-    // 게시글 삭제 (ADMIN 권한만 가능)
-    @Secured("ROLE_ADMIN")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteMealCounsel(
-            @PathVariable Long id,
-            @AuthenticationPrincipal UserDetails userDetails) {
-        String username = userDetails.getUsername();
-        mealCounselService.deleteCounselPost(id, username);
-        return ResponseEntity.noContent().build();
-    }
-
-    // 파일 업로드 엔드포인트 (관리자만 가능)
-    @Secured("ROLE_ADMIN")
-    @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
-        String filePath = fileStorageService.storeFile(file);
-        return ResponseEntity.ok("파일이 저장되었습니다: " + filePath);
-    }
-
-    // 파일 다운로드 엔드포인트
-    @GetMapping("/files/{fileName}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) {
-        String filePath = "uploads/" + fileName;
-        Resource resource = fileStorageService.loadFileAsResource(filePath);
-
-        String contentType;
         try {
-            contentType = Files.probeContentType(Paths.get(filePath));
-            if (contentType == null) {
-                contentType = "application/octet-stream";
-            }
-        } catch (IOException ex) {
-            contentType = "application/octet-stream";
+            MealCounselResponseDTO mealCounselDTO = mealCounselService.getCounselPostById(id);
+            return ResponseEntity.ok(mealCounselDTO);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("게시글을 찾을 수 없습니다.");
+        }
+    }
+
+    //새로운 게시글을 추가합니다. 인증이 필요하며, 최대 5개의 파일을 첨부할 수 있습니다.
+
+    @PostMapping(value = "/writepost", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> addMealCounsel(
+            @ModelAttribute @Valid MealCounselRequestDTO requestDTO,
+            @AuthenticationPrincipal UserDetails userDetails) throws IOException {
+
+        // 인증되지 않은 사용자인 경우 401 반환
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
         }
 
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(contentType))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
-                .body(resource);
+        String author = userDetails.getUsername(); // 인증된 사용자의 ID 가져오기
+
+        // MealCounsel 객체 생성 및 설정 (빌더 패턴 사용)
+        MealCounsel mealCounsel = MealCounsel.builder()
+                .title(requestDTO.getTitle())
+                .author(author)
+                .content(requestDTO.getContent())
+                .youtubeHtml(requestDTO.getYoutubeHtml()) // 필요 시 추가 필드 설정
+                .build();
+
+        // 파일 처리 및 게시글 저장
+        MealCounselResponseDTO responseDTO = mealCounselService.saveMealCounsel(mealCounsel, requestDTO.getFiles());
+
+        // 생성 성공 시 201 반환
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
+    }
+
+    /**
+     * 특정 게시글을 수정합니다. 인증이 필요하며, 작성자만 수정할 수 있습니다.
+     */
+    @PutMapping(value = "/edit/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateMealCounsel(
+            @PathVariable Long id,
+            @ModelAttribute @Valid MealCounselRequestDTO requestDTO,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        // 인증되지 않은 사용자인 경우 401 반환
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+        }
+
+        String author = userDetails.getUsername(); // 인증된 사용자의 ID 가져오기
+
+        try {
+            // 게시글 수정 시도
+            MealCounselResponseDTO updatedMealCounsel = mealCounselService.updateCounselPost(id, requestDTO, author);
+            return ResponseEntity.ok(updatedMealCounsel);
+        } catch (IllegalArgumentException e) {
+            // 게시글을 찾을 수 없을 경우 404 반환
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("게시글을 찾을 수 없습니다.");
+        } catch (AccessDeniedException e) {
+            // 작성자가 아닐 경우 403 반환
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("작성자만 수정할 수 있습니다.");
+        }
+    }
+
+    /**
+     * 특정 게시글을 삭제합니다. 인증이 필요하며, 작성자만 삭제할 수 있습니다.
+     */
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteMealCounsel(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        // 인증되지 않은 사용자인 경우 401 반환
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+        }
+
+        String author = userDetails.getUsername(); // 인증된 사용자의 ID 가져오기
+
+        try {
+            // 게시글 삭제 시도
+            mealCounselService.deleteCounselPost(id, author);
+            return ResponseEntity.noContent().build(); // 성공 시 204 반환
+        } catch (IllegalArgumentException e) {
+            // 게시글을 찾을 수 없을 경우 404 반환
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("게시글을 찾을 수 없습니다.");
+        } catch (AccessDeniedException e) {
+            // 작성자가 아닐 경우 403 반환
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("작성자만 삭제할 수 있습니다.");
+        }
+    }
+
+    /**
+     * 특정 파일을 다운로드합니다. 인증이 필요합니다.
+     */
+    @GetMapping("/files/{fileId}")
+    public ResponseEntity<?> downloadFile(
+            @PathVariable Long fileId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        // 인증되지 않은 사용자인 경우 401 반환
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+        }
+
+        try {
+            // 파일 다운로드 서비스 호출
+            return mealCounselService.downloadMealCounselFile(fileId);
+        } catch (IllegalArgumentException e) {
+            // 파일을 찾을 수 없을 경우 404 반환
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("파일을 찾을 수 없습니다.");
+        } catch (IOException e) {
+            // 파일 다운로드 중 오류 발생 시 500 반환
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일을 다운로드하는 중 오류가 발생했습니다.");
+        }
     }
 }

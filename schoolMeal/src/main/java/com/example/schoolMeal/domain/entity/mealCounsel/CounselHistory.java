@@ -35,16 +35,12 @@ public class CounselHistory {
     @NotBlank(message = "상담 결과는 필수입니다.")
     private String counselResult; // 상담 결과
 
-    private String specialNotes; // 특이사항
+    private String significant; // 특이사항
 
     private String studentHistory; // 학생 상담 이력
 
     @PastOrPresent(message = "상담일은 과거 또는 현재여야 합니다.")
     private LocalDate counselDate; // 상담일
-// 제작 안함
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "school_id")
-//    private School school; // 상담이 이루어진 학교
 
     // 빌더 패턴을 이용한 생성자
     @Builder
@@ -54,7 +50,8 @@ public class CounselHistory {
         this.author = author;
         this.counselContent = counselContent;
         this.counselResult = counselResult;
-        this.specialNotes = specialNotes;
+        this.
+                significant = specialNotes;
         this.studentHistory = studentHistory;
         this.counselDate = counselDate;
     }

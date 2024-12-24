@@ -30,11 +30,6 @@ public class MealCounselRequestDTO {
     @Size(max = 5, message = "최대 5개의 파일을 업로드할 수 있습니다.")
     private List<MultipartFile> files; // 첨부 파일 리스트
 
-    @NotEmpty(message = "게시판 이름은 필수 입력 값입니다.")
-    private String boardName; // 게시판 이름
-
     
     // 작성자 정보는 서버에서 인증된 사용자 정보로 설정하므로, 클라이언트에서 받지 않는다.
 }
-
-

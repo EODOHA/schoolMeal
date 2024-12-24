@@ -8,7 +8,6 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -24,12 +23,12 @@ public class MealCounselResponseDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    private List<MealCounselFileDTO> files;
+    private List<Long> fileIds; // 파일 ID 리스트로 변경
 
     @Builder
     public MealCounselResponseDTO(Long id, String title, String content, int viewCount, String author,
                                   String youtubeHtml, LocalDateTime createdAt, LocalDateTime updatedAt,
-                                  List<MealCounselFileDTO> files) {
+                                  List<Long> fileIds) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -38,7 +37,7 @@ public class MealCounselResponseDTO {
         this.youtubeHtml = youtubeHtml;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.files = files;
+        this.fileIds = fileIds;
     }
 
     public static MealCounselResponseDTO fromEntity(MealCounsel mealCounsel) {
@@ -47,14 +46,13 @@ public class MealCounselResponseDTO {
                 .title(mealCounsel.getTitle())
                 .content(mealCounsel.getContent())
                 .viewCount(mealCounsel.getViewCount())
+                // 예: 회원 아이디 기준으로 표시
                 .author(mealCounsel.getAuthor())
                 .youtubeHtml(mealCounsel.getYoutubeHtml())
                 .createdAt(mealCounsel.getCreatedAt())
                 .updatedAt(mealCounsel.getUpdatedAt())
-                .files(mealCounsel.getFiles().stream()
-                        .map(MealCounselFileDTO::fromEntity)
-                        .collect(Collectors.toList()))
+                .fileIds(mealCounsel.getFileIds())
                 .build();
     }
-    
 }
+

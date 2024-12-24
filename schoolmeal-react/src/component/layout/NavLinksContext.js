@@ -40,11 +40,12 @@ const navLinksInitial = [
             { path: "/eduData/edu-material-sharing", label: "교육자료 나눔" }
         ]
     },
-    {
-        path: "/test5", label: "영양상담",
+    { path: "/mealcounsel", label: "영양상담",
         subLinks: [
-            { path: "/test5/sub1", label: "테스트5-서브1" },
-            { path: "/test5/sub2", label: "테스트5-서브2" }
+            { path: "/mealcounsel/list", label: "영양상담 목록" },
+            { path: "/counsel", label: "영양상담 진단 페이지" },
+            { path: "/mealcounsel/CounselHistoryList", label: "영양상담 작성"}
+        
         ],
         showSearch: true  // 검색창을 보여줄 항목
     },

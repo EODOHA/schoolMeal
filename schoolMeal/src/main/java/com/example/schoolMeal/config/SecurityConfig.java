@@ -97,6 +97,16 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.GET, "/chat/stream/**").permitAll()
 
 
+				//영양상담 자료실
+				.requestMatchers(HttpMethod.GET, "/mealcounsel/**").permitAll()
+
+				//영양상담 상담 기록 페이지
+				.requestMatchers(HttpMethod.GET, "/counselHistory/**").permitAll()
+
+				//영양상담 진단 페이지
+				.requestMatchers(HttpMethod.GET, "/goToCounsel").permitAll()
+
+
 				// 해당 엔드포인트는 인증 필요 없음.
 				.anyRequest().authenticated()
 				// 그 외 모든 요청은 인증 필요

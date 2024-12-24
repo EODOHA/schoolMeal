@@ -23,7 +23,7 @@ public class CounselHistoryDTO {
     @NotBlank(message = "상담 결과는 필수입니다.")
     private String counselResult; //상담 결과
 
-    private String specialNotes; //특이 사항
+    private String significant; //특이 사항
 
     private String studentHistory; //학생 상담 이력
 

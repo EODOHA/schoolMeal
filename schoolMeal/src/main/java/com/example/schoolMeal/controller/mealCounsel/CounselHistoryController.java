@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -28,8 +27,7 @@ public class CounselHistoryController {
     }
 
     // 상담 기록 조회 (전체 조회 및 검색 기능 통합)
-    @GetMapping
-    @PreAuthorize("hasRole('ADMIN') or hasRole('LINKAGE')")
+    @GetMapping("/counsellist")
     public ResponseEntity<List<CounselHistoryDTO>> getAllCounselHistory(
             @RequestParam(required = false) String author,
             @RequestParam(required = false) String title,
@@ -51,8 +49,7 @@ public class CounselHistoryController {
     }
 
     // 새로운 상담 기록 추가 (ADMIN, LINKAGE만 가능)
-    @PostMapping
-    @PreAuthorize("hasRole('ADMIN') or hasRole('LINKAGE')")
+    @PostMapping("/counselwrite")
     public ResponseEntity<CounselHistoryDTO> addCounselHistory(@Valid @RequestBody CounselHistoryDTO counselHistoryDTO) {
         CounselHistory counselHistory = convertToEntity(counselHistoryDTO);
         CounselHistory created = service.addCounselHistory(counselHistory);
@@ -62,7 +59,7 @@ public class CounselHistoryController {
 
     // 상담이력 ID로 상담 기록 조회 (ADMIN, LINKAGE만 가능)
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('LINKAGE')")
+
     public ResponseEntity<CounselHistoryDTO> getCounselHistoryById(@PathVariable Long id) {
         CounselHistory history = service.getCounselHistoryById(id);
         CounselHistoryDTO dto = convertToDTO(history);
@@ -71,7 +68,7 @@ public class CounselHistoryController {
 
     // 상담이력 ID로 상담 기록 삭제 (ADMIN, LINKAGE만 가능)
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('LINKAGE')")
+
     public ResponseEntity<Void> deleteCounselHistory(@PathVariable Long id) {
         service.deleteCounselHistoryById(id);
         return ResponseEntity.noContent().build();
@@ -79,7 +76,6 @@ public class CounselHistoryController {
 
     // 상담이력 ID로 상담 기록 수정 (ADMIN, LINKAGE만 가능)
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('LINKAGE')")
     public ResponseEntity<CounselHistoryDTO> updateCounselHistory(@PathVariable Long id,
                                                                   @Valid @RequestBody CounselHistoryDTO counselHistoryDTO) {
         CounselHistory counselHistory = convertToEntity(counselHistoryDTO);
@@ -95,7 +91,7 @@ public class CounselHistoryController {
         counselHistory.setAuthor(dto.getAuthor());
         counselHistory.setCounselContent(dto.getCounselContent());
         counselHistory.setCounselResult(dto.getCounselResult());
-        counselHistory.setSpecialNotes(dto.getSpecialNotes());
+        counselHistory.setSignificant(dto.getSignificant());
         counselHistory.setStudentHistory(dto.getStudentHistory());
         counselHistory.setCounselDate(dto.getCounselDate());
         return counselHistory;
@@ -108,7 +104,7 @@ public class CounselHistoryController {
         dto.setAuthor(counselHistory.getAuthor());
         dto.setCounselContent(counselHistory.getCounselContent());
         dto.setCounselResult(counselHistory.getCounselResult());
-        dto.setSpecialNotes(counselHistory.getSpecialNotes());
+        dto.setSignificant(counselHistory.getSignificant());
         dto.setStudentHistory(counselHistory.getStudentHistory());
         dto.setCounselDate(counselHistory.getCounselDate());
         return dto;
