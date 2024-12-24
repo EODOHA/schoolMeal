@@ -46,17 +46,23 @@ public class MealExpertController extends PathResolver {
 		// HistoryDto를 History 엔티티로 변환 및 연관 관계 설정
 		if (mealExpertDto.getHistories() != null) {
 			for (ExpertHistoryDto historyDto : mealExpertDto.getHistories()) {
-				ExpertHistory history = new ExpertHistory();
-				history.setExp_hist_description(historyDto.getExp_hist_description());
-				mealExpert.addHistory(history);
+				if (historyDto.getExp_hist_description() != null
+						&& !historyDto.getExp_hist_description().trim().isEmpty()) {
+					ExpertHistory history = new ExpertHistory();
+					history.setExp_hist_description(historyDto.getExp_hist_description());
+					mealExpert.addHistory(history);
+				}
 			}
 		}
 		// QualificationDto를 Qualification 엔티티로 변환 및 연관 관계 설정
 		if (mealExpertDto.getQualifications() != null) {
 			for (ExpertQualificationDto qualificationDto : mealExpertDto.getQualifications()) {
-				ExpertQualification qualification = new ExpertQualification();
-				qualification.setExp_qual_description(qualificationDto.getExp_qual_description());
-				mealExpert.addQualification(qualification);
+				if (qualificationDto.getExp_qual_description() != null
+						&& !qualificationDto.getExp_qual_description().trim().isEmpty()) {
+					ExpertQualification qualification = new ExpertQualification();
+					qualification.setExp_qual_description(qualificationDto.getExp_qual_description());
+					mealExpert.addQualification(qualification);
+				}
 			}
 		}
 
