@@ -96,7 +96,14 @@ function MealExpertEdit(props) {
             <IconButton onClick={handleClickOpen}>
                 <EditIcon color="white" />
             </IconButton>
-            <Dialog open={open} onClose={handleClose}>
+            <Dialog open={open} onClose={handleClose}
+                // 모달폼 너비 조절
+                sx={{
+                    '& .MuiDialog-paper': {
+                        width: '50%', // 너비를 설정
+                        maxWidth: '800px', // 최대 너비 설정 
+                    },
+                }}>
                 <DialogTitle>급식전문 인력정보 수정</DialogTitle>
                 <DialogContent>
                     <Formik

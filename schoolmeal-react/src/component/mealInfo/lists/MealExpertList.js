@@ -29,6 +29,8 @@ function MealExpertList() {
             .then(response => response.json()) //json 형태로 변환
             .then(data => {
                 // console.log('불러온 전문가 목록:', data); // 데이터가 제대로 로드되는지 확인
+                data.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+
                 setExperts(data);
                 const indexOfLastItem = currentPage * itemsPerPage;
                 const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -101,9 +103,12 @@ function MealExpertList() {
             })
                 .then(() => {
                     alert('인력 정보가 삭제되었습니다.');
-                    fetchExperts(currentPage);
-                    console.log(`${SERVER_URL}mealExpert/${exp_id}`);
-
+                    const totalPages = Math.ceil(experts.length / itemsPerPage);
+                    if (currentPage === totalPages) {
+                        const newPage = currentPage === 1 ? 1 : currentPage - 1;
+                        setCurrentPage(newPage);
+                        fetchExperts(newPage);
+                    }
                 })
                 .catch((error) => {
                     console.error("삭제 실패: ", error);
@@ -125,9 +130,18 @@ function MealExpertList() {
         navigate(`/mealInfo/meal-expert/${exp_id}`);
     }
     return (
-        <div> {
-            loading ? (
-                <div> <CircularProgress /></div >
+        <div>
+            {loading ? (
+                <div style={{
+                    display: 'flex',
+                    justifyContent: 'center', // 수평 가운데 정렬
+                    alignItems: 'center', // 수직 가운데 정렬
+                    height: '30vh' // 전체 화면 높이
+                }}>
+                    <CircularProgress />
+                    <br />
+                    <p>데이터를 불러오는 중입니다....⏰</p>
+                </div>
             ) : (
                 <div className="meal-expert-list-container">
                     <h1 className='meal-expert-title'>급식 전문가 인력관리</h1>
@@ -150,32 +164,43 @@ function MealExpertList() {
                             currentItems.map((expert, index) => (
                                 <div key={index} className="expert-card">
                                     {/* 프로필 이미지 */}
-                                    <img
-                                        src='/mealInfo/expert-default-profile.png'
-                                        alt="프로필"
-                                        className="profile-image"
-                                    />
+                                    <div className='profile-container'>
+                                        <img
+                                            src='/mealInfo/expert-default-profile.png'
+                                            alt="프로필"
+                                            className="profile-image"
+                                        />
+                                    </div>
 
                                     {/* 전문인력 정보 */}
-                                    <div className="expert-profile-text">
-                                        <div style={{ textAlign: "center" }}>{expert.exp_id}</div>
-                                        <div className="expert-profile-info">
-                                            <span className="expert-info-label">이    름:</span> {expert.exp_name}
-                                        </div>
-                                        <div className="expert-profile-info">
-                                            <span className="expert-info-label">소    속:</span> {expert.exp_department}
-                                        </div>
-                                        <div className="expert-profile-info">
-                                            <span className="expert-info-label">직    급:</span> {expert.exp_position}
-                                        </div>
-                                        <div className="expert-profile-info">
-                                            <span className="expert-info-label">이 메 일:</span> {expert.exp_email}
+                                    <div className="expert-profile-info">
+                                        <div className='expert-profile-info-container'>
+                                            {/* <div style={{ textAlign: "center" }}>{expert.exp_id}</div> */}
+
+                                            <div className="expert-profile-info-row">
+                                                <span className="expert-info-label">이    름:</span> {expert.exp_name}
+                                            </div>
+                                            <div className="expert-profile-info-row">
+                                                <span className="expert-info-label">소    속:</span> {expert.exp_department}
+                                            </div>
+                                            <div className="expert-profile-info-row">
+                                                <span className="expert-info-label">직    급:</span> {expert.exp_position}
+                                            </div>
+                                            <div className="expert-profile-info-row">
+                                                <span className="expert-info-label">이 메 일:</span> {expert.exp_email}
+                                            </div>
                                         </div>
                                         <br />
-                                        {/* 상세보기 버튼 */}
-                                        <Button className="detail-card" variant="contained" onClick={() => goToDetailPage(expert.exp_id)}>상세보기</Button>
-                                        {/* 삭제 및 수정 버튼 isAdmin또는 isBoardAdmin이 true일 때만 보이도록 함*/}
+                                        {/* 더보기 버튼 */}
+                                        <Button
+                                            className="detail-card"
+                                            variant="outlined"
+                                            onClick={() => goToDetailPage(expert.exp_id)}
+                                        >
+                                            더보기
+                                        </Button>
 
+                                        {/* 삭제 및 수정 버튼 isAdmin또는 isBoardAdmin이 true일 때만 보이도록 함*/}
                                         {(isAdmin || isBoardAdmin) && (
                                             <div className="expert-buttons-container">
                                                 <MealExpertEdit data={expert} updateExpert={updateExpert} />
@@ -189,6 +214,7 @@ function MealExpertList() {
                             ))
                         )}
                     </div>
+
                     {/* 페이지네이션 */}
                     <div className="pagination">
                         <Pagination
@@ -199,7 +225,8 @@ function MealExpertList() {
                         />
                     </div>
                 </div>
-            )}</div>
+            )}
+        </div>
     );
 }
 export default MealExpertList;

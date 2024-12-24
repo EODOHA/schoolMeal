@@ -33,25 +33,35 @@ function MealExpertWrite({ addExpert }) {
 
     // 데이터 제출 처리
     const handleSave = async (values) => {
-        const payload = {
+        const data = {
             exp_name: values.exp_name,
             exp_department: values.exp_department,
             exp_position: values.exp_position,
             exp_email: values.exp_email,
-            qualifications: values.qualifications.length > 0 ? values.qualifications : [],
-            histories: values.histories.length > 0 ? values.histories : [],
+            qualifications: values.qualifications.map((qual) => ({
+                exp_qual_description: qual.exp_qual_description,
+            })),
+            histories: values.histories.map((hist) => ({
+                exp_hist_description: hist.exp_hist_description,
+            })),
         };
+
+        // console.log("요청 데이터: {}", data);
         try {
             // 서버로 POST 요청 (JSON 형식으로 보내기)
-            await axios.post(`${SERVER_URL}mealExpert`, payload, {
+            await axios.post(`${SERVER_URL}mealExpert`, data, {
                 headers: {
                     'Authorization': token,
                     'Content-Type': 'application/json',
                 },
             });
+            console.log("Sending POST request to:", `${SERVER_URL}mealExpert`);
+
             alert('전문인력 정보가 저장되었습니다.');
-            addExpert(payload);  // 부모 컴포넌트로 데이터 전달
+            addExpert(data);  // 부모 컴포넌트로 데이터 전달
+            console.log(data);
             handleClose();  // 모달 닫기
+
         } catch (error) {
             console.error('전문가 추가 실패', error);
             alert('전문가 추가에 실패했습니다.');

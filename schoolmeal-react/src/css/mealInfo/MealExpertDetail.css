@@ -13,19 +13,16 @@
 .profile-container {
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  justify-content: flex-start;
+  gap: 10px;
+  height: 100px;
 }
 
 .profile-image {
-  display: table-cell;
-  width: 150px;
-  height: 150px;
-  object-fit: cover;
-  margin-right: 20px; 
-}
+  width: auto;
+  height: 100px;
+  margin-right: 50px;
 
-.profile-info {
-  flex: 1;
 }
 
 .profile-info h2 {
@@ -33,6 +30,8 @@
   font-size: 1.5rem;
   font-weight: bold;
   color: #333;
+  flex-grow: 1;
+  min-width: 200px;
 }
 
 .profile-info p {
@@ -63,5 +62,5 @@ ul li strong {
 
 .back-button {
   margin-top: 20px;
-  align-self: flex-start;
+  align-items: center;
 }
