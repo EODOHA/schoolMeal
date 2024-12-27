@@ -19,6 +19,7 @@ import Memberlist from './component/memManage/Memberlist';
 import MainManager from './component/mainManage/MainManager';
 import ProfileUpdate from './component/profile/ProfileUpdate';
 import AdminNoticeManagerRoutes from './component/mainManage/adminNoticeManager/routes/AdminNoticeManagerRoutes';
+import KakaoRedirectPage from "./component/sign/KakaoVerify/KakaoRedirectPage";
 
 // 급식자료실
 import MealResourceRoutes from './component/mealResource/routes/MealResourceRoutes';
@@ -77,6 +78,7 @@ function App() {
               <Route path="main" element={<MainPage />} />
               <Route path="login" element={<Login />} />
               <Route path="signup" element={<Signup />} />
+              <Route path="verify/kakao" element={<KakaoRedirectPage />} />
               <Route path="findAccount" element={<FindAccount />} />
               <Route path="emailVerification" element={<EmailVerification />} />
               <Route path="ReEmailVerification" element={<ReEmailVerification />} />

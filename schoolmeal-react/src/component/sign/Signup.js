@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { SERVER_URL } from "../../Constants";
 import { Stack, TextField, Button, Typography, CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { getKakaoLoginLink } from "./KakaoVerify/kakaoApi";
 import '../../css/sign/Signup.css'; // Signup 스타일을 위한 CSS 파일 import
 
 const Signup = () => {
@@ -50,7 +51,13 @@ const Signup = () => {
         confirmPassword: '',
         phone: '',
     });
-    
+
+    // 인증방식 선택 여부 표시
+    const [showAuthOptions, setShowAuthOptions] = useState(false);
+
+    // 인증방식 상태 추가
+    const [authMethod, setAuthMethod] = useState("") // 이메일 또는 카카오 인증방식
+
     const [loading, setLoading] = useState('');
 
     const navigator = useNavigate();
@@ -63,7 +70,7 @@ const Signup = () => {
         const hangulConsonants = /[ㄱ-ㅎ]/; // 한글 자음을 검출하는 정규 표현식
         const hangulVowels = /[ㅏ-ㅣ]/; // 한글 모음을 검출하는 정규 표현식
         const specialCharacters = /[!@#$%^&*(),.?":{}|<>]/; // 특수문자를 검출하는 정규 표현식
-        
+
         if (!member.memberName) {
             tempErrors.memberName = "회원명은 필수입니다.";
             isValid = false;
@@ -143,9 +150,9 @@ const Signup = () => {
             return;
         }
 
-        // 가입 확인 전, 이메일 토큰 확인
+        // 가입 확인 전, 이메일 중복검사 결과 확인
         if (!emailCheckResult.isAvailable) {
-            setSignupCheck("이메일 인증을 완료해야 합니다.");
+            setSignupCheck("이메일 중복 검사를 완료해야 합니다.");
             setLoading(false); // 로딩 종료
             return;
         }
@@ -156,32 +163,75 @@ const Signup = () => {
             return; // 유효성 검사가 실패하면 종료
         }
 
-        fetch(SERVER_URL + 'signup', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(member)
-        })
-        .then(res => {
-            if (!res.ok) {
-                return res.json().then(data => {
-                    throw new Error(data.messages ? data.messages.join(", ") : "회원정보 등록 실패");
+        // 인증 방식 선택화면 표시
+        setShowAuthOptions(true);  //인증방식이 선택화면 표시
+        setLoading(false); // 로딩 종료
+    };
+
+    // 사용자가 방법을 선택하면, member의 정보를 저장하고 인증방법 선택 후 인증을 진행
+    const toAuthentication = (selectedAuthMethod) => {
+        setAuthMethod(selectedAuthMethod);  //선택된 인증 방식 설정
+        setLoading(true);
+
+        //회원 정보 저장
+        const signupMember = async () => {
+            try {
+                const response = await fetch(SERVER_URL + 'signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        ...member,                      // 기존 폼에 입력한 정보
+                        authMethod: selectedAuthMethod,  // 인증방식
+                    })
                 });
+                const { memberId } = member;
+                localStorage.setItem("memberId", memberId);
+
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error(error);
+                throw new Error("회원 정보 저장 중 오류 발생");
             }
-            return res.json();
-        })
-        .then(data => {
-            if (data.success) {
-                alert("회원정보 등록이 완료되었습니다.\n이메일 인증 페이지로 이동합니다.");
-                navigator("/emailVerification", { state: { member }});
-            } else {
-                setSignupCheck(data.message || "회원정보 등록 실패.");
-            }
-        })
-        .catch(err => {
-            console.error(err);
-            setSignupCheck(err.message);
-            setLoading(false); // 로딩 종료
-        });
+        };
+        // 선택학 인증방식에 따른 인증 처리
+        if (selectedAuthMethod === "kakao") {
+            console.log("selectedAuthMethod: ", selectedAuthMethod);
+            // 카카오 인증 버튼 클릭 시 멤버 정보를 저장하고 카카오 로그인 URL로 이동
+            signupMember()
+                .then(data => {
+                    console.log("Signup member response: ", data);
+                    if (data.success) {
+                        const link = getKakaoLoginLink();    // 카카오 로그인 URL
+                        window.location.href = link;        // 로그인 페이지 리다이렉트
+                    } else {
+                        setSignupCheck(data.message || "회원 정보 등록 실패");
+                        setLoading(false);
+                    }
+                })
+                .catch(err => {
+                    alert(err.message);
+                    setLoading(false);
+                });
+
+        } else if (selectedAuthMethod === "email") {
+            // 이메일 인증 처리
+            signupMember()
+                .then(data => {
+                    if (data.success) {
+                        alert("회원정보 등록이 완료되었습니다.\n이메일 인증 페이지로 이동합니다.")
+                        navigator("/emailVerification", { state: { member } });
+                        console.log("회원정보 데이터: ", data);
+                    } else {
+                        setSignupCheck(data.message || "회원정보 등록 실패");
+                        setLoading(false);
+                    }
+                })
+                .catch(err => {
+                    alert(err.message);
+                    setLoading(false);
+                });
+        }
     }
 
     // 중복 검사 초기화 함수 Start -----------------------------------------------------
@@ -199,7 +249,7 @@ const Signup = () => {
         });
 
         // 회원 아이디가 변경될 때 중복 확인 상태 초기화
-        if (name === 'memberId') { 
+        if (name === 'memberId') {
             setIdCheckResult({
                 isAvailable: null,
                 message: ""
@@ -238,7 +288,7 @@ const Signup = () => {
         });
 
         // 회원 아이디가 변경될 때 중복 확인 상태 초기화
-        if (name === 'memberId') { 
+        if (name === 'memberId') {
             setIdCheckResult({
                 isAvailable: null,
                 message: ""
@@ -256,7 +306,7 @@ const Signup = () => {
     // 아이디 중복 체크 함수 Start ---------------------------------------------------
     const checkDuplicateId = () => {
         // 공백 검사
-        if (!member.memberId || /\s/.test(member.memberId)) { 
+        if (!member.memberId || /\s/.test(member.memberId)) {
             setIdCheckResult({
                 isAvailable: false,
                 message: "회원 아이디로 공백은 입력이 불가능합니다."
@@ -278,23 +328,23 @@ const Signup = () => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ memberId: member.memberId })
         })
-        .then(res => res.json())
-        .then(data => {
-            if (data.isAvailable) {
-                setIdCheckResult({
-                    isAvailable: true,
-                    message: "사용 가능한 아이디입니다."
-                });
-            } else {
-                setIdCheckResult({
-                    isAvailable: false,
-                    message: "이미 사용 중인 아이디입니다."
-                });
-            }
-        })
-        .catch(err => {
-            alert("중복 검사 중 문제가 발생했습니다!");
-        });
+            .then(res => res.json())
+            .then(data => {
+                if (data.isAvailable) {
+                    setIdCheckResult({
+                        isAvailable: true,
+                        message: "사용 가능한 아이디입니다."
+                    });
+                } else {
+                    setIdCheckResult({
+                        isAvailable: false,
+                        message: "이미 사용 중인 아이디입니다."
+                    });
+                }
+            })
+            .catch(err => {
+                alert("중복 검사 중 문제가 발생했습니다!");
+            });
     };
     // 아이디 중복 체크 함수 End -----------------------------------------------------
 
@@ -314,39 +364,39 @@ const Signup = () => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: member.email })
         })
-        .then(res => res.json())
-        .then(data => {
-            if (data.isAvailable) {
-                setEmailCheckResult({
-                    isAvailable: true,
-                    message: "사용 가능한 이메일입니다."
-                });
-            } else {
-                setEmailCheckResult({
-                    isAvailable: false,
-                    message: "이미 사용 중인 이메일입니다."
-                });
-            }
-        })
-        .catch(err => {
-            alert("중복 검사 중 문제가 발생했습니다!");
-        });
+            .then(res => res.json())
+            .then(data => {
+                if (data.isAvailable) {
+                    setEmailCheckResult({
+                        isAvailable: true,
+                        message: "사용 가능한 이메일입니다."
+                    });
+                } else {
+                    setEmailCheckResult({
+                        isAvailable: false,
+                        message: "이미 사용 중인 이메일입니다."
+                    });
+                }
+            })
+            .catch(err => {
+                alert("중복 검사 중 문제가 발생했습니다!");
+            });
     };
     // 이메일 중복 체크 함수 End -----------------------------------------------------
 
     // 전화번호 숫자만 허용하는 함수 Start --------------------------------------------
     const handlePhoneInputChange = (e) => {
         const { name, value } = e.target;
-    
+
         // 숫자만 허용하는 정규식
         const numericValue = value.replace(/[^0-9]/g, "");
-    
+
         // 상태 업데이트
         setMember({
             ...member,
             [name]: numericValue,
         });
-    
+
         // 숫자만 입력된 경우 오류 메시지 초기화
         if (numericValue === value) {
             setErrors({
@@ -365,13 +415,13 @@ const Signup = () => {
 
     const getHelperText = (name, minLength, maxLength) => {
         const length = member[name].length;
-    
+
         const minMessage = minLength ? `최소 ${minLength}자` : '';  // 최소 글자 수 메시지
         const maxMessage = maxLength ? `최대 ${maxLength}자` : '';  // 최대 글자 수 메시지
-    
+
         // 최소, 최대 메시지를 조건에 맞게 합침
         let helperText = `${length}`;
-    
+
         if (minMessage && maxMessage) {
             // 최소와 최대 모두 있을 경우
             helperText += ` / ${minMessage}, ${maxMessage}`;
@@ -382,7 +432,7 @@ const Signup = () => {
             // 최대만 있을 경우
             helperText += ` / ${maxMessage}`;
         }
-    
+
         return helperText;
     };
 
@@ -402,10 +452,10 @@ const Signup = () => {
                         fullWidth
                         required
                         error={!!errors.memberName}
-                        inputProps={{minLength:2, maxLength:10}}
+                        inputProps={{ minLength: 2, maxLength: 10 }}
                         helperText={errors.memberName || getHelperText("memberName", 2)}
                     />
-            
+
                     <TextField
                         label="회원 아이디"
                         name="memberId"
@@ -414,13 +464,13 @@ const Signup = () => {
                         fullWidth
                         required
                         error={!!errors.memberId}
-                        inputProps={{minLength:3, maxLength:20}}
-                        helperText={errors.memberId || getHelperText("memberId",3, 20)}
+                        inputProps={{ minLength: 3, maxLength: 20 }}
+                        helperText={errors.memberId || getHelperText("memberId", 3, 20)}
                     />
                     <Button
                         variant="outlined"
                         color="primary"
-                         // 중복 검사 버튼
+                        // 중복 검사 버튼
                         onClick={checkDuplicateId}
                     >
                         아이디 중복 검사
@@ -446,7 +496,7 @@ const Signup = () => {
                     <Button
                         variant="outlined"
                         color="primary"
-                         // 중복 검사 버튼
+                        // 중복 검사 버튼
                         onClick={checkDuplicateEmail}
                     >
                         이메일 중복 검사
@@ -468,7 +518,7 @@ const Signup = () => {
                         fullWidth
                         required
                         error={!!errors.password}
-                        inputProps={{minLength:8, maxLength:20}}
+                        inputProps={{ minLength: 8, maxLength: 20 }}
                         helperText={errors.password || getHelperText("password", 8, 20)}
                     />
                     <TextField
@@ -491,17 +541,41 @@ const Signup = () => {
                         required
                         error={!!errors.phone}
                         helperText={errors.phone}
-                        inputProps={{minLength: 10, maxLength: 11}}
+                        inputProps={{ minLength: 10, maxLength: 11 }}
                     />
-                    <Button
-                        className="inSignjs-signup-btn"
-                        variant="contained"
-                        color="primary"
-                        type="submit"
-                        fullWidth
-                    >
-                        이메일 인증하기
-                    </Button>
+                    {!showAuthOptions ? (
+                        <Button
+                            className="inSignjs-signup-btn"
+                            variant="contained"
+                            color="primary"
+                            type="submit"
+                            fullWidth
+                        >
+                            인증방법을 선택하세요
+                        </Button>
+                    ) : (
+                        <div style={{ textAlign: "center" }}>
+                            <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
+                                <Button
+                                    onClick={() => toAuthentication("email")}
+                                    variant="contained"
+                                    color="primary"
+                                >
+                                    이메일 인증
+                                </Button>
+                                <Button
+                                    onClick={() => toAuthentication("kakao")}
+                                    variant="contained"
+                                    style={{
+                                        background: "#FEE500",
+                                        color: "#3C1E1E",
+                                    }}
+                                >
+                                    카카오 인증
+                                </Button>
+                            </div>
+                        </div>
+                    )}
                     {/* 로딩 표시 */}
                     {loading && (
                         <CircularProgress />

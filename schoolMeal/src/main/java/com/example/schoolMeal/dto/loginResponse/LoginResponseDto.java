@@ -11,5 +11,6 @@ public class LoginResponseDto {
 	private String error;
 	private String role;
 	private boolean isEmailVerified;
+	private boolean isKakaoVerified;
 	
 }

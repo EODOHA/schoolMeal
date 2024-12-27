@@ -55,13 +55,15 @@ public class LoginController {
 				// 인증 성공 시, 토큰 생성
 				String jwts = jwtService.getToken(auth.getName(), role);
 				
-				// 이메일 인증 여부 확인
+				// 이메일, 카카오 인증 여부 확인
 	            boolean isEmailVerified = memberService.isEmailVerified(credentials.getMemberId());
+	            boolean isKakaoVerified = memberService.isKakaoVerified(credentials.getMemberId());
 				
 				response.setSuccess(true);
 				response.setToken(jwts);
 				response.setRole(role.name());
 				response.setEmailVerified(isEmailVerified);
+				response.setKakaoVerified(isKakaoVerified);
 				return ResponseEntity.ok(response);
 			} else {
 				response.setSuccess(false);

@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import '../../css/sign/Login.css';  // 로그인 스타일을 위한 CSS 파일 import
 
+
 function Login() {
     const [member, setMember] = useState({
         memberId: '',
@@ -40,68 +41,69 @@ function Login() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(member)
         })
-        .then(async res => {
-            const data = await res.json();
-            // console.log("응답 데이터:", data)
+            .then(async res => {
+                const data = await res.json();
+                // console.log("응답 데이터:", data)
 
-            if (!res.ok) {
-                // 로그인 실패 시, 서버에서 전달한 실패 횟수 반영
-                if (data.failed_attempts !== undefined) {
-                    setFailedAttempts(data.failed_attempts);  // 서버에서 받은 실패 횟수 반영
+                if (!res.ok) {
+                    // 로그인 실패 시, 서버에서 전달한 실패 횟수 반영
+                    if (data.failed_attempts !== undefined) {
+                        setFailedAttempts(data.failed_attempts);  // 서버에서 받은 실패 횟수 반영
+                    }
+
+                    // 실패 횟수가 5에 도달하면 계정 잠금 처리
+                    if (data.failed_attempts >= 5) {
+                        throw new Error(data.error);
+                    }
+
+                    throw new Error(data.error || "로그인 실패");
                 }
 
-                // 실패 횟수가 5에 도달하면 계정 잠금 처리
-                if (data.failed_attempts >= 5) {
-                    throw new Error(data.error);
-                }
+                if (data.success && data.token) {
+                    // 로그인 타입 확인
+                    if ((loginType === 'admin' && (data.role !== 'ADMIN' && data.role !== 'BOARDADMIN')) ||
+                        (loginType === 'linkage' && data.role !== 'LINKAGE') ||
+                        (loginType === 'member' && data.role !== 'MEMBER')) {
+                        // console.log("loginType:", loginType)
+                        // console.log("memberRole:", data.role)
+                        setOpen(true);
+                        throw new Error("올바른 권한이 아닙니다. 다른 로그인을 선택해 주세요.");
+                    }
 
-                throw new Error(data.error || "로그인 실패");
-            }
+                    const jwtToken = `Bearer ${data.token}`;
+                    sessionStorage.setItem("jwt", jwtToken);
+                    authLogin(jwtToken);
+                    console.log(data);
 
-            if (data.success && data.token) {
-                // 로그인 타입 확인
-                if ((loginType === 'admin' && (data.role !== 'ADMIN' && data.role !== 'BOARDADMIN')) ||
-                (loginType === 'linkage' && data.role !== 'LINKAGE') ||
-                (loginType === 'member' && data.role !== 'MEMBER')) {
-                    // console.log("loginType:", loginType)
-                    // console.log("memberRole:", data.role)
-                    setOpen(true);
-                    throw new Error("올바른 권한이 아닙니다. 다른 로그인을 선택해 주세요.");
-                }
+                    // 이메일 인증 여부 확인(권한이 'ADMIN'인 경우 제외).
+                    if ((data.role !== 'ADMIN' && data.role !== 'BOARDADMIN') && ( !data.emailVerified && !data.kakaoVerified )) {
+                        console.log(data.emailVerified, data.kakaoVerified)
+                        // 이메일 인증이 FALSE인 경우, 인증 페이지로 리다이렉트.
+                        alert("이메일 인증이 필요합니다.")
+                        navigate("/ReEmailVerification", { state: { email: member.memberId } });
+                    } else {
+                        navigate("/main")
+                    }
 
-                const jwtToken = `Bearer ${data.token}`;
-                sessionStorage.setItem("jwt", jwtToken);
-                authLogin(jwtToken);
-                console.log(data);
-
-                // 이메일 인증 여부 확인(권한이 'ADMIN'인 경우 제외).
-                if ((data.role !== 'ADMIN' && data.role !== 'BOARDADMIN') && !data.emailVerified) {
-                    // 이메일 인증이 FALSE인 경우, 인증 페이지로 리다이렉트.
-                    alert("이메일 인증이 필요합니다.")
-                    navigate("/ReEmailVerification", { state: { email: member.memberId }});
+                    return fetch(SERVER_URL + 'members', {
+                        method: 'GET',
+                        headers: { 'Authorization': jwtToken }
+                    });
                 } else {
-                    navigate("/main")
+                    throw new Error("로그인 실패: 계정 정보를 확인해 주세요.");
                 }
-
-                return fetch(SERVER_URL + 'members', {
-                    method: 'GET',
-                    headers: { 'Authorization': jwtToken }
-                });
-            } else {
-                throw new Error("로그인 실패: 계정 정보를 확인해 주세요.");
-            }
-        })
-        .then(res => {
-            if (!res.ok) {
-                throw new Error("사용자 정보를 불러오는 데 실패했습니다.");
-            }
-            return res.json();
-        })
-        .catch(err => {
-            // console.error(err);
-            setErrorMessage(err.message);
-            setOpen(true);
-        });
+            })
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error("사용자 정보를 불러오는 데 실패했습니다.");
+                }
+                return res.json();
+            })
+            .catch(err => {
+                // console.error(err);
+                setErrorMessage(err.message);
+                setOpen(true);
+            });
     };
 
     // 로그인 성공 후 메인 페이지로 이동
@@ -168,7 +170,7 @@ function Login() {
                     autoHideDuration={3000}
                     onClose={() => setOpen(false)}
                     message={errorMessage}
-                    anchorOrigin={{ 
+                    anchorOrigin={{
                         vertical: 'top',
                         horizontal: 'center'
                     }}

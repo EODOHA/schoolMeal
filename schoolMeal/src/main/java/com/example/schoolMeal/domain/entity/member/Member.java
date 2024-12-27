@@ -52,6 +52,9 @@ public class Member {
 	@Column(nullable=false)
 	private Role role;
 	
+	// 인증 방식
+	private String authMethod;
+	
 	// 이메일 인증을 위한 필드들 -----------------------
 
 	// 이메일 인증 여부. 기본값 false
@@ -61,6 +64,18 @@ public class Member {
 	// 인증에 사용할 토큰
 	@Column
 	private String emailVerificationToken;
+	
+	// ---------------------------
+	
+	// 카카오 인증을 위한 필드들 -----------------------
+	
+	// 카카오 인증 여부. 기본값 false
+	@Column(nullable=false)
+	private boolean isKakaoVerified = false;
+	
+	// 인증에 사용할 토큰
+	@Column
+	private String kakaoAccessToken;
 	
 	// ---------------------------
 	

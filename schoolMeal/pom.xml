@@ -120,14 +120,14 @@
 			<scope>runtime</scope>
 		</dependency>
 
-		<!-- Jakarta Validation API  유효성검사에 notblank notnul을 쓰기위한 종속성추가 -->
+		<!-- Jakarta Validation API  유효성검사에 notblank notnull을 쓰기위한 종속성추가 -->
 		<dependency>
 			<groupId>jakarta.validation</groupId>
 			<artifactId>jakarta.validation-api</artifactId>
 			<version>3.0.2</version> <!-- 최신 버전 확인 후 사용 -->
 		</dependency>
 
-		<!-- Hibernate Validator  유효성검사에 notblank notnul을 쓰기위한 종속성추가 -->
+		<!-- Hibernate Validator  유효성검사에 notblank notnull을 쓰기위한 종속성추가 -->
 		<dependency>
 			<groupId>org.hibernate.validator</groupId>
 			<artifactId>hibernate-validator</artifactId>
@@ -172,6 +172,17 @@
 		<dependency>
 		    <groupId>org.springframework.boot</groupId>
 		    <artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		
+		<!-- 카카오 로그인 인증을 위한 의존성 추가-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.projectreactor</groupId>
+			<artifactId>reactor-test</artifactId>
+			<scope>test</scope>
 		</dependency>
 		
 	</dependencies>

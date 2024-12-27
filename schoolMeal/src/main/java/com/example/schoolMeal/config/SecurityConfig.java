@@ -56,6 +56,7 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.POST, "/find-account-verify-token").permitAll()
 				.requestMatchers(HttpMethod.POST, "/change-password").permitAll()
 				.requestMatchers(HttpMethod.POST, "/verify-token").permitAll()
+				.requestMatchers(HttpMethod.POST, "/verify-kakao").permitAll()
 				.requestMatchers(HttpMethod.GET, "/imageManage/{category}").permitAll()
 				.requestMatchers(HttpMethod.GET, "/adminNotice/**").permitAll()
 				
