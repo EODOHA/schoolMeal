@@ -53,18 +53,23 @@ function MealExpertDetail() {
     return (
         <>
             {/* 상세정보 제목 */}
-            < h1 className="meal-expert-detail-title" >
+            < h1 className="meal-expert-detail-title">
                 {expert.exp_name}의 상세정보
             </h1 >
-            <Card className='expert-detail-card'>
-                <div className="profile-container">
+            <Card className='expert-detail-card' style={{ display: 'flex' }}>
+                <div className="profile-container" style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <CardMedia
                         component="img"
                         className="profile-image"
                         image='/mealInfo/expert-default-profile.png' // 기본이미지 설정
                         alt="프로필 이미지"
+                        style={{
+                            width: '200px', // 원하는 고정 크기 설정
+                            height: '200px', // 원하는 고정 크기 설정
+                            objectFit: 'cover', // 이미지 비율을 유지하면서 크기 조정
+                        }}
                     />
-                    <div className="profile-info">
+                    <div className="profile-info" style={{ flex: 1 }}>
                         <Typography variant="body1"><strong>소속:</strong> {expert.exp_department}</Typography>
                         <Typography variant="body1"><strong>직급:</strong> {expert.exp_position}</Typography>
                         <Typography variant="body1"><strong>이메일:</strong> {expert.exp_email}</Typography>

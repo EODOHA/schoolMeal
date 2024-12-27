@@ -1,5 +1,10 @@
 package com.example.schoolMeal.domain.entity.community;
 
 public enum RegionCategory {
-    SEOUL, DAEJEON, INCHEON, BUSAN, GANGWONDO, ALL  // 각 지역 카테고리 정의
+    ALL, SEOUL, BUSAN,
+    DAEGU, INCHEON, GWANGJU,
+    DAEJEON, ULSAN, SEJONG,
+    GANGWON, GYEONGGI, CHUNGBUK,
+    CHUNGNAM, JEONBUK, JEONNAM,
+    GYEONGBUK, GYEONGNAM, JEJU// 각 지역 카테고리 정의
 }

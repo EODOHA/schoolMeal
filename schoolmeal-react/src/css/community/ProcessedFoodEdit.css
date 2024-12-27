@@ -1,0 +1,97 @@
+/* 컨테이너 스타일 */
+.processed-food-edit-container {
+    max-width: 1000px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40px;
+}
+
+/* 카드 스타일 (Edit 페이지) */
+.processed-food-card {
+    width: 100%;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+/* 제목 스타일 */
+.processed-food-card h2 {
+    margin-bottom: 20px;
+    font-size: 26px;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* 입력 폼 그룹 */
+.processed-food-form-group {
+    margin-bottom: 20px;
+    padding: 0 10px; /* 그룹 내부 좌우 여백 추가 */
+    box-sizing: border-box; /* 여백 포함 계산 */
+}
+
+/* 입력 필드 및 셀렉트 박스 스타일 */
+.processed-food-form-group input,
+.processed-food-form-group select,
+.processed-food-form-group textarea {
+    width: 100%;
+    max-width: calc(100% - 10px); /* 양쪽 패딩(10px * 2)을 제외한 최대 너비 */
+    padding: 10px;
+    margin: 0 auto; /* 중앙 정렬 */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box; /* 여백 포함 계산 */
+}
+
+textarea.processed-food-form-control {
+    resize: vertical;
+}
+
+/* 버튼 그룹 스타일 */
+.processed-food-button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.processed-food-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.processed-food-button.submit {
+    background-color: #007BFF;
+    color: white;
+}
+
+.processed-food-button.submit:hover {
+    background-color: #0056b3;
+}
+
+.processed-food-button.cancel {
+    background-color: #6c757d;
+    color: white;
+}
+
+.processed-food-button.cancel:hover {
+    background-color: #494e52;
+}
+
+/* 에러 메시지 스타일 */
+.processed-food-error-message {
+    color: red;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 18px;
+}

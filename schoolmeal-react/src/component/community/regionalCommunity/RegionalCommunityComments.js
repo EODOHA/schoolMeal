@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { SERVER_URL } from "../../../Constants";
-import { useAuth } from "../../sign/AuthContext"; 
+import { useAuth } from "../../sign/AuthContext";
 import "../../../css/community/RegionalCommunityComments.css";
 
 const RegionalCommunityComments = ({ communityPostId }) => {
   const [comments, setComments] = useState([]);
   const [content, setContent] = useState('');
-  const { memberId, token } = useAuth(); // 로그인 사용자 ID 및 토큰 가져오기
+  const { memberId, token, isAdmin, isBoardAdmin } = useAuth(); // 로그인 사용자 ID 및 토큰 가져오기
 
   // 댓글 가져오기
   useEffect(() => {
@@ -27,6 +27,10 @@ const RegionalCommunityComments = ({ communityPostId }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!content.trim()) return;
+
+    // 작성 확인.
+    const isConfirmed = window.confirm("댓글을 작성하시겠습니까?");
+    if (!isConfirmed) return;
 
     const commentData = {
       content,
@@ -49,6 +53,9 @@ const RegionalCommunityComments = ({ communityPostId }) => {
 
   // 댓글 삭제
   const handleDelete = async (commentId) => {
+    // 삭제 확인.
+    const isConfirmed = window.confirm("댓글을 삭제하시겠습니까?");
+    if (!isConfirmed) return;
     try {
       await axios.delete(`${SERVER_URL}comments/${commentId}`, {
         headers: {
@@ -70,12 +77,14 @@ const RegionalCommunityComments = ({ communityPostId }) => {
             <span className="regionCommunitycomment-content">
               <strong>{comment.author}</strong>: {comment.content}
             </span>
-            <button
-              className="regionCommunitydelete-comment-btn"
-              onClick={() => handleDelete(comment.id)}
-            >
-              삭제
-            </button>
+            {(comment.author === memberId || isAdmin || isBoardAdmin) && (
+              <button
+                className="regionCommunitydelete-comment-btn"
+                onClick={() => handleDelete(comment.id)}
+              >
+                삭제
+              </button>
+            )}
           </li>
         ))}
       </ul>

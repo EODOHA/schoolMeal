@@ -144,7 +144,7 @@ function MealExpertList() {
                 </div>
             ) : (
                 <div className="meal-expert-list-container">
-                    <h1 className='meal-expert-title'>급식 전문가 인력관리</h1>
+                    <h1 className='meal-expert-title'>학교급식 전문가 인력관리</h1>
                     <br />
                     {/* 추가버튼 isAdmin 또는 isBoardAdmin이 true일 때만 보이도록 함 */}
                     {(isAdmin || isBoardAdmin) && (

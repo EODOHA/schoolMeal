@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { SERVER_URL } from "../../../Constants";
-import { useAuth } from "../../sign/AuthContext";  
-import "../../../css/community/RegionalCommunityDetail.css"; 
+import { useAuth } from "../../sign/AuthContext";
+import { Button } from '@mui/material';
 import RegionalCommunityComments from './RegionalCommunityComments';
+import "../../../css/community/RegionalCommunityDetail.css";
 
 const RegionalCommunityDetail = () => {
   const { id: postId } = useParams();
@@ -33,7 +34,7 @@ const RegionalCommunityDetail = () => {
 
   // 권한 판단 함수
   const canEditOrDelete = () => {
-    return role === "ADMIN" || post?.author === memberId; // 관리자이거나 작성자인 경우
+    return role === "ADMIN" || role === "BOARDADMIN" || post?.author === memberId; // ADMIN, BOARDADMIN, 작성자인 경우
   };
 
   // 게시글 삭제 처리
@@ -87,31 +88,35 @@ const RegionalCommunityDetail = () => {
       <div className="regionCommunityDetailbutton-group">
         {/* 수정 버튼 */}
         {canEditOrDelete() && (
-          <button
+          <Button
+            variant="outlined"
+            color="success"
             onClick={() => navigate(`/community/regions/edit/${post.id}`)}
-            className="regionCommunityDetailedit-btn"
           >
             수정
-          </button>
-        )}
-
-        {/* 삭제 버튼 */}
-        {canEditOrDelete() && (
-          <button
-            onClick={handleDelete}
-            className="regionCommunityDetaildelete-btn"
-          >
-            삭제
-          </button>
+          </Button>
         )}
 
         {/* 뒤로 가기 버튼 */}
-        <button
+        <Button
+          variant="outlined"
+          color="primary"
           onClick={() => navigate("/community/regions")}
-          className="regionCommunityDetailback-btn"
         >
-          뒤로 가기
-        </button>
+          목록
+        </Button>
+
+        {/* 삭제 버튼 */}
+        {canEditOrDelete() && (
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleDelete}
+          >
+            삭제
+          </Button>
+        )}
+
       </div>
 
       {/* 댓글 컴포넌트 */}

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { SERVER_URL } from "../../../Constants";
 import { useAuth } from "../../sign/AuthContext"; // AuthContext 사용
+import { Button } from '@mui/material';
 import "../../../css/community/CreateRegionalCommunity.css";
 
 const CreateRegionalCommunity = () => {
@@ -99,11 +100,24 @@ const CreateRegionalCommunity = () => {
             onChange={(e) => setRegion(e.target.value)}
             required
           >
-            <option value="SEOUL">서울</option>
-            <option value="DAEJEON">대전</option>
-            <option value="INCHEON">인천</option>
-            <option value="BUSAN">부산</option>
-            <option value="GANGWONDO">강원도</option>
+            <option value="ALL">전체</option>
+            <option value="SEOUL">서울특별시</option>
+            <option value="BUSAN">부산광역시</option>
+            <option value="DAEGU">대구광역시</option>
+            <option value="INCHEON">인천광역시</option>
+            <option value="GWANGJU">광주광역시</option>
+            <option value="DAEJEON">대전광역시</option>
+            <option value="ULSAN">울산광역시</option>
+            <option value="SEJONG">세종특별자치시</option>
+            <option value="GANGWON">강원특별자치도</option>
+            <option value="GYEONGGI">경기도</option>
+            <option value="CHUNGBUK">충청북도</option>
+            <option value="CHUNGNAM">충청남도</option>
+            <option value="JEONBUK">전북특별자치도</option>
+            <option value="JEONNAM">전라남도</option>
+            <option value="GYEONGBUK">경상북도</option>
+            <option value="GYEONGNAM">경상남도</option>
+            <option value="JEJU">제주특별자치도</option>
           </select>
         </div>
         <div className="regionCommunityform-group">
@@ -114,9 +128,22 @@ const CreateRegionalCommunity = () => {
             required
           />
         </div>
-        <button type="submit" className="regionCommunityCrudSubmit-btn">
-          {id ? "게시글 수정하기" : "게시글 작성하기"}
-        </button>
+        <div className='regionCommunityCrudSubmit-btn'>
+          <Button
+            variant="contained"
+            color="success"
+            type="submit"
+          >
+            {id ? "게시글 수정하기" : "게시글 작성하기"}
+          </Button>
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() => navigate("/community/regions")}
+          >
+            취소
+          </Button>
+        </div>
       </form>
     </div>
   );

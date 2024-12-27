@@ -1,117 +1,128 @@
-/* 전체 레이아웃 스타일 */
-.communityNoticedetail-container {
-    width: 80%;
-    margin: 30px auto;
-    padding: 30px;
-    background-color: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    border: 1px solid #ececec;
-
-}
-
-
-
-/* 제목 스타일 */
-h2 {
-    text-align: center;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 20px;
-    font-size: 28px;
-}
-
-/* 공지사항 상세 테이블 스타일 */
-.communitynotice-detail-table {
-    width: 100%;
-    border-collapse: collapse; /* 테이블 셀 간의 간격을 없앰 */
-    margin-bottom: 20px;
-}
-
-.communitynotice-detail-table th, .communitynotice-detail-table td {
-    padding: 15px;
-    text-align: left;
-    border-radius: 16px;
-    background-color: #ffffff;
-    font-weight: normal;
-    border: 2px solid #000;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    height: 60px; /* 고정된 높이 설정 */
-    box-sizing: border-box;
-}
-
-.communitynotice-detail-table th {
-    font-weight: bold;
-    background-color: #ececec;
-    width: 25%; /* th 칸의 너비를 줄여 td 칸을 더 넓게 보이게 함 */
-}
-
-.communitynotice-detail-table td {
-    background-color: #f9f9f9;
-    width: 75%; /* td 칸을 더 넓게 설정하여 정보가 잘 보이도록 함 */
-}
-
-/* 글의 내용 부분 스타일 */
-.communitynotice-content {
-    font-size: 18px;
-    line-height: 1.8;
-    margin: 30px 0;
-    color: #444;
-    text-align: left;
+/* 컨테이너 스타일 */
+.notice-detail-container {
+    max-width: 1000px; /* 최대 폭 설정 */
+    width: 100%; /* 100% 너비로 확장 가능 */
+    margin: 0 auto; /* 중앙 정렬 */
     padding: 20px;
-    border: 2px solid #000;
-    border-radius: 16px;
-    background-color: #f9f9f9;
-    min-height: 480px; /* 최소 높이 설정 */
-    box-sizing: border-box;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    white-space: pre-wrap; /* 줄바꿈을 보이게 유지 */
-    overflow: visible; /* 스크롤 대신 높이가 늘어나도록 설정 */
+    box-sizing: border-box; /* padding과 border를 크기 안에 포함 */
+    display: flex;
+    flex-direction: column; /* 내용은 세로로 정렬 */
+    justify-content: center; /* 세로 중앙 정렬 */
+    align-items: center; /* 가로 중앙 정렬 */
+    margin-top: 40px;
 }
 
-/* 버튼 스타일 */
-.communityNoticebutton-group {
+/* 카드 스타일 */
+.notice-card {
+    width: 100%; /* 카드가 컨테이너의 폭에 맞게 채워짐 */
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+/* 카드 본문 스타일 */
+.notice-card-body {
+    font-family: Arial, sans-serif;
+}
+
+/* 제목 */
+.notice-card-body h2 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
     text-align: center;
-    margin-top: 30px;
 }
 
-.communityNoticebutton-group button {
-    margin: 0 12px;
-    padding: 12px 28px;
-    font-size: 18px;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+/* 헤더 */
+.notice-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
 }
 
-.communityNoticebutton-group .communityNoticeedit-btn {
-    background-color: #ffc107;
-    color: #fff;
+.notice-id, 
+.notice-date {
+    font-size: 0.9rem;
+    color: #555;
 }
 
-.communityNoticebutton-group .communityNoticeedit-btn:hover {
-    background-color: #e0a800;
-    box-shadow: 0 6px 16px rgba(224, 168, 0, 0.3);
+/* 폼 그룹 */
+.notice-form-group {
+    margin-bottom: 1rem;
 }
 
-.communityNoticebutton-group .communityNoticeback-btn {
-    background-color: #007bff;
-    color: #fff;
+.notice-form-control {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    box-sizing: border-box; /* 부모 요소 넘어가지 않게. */
 }
 
-.communityNoticebutton-group .communityNoticeback-btn:hover {
-    background-color: #0056b3;
-    box-shadow: 0 6px 16px rgba(0, 86, 179, 0.3);
+/* 텍스트 영역 */
+textarea.notice-form-control {
+    resize: vertical;
 }
 
-.communityNoticebutton-group .communityNoticedelete-btn {
-    background-color: #dc3545;
-    color: #fff;
+/* 첨부파일 링크 */
+.notice-attachment-link {
+    color: #007bff;
+    text-decoration: none;
 }
 
-.communityNoticebutton-group .communityNoticedelete-btn:hover {
-    background-color: #c82333;
-    box-shadow: 0 6px 16px rgba(200, 35, 51, 0.3);
+.notice-attachment-link:hover {
+    text-decoration: underline;
+}
+
+/* 첨부파일 아이콘과 텍스트 간 간격 설정 */
+.notice-attachment-link svg {
+    margin-right: 5px;
+}
+
+/* 버튼 그룹 */
+.notice-button-group {
+    display: flex;
+    justify-content: center !important;
+    margin-bottom: 30px; /* 버튼과 테이블 사이 간격 */
+    gap: 10px;
+}
+
+/* 첨부파일 섹션 스타일 */
+.notice-attachment {
+    text-align: right; /* 오른쪽 정렬 */
+    margin-top: 10px; /* 작성일과의 간격 */
+    margin-bottom: 10px; /* 작성자와의 간격 */
+}
+
+/* 첨부파일 다운로드 링크 스타일 */
+.notice-attachment-link {
+    text-decoration: none; /* 밑줄 제거 */
+    color: #1976d2;
+    font-weight: bold;
+    display: inline-flex; /* 아이콘과 텍스트 한 줄 표시 */
+    align-items: center;
+}
+
+/* 첨부파일 없음 아이콘 스타일 */
+.notice-attachment span {
+    display: inline-flex;
+    align-items: center;
+    color: #888;
+    font-style: italic;
+}
+
+.notice-image {
+    text-align: center; /* 중앙 정렬 */
+    margin-top: 20px;
+    width: 100%; /* 컨테이너 크기 맞추기 */
+    height: auto; /* 비율 유지 */
+}
+
+.notice-image img {
+    max-width: 100%; /* 영상 너비를 부모 컨테이너에 맞게 100%로 설정 */
+    max-height: 360px; 
+    object-fit: cover; /* 비율을 유지하면서 크기를 맞춤 */
+    border-radius: 8px; /* 영상 모서리 둥글게 처리 */
+    margin-top: 10px;
 }

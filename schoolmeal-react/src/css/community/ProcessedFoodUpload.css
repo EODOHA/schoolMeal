@@ -1,0 +1,127 @@
+/* 컨테이너 스타일 */
+.processed-food-upload-container {
+    padding: 20px;
+    margin: 0 auto;
+    max-width: 1400px;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    /* 컨테이너 내 내용 가로 가운데 정렬 */
+}
+
+/* 제목 스타일 */
+.processed-food-upload-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+/* 버튼 그룹 스타일 */
+.processed-food-button-group {
+    display: flex;
+    justify-content: center !important;
+    gap: 10px;
+    /* 버튼들 간 간격 */
+    margin-bottom: 30px;
+    /* 버튼과 테이블 사이 간격 */
+}
+.processed-food-button.back-to-list {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* 테이블 스타일 */
+.processed-food-upload-table {
+    width: 100%;
+    border-collapse: collapse;
+    /* 셀 간 경계를 합침 */
+    margin-top: 20px;
+    /* 테이블 위쪽 여백 추가 */
+    table-layout: auto;
+}
+
+/* 테이블 헤더 스타일 */
+.processed-food-upload-thead {
+    background-color: #f2f2f2;
+    border-bottom: 2px solid #ccc;
+}
+
+/* 셀 스타일 */
+.processed-food-upload-table td,
+.processed-food-upload-table th {
+    padding: 15px;
+    /* 셀 안쪽 여백 */
+    text-align: center;
+    /* 셀 내 글자 가운데 정렬 */
+    word-wrap: break-word;
+    /* 긴 글자는 자동 줄바꿈 */
+}
+
+/* 각 열 너비 설정 */
+/* HACCP 지정번호 */
+.processed-food-upload-table th:nth-child(1),
+.processed-food-upload-table td:nth-child(1) {
+    width: 13%;
+}
+
+/* 카테고리 */
+.processed-food-upload-table th:nth-child(2),
+.processed-food-upload-table td:nth-child(2) {
+    width: 10%;
+}
+
+/* 업소명 */
+.processed-food-upload-table th:nth-child(3),
+.processed-food-upload-table td:nth-child(3) {
+    width: 15%;
+}
+
+/* 주소 */
+.processed-food-upload-table th:nth-child(4),
+.processed-food-upload-table td:nth-child(4) {
+    width: 30%;
+}
+
+.processed-food-upload-table th:nth-child(5),
+.processed-food-upload-table td:nth-child(5) {
+    width: 10%;
+    /* 품목명 */
+}
+
+/* 영업상태 */
+.processed-food-upload-table th:nth-child(6),
+.processed-food-upload-table td:nth-child(6) {
+    width: 10%;
+}
+
+/* 인증종료일자 */
+.processed-food-upload-table th:nth-child(7),
+.processed-food-upload-table td:nth-child(7) {
+    width: 25%;
+}
+
+/* 카테고리(식재료 가격 정보) */
+.processed-food-price .processed-food-upload-table th:nth-child(1),
+.processed-food-price .processed-food-upload-table td:nth-child(1) {
+    width: 20%;
+}
+
+/* 품목명(식재료 가격 정보) */
+.processed-food-price .processed-food-upload-table th:nth-child(2),
+.processed-food-price .processed-food-upload-table td:nth-child(2) {
+    width: 20%;
+}
+/* 가격(식재료 가격 정보) */
+.processed-food-price .processed-food-upload-table th:nth-child(5),
+.processed-food-price .processed-food-upload-table td:nth-child(5) {
+    width: 20%;
+}
+
+/* 행 스타일 */
+.processed-food-upload-tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.processed-food-upload-tbody tr:hover {
+    background-color: #f1f1f1 !important;
+}

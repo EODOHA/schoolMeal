@@ -1,0 +1,70 @@
+/* 컨테이너 스타일 */
+.notice-write-container {
+    display: flex;
+    justify-content: center;
+    align-items: center; /* 세로 정렬 */
+    max-width: 800px; /* Detail과 일치하는 폭 설정 */
+    width: 100%;
+    margin: 0 auto; /* 중앙 정렬 */
+    padding: 20px;
+    box-sizing: border-box;
+    margin-top: 40px; /* 기존 여백 유지 */
+}
+
+.notice-card {
+    width: 100%; /* 카드가 컨테이너의 폭에 맞게 채워짐 */
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+.notice-card-body {
+    font-family: Arial, sans-serif;
+}
+
+.notice-card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.notice-form-group {
+    margin-bottom: 15px;
+    text-align: center;  /* 텍스트와 이미지를 중앙 정렬 */
+}
+
+.notice-form-group input[type="file"] {
+    width: 100%; /* 부모 요소에 맞춤 */
+    padding: 5px; /* 여백 조정 */
+    border: 1px solid #ccc; /* 기본 테두리 */
+    border-radius: 5px; /* 둥근 모서리 */
+    box-sizing: border-box; /* 크기 계산 */
+}
+
+.notice-button-group {
+    display: flex;
+    justify-content: center !important;
+    margin-bottom: 30px; /* 버튼과 테이블 사이 간격 */
+    gap: 10px;
+}
+
+.notice-error-message {
+    color: red;
+    margin-bottom: 15px;
+}
+
+.notice-image-preview-container {
+    text-align: center; /* 영상 중앙 정렬 */
+    margin-top: 20px;
+}
+
+.notice-image-preview {
+    max-width: 250px; /* 영상 최대 너비 */
+    max-height: 300px; /* 영상 최대 높이 */
+    object-fit: cover; /* 비율 유지하면서 크기 맞추기 */
+    border-radius: 8px; /* 영상 모서리 둥글게 처리 */
+    margin-top: 10px;
+}
+
+

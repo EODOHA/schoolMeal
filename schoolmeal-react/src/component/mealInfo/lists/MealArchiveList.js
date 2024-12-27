@@ -138,7 +138,7 @@ function MealArchiveList() {
                     error={<div className='meal-info-error-message'>{error}</div>} /> //isWriting 이 true일 떄 MealArchiveWrite 컴포넌트를 렌더링
             ) : (
                 <div className="meal-info-list-container">
-                    <h1 className='meal-info-title'>학교 급식 과거와 현재</h1>
+                    <h1 className='meal-info-title'>학교급식 과거와 현재</h1>
                     <div className='meal-info-list-button-group'>
                         {/* isAdmin또는 isBoardAdmin이 true일 때만 새 글 쓰기 버튼 표시 */}
                         {(isAdmin || isBoardAdmin) && (

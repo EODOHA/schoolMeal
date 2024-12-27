@@ -1,215 +1,249 @@
 package com.example.schoolMeal.service.community;
 
-import com.example.schoolMeal.domain.entity.community.Notice;
-import com.example.schoolMeal.domain.entity.community.CommunityFile;
-import com.example.schoolMeal.domain.repository.community.NoticeRepository;
-import com.example.schoolMeal.domain.repository.community.CommunityFileRepository;
-import com.example.schoolMeal.dto.community.NoticeRequestDTO;
-import com.example.schoolMeal.dto.community.NoticeResponseDTO;
-import jakarta.annotation.PostConstruct;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.persistence.EntityNotFoundException;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.util.Base64;
-import java.util.List;
-import java.util.stream.Collectors;
 import com.example.schoolMeal.common.PathResolver;
+import com.example.schoolMeal.domain.entity.FileUrl;
+import com.example.schoolMeal.domain.entity.community.Notice;
+import com.example.schoolMeal.domain.repository.FileUrlRepository;
+import com.example.schoolMeal.domain.repository.community.NoticeRepository;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
 
 @Service
 public class NoticeService extends PathResolver {
 
-    @Autowired
-    private NoticeRepository noticeRepository;
+	@Autowired
+	private NoticeRepository noticeRepository;
 
-    @Autowired
-    private CommunityFileRepository communityFileRepository;
+	@Autowired
+	private FileUrlRepository fileUrlRepository;
 
-    private String noticePath;
+	/* 파일 업로드 경로 설정 */
+	private String noticePath;
 
-    @PostConstruct
-    public void init() {
-        noticePath = buildPath("공지사항");
+	@PostConstruct
+	public void init() {
+		noticePath = buildPath("공지사항");
 
-        // 저장 경로의 유효성 검사
-        File saveDir = new File(noticePath);
-        if (!saveDir.exists() && !saveDir.mkdirs()) {
-            throw new RuntimeException("저장 폴더를 생성할 수 없습니다: " + noticePath);
-        }
-    }
+		// 저장 경로의 유효성 검사
+		File saveDir = new File(noticePath);
+		if (!saveDir.exists() && !saveDir.mkdirs()) {
+			throw new RuntimeException("저장 폴더를 생성할 수 없습니다: " + noticePath);
+		}
+	}
 
-    // 공지사항 생성 메서드 (파일 첨부 포함)
-    public NoticeResponseDTO createNotice(NoticeRequestDTO dto, MultipartFile file) throws IOException {
-        Notice notice = new Notice(dto.getTitle(), dto.getContent(), dto.getAuthor());
+	// 게시글 저장
+	public void write(Notice notice, MultipartFile file) {
+		try {
+			if (notice == null) {
+				throw new IllegalArgumentException("Notice 객체가 null입니다.");
+			}
 
-        // 파일이 첨부된 경우 파일 저장을 처리
-        if (file != null && !file.isEmpty()) {
-            CommunityFile communityFile = saveFile(file);
-            notice.setFile(communityFile);
-        }
+			if (file != null && !file.isEmpty()) {
+				System.out.println("write 메서드에서 파일 처리 시작");
+				System.out.println("파일 이름: " + file.getOriginalFilename());
+				System.out.println("파일 크기: " + file.getSize());
 
-        Notice savedNotice = noticeRepository.save(notice); //공지사항 저장
-        return mapToResponseDTO(savedNotice);               // 저장된 공지사항을 DTO로 변환 후 반환
-    }
+				// 파일 저장 및 FileUrl 생성
+				FileUrl fileUrl = saveFile(file);
+				notice.setFileUrl(fileUrl); // fileUrl 설정
+				notice.getFileUrlId();
+			}
 
-    // 공지사항 조회 메서드 (조회수 증가 포함)
-    public NoticeResponseDTO getNotice(Long id) {
-        Notice notice = noticeRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Notice not found"));
-        notice.setViewCount(notice.getViewCount() + 1); // 조회수 증가
-        noticeRepository.save(notice);  // 업데이트된 조회수를 반영하에 저장
-        return mapToResponseDTO(notice);    // 조회된 공지사항을 DTO로 변환 후 반환
-    }
+			// 게시글 저장
+			Notice savedNotice = noticeRepository
+					.save(notice);
+			System.out.println("DB에 저장된 Notice ID: " + savedNotice.getId());
+		} catch (IOException e) {
+			throw new RuntimeException("파일 업로드 중 오류가 발생했습니다. 자세한 내용을 확인하세요.", e);
+		} catch (Exception e) {
+			throw new RuntimeException("게시글 저장 중 오류가 발생했습니다. 다시 시도해 주세요.", e);
+		}
+	}
 
-    // 모든 공지사항 조회 메서드
-    public List<NoticeResponseDTO> getAllNotices() {
-        return noticeRepository.findAll().stream()
-                .map(this::mapToResponseDTO)    // NOTICE엔터티를 ResponseDTO로 변환
-                .collect(Collectors.toList());  // 반환
-    }
+	// 파일 정보를 DB에 저장하는 메서드
+	public FileUrl saveFile(MultipartFile file) throws IOException {
+		// 파일 디버깅 출력
+		if (file == null || file.isEmpty()) {
+			throw new IOException("파일이 비어 있거나 유효하지 않습니다.");
+		}
 
-    // 공지사항 수정 메서드 (파일 첨부 포함)
-    public void updateNotice(Long id, NoticeRequestDTO dto, MultipartFile file) throws IOException {
-        Notice notice = noticeRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Notice not found"));
+		System.out.println("파일 저장 시작 - 이름: " + file.getOriginalFilename());
+		System.out.println("파일 크기: " + file.getSize());
 
-        // 기존 필드 업데이트
-        notice.setTitle(dto.getTitle());
-        notice.setContent(dto.getContent());
-        notice.setAuthor(dto.getAuthor());
-        notice.setUpdatedDate(LocalDateTime.now());
+		String origFilename = file.getOriginalFilename();
+		if (origFilename == null) {
+			throw new IOException("파일 이름이 null입니다.");
+		}
 
-        // 파일이 첨부된 경우 기존 파일 삭제 후 새로운 파일 저장
-        if (file != null && !file.isEmpty()) {
-            // 기존 파일 삭제
-            if (notice.getFile() != null) {
-                deleteFileFromSystem(notice.getFile()); //기존 파일 삭제
-                communityFileRepository.delete(notice.getFile()); // 기존 파일 엔터티 삭제
-            }
+		String filename = System.currentTimeMillis() + "_" + origFilename;
+		File saveDir = new File(noticePath);
+		if (!saveDir.exists() && !saveDir.mkdirs()) {
+			throw new IOException("저장 폴더를 생성할 수 없습니다.");
+		}
 
-            // 새로운 파일 저장
-            CommunityFile newFile = saveFile(file);
-            notice.setFile(newFile);
-        }
+		String filePath = noticePath + File.separator + filename;
+		Long fileSize = file.getSize();
 
-        noticeRepository.save(notice);  // 저장
-    }
+		// 파일 저장 로직
+		try {
+			file.transferTo(new File(filePath));
+			System.out.println("파일이 성공적으로 저장되었습니다: " + filePath);
+		} catch (IOException e) {
+			throw new IOException("파일 저장 중 오류가 발생했습니다.", e);
+		}
 
-    // 공지사항 삭제 메서드 (파일 삭제 포함)
-    public void deleteNotice(Long id) {
-        Notice notice = noticeRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Notice not found"));
+		// FileUrl 객체 생성 및 저장
+		FileUrl fileUrl = FileUrl.builder().origFileName(origFilename).fileName(filename).filePath(filePath)
+				.fileSize(fileSize).build();
 
-        // 파일이 첨부된 경우 파일을 삭제
-        if (notice.getFile() != null) {
-            deleteFileFromSystem(notice.getFile()); // 파일 시스템에서 파일 삭제
-            communityFileRepository.delete(notice.getFile()); // 파일 엔터티 삭제
-        }
+		FileUrl savedFileUrl = fileUrlRepository.save(fileUrl);
+		System.out.println("DB에 저장된 FileUrl ID: " + savedFileUrl.getId());
+		return savedFileUrl;
+	}
 
-        noticeRepository.deleteById(id);
-    }
+	// 게시글 리스트 반환 메서드
+	public List<Notice> noticeList() {
+		return noticeRepository.findAll();
+	}
 
-    // 파일 저장 메서드 - Base64로 인코딩하여 데이터베이스에도 저장하고 파일은 디스크에도 저장
-    private CommunityFile saveFile(MultipartFile file) throws IOException {
-        String origFilename = file.getOriginalFilename();
-        if (origFilename == null || origFilename.isEmpty()) {
-            throw new IOException("파일 이름이 유효하지 않습니다.");
-        }
+	// 특정 파일 정보 조회
+	public FileUrl getFileUrlByNoticeId(Long id) {
+		// 해당 ID의 Notice 조회
+		Notice notice = noticeRepository.findById(id)
+				.orElseThrow(() -> new IllegalArgumentException("해당 ID의 게시글이 존재하지 않습니다: " + id));
 
-        // 디스크에 저장할 파일 이름 생성
-        String filename = System.currentTimeMillis() + "_" + origFilename;
-        String filePath = noticePath + File.separator + filename;
+		// Notice에 연결된 FileUrl 조회
+		return notice.getFileUrl(); // 파일이 없으면 null 반환
+	}
 
-        // 파일 저장 경로 출력
-        System.out.println("파일 저장 경로: " + filePath);
+	// 특정 게시글을 조회하면서 첨부 파일 정보도 함께 반환
+	public Notice getPostWithFileDetails(Long id) {
+		try {
+			Notice notice = noticeRepository.findById(id)
+					.orElseThrow(() -> new IllegalArgumentException("해당 ID의 게시글이 존재하지 않습니다: " + id));
 
-        Path savePath = Paths.get(filePath);
-        Files.copy(file.getInputStream(), savePath);
+			if (notice.getFileUrl() != null) {
+				FileUrl fileUrl = fileUrlRepository.findById(notice.getFileUrl().getId()).orElse(null); // 처리
+				notice.setFileUrl(fileUrl); // Notice에 FileUrl 설정
+			}
 
-        // 파일을 InputStream으로 읽고 Base64로 인코딩
-        byte[] bytes = Files.readAllBytes(savePath);
-        String base64Data = Base64.getEncoder().encodeToString(bytes);
-        String mimeType = file.getContentType();
+			return notice;
+		} catch (Exception e) {
+			throw new RuntimeException("게시글 조회 중 오류가 발생했습니다. 다시 시도해 주세요.", e);
+		}
+	}
 
-        return communityFileRepository.save(CommunityFile.builder()
-                .origFileName(filename)  // 디스크에 저장된 파일명으로 설정
-                .base64Data(base64Data)  // 파일의 Base64인코딩 데이터
-                .fileType(mimeType)      // 파일의 MIME 타입
-                .build());
-    }
+	// 게시글 삭제
+	@Transactional
+	public ResponseEntity<Integer> noticeDelete(Long id) {
+		try {
+			// 1. 삭제할 Notice 조회
+			Notice notice = noticeRepository.findById(id)
+					.orElseThrow(() -> new IllegalArgumentException("해당 ID의 게시글이 존재하지 않습니다: " + id));
 
-    // 파일 삭제 메서드 - 파일 시스템에서 파일 삭제
-    private void deleteFileFromSystem(CommunityFile file) {
-        String filePath = noticePath + File.separator + file.getOrigFileName();
-        File fileToDelete = new File(filePath);
-        if (fileToDelete.exists() && !fileToDelete.delete()) {
-            System.err.println("파일을 삭제할 수 없습니다: " + filePath);
-        }
-    }
+			// 2. Notice에서 파일 참조 해제 (FILE_ID를 null로 설정)
+			if (notice.getFileUrl() != null) {
+				FileUrl fileUrl = notice.getFileUrl();
+				notice.setFileUrl(null); // fileUrl 설정
+				noticeRepository.save(notice); // DB에 반영
 
-    // 파일 MIME 타입 가져오기 메서드
-    public String getMimeTypeByFileId(Long fileId) {
-        CommunityFile file = communityFileRepository.findById(fileId)
-                .orElseThrow(() -> new EntityNotFoundException("File not found"));
-        return file.getFileType();
-    }
+				// 3. 파일 삭제
+				File fileToDelete = new File(fileUrl.getFilePath());
+				if (fileToDelete.exists()) {
+					boolean deleted = fileToDelete.delete();
+					if (!deleted) {
+						System.err.println("파일 삭제 실패: " + fileUrl.getFilePath() + " (삭제되지 않았습니다)");
+						throw new IOException("파일 삭제 실패");
+					}
+				}
 
-    // 파일 Base64 데이터 가져오기 메서드
-    public String getFileBase64DataById(Long fileId) {
-        CommunityFile file = communityFileRepository.findById(fileId)
-                .orElseThrow(() -> new EntityNotFoundException("File not found"));
-        return file.getBase64Data();
-    }
+				// 4. FileUrl 삭제
+				fileUrlRepository.delete(fileUrl);
+				System.out.println("파일 URL 삭제 완료: " + fileUrl.getId());
+			}
 
-    // Notice 엔티티를 NoticeResponseDTO로 변환
-    private NoticeResponseDTO mapToResponseDTO(Notice notice) {
-        Long fileId = null;
-        String origFileName = null;
+			// 5. 게시글 삭제
+			noticeRepository.deleteById(id);
+			System.out.println("게시글 삭제 완료: " + id);
 
-        // 파일이 존재할 경우 파일 ID와 원본 파일 이름을 설정
-        if (notice.getFile() != null) {
-            fileId = notice.getFile().getId();
-            origFileName = notice.getFile().getOrigFileName();
-        }
+			return ResponseEntity.ok(1); // 삭제 성공 시 명시적으로 1 반환
 
-        // NoticeResponseDTO 생성 후 반환
-        return new NoticeResponseDTO(
-                notice.getId(),
-                notice.getTitle(),
-                notice.getContent(),
-                notice.getAuthor(),
-                notice.getViewCount(),
-                notice.getCreatedDate(),
-                notice.getUpdatedDate(),
-                fileId,
-                origFileName
-        );
-    }
-    //검색기능
-    public List<NoticeResponseDTO> searchNotices(String keyword, String type) {
-        List<Notice> notices;
+		} catch (Exception e) {
+			// 예외 로그 출력
+			System.err.println("게시글 삭제 중 오류 발생: " + e.getMessage());
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(0); // 오류 시 0 반환
+		}
+	}
 
-        switch (type) {
-            case "title":
-                notices = noticeRepository.findByTitleContaining(keyword);
-                break;
-            case "content":
-                notices = noticeRepository.findByContentContaining(keyword);
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid search type");
-        }
+	// 게시글 수정
+	@Transactional
+	public void noticeUpdate(Notice notice, MultipartFile file)
+			throws IOException {
+		try {
+			if (file != null && !file.isEmpty()) {
+				FileUrl existingFile = notice.getFileUrl(); // 기존 파일 정보 가져오기
 
-        return notices.stream()
-                .map(this::mapToResponseDTO)
-                .collect(Collectors.toList());
-    }
+				if (existingFile != null) {
+					// 기존 파일 삭제
+					File fileToDelete = new File(existingFile.getFilePath());
+					if (fileToDelete.exists() && !fileToDelete.delete()) {
+						throw new IOException("기존 파일 삭제에 실패했습니다.");
+					}
+
+					// 기존 FileUrl 엔티티 업데이트
+					String newFilePath = saveFileToDisk(file);
+					existingFile.setFileName(file.getOriginalFilename());
+					existingFile.setFilePath(newFilePath);
+					existingFile.setFileSize(file.getSize());
+					fileUrlRepository.save(existingFile); // 업데이트된 파일 정보 저장
+				} else {
+					// 기존 파일이 없으면 새 파일 생성
+					FileUrl newFileUrl = saveFile(file);
+					notice.setFileUrl(newFileUrl);
+				}
+
+				// 파일 정보
+				if (notice.getFileUrl() != null) {
+					Long fileId = notice.getFileUrl().getId();
+				}
+			}
+
+			// 게시글 업데이트
+			noticeRepository.save(notice);
+
+		} catch (IOException e) {
+			throw new RuntimeException("파일 업로드 또는 게시글 수정 중 오류가 발생했습니다. 세부사항: " + e.getMessage(), e);
+		} catch (Exception e) {
+			throw new RuntimeException("게시글 수정 중 예기치 못한 오류가 발생했습니다.", e);
+		}
+	}
+
+	// 파일을 디스크에 저장
+	private String saveFileToDisk(MultipartFile file) throws IOException {
+		// 파일 저장 경로 생성 (저장 디렉터리 유효성 검사 추가)
+		String uploadDir = noticePath;
+		File directory = new File(uploadDir);
+		if (!directory.exists() && !directory.mkdirs()) {
+			throw new IOException("파일 저장 디렉터리를 생성하지 못했습니다: " + uploadDir);
+		}
+
+		String filename = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+		String filePath = uploadDir + File.separator + filename;
+		File destination = new File(filePath);
+		file.transferTo(destination); // 파일 저장
+		return filePath;
+	}
+
 }

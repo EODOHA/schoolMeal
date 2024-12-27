@@ -1,103 +1,97 @@
-/* src/css/mealCounsel/MealCounselList.css */
-
 /* 컨테이너 스타일 */
-.meal-list-container {
-  padding: 20px;
-  margin: 0 auto;
-  max-width: 1200px;
-  font-family: Arial, sans-serif;
-  text-align: center; /* 컨테이너 내 내용 가로 가운데 정렬 */
+.meal-counsel-list-container {
+    padding: 20px;
+    margin: 0 auto;
+    max-width: 1200px;
+    font-family: Arial, sans-serif;
+    text-align: center; /* 컨테이너 내 내용 가로 가운데 정렬 */
 }
 
 /* 제목 스타일 */
-.meal-title {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 15px;
+.meal-counsel-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 15px;
 }
 
 /* 버튼 그룹 스타일 */
-.meal-button-group {
-  display: flex;
-  justify-content: flex-start; /* 왼쪽 정렬 */
-  gap: 10px; /* 버튼들 간 간격 */
-  margin-bottom: 30px; /* 버튼과 테이블 사이 간격 */
+.meal-counsel-button-group {
+    display: flex;
+    justify-content: center !important;
+    margin-bottom: 30px; /* 버튼과 테이블 사이 간격 */
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
 }
 
-/* 검색 폼 스타일 */
-.meal-search-form {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-  justify-content: center; /* 중앙 정렬 */
+.meal-counsel-left-buttons {
+    display: flex;
+    gap: 10px; /* 새 글 쓰기 버튼과 필터 버튼 사이 여백 */
+    justify-content: center;
+    align-items: center;
 }
 
-.meal-search-form input {
-  padding: 8px;
-  font-size: 16px;
-  width: 200px; /* 적당한 너비 설정 */
-}
-
-.meal-search-form button {
-  padding: 8px 16px;
+.meal-counsel-right-searchbar {
+    margin-left: auto; /* 오른쪽 끝으로 정렬 */
 }
 
 /* 테이블 스타일 */
-.meal-table {
-  width: 100%;
-  border-collapse: collapse; /* 셀 간 경계를 합침 */
-  margin-top: 20px; /* 테이블 위쪽 여백 추가 */
+.meal-counsel-table {
+    width: 100%;
+    border-collapse: collapse; /* 셀 간 경계를 합침 */
+    margin-top: 20px; /* 테이블 위쪽 여백 추가 */
 }
 
 /* 테이블 헤더 스타일 */
-.meal-thead {
-  background-color: #f2f2f2;
-  border-bottom: 2px solid #ccc;
+.meal-counsel-thead {
+    background-color: #f2f2f2;
+    border-bottom: 2px solid #ccc;
 }
 
 /* 셀 스타일 */
-.meal-table th, .meal-table td {
-  padding: 10px; /* 셀 안쪽 여백 */
-  text-align: center; /* 셀 내 글자 가운데 정렬 */
+.meal-counsel-table td, .meal-counsel-table th {
+    padding: 10px; /* 셀 안쪽 여백 */
+    text-align: center; /* 셀 내 글자 가운데 정렬 */
 }
 
 /* 각 열 너비 설정 */
-.meal-table th:nth-child(1), .meal-table td:nth-child(1) {
-  width: 10%; /* 번호 열의 너비 */
+.meal-counsel-table th:nth-child(1), .meal-counsel-table td:nth-child(1) {
+    width: 10%; /* 번호 열의 너비 */
 }
 
-.meal-table th:nth-child(2), .meal-table td:nth-child(2) {
-  width: 40%; /* 제목 열의 너비 (가장 넓게 설정) */
+.meal-counsel-table th:nth-child(2), .meal-counsel-table td:nth-child(2) {
+    width: 40%; /* 제목 열의 너비 (가장 넓게 설정) */
 }
 
-.meal-table th:nth-child(3), .meal-table td:nth-child(3) {
-  width: 20%; /* 작성자 열의 너비 */
+.meal-counsel-table th:nth-child(3), .meal-counsel-table td:nth-child(3) {
+    width: 20%; /* 등록일 열의 너비 */
 }
 
-.meal-table th:nth-child(4), .meal-table td:nth-child(4) {
-  width: 15%; /* 등록일 열의 너비 */
+.meal-counsel-table th:nth-child(4), .meal-counsel-table td:nth-child(4) {
+    width: 15%; /* 작성자 열의 너비 */
 }
 
-.meal-table th:nth-child(5), .meal-table td:nth-child(5) {
-  width: 15%; /* 첨부파일 열의 너비 */
+.meal-counsel-table th:nth-child(5), .meal-counsel-table td:nth-child(5) {
+    width: 15%; /* 첨부파일 열의 너비 */
 }
 
 /* 행 스타일 */
-.meal-tbody tr:nth-child(even) {
-  background-color: #f9f9f9;
+.meal-counsel-tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
 }
 
-.meal-tbody tr:hover {
-  background-color: #f1f1f1 !important;
+.meal-counsel-tbody tr:hover {
+    background-color: #f1f1f1 !important;
 }
 
-.meal-tbody tr {
-  margin-bottom: 10px;
+/* 선택된 행 강조 스타일 */
+.meal-counsel-table tbody tr.selected {
+    background-color: #d1eaff;
 }
 
 /* 첨부파일 아이콘 스타일 */
-.meal-attachment-icon {
-  font-size: 18px;
-  color: #007bff;
-  cursor: pointer;
+.meal-counsel-attachment-icon {
+    font-size: 18px;
+    color: #007bff;
+    cursor: pointer;
 }

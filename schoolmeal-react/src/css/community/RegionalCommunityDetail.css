@@ -71,47 +71,9 @@ h2 {
 
 /* 버튼 스타일 */
 .regionCommunityDetailbutton-group {
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
     margin-top: 30px;
-}
-
-.regionCommunityDetailbutton-group button {
-    margin: 0 12px;
-    padding: 12px 28px;
-    font-size: 18px;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.regionCommunityDetailbutton-group .regionCommunityDetailedit-btn {
-    background-color: #2ceeb7;
-    color: #fff;
-}
-
-.regionCommunityDetailbutton-group .regionCommunityDetailedit-btn:hover {
-    background-color: #e0a800;
-    box-shadow: 0 6px 16px rgba(224, 168, 0, 0.3);
-}
-
-.regionCommunityDetailbutton-group .regionCommunityDetailback-btn {
-    background-color: #007bff;
-    color: #fff;
-}
-
-.regionCommunityDetailbutton-group .regionCommunityDetailback-btn:hover {
-    background-color: #0056b3;
-    box-shadow: 0 6px 16px rgba(0, 86, 179, 0.3);
-}
-
-.regionCommunityDetailbutton-group .regionCommunityDetaildelete-btn {
-    background-color: #dc3545;
-    color: #fff;
-}
-
-.regionCommunityDetailbutton-group .regionCommunityDetaildelete-btn:hover {
-    background-color: #c82333;
-    box-shadow: 0 6px 16px rgba(200, 35, 51, 0.3);
 }

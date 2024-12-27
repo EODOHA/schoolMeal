@@ -54,12 +54,11 @@
 /* 버튼들이 로그인/회원가입일 때 상단에, 로그아웃일 때는 동일한 위치에 표시 */
 .auth-buttons .welcome-message {
   padding: 5px;
-  background-color:beige;
   border-radius: 8px;
-  border: 2px solid #1976d2;
+  border: 1px solid #1976d2;
 
   text-align: center;
-  color: black;
+  color: #1976d2;
   font-size: 14px;
   font-weight: bold;
 }

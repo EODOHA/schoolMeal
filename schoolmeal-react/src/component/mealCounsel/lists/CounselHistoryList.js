@@ -51,7 +51,7 @@ function CounselHistoryList() {
   
     return (
       <div className="counsel-history-list">
-        <h2>상담 기록 목록</h2>
+        <h2>영양상담 이력관리</h2>
         <form onSubmit={handleSearch} className="search-form">
           <input
             type="text"

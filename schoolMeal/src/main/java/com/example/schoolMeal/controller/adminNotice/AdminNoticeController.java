@@ -75,10 +75,12 @@ public class AdminNoticeController extends PathResolver {
                 directory.mkdirs();
             }
 
-            // 파일 저장
+         // 파일 저장
             String fileName = null;
             if (file != null && !file.isEmpty()) {
-                fileName = file.getOriginalFilename();
+                String originalFileName = file.getOriginalFilename();
+                String timestamp = String.valueOf(System.currentTimeMillis());
+                fileName = timestamp + "_" + originalFileName; // 현재 시간을 파일명에 추가
                 Path filePath = Paths.get(uploadDirectory, fileName);
                 Files.copy(file.getInputStream(), filePath);
             }

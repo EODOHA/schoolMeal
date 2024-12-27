@@ -13,21 +13,18 @@ public class CommentDTO {
     private Long noticeId;
     private Long regionalCommunityId;
     private Long processedFoodId;
-    private Long cateringFacilityId;
     private LocalDateTime createdDate;
 
     // 기본 생성자
     public CommentDTO() {}
 
     // 통합된 생성자
-    public CommentDTO(Long id, String content, String author, Long noticeId, Long regionalCommunityId, Long processedFoodId, Long cateringFacilityId, LocalDateTime createdDate) {
+    public CommentDTO(Long id, String content, String author, Long noticeId, Long regionalCommunityId, LocalDateTime createdDate) {
         this.id = id;
         this.content = content;
         this.author = author;
         this.noticeId = noticeId;
         this.regionalCommunityId = regionalCommunityId;
-        this.processedFoodId = processedFoodId;
-        this.cateringFacilityId = cateringFacilityId;
         this.createdDate = createdDate;
     }
     

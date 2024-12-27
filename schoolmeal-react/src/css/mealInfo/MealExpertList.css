@@ -39,10 +39,12 @@
 }
 
 .expert-profile-info {
+    align-items: flex-start; /* 수직 정렬을 왼쪽으로 설정 */
+    justify-content: flex-start; /* 수평 정렬을 왼쪽으로 설정 */
     margin-top: 10px;
 }
 .expert-profile-info-row {
-    align-items: center;
+    
     margin-bottom: 10px; 
 }
 .profile-container {

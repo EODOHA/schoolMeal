@@ -20,7 +20,7 @@ public class CommunityFile {
     private String origFileName;  // 원본 파일 이름
 
     @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String base64Data;  // 파일의 Base64 인코딩된 데이터
 
     @Column(nullable = false)

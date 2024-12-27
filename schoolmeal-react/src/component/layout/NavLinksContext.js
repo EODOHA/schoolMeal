@@ -40,11 +40,11 @@ const navLinksInitial = [
             { path: "/eduData/edu-material-sharing", label: "교육자료 나눔" }
         ]
     },
-    { path: "/mealcounsel", label: "영양상담",
+    { path: "/mealCounsel", label: "영양상담",
         subLinks: [
-            { path: "/mealcounsel/list", label: "영양상담 목록" },
-            { path: "/counsel", label: "영양상담 진단 페이지" },
-            { path: "/mealcounsel/CounselHistoryList", label: "영양상담 작성"}
+            { path: "/mealCounsel/meal-counsel", label: "매뉴얼 및 상담 관련 자료" },
+            { path: "/counsel", label: "식생활·습관 진단 프로그램" },
+            { path: "/mealcounsel/CounselHistoryList", label: "영양상담 이력관리"}
         
         ],
         showSearch: true  // 검색창을 보여줄 항목
@@ -54,7 +54,7 @@ const navLinksInitial = [
         path: "/community", label: "커뮤니티",
         subLinks: [
             { path: "/community/notices", label: "공지사항" },
-            { path: "/community/processed-foods", label: "가공식품정보" },
+            { path: "/community/processedFood", label: "가공식품정보" },
             { path: "/community/regions", label: "지역별 커뮤니티" },
             { path: "/community/crawling/school-news", label: "급식 뉴스" },
             { path: "/community/crawling/materials", label: "학술 정보" }

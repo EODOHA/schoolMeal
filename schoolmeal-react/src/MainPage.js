@@ -266,115 +266,115 @@ const MainPage = () => {
     }, []); // 컴포넌트가 마운트될 때 한 번만 실행
 
 
-    // 자주 찾는 서비스 관련 Start ----------------------------------
-    const sliderRef = useRef(null);
-    const [position, setPosition] = useState(0);
-    const itemWidth = 220; // 슬라이드 버튼 누를 때 움직이는 길이.
-    const [items, setItems] = useState([]);
+    // // 자주 찾는 서비스 관련 Start ----------------------------------
+    // const sliderRef = useRef(null);
+    // const [position, setPosition] = useState(0);
+    // const itemWidth = 220; // 슬라이드 버튼 누를 때 움직이는 길이.
+    // const [items, setItems] = useState([]);
 
-    const [sliderWidth, setSliderWidth] = useState(0);
+    // const [sliderWidth, setSliderWidth] = useState(0);
 
-    // 화면 크기 변경 시 슬라이더 너비 업데이트
-    useEffect(() => {
-        const handleResize = () => {
-            if (sliderRef.current) {
-                setSliderWidth(sliderRef.current.clientWidth); // 슬라이더 부모의 너비 계산
-            }
-        };
+    // // 화면 크기 변경 시 슬라이더 너비 업데이트
+    // useEffect(() => {
+    //     const handleResize = () => {
+    //         if (sliderRef.current) {
+    //             setSliderWidth(sliderRef.current.clientWidth); // 슬라이더 부모의 너비 계산
+    //         }
+    //     };
 
-        window.addEventListener('resize', handleResize);
-        handleResize(); // 초기 로딩 시에도 슬라이더 너비 계산
+    //     window.addEventListener('resize', handleResize);
+    //     handleResize(); // 초기 로딩 시에도 슬라이더 너비 계산
 
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, []);
+    //     return () => {
+    //         window.removeEventListener('resize', handleResize);
+    //     };
+    // }, []);
 
-    const totalItemsWidth = items.length * itemWidth; // 전체 아이템 너비
+    // const totalItemsWidth = items.length * itemWidth; // 전체 아이템 너비
 
-    // 로컬 스토리지에서 항목 불러오기
-    useEffect(() => {
-        const savedItems = sessionStorage.getItem('favoriteServices');
-        if (savedItems) {
-            setItems(JSON.parse(savedItems));
-        }
-    }, []);
+    // // 로컬 스토리지에서 항목 불러오기
+    // useEffect(() => {
+    //     const savedItems = sessionStorage.getItem('favoriteServices');
+    //     if (savedItems) {
+    //         setItems(JSON.parse(savedItems));
+    //     }
+    // }, []);
 
-    // selectedParent가 변경될 때마다 실행
-    useEffect(() => {
-        if (selectedParent && selectedParent.label) {
-            setItems((prevItems) => {
-                // 중복된 항목이 없으면 추가
-                if (!prevItems.some((item) => item.name === selectedParent.label)) {
-                    const newItems = [
-                        ...prevItems,
-                        {
-                            id: prevItems.length + 1,
-                            name: selectedParent.label,
-                            description1: `${selectedParent.label} 관련`,
-                            description2: '메인 게시판으로 이동합니다.',
-                            path: selectedParent.path || '#', // selectedParent.path를 item에 추가
-                        }
-                    ];
+    // // selectedParent가 변경될 때마다 실행
+    // useEffect(() => {
+    //     if (selectedParent && selectedParent.label) {
+    //         setItems((prevItems) => {
+    //             // 중복된 항목이 없으면 추가
+    //             if (!prevItems.some((item) => item.name === selectedParent.label)) {
+    //                 const newItems = [
+    //                     ...prevItems,
+    //                     {
+    //                         id: prevItems.length + 1,
+    //                         name: selectedParent.label,
+    //                         description1: `${selectedParent.label} 관련`,
+    //                         description2: '메인 게시판으로 이동합니다.',
+    //                         path: selectedParent.path || '#', // selectedParent.path를 item에 추가
+    //                     }
+    //                 ];
 
-                    // 새로운 항목을 로컬 스토리지에 저장
-                    sessionStorage.setItem('favoriteServices', JSON.stringify(newItems));
-                    return newItems;
-                }
-                return prevItems;  // 중복된 항목은 그대로 유지
-            });
-        }
-    }, [selectedParent]);  // selectedParent만 의존성에 추가
+    //                 // 새로운 항목을 로컬 스토리지에 저장
+    //                 sessionStorage.setItem('favoriteServices', JSON.stringify(newItems));
+    //                 return newItems;
+    //             }
+    //             return prevItems;  // 중복된 항목은 그대로 유지
+    //         });
+    //     }
+    // }, [selectedParent]);  // selectedParent만 의존성에 추가
 
-    // 무한 루프 효과를 위한 useEffect
-    useEffect(() => {
-        if (totalItemsWidth > sliderWidth) {
-            // 슬라이드가 끝에 도달했을 때, 즉시 복사된 아이템을 추가
-            if (position >= (items.length - 1) * itemWidth) {
-                setItems((prevItems) => [
-                    ...prevItems,  // 기존 아이템들
-                    ...prevItems.slice(0, items.length),  // 처음부터 items.length 만큼 복사
-                ]);
-            } else if (position < 0) {
-                // 왼쪽 끝에 도달했을 때, 즉시 복사된 아이템을 추가
-                setItems((prevItems) => [
-                    ...prevItems.slice(-items.length),  // 마지막 items.length 만큼 복사
-                    ...prevItems,  // 기존 아이템들
-                ]);
-                setPosition(items.length * itemWidth); // 위치 재조정
-            }
-        } else {
-            // 무한 루프를 끄는 로직
-            setPosition(0); // 슬라이드 초기화
-        }
-    }, [position, items.length, sliderWidth, totalItemsWidth]);
+    // // 무한 루프 효과를 위한 useEffect
+    // useEffect(() => {
+    //     if (totalItemsWidth > sliderWidth) {
+    //         // 슬라이드가 끝에 도달했을 때, 즉시 복사된 아이템을 추가
+    //         if (position >= (items.length - 1) * itemWidth) {
+    //             setItems((prevItems) => [
+    //                 ...prevItems,  // 기존 아이템들
+    //                 ...prevItems.slice(0, items.length),  // 처음부터 items.length 만큼 복사
+    //             ]);
+    //         } else if (position < 0) {
+    //             // 왼쪽 끝에 도달했을 때, 즉시 복사된 아이템을 추가
+    //             setItems((prevItems) => [
+    //                 ...prevItems.slice(-items.length),  // 마지막 items.length 만큼 복사
+    //                 ...prevItems,  // 기존 아이템들
+    //             ]);
+    //             setPosition(items.length * itemWidth); // 위치 재조정
+    //         }
+    //     } else {
+    //         // 무한 루프를 끄는 로직
+    //         setPosition(0); // 슬라이드 초기화
+    //     }
+    // }, [position, items.length, sliderWidth, totalItemsWidth]);
 
-    // 슬라이드 이동 처리 함수
-    const handleSlide = (direction) => {
-        if (totalItemsWidth > sliderWidth) {  // 무한 슬라이드 조건
-            const newPosition = position + direction * itemWidth;
+    // // 슬라이드 이동 처리 함수
+    // const handleSlide = (direction) => {
+    //     if (totalItemsWidth > sliderWidth) {  // 무한 슬라이드 조건
+    //         const newPosition = position + direction * itemWidth;
 
-            if (newPosition >= 0 && newPosition <= (items.length - 1) * itemWidth) {
-                setPosition(newPosition);
-            } else {
-                // 끝에 도달하면 복사된 아이템을 즉시 추가하고 슬라이드를 0으로 리셋
-                setPosition(0);  // 최소 위치로 설정
+    //         if (newPosition >= 0 && newPosition <= (items.length - 1) * itemWidth) {
+    //             setPosition(newPosition);
+    //         } else {
+    //             // 끝에 도달하면 복사된 아이템을 즉시 추가하고 슬라이드를 0으로 리셋
+    //             setPosition(0);  // 최소 위치로 설정
 
-                setItems((prevItems) => [
-                    ...prevItems,  // 기존 아이템들
-                    ...prevItems.slice(0, items.length),  // 복사된 아이템들
-                ]);
-            }
-        } else {
-            // 슬라이드가 끝에 도달한 경우
-            const newPosition = position + direction * itemWidth;
+    //             setItems((prevItems) => [
+    //                 ...prevItems,  // 기존 아이템들
+    //                 ...prevItems.slice(0, items.length),  // 복사된 아이템들
+    //             ]);
+    //         }
+    //     } else {
+    //         // 슬라이드가 끝에 도달한 경우
+    //         const newPosition = position + direction * itemWidth;
 
-            if (newPosition >= 0 && newPosition <= (items.length - 1) * itemWidth) {
-                setPosition(newPosition);
-            }
-        }
-    };
-    // 자주 찾는 서비스 관련 End ------------------------------------
+    //         if (newPosition >= 0 && newPosition <= (items.length - 1) * itemWidth) {
+    //             setPosition(newPosition);
+    //         }
+    //     }
+    // };
+    // // 자주 찾는 서비스 관련 End ------------------------------------
 
     // 유관 기관 관련 Start ----------------------------------------
     const [animate, setAnimate] = useState(true);
@@ -426,7 +426,7 @@ const MainPage = () => {
 
                 <div className="notice-container">
                     <Link to={'/adminNoticeManager'}>
-                        <h2>공지사항</h2>
+                        <h2>메인 공지사항</h2>
                     </Link>
                     <ul>
                         {isAdminNoticeLoading ? (
@@ -483,7 +483,7 @@ const MainPage = () => {
 
             {/* <ChatApp></ChatApp> */}
 
-            <section className="service-section">
+            {/* <section className="service-section">
                 <h2>자주 찾는 서비스</h2>
                 <div className="service-slider-wrapper">
                     <button
@@ -504,7 +504,7 @@ const MainPage = () => {
                             items.map((item, index) => (
                                 <Link to={item.path || '#'} className="service-link">
                                     <div key={`${item.id}-${index}`} className="service-item">
-                                        {/* react-router-dom의 Link 컴포넌트를 사용하여 href 대신 path로 이동 */}
+                                        // react-router-dom의 Link 컴포넌트를 사용하여 href 대신 path로 이동
                                         <h3>{item.name}</h3>
                                         <p>{item.description1}</p>
                                         <p>{item.description2}</p>
@@ -522,7 +522,7 @@ const MainPage = () => {
                         ▶
                     </button>
                 </div>
-            </section>
+            </section> */}
 
             <section className="video-root-box">
                 <h2>영상 자료</h2>

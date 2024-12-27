@@ -25,7 +25,7 @@ import com.example.schoolMeal.service.member.MemberService;
 import jakarta.validation.Valid;
 
 @RestController
-public class SingupController {
+public class SignupController {
 
 	@Autowired
 	private MemberService memberService;

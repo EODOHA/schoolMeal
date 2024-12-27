@@ -22,7 +22,8 @@
   width: auto;
   height: 100px;
   margin-right: 50px;
-
+  margin: 0 auto;
+  border: 2px solid #ccc;
 }
 
 .profile-info h2 {
