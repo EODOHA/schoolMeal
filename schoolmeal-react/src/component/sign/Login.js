@@ -73,11 +73,11 @@ function Login() {
                     const jwtToken = `Bearer ${data.token}`;
                     sessionStorage.setItem("jwt", jwtToken);
                     authLogin(jwtToken);
-                    console.log(data);
+                    // console.log(data);
 
                     // 이메일 인증 여부 확인(권한이 'ADMIN'인 경우 제외).
                     if ((data.role !== 'ADMIN' && data.role !== 'BOARDADMIN') && ( !data.emailVerified && !data.kakaoVerified )) {
-                        console.log(data.emailVerified, data.kakaoVerified)
+                        // console.log(data.emailVerified, data.kakaoVerified)
                         // 이메일 인증이 FALSE인 경우, 인증 페이지로 리다이렉트.
                         alert("이메일 인증이 필요합니다.")
                         navigate("/ReEmailVerification", { state: { email: member.memberId } });

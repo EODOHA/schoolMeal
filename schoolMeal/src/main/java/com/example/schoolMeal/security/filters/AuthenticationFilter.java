@@ -45,12 +45,12 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 			filterChain.doFilter(request, response);
 			return;
 		}
-		
+
 		// "/verify-kakao" 경로는 인증 필터를 건너뛰도록 추가
-	    if (request.getRequestURI().equals("/verify-kakao")) {
-	        filterChain.doFilter(request, response);
-	        return;
-	    }
+		if (request.getRequestURI().equals("/verify-kakao")) {
+			filterChain.doFilter(request, response);
+			return;
+		}
 
 		// 메인 페이지 "GET" 요청만 인증없도록 필터.
 		if (request.getRequestURI().startsWith("/imageManage") && request.getMethod().equals("GET")) {
@@ -98,12 +98,18 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 			filterChain.doFilter(request, response);
 			return;
 		}
-		
+
 		// "GET" 요청만 인증없도록 필터
-				if (request.getRequestURI().startsWith("/processed-food/**") && request.getMethod().equals("GET")) {
-					filterChain.doFilter(request, response);
-					return;
-				}
+		if (request.getRequestURI().startsWith("/meal_counsel_history") && request.getMethod().equals("GET")) {
+			filterChain.doFilter(request, response);
+			return;
+		}
+
+		// "GET" 요청만 인증없도록 필터
+		if (request.getRequestURI().startsWith("/processed-food/**") && request.getMethod().equals("GET")) {
+			filterChain.doFilter(request, response);
+			return;
+		}
 
 		// "GET" 요청만 인증없도록 필터
 		if (request.getRequestURI().startsWith("/processedFood/**") && request.getMethod().equals("GET")) {

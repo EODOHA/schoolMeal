@@ -87,7 +87,7 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.GET, "/notices/download/**").permitAll()
 
 				// 커뮤니티 - 가공식품정보
-				.requestMatchers(HttpMethod.GET, "/processed-foods/**", "/processedFood/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/processed-foods/**", "/processedFood/**", "/processedFoods/**").permitAll()
 
 				// 커뮤니티 - 지역별커뮤니티
 				.requestMatchers(HttpMethod.GET, "/regions/**").permitAll()
@@ -106,7 +106,7 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.GET, "/mealCounsel/**", "/mealCounsels/**", "/mealCounsel/download/**").permitAll()
 
 				//영양상담 상담 기록 페이지
-				.requestMatchers(HttpMethod.GET, "/counselHistory/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/mealCounselHistories/**", "/mealCounselHistory/**").permitAll()
 
 				//영양상담 진단 페이지
 				.requestMatchers(HttpMethod.GET, "/goToCounsel").permitAll()

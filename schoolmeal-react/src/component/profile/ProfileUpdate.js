@@ -161,7 +161,7 @@ const ProfileUpdate = () => {
         })
         .then(() => {
             setUpdateCheck("회원정보가 성공적으로 수정되었습니다.");
-            alert("수정이 완료되었습니다.");
+            alert("수정이 완료되었습니다. 현재 페이지에서 벗어나지 않습니다.");
         })
         .catch((err) => {
             console.error(err.message);

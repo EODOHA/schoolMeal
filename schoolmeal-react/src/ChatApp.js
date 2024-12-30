@@ -42,7 +42,7 @@ const ChatApp = () => {
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log("서버로부터 받은 사용자 데이터:", data); // 디버깅 로그
+                // console.log("서버로부터 받은 사용자 데이터:", data); // 디버깅 로그
                 // _embedded.members에서 memberId만 추출
                 const participantIds = data._embedded?.members.map((member) => member.memberId) || [];
                 setParticipantList(participantIds);  // memberId 배열로 상태 업데이트
@@ -58,7 +58,7 @@ const ChatApp = () => {
         const atIndex = input.lastIndexOf("@");
         if (atIndex >= 0) {
             const search = input.substring(atIndex + 1); // '@' 이후 텍스트
-            console.log("현재 participantList:", participantList); // 디버깅용 로그
+            // console.log("현재 participantList:", participantList); // 디버깅용 로그
 
             if (Array.isArray(participantList)) {
                 const filtered = participantList.filter((user) =>
@@ -116,7 +116,7 @@ const ChatApp = () => {
             // 연결이 끊어졌을 때 (EventSource.CLOSED 상태 감지)
             newEventSource.onerror = function () {
                 if (newEventSource.readyState === EventSource.CLOSED) {
-                    console.log('SSE connection closed. Attempting to reconnect...');
+                    // console.log('SSE connection closed. Attempting to reconnect...');
                     // 3초 후 재연결 시도
                     setTimeout(connectToSse, 3000);
                 }
@@ -323,7 +323,7 @@ const ChatApp = () => {
             });
             if (response.ok) {
                 const data = await response.json();
-                console.log("채팅방 목록:", data); // 서버 응답 확인
+                // console.log("채팅방 목록:", data); // 서버 응답 확인
                 setChatRooms(data);
             } else {
                 console.error("채팅방 목록을 불러오는 데 실패했습니다.");

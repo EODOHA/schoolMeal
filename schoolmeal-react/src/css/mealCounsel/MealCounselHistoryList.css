@@ -1,0 +1,97 @@
+/* 컨테이너 스타일 */
+.meal-counsel-history-list-container {
+    padding: 20px;
+    margin: 0 auto;
+    max-width: 1200px;
+    font-family: Arial, sans-serif;
+    text-align: center; /* 컨테이너 내 내용 가로 가운데 정렬 */
+}
+
+/* 제목 스타일 */
+.meal-counsel-history-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* 버튼 그룹 스타일 */
+.meal-counsel-history-button-group {
+    display: flex;
+    justify-content: center !important;
+    margin-bottom: 30px; /* 버튼과 테이블 사이 간격 */
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.meal-counsel-history-left-buttons {
+    display: flex;
+    gap: 10px; /* 새 글 쓰기 버튼과 필터 버튼 사이 여백 */
+    justify-content: center;
+    align-items: center;
+}
+
+.meal-counsel-history-right-searchbar {
+    margin-left: auto; /* 오른쪽 끝으로 정렬 */
+}
+
+/* 테이블 스타일 */
+.meal-counsel-history-table {
+    width: 100%;
+    border-collapse: collapse; /* 셀 간 경계를 합침 */
+    margin-top: 20px; /* 테이블 위쪽 여백 추가 */
+}
+
+/* 테이블 헤더 스타일 */
+.meal-counsel-history-thead {
+    background-color: #f2f2f2;
+    border-bottom: 2px solid #ccc;
+}
+
+/* 셀 스타일 */
+.meal-counsel-history-table td, .meal-counsel-history-table th {
+    padding: 10px; /* 셀 안쪽 여백 */
+    text-align: center; /* 셀 내 글자 가운데 정렬 */
+}
+
+/* 각 열 너비 설정 */
+.meal-counsel-history-table th:nth-child(1), .meal-counsel-history-table td:nth-child(1) {
+    width: 10%; /* 번호 열의 너비 */
+}
+
+.meal-counsel-history-table th:nth-child(2), .meal-counsel-history-table td:nth-child(2) {
+    width: 40%; /* 제목 열의 너비 (가장 넓게 설정) */
+}
+
+.meal-counsel-history-table th:nth-child(3), .meal-counsel-history-table td:nth-child(3) {
+    width: 20%; /* 등록일 열의 너비 */
+}
+
+.meal-counsel-history-table th:nth-child(4), .meal-counsel-history-table td:nth-child(4) {
+    width: 15%; /* 작성자 열의 너비 */
+}
+
+.meal-counsel-history-table th:nth-child(5), .meal-counsel-history-table td:nth-child(5) {
+    width: 15%; /* 첨부파일 열의 너비 */
+}
+
+/* 행 스타일 */
+.meal-counsel-history-tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.meal-counsel-history-tbody tr:hover {
+    background-color: #f1f1f1 !important;
+}
+
+/* 선택된 행 강조 스타일 */
+.meal-counsel-history-table tbody tr.selected {
+    background-color: #d1eaff;
+}
+
+/* 첨부파일 아이콘 스타일 */
+.meal-counsel-history-attachment-icon {
+    font-size: 18px;
+    color: #007bff;
+    cursor: pointer;
+}

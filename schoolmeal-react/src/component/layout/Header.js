@@ -102,7 +102,7 @@ const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setI
         return response.json();
       })
       .then(data => {
-        console.log("Fetched headerImages:", data);
+        // console.log("Fetched headerImages:", data); // 확인용 로그. 
         setHeaderImages(data);
       })
       .catch(error => {

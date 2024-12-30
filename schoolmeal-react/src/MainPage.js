@@ -62,7 +62,7 @@ const MainPage = () => {
                 return response.json(); // JSON으로 응답을 파싱.
             })
             .then(data => {
-                console.log("Fetched images:", data); // 확인용 로그
+                // console.log("Fetched images:", data); // 확인용 로그
                 setImages(data); // 데이터를 그대로 저장
             })
             .catch((error) => console.error("Error fetching images:", error))
@@ -92,7 +92,7 @@ const MainPage = () => {
                 return response.json(); // JSON으로 응답을 파싱.
             })
             .then(data => {
-                console.log("Fetched agencies:", data); // 확인용 로그
+                // console.log("Fetched agencies:", data); // 확인용 로그
                 setAgencies(data); // 데이터를 그대로 저장
             })
             .catch((error) => console.error("Error fetching agencies:", error))
@@ -114,7 +114,7 @@ const MainPage = () => {
                 return response.json(); // JSON으로 응답을 파싱.
             })
             .then(data => {
-                console.log("Fetched videos:", data); // 확인용 로그
+                // console.log("Fetched videos:", data); // 확인용 로그
                 setVideos(data); // 데이터를 그대로 저장
             })
             .catch((error) => console.error("Error fetching videos:", error))
@@ -233,7 +233,7 @@ const MainPage = () => {
                 return response.json(); // JSON으로 응답을 파싱.
             })
             .then(data => {
-                console.log("Fetched adminNotices:", data); // 확인용 로그
+                // console.log("Fetched adminNotices:", data); // 확인용 로그
                 setAdminNotices(data); // 데이터를 그대로 저장
                 setIsAdminNoticeLoading(false);
             })
@@ -255,7 +255,7 @@ const MainPage = () => {
                 return response.json();
             })
             .then(data => {
-                console.log("Fetched Resource:", data);
+                // console.log("Fetched Resource:", data);
                 setResources(data._embedded?.schoolMealCases || []);  // 데이터가 없으면 빈 배열로 설정
                 setIsResourcesLoading(false);  // 로딩 완료 상태로 설정
             })

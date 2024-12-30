@@ -44,7 +44,7 @@ const navLinksInitial = [
         subLinks: [
             { path: "/mealCounsel/meal-counsel", label: "매뉴얼 및 상담 관련 자료" },
             { path: "/counsel", label: "식생활·습관 진단 프로그램" },
-            { path: "/mealcounsel/CounselHistoryList", label: "영양상담 이력관리"}
+            { path: "/mealcounsel/meal-counsel-history", label: "영양상담 이력관리"}
         
         ],
         showSearch: true  // 검색창을 보여줄 항목

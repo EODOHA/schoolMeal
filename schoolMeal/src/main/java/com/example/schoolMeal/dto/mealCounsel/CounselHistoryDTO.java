@@ -10,6 +10,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CounselHistoryDTO {
+	
+	private Long id;
 
     @NotBlank(message = "상담 제목은 필수입니다.")
     private String title; // 상담 제목

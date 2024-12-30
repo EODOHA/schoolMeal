@@ -519,7 +519,7 @@ li {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 80%;
-    height: 50%;
+    min-height: 200px;  /* 최소 높이 설정 (기본값) */
     background-color: white;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     z-index: 1000;

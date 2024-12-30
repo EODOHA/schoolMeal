@@ -104,7 +104,7 @@ const RegionalCommunityList = () => {
         <thead>
           <tr>
             <th>번호</th>
-            <th>조회수</th> {/* 조회수 컬럼 추가 */}
+            <th>조회수</th>
             <th>제목</th>
             <th>작성자</th>
             <th>지역</th>
@@ -116,11 +116,13 @@ const RegionalCommunityList = () => {
             posts.map((post, index) => (
               <tr key={post.id} onClick={() => navigate(`/community/regions/${post.id}`)}>
                 <td>{posts.length - index}</td>
-                <td>{post.viewCount || 0} {/* 조회수 출력 */}</td>
+                <td>{post.viewCount || 0}</td>
                 <td>
-                  {/* 댓글 개수 표시 */}
-                  [{commentCounts[post.id] || 0}]
-                  {post.title}{" "}
+                  <span style={{ fontWeight: 'bold', color: '#1976d2' }}>
+                    [{commentCounts[post.id] || 0}]
+                  </span>
+                  {" "} {/* 띄어쓰기 추가 */}
+                  {post.title}
                 </td>
                 <td>{post.author}</td>
                 <td>{post.region}</td>
@@ -129,7 +131,9 @@ const RegionalCommunityList = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="5">게시글이 없습니다.</td>
+              <td colSpan="6" style={{ textAlign: "center" }}>
+                {"게시글이 없습니다."}
+              </td>
             </tr>
           )}
         </tbody>

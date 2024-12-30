@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
         const jwtToken = sessionStorage.getItem('jwt');   //세션에 저장된 JWT 토큰 가져오기
         if (jwtToken) {
             const decoded = jwtDecode(jwtToken);
-            console.log(decoded);
+            // console.log(decoded); // 토큰 정보 확인용.
             //디코딩된 토큰에서 정보 추출
             const member = decoded.sub;  // memberId
             const role = decoded.role;  //  role

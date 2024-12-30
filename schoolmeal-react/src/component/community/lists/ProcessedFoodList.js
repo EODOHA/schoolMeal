@@ -44,26 +44,36 @@ const ProcessedFoodList = () => {
     // API URL 로그 출력
     // console.log("API URL:", apiUrl);
     try {
-      const response = await axios.get(apiUrl, {
-        headers: {
-          "Authorization": token
-        }
-      });
+      // 요청 헤더에 Authorization을 조건부로 추가
+      const headers = token ? { "Authorization": token } : {};
+
+      const response = await axios.get(apiUrl, { headers });
+      
       const data = response.data;
-      setProcessedFood(data._embedded.processedFoods || []);
-      // 전체 게시글 수
-      setTotalElements(data.page.totalElements);
 
-      // 전체 페이지 수
-      const totalPagesCalculated = Math.ceil(data.page.totalElements / size);
-      setTotalPages(totalPagesCalculated);
+      // 데이터가 없을 경우 처리
+      if (!data._embedded?.processedFoods?.length) {
+        setProcessedFood([]); // 빈 데이터 설정
+        setTotalElements(0);
+        setTotalPages(0);
+      } else {
+        setProcessedFood(data._embedded.processedFoods);
+        setTotalElements(data.page.totalElements);
 
+        // 전체 페이지 수 계산
+        const totalPagesCalculated = Math.ceil(data.page.totalElements / size);
+        setTotalPages(totalPagesCalculated);
+      }
     } catch (error) {
-      console.error("데이터 불러오기 오류:", error);
+      // console.error("데이터 불러오기 오류:", error);
+
+      // 상태 관리: 네트워크 오류 발생 시만 에러 설정
       setError(error);
-      setProcessedFood([]);
+      setProcessedFood([]); // 안전한 초기화
+      setTotalElements(0);
+      setTotalPages(0);
     } finally {
-      setLoading(false)
+      setLoading(false); // 로딩 상태 해제
     }
   }, [currentPage, pageSize, productName, token]);
 

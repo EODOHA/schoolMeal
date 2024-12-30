@@ -196,11 +196,11 @@ const Signup = () => {
         };
         // 선택학 인증방식에 따른 인증 처리
         if (selectedAuthMethod === "kakao") {
-            console.log("selectedAuthMethod: ", selectedAuthMethod);
+            // console.log("selectedAuthMethod: ", selectedAuthMethod);
             // 카카오 인증 버튼 클릭 시 멤버 정보를 저장하고 카카오 로그인 URL로 이동
             signupMember()
                 .then(data => {
-                    console.log("Signup member response: ", data);
+                    // console.log("Signup member response: ", data);s
                     if (data.success) {
                         const link = getKakaoLoginLink();    // 카카오 로그인 URL
                         window.location.href = link;        // 로그인 페이지 리다이렉트
@@ -221,7 +221,7 @@ const Signup = () => {
                     if (data.success) {
                         alert("회원정보 등록이 완료되었습니다.\n이메일 인증 페이지로 이동합니다.")
                         navigator("/emailVerification", { state: { member } });
-                        console.log("회원정보 데이터: ", data);
+                        // console.log("회원정보 데이터: ", data);
                     } else {
                         setSignupCheck(data.message || "회원정보 등록 실패");
                         setLoading(false);

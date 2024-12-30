@@ -53,13 +53,6 @@ import MealCounselRoutes from './component/mealCounsel/routes/MealCounselRoutes'
 //영양상담 - 진단페이지 이동
 import Counsel from './component/mealCounsel/routes/Counsel';
 
-//영양상담 - 상담내역
-import CounselHistoryList from './component/mealCounsel/lists/CounselHistoryList';
-
-// import CounselHistoryWrite from './component/mealCounsel/writes/CounselHistoryWrite';
-// import CounselHistoryEdit from './component/mealCounsel/edits/CounselHistoryEdit';
-// import CounselHistoryDetail from './component/mealCounsel/details/CounselHistoryDetail';
-
 
 function App() {
   return (
@@ -110,18 +103,11 @@ function App() {
               <Route path="community/crawling/school-news" element={<SchoolMealNewsList />} />
               <Route path="community/crawling/materials" element={<AcademicMaterialsList />} />
 
-              {/*영양상담 자료실*/}
+              {/*영양상담*/}
               {MealCounselRoutes.props.children}
 
               {/*영양상담 진단 페이지*/}
               <Route path="Counsel" element={<Counsel />} />
-
-              {/*영양상담 상담내역 페이지*/}
-              <Route path="mealcounsel/CounselHistoryList" element={<CounselHistoryList />} />
-              {/* <Route path="mealcounsel/counselHistory/counselwrite" element={<CounselHistoryWrite />}/>
-              <Route path="mealcounsel//counselHistory/counseledit/:id" element={<CounselHistoryEdit />}/>
-              <Route path="mealcounsel//counselHistory/counseldetail/:id" element={<CounselHistoryDetail />}/> */}
-
 
             </Route>
 

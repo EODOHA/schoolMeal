@@ -8,10 +8,10 @@ import { HiChevronLeft, HiChevronDoubleLeft, HiChevronRight, HiChevronDoubleRigh
 import "../../../css/page/Pagination.css";
 import { useAuth } from "../../sign/AuthContext";  // 권한설정
 import SearchBar from "../../common/SearchBar";  // 검색기능
-import "../../../css/mealCounsel/MealCounselList.css";
+import "../../../css/mealCounsel/MealCounselHistoryList.css";
 
-function MealCounselList() {
-    const [mealCounsel, setMealCounsel] = useState([]);
+function MealCounselHistoryList() {
+    const [mealCounselHistory, setMealCounselHistory] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');  // 검색어 상태 추가
     const [selectedFilter, setSelectedFilter] = useState('전체'); // 필터 상태 추가
     const navigate = useNavigate();
@@ -22,13 +22,13 @@ function MealCounselList() {
     const [postsPerPage] = useState(5); // 페이지당 게시글 수
     const [pageNumbersPerBlock] = useState(4) // 한 블록당 표시할 페이지 번호 수    
 
-    const totalPages = Math.ceil(mealCounsel.length / postsPerPage); //전체 페이지 수
+    const totalPages = Math.ceil(mealCounselHistory.length / postsPerPage); //전체 페이지 수
     const currentBlock = Math.ceil(currentPage / pageNumbersPerBlock); // 현재 블록 번호
     const startPage = (currentBlock - 1) * pageNumbersPerBlock + 1; //현재 블록의 첫 페이지 번호
     const endPage = Math.min(startPage + pageNumbersPerBlock - 1, totalPages);  //현재 블록의 마지막 페이지번호(전체 페이지 수를 넘지 않도록)
 
     // 현재 페이지의 게시물 추출
-    const currentPosts = mealCounsel.filter(item => {
+    const currentPosts = mealCounselHistory.filter(item => {
         // 검색어 필터링 적용
         if (selectedFilter === '제목') {
             return item.title.toLowerCase().includes(searchQuery.toLowerCase());
@@ -67,10 +67,10 @@ function MealCounselList() {
     };
 
     useEffect(() => {
-        fetch(SERVER_URL + "mealCounsels")
+        fetch(SERVER_URL + "mealCounselHistories")
             .then(response => response.json())
             .then(data => {
-                setMealCounsel(data._embedded.mealCounsels);
+                setMealCounselHistory(data._embedded.mealCounselHistories);
             })
             .catch(err => console.error("Error fetching data:", err));
     }, []);
@@ -81,13 +81,13 @@ function MealCounselList() {
     };
 
     // 상세 페이지로 이동하는 함수
-    const goToDetailPage = (mealCounsel) => {
-        const mealCounselId = mealCounsel.id || (mealCounsel._links?.self?.href ? extractIdFromHref(mealCounsel._links.self.href) : null);
-        if (!mealCounselId) {
-            console.error("Invalid ID:", mealCounselId);
+    const goToDetailPage = (mealCounselHistory) => {
+        const mealCounselHistoryId = mealCounselHistory.id || (mealCounselHistory._links?.self?.href ? extractIdFromHref(mealCounselHistory._links.self.href) : null);
+        if (!mealCounselHistoryId) {
+            console.error("Invalid ID:", mealCounselHistoryId);
             return;
         }
-        navigate(`/mealCounsel/meal-counsel/${mealCounselId}`);
+        navigate(`/mealCounsel/meal-counsel-history/${mealCounselHistoryId}`);
     };
 
     const extractIdFromHref = (href) => {
@@ -96,20 +96,20 @@ function MealCounselList() {
     };
 
     return (
-        <div className="meal-counsel-list-container">
-            <h1 className="meal-counsel-title">매뉴얼 및 상담 관련 자료</h1>
-            <div className="meal-counsel-button-group">
-                <div className="meal-counsel-left-buttons">
+        <div className="meal-counsel-history-list-container">
+            <h1 className="meal-counsel-history-title">영양상담 이력관리</h1>
+            <div className="meal-counsel-history-button-group">
+                <div className="meal-counsel-history-left-buttons">
                     {(isAdmin || isBoardAdmin) && (
                         <Button
                             variant="outlined"
-                            onClick={() => navigate("/mealCounsel/meal-counsel/write")}
+                            onClick={() => navigate("/mealCounsel/meal-counsel-history/write")}
                         >
                             새 글 쓰기
                         </Button>
                     )}
                 </div>
-                <div className="meal-counsel-right-searchbar">
+                <div className="meal-counsel-history-right-searchbar">
                     <SearchBar
                         searchQuery={searchQuery}
                         selectedFilter={selectedFilter}
@@ -122,8 +122,8 @@ function MealCounselList() {
                     />
                 </div>
             </div>
-            <table className="meal-counsel-table">
-                <thead className="meal-counsel-thead">
+            <table className="meal-counsel-history-table">
+                <thead className="meal-counsel-history-thead">
                     <tr>
                         <th>번호</th>
                         <th>제목</th>
@@ -132,7 +132,7 @@ function MealCounselList() {
                         <th>첨부파일</th>
                     </tr>
                 </thead>
-                <tbody className="meal-counsel-tbody">
+                <tbody className="meal-counsel-history-tbody">
                     {currentPosts.length === 0 ? (
                         <tr>
                             <td colSpan="5" style={{ textAlign: "center" }}>
@@ -140,25 +140,24 @@ function MealCounselList() {
                             </td>
                         </tr>
                     ) : (
-                        currentPosts.map((mealCounsel, index) => {
-                            // 필터링된 게시글의 역순 인덱스를 계산
+                        currentPosts.map((mealCounselHistory, index) => {
                             const reversedFilteredIndex = currentPosts.length - index;
 
                             return (
                                 <tr
-                                    key={mealCounsel.id || `mealCounsel-${index}`}
-                                    onClick={() => goToDetailPage(mealCounsel)}
+                                    key={mealCounselHistory.id || `mealCounselHistory-${index}`}
+                                    onClick={() => goToDetailPage(mealCounselHistory)}
                                     style={{ cursor: "pointer" }}
                                 >
-                                    <td>{reversedFilteredIndex}</td> {/* 필터링 후 역순 번호 */}
-                                    <td>{mealCounsel.title}</td>
-                                    <td>{formatDate(mealCounsel.createdDate)}</td>
-                                    <td>{mealCounsel.writer}</td>
+                                    <td>{reversedFilteredIndex}</td>
+                                    <td>{mealCounselHistory.title}</td>
+                                    <td>{formatDate(mealCounselHistory.createdDate)}</td>
+                                    <td>{mealCounselHistory.writer}</td>
                                     <td>
-                                        {mealCounsel.fileUrlId ? (
-                                            <span className="meal-counsel-attachment-icon"><MdAttachFile /></span>
+                                        {mealCounselHistory.fileUrlId ? (
+                                            <span className="meal-counsel-history-attachment-icon"><MdAttachFile /></span>
                                         ) : (
-                                            <span className="meal-counsel-attachment-icon"><BsFileExcel /></span>
+                                            <span className="meal-counsel-history-attachment-icon"><BsFileExcel /></span>
                                         )}
                                     </td>
                                 </tr>
@@ -172,14 +171,14 @@ function MealCounselList() {
                 <Button
                     className="pagination-nav-button"
                     onClick={() => setCurrentPage(1)}
-                    disabled={currentPage === 1 || mealCounsel.length === 0}
+                    disabled={currentPage === 1 || mealCounselHistory.length === 0}
                 >
                     <HiChevronDoubleLeft />
                 </Button>
                 <Button
                     className="pagination-nav-button"
                     onClick={handlePrevBlock}
-                    disabled={currentPage === 1 || mealCounsel.length === 0}
+                    disabled={currentPage === 1 || mealCounselHistory.length === 0}
                 >
                     <HiChevronLeft />
                 </Button>
@@ -195,14 +194,14 @@ function MealCounselList() {
                 <Button
                     className="pagination-nav-button"
                     onClick={handleNextBlock}
-                    disabled={currentPage === totalPages || mealCounsel.length === 0}
+                    disabled={currentPage === totalPages || mealCounselHistory.length === 0}
                 >
                     <HiChevronRight />
                 </Button>
                 <Button
                     className="pagination-nav-button"
                     onClick={() => setCurrentPage(totalPages)}
-                    disabled={currentPage === totalPages || mealCounsel.length === 0}
+                    disabled={currentPage === totalPages || mealCounselHistory.length === 0}
                 >
                     <HiChevronDoubleRight />
                 </Button>
@@ -211,4 +210,4 @@ function MealCounselList() {
     );
 }
 
-export default MealCounselList;
+export default MealCounselHistoryList;
