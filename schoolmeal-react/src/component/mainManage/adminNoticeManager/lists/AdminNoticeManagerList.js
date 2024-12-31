@@ -25,7 +25,7 @@ const AdminNoticeManagerList = () => {
         })
         .then((res) => res.json())
         .then((data) => {
-            console.log(data);
+            // console.log(data);
             const sortedNotices = data.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
             setNotices(sortedNotices);
         })

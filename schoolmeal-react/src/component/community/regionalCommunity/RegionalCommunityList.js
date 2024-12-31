@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { SERVER_URL } from "../../../Constants";
 import { useAuth } from "../../sign/AuthContext";  // 권한설정
+import Pagination from '@mui/material/Pagination';
 import "../../../css/community/RegionalCommunityList.css";
 
 const RegionalCommunityList = () => {
@@ -10,6 +11,10 @@ const RegionalCommunityList = () => {
   const [loading, setLoading] = useState(true);
   const [selectedRegion, setSelectedRegion] = useState('ALL'); // 기본값은 전체 조회
   const [commentCounts, setCommentCounts] = useState({}); // 댓글 개수.
+
+  // 페이지네이션 관련 상태.
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지.
+  const itemsPerPage = 5; // 한 페이지당 보여줄 게시글 수.
   const navigate = useNavigate();
 
   // AuthContext에서 인증 상태와 권한 정보 가져오기
@@ -56,7 +61,17 @@ const RegionalCommunityList = () => {
     const region = e.target.value;
     setSelectedRegion(region);
     loadPosts(region); // 선택한 지역에 맞는 게시글을 로드합니다.
+    setCurrentPage(1); // 지역 변경 시, 페이지를 첫 페이지로 초기화.
   };
+
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+  }
+
+  // 현재 페이지에 표시할 게시글 계산.
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = posts.slice(indexOfFirstItem, indexOfLastItem);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -112,16 +127,15 @@ const RegionalCommunityList = () => {
           </tr>
         </thead>
         <tbody>
-          {Array.isArray(posts) && posts.length > 0 ? (
-            posts.map((post, index) => (
+          {currentItems.length > 0 ? (
+            currentItems.map((post, index) => (
               <tr key={post.id} onClick={() => navigate(`/community/regions/${post.id}`)}>
-                <td>{posts.length - index}</td>
+                <td>{posts.length - (currentPage - 1) * itemsPerPage - index}</td>
                 <td>{post.viewCount || 0}</td>
                 <td>
                   <span style={{ fontWeight: 'bold', color: '#1976d2' }}>
                     [{commentCounts[post.id] || 0}]
-                  </span>
-                  {" "} {/* 띄어쓰기 추가 */}
+                  </span>{" "}
                   {post.title}
                 </td>
                 <td>{post.author}</td>
@@ -138,6 +152,38 @@ const RegionalCommunityList = () => {
           )}
         </tbody>
       </table>
+      <div className="pagination-buttons" style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+        <Pagination
+          count={Math.ceil(posts.length / itemsPerPage)}
+          page={currentPage}
+          onChange={handlePageChange}
+          color="primary"
+          variant="outlined"
+          showFirstButton
+          showLastButton
+          sx={{
+            '& .MuiPaginationItem-root': {
+              borderRadius: '50%', // 둥근 버튼
+              border: '1px solid #e0e0e0', // 연한 테두리
+              backgroundColor: '#fff', // 기본 배경색
+              '&:hover': {
+                backgroundColor: '#52a8ff', // 호버 시 배경색
+              },
+              '&.Mui-selected': {
+                backgroundColor: '#1976d2', // 선택된 페이지 배경
+                color: '#fff', // 선택된 페이지 글자 색
+              },
+            },
+            '& .MuiPaginationItem-previousNext': {
+              fontSize: '20px', // 이전/다음 아이콘 크기
+              padding: '5px', // 간격
+            },
+            '& .MuiPaginationItem-first, & .MuiPaginationItem-last': {
+              fontSize: '20px', // 첫/마지막 아이콘 크기
+            },
+          }}
+        />
+      </div>
     </div>
   );
 };

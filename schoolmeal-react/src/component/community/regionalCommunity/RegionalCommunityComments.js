@@ -28,6 +28,11 @@ const RegionalCommunityComments = ({ communityPostId }) => {
     e.preventDefault();
     if (!content.trim()) return;
 
+    if (!memberId) {
+      alert("로그인이 필요합니다!");
+      return;
+    }
+
     // 작성 확인.
     const isConfirmed = window.confirm("댓글을 작성하시겠습니까?");
     if (!isConfirmed) return;
