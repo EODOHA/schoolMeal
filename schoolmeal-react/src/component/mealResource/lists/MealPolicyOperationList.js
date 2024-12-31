@@ -145,7 +145,9 @@ function MealPolicyOperationList() {
                 <tbody className="meal-resource-tbody">
                     {currentPosts.length === 0 ? (
                         <tr>
-                            <td colSpan="5" style={{ textAlign: "center" }}>해당하는 게시글이 없습니다.</td>
+                            <td colSpan="5" style={{ textAlign: "center" }}>
+                                {"해당하는 게시글이 없습니다."}
+                            </td>
                         </tr>
                     ) : (
                         currentPosts.map((mealPolicyOperation, index) => {

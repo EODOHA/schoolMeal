@@ -4,6 +4,7 @@ import '../../css/stats/Stats.css';
 // 차트 라이브러리 임포트
 import { Pie, Bar } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from "chart.js";
+import { Button } from "@mui/material";
 
 // Chart.js 등록
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
@@ -113,6 +114,7 @@ const PageStatsBoard = () => {
     // 차트 옵션(퍼센트 범례)
     const chartOptions = {
         responsive: true,
+        maintainAspectRatio: chartType === 'pie',
         plugins: {
             legend: {
                 position: "top",
@@ -128,6 +130,11 @@ const PageStatsBoard = () => {
                 },
             },
         },
+        scales: chartType === 'bar' ? {
+            y: {
+                beginAtZero: true,
+            },
+        } : {},
     };
 
     // 표 데이터 준비 (상위 5개와 기타를 표시)
@@ -136,15 +143,15 @@ const PageStatsBoard = () => {
     ];
     // console.log(totalPages);
 
+    const chartContainerStyle = {
+        height: chartType === "bar" ? "500px" : "auto",
+        width: "100%",
+        margin: "0 auto",
+    }
+
     return (
         <div className="stats-member-container">
             <h1 className="stats-member-title">게시판별 방문 통계</h1>
-            <div className="stats-text">
-                본 통계자료는 홈페이지를 이용하는 모든 사용자의 게시판 방문 횟수를 기반으로 합니다.<br />
-                사용자의 회원 권한별로 구분되지 않기 때문에 <br />
-                특정 사용자 그룹에 대한 이용 추이를 분석하는 데에는 한계가 있습니다.<br />
-                이에 해당 자료는 참고용으로만 이용하여 주시기 바랍니다.
-            </div>
             {/* 통계 표 */}
             <div className="stats-page-container">
                 <div className="stats-container">
@@ -162,45 +169,61 @@ const PageStatsBoard = () => {
                                     <td>{data.count}</td>
                                 </tr>
                             ))}
+                            <tr>
+                                <td className="chartType-selector" colSpan="1">
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="chartType"
+                                            value="pie"
+                                            checked={chartType === "pie"}
+                                            onChange={() => setChartType("pie")}
+                                        />
+                                        파이차트
+                                    </label>
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="chartType"
+                                            value="bar"
+                                            checked={chartType === "bar"}
+                                            onChange={() => setChartType("bar")}
+                                        />
+                                        막대차트
+                                    </label>
+                                </td>
+                                {/* 통계 초기화 버튼 */}
+                                <td className="reset-button" colSpan="1">
+                                    <Button
+                                        variant="contained"
+                                        color="error"
+                                        onClick={resetClickStats}>
+                                        통계 초기화
+                                    </Button>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                     <div>
-                        <button className="stats-clear-button" onClick={resetClickStats}>
-                            통계 초기화
-                        </button>
+                        {/* 차트 렌더링 */}
+                        <div className="page-stats-chart-container" style={chartContainerStyle}>
+
+                            {chartType === 'pie' ? (
+                                <Pie data={pieData} options={chartOptions} />
+                            ) : (
+                                <Bar data={barData} options={chartOptions} />
+                            )}
+                        </div>
                     </div>
                 </div>
-                {/* 차트 전환을 위한 라디오 버튼 */}
-                <div className="page-stats-chart-container">
-                    <label>
-                        <input
-                            type="radio"
-                            name="chartType"
-                            value="pie"
-                            checked={chartType === 'pie'}
-                            onChange={() => setChartType('pie')}
-                        />
-                        파이차트
-                    </label>
-                    <label>
-                        <input
-                            type="radio"
-                            name="chartType"
-                            value="bar"
-                            checked={chartType === 'bar'}
-                            onChange={() => setChartType('bar')}
-                        />
-                        막대차트
-                    </label>
-                    {/* 차트 렌더링 */}
-                    {chartType === 'pie' ? (
-                        <Pie data={pieData} options={chartOptions} />
-                    ) : (
-                        <Bar data={barData} options={chartOptions} />
-                    )}
-                </div>
+                <div className="stats-text">
+                본 통계자료는 홈페이지를 이용하는 모든 사용자의 게시판 방문 횟수를 기반으로 합니다.<br />
+                사용자의 회원 권한별로 구분되지 않기 때문에 <br />
+                특정 사용자 그룹에 대한 이용 추이를 분석하는 데에는 한계가 있습니다.<br />
+                이에 해당 자료는 참고용으로만 이용하여 주시기 바랍니다.
             </div>
-        </div>
+            </div>
+        </div >
     );
 };
 export default PageStatsBoard;
