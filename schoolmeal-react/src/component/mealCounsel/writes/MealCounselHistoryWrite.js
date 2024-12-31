@@ -17,12 +17,74 @@ function MealCounselHistoryWrite() {
     const [isLoadingAuth, setIsLoadingAuth] = useState(true); // 인증 상태 로딩
     const navigate = useNavigate();
 
+    const createHeaders = () => ({
+        'Content-Type': 'application/json',
+        'Authorization': token
+    });
+
+    // @로 내담자 ID 목록 가져오기
+    const [counselClientId, setCounselClientId] = useState([]);   // 대상 내담자 지정
+    const [counselClientList, setCounselClientList] = useState([]);
+    const [filteredCounselClients, setFilteredCounselClients] = useState([]);
+    const [showAutocomplete, setShowAutocomplete] = useState(false);
+
+
+    // 내담자 목록 @(멘션) 으로 자동완성 -------------------------------------------------------------
+
+    // 멤버 목록 가져오기
+    useEffect(() => {
+        fetch(`${SERVER_URL}members`, {
+            headers: createHeaders()
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                // console.log("서버로부터 받은 사용자 데이터: ", data);
+                const counselClientIds = data._embedded?.members.map((member) => member.memberId) || [];
+                // console.log(counselClientIds);
+                setCounselClientList(counselClientIds);  // memberId 배열로 상태 업데이트
+            })
+            .catch((error) => console.err("내담자 목록 가져오기 실패:", error));
+    }, []);
+
+    // @ 입력 감지 및 자동완성 목록 표시
+    const handleCounselClientInputChange = (e) => {
+        const input = e.target.value;
+        setCounselClientId(input);
+
+        const atIndex = input.lastIndexOf("@");
+        if (atIndex >= 0) {
+            const search = input.substring(atIndex + 1); // '@' 이후 텍스트
+            // console.log("현재 idList:", counselClientList); // 디버깅용 로그
+
+            if (Array.isArray(counselClientList)) {
+                const filtered = counselClientList.filter((user) =>
+                    user.toLowerCase().startsWith(search.toLowerCase())
+                );
+                setFilteredCounselClients(filtered);
+                setShowAutocomplete(filtered.length > 0);
+            } else {
+                console.error("counselClientList가 배열이 아닙니다.", counselClientList);
+                setShowAutocomplete(false); // 목록 숨김
+            }
+        } else {
+            setShowAutocomplete(false);
+        }
+    };
+
+    // 자동완성 UI 추가.
+    const handleAutocompleteSelect = (selectedMember) => {
+        const atIndex = counselClientId.lastIndexOf("@");
+        const updatedInput = counselClientId.substring(0, atIndex + 1) + selectedMember;
+        setCounselClientId(updatedInput);
+        setShowAutocomplete(false);
+    }
+
     // AuthContext에서 인증 상태와 권한 정보 가져오기
     const { isAuth, isAdmin, isBoardAdmin, token, role, memberId } = useAuth();
 
     // 작성자를 memberId로 설정 
     useEffect(() => {
-        let writer = role; 
+        let writer = role;
         if (isAdmin) {
             writer = "관리자";
         } else if (isBoardAdmin) {
@@ -109,6 +171,45 @@ function MealCounselHistoryWrite() {
                                 onChange={(e) => setWriter(e.target.value)}
                                 disabled
                             />
+                        </div>
+                        {/* 상담을 진행한 내담자의 ID 입력 */}
+                        <div className="meal-counsel-form-group">
+                            <TextField
+                                label="내담자 ID "
+                                placeholder="@ 입력시 사용자 아이디 조회 가능 "
+                                fullWidth
+                                value={counselClientId}
+                                onChange={handleCounselClientInputChange}
+                                required
+                            />
+                            {/* 자동완성 목록 */}
+                            {showAutocomplete && (
+                                <div style={{
+                                    position: "absolute",
+                                    backgroundColor: "white",
+                                    border: "1px solid #ccc",
+                                    borderRadius: "5px",
+                                    maxHeight: "100px",
+                                    overflow: "auto",
+                                    zIndex: 1000,
+                                }}>
+                                    {filteredCounselClients.map((user, index) => (
+                                        <div
+                                            key={index}
+                                            onClick={() => handleAutocompleteSelect(user)}
+                                            style={{
+                                                padding: "10px",
+                                                cursor: "pointer",
+                                                borderBottom: "1px solid #eee",
+                                            }}
+                                            onMouseOver={(e) => e.target.style.backgroundColor = "#f0f0f0"}
+                                            onMouseOut={(e) => e.target.style.backgroundColor = "white"}
+                                        >
+                                            {user}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                         <div className="meal-counsel-history-form-group">
                             <TextField
