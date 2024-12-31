@@ -28,6 +28,9 @@ const Layout = ({ hideHeaderFooter }) => {
 
   // 마이페이지 메뉴 표시 여부를 관리하는 상태 추가.
   const [isProfileUpdateOpen, setIsProfileUpdateOpen] = useState(false);
+
+  // 통계 분석 페이지 메뉴 표시 여부를 관리하는 상태 추가.
+  const [isStatsOpen, setIsStatsOpen] = useState(false);
   
   // 메인 페이지 링크용 상태 추가: isSchoolMealCaseOpen
   const [isSchoolMealCaseOpen, setIsSchoolMealCaseOpen] = useState(false);
@@ -74,6 +77,7 @@ const Layout = ({ hideHeaderFooter }) => {
     if (location.pathname.startsWith("/adminNoticeManager")) {
       setIsMemberManageOpen(true);
       setIsProfileUpdateOpen(false);
+      setIsStatsOpen(false);
     }
   }, []); // 컴포넌트가 처음 렌더링될 때 한 번 실행
 
@@ -93,6 +97,28 @@ const Layout = ({ hideHeaderFooter }) => {
     if (location.pathname.startsWith("/profileUpdate")) {
       setIsProfileUpdateOpen(true);
       setIsMemberManageOpen(false);
+      setIsStatsOpen(false);
+    }
+  }, []); // 컴포넌트가 처음 렌더링될 때 한 번 실행
+
+  useEffect(() => {
+    if (location.pathname.startsWith("/stats")) {
+        setTimeout(() => {
+            setIsMemberManageOpen(true); // 통계분석 메뉴 열기
+        }, 0); // 즉시 실행
+    } else {
+        setTimeout(() => {
+            setIsMemberManageOpen(false); // 닫기
+        }, 0);
+    }
+  }, [location.pathname]);
+
+  
+  useEffect(() => {
+    if (location.pathname.startsWith("/stats")) {
+      setIsStatsOpen(true);
+      setIsMemberManageOpen(false);
+      setIsProfileUpdateOpen(false);
     }
   }, []); // 컴포넌트가 처음 렌더링될 때 한 번 실행
 
@@ -109,6 +135,9 @@ const Layout = ({ hideHeaderFooter }) => {
           isProfileUpdateOpen={location.pathname.startsWith("/profileUpdate") ||
                                location.pathname.startsWith("/chat")}
           isSchoolMealCaseOpen={isSchoolMealCaseOpen}
+          isStatsOpen ={location.pathname.startsWith("/stats") ||
+                        location.pathname.startsWith("/stats/members")||
+                        location.pathname.startsWith("/stats/pages")}
         />
         )}
 
@@ -120,6 +149,7 @@ const Layout = ({ hideHeaderFooter }) => {
               setIsMemberManageOpen={setIsMemberManageOpen}
               setIsProfileUpdateOpen={setIsProfileUpdateOpen}
               setIsSchoolMealCaseOpen={setIsSchoolMealCaseOpen}
+              setIsStatsOpen={setIsStatsOpen}
               />
             )}
           <main className="layout-content">

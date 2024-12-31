@@ -10,7 +10,7 @@ import '../../css/layout/Header.css';  // Header.css 파일을 import
 import { SERVER_URL } from '../../Constants';
 import { Block } from '@mui/icons-material';
 
-const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setIsMemberManageOpen을 props로 받아옴
+const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen, setIsStatsOpen }) => {  // setIsMemberManageOpen을 props로 받아옴
   // 헤더 이미지 상태.
   const [headerImages, setHeaderImages] = useState([]);
 
@@ -156,8 +156,17 @@ const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setI
     setSelectedParent(null); // 함수 실행 시, 부모 게시판 초기화.
     setIsMemberManageOpen(true); // 유저관리 관련 메뉴 열기
     setIsProfileUpdateOpen(false);
+    setIsStatsOpen(false);
     navigate("/memberlist");     // 유저관리 페이지로 이동
   };
+  const handleStatsClick = () => {
+    setSelectedParent(null); // 함수 실행 시, 부모 게시판 초기화.
+    setIsStatsOpen(true);
+    setIsMemberManageOpen(false); // 유저관리 관련 메뉴 닫기
+    setIsProfileUpdateOpen(false);
+    navigate("/stats/members");     // 통계분석 페이지로 이동
+  };
+
 
   const toggleDrawer = (open) => {
     setDrawerOpen(open);  // Drawer 열기/닫기
@@ -169,6 +178,7 @@ const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setI
     setTimeout(() => setSelectedParent(parent), 0); // 선택된 부모를 상태에 저장
     setIsMemberManageOpen(false); // 부모 게시판 선택 시 유저 관리 메뉴 닫기
     setIsProfileUpdateOpen(false); // 부모 게시판 선택 시 마이 페이지 메뉴 닫기
+    setIsStatsOpen(false); //부모 게시판 선택 시 통계 분석 메뉴 닫기
   };
 
   // 화면 크기에 따라 표시할 navLinks의 수를 제한
@@ -342,9 +352,14 @@ const Header = ({ setIsMemberManageOpen, setIsProfileUpdateOpen }) => {  // setI
             ) : (
               <>
                 {isAdmin && (
-                  <Button className="mng-btn" color="inherit" onClick={handleMemberManageClick}>
-                    관리
-                  </Button>
+                  <>
+                    <Button className="mng-btn" color="inherit" onClick={handleStatsClick}>
+                      통계 분석
+                    </Button>
+                    <Button className="mng-btn" color="inherit" onClick={handleMemberManageClick}>
+                      관리
+                    </Button>
+                  </>
                 )}
                 <Button className="logout-btn" color="inherit" onClick={handleLogout}>
                   로그아웃
