@@ -115,7 +115,8 @@ const AdminNoticeManagerList = () => {
                             className={index % 2 === 0 ? 'even' : ''}
                             onClick={() => handleRowClick(notice.id)}
                         >
-                            <td>{notices.length - (currentPage - 1) * itemsPerPage - index}</td> {/* 역순 번호 출력 */}
+                             {/* 역순 번호 출력 */}
+                            <td>{notices.length - (currentPage - 1) * itemsPerPage - index}</td>
                             <td>{notice.title}</td>
                             <td>{formatDate(notice.createdDate)}</td>
                             <td>

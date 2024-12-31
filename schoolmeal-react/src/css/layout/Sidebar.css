@@ -63,7 +63,7 @@
     padding: 5px;
     margin: 20px 0; /* 각 링크 간의 간격 조정 */
     border-radius: 8px;
-    margin-left: -30px;
+    margin-left: -10px;
     background-color: #333;
     text-align: center;
     white-space: nowrap; /* 텍스트가 줄바꿈되지 않도록 설정 */

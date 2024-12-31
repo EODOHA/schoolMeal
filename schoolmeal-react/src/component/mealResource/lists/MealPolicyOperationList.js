@@ -160,7 +160,7 @@ function MealPolicyOperationList() {
                                     onClick={() => goToDetailPage(mealPolicyOperation)}
                                     style={{ cursor: "pointer" }}
                                 >
-                                    <td>{reversedFilteredIndex}</td> {/* 필터링 후 역순 번호 */}
+                                    <td>{reversedFilteredIndex}</td>
                                     <td>{mealPolicyOperation.title}</td>
                                     <td>{formatDate(mealPolicyOperation.createdDate)}</td>
                                     <td>{mealPolicyOperation.writer}</td>
