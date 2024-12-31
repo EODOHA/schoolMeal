@@ -22,7 +22,7 @@ const AdminNoticeManagerEdit = () => {
         })
         .then((res) => res.json())
         .then((data) => {
-            console.log(data);
+            // console.log(data);
             setNotice({
                 title: data.title || '',
                 content: data.content || '',

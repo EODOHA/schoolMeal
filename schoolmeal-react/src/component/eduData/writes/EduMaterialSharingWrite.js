@@ -101,7 +101,7 @@ function EduMaterialSharingWrite() {
             },
         })
             .then((response) => {
-                console.log("응답 데이터: ", response.data);  // 응답 전체 로그 출력
+                // console.log("응답 데이터: ", response.data);  // 응답 전체 로그 출력
                 const { fileUrl, imageUrl } = response.data;  // 서버 응답에서 fileUrl과 imageUrl 추출
 
                 // 응답에 fileUrl과 imageUrl이 존재하는지 체크

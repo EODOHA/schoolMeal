@@ -53,13 +53,25 @@ import MealCounselRoutes from './component/mealCounsel/routes/MealCounselRoutes'
 //영양상담 - 진단페이지 이동
 import Counsel from './component/mealCounsel/routes/Counsel';
 
+// 통계분석 
+import StatsRoutes from './component/stats/StatsRoutes';
+
+// 트래커
+import PageTracker from './component/stats/PageTracker';
+
 
 function App() {
+  const trackPath = (path) =>{
+    // console.log("트래킹된 경로: ", path);
+  };
+
   return (
     // AuthProvider와 NavLinksProvider를 중첩하여 감싸기
     <AuthProvider>
       <NavLinksProvider>  {/* NavLinksProvider 추가 */}
         <Router>
+            {/* 방문 게시판 통계를 위한 경로 트래킹 컴포넌트 */}
+            <PageTracker onTrack={trackPath} />  
           <Routes>
             {/* 첫 번째 레이아웃 */}
             <Route path="/" element={<Layout hideHeaderFooter={true} />}>
@@ -107,8 +119,11 @@ function App() {
               {MealCounselRoutes.props.children}
 
               {/*영양상담 진단 페이지*/}
-              <Route path="Counsel" element={<Counsel />} />
+              <Route path="mealCounsel/foodLife" element={<Counsel />} />
 
+               {/* 통계분석 페이지 */}
+               {StatsRoutes.props.children}
+            
             </Route>
 
             {/* 권한 없음 페이지 */}

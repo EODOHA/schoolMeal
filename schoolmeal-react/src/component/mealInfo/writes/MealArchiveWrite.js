@@ -14,8 +14,8 @@ function MealArchiveWrite({ writeArchive, error, handleBackToList }) {
     //컴포넌트가 처음 렌더링될 때 author를 권한에 따라 다르게 설정
     useEffect(() => {
         let arcAuthor = role; //
-        console.log(role);
-        console.log(isBoardAdmin);
+        // console.log(role);
+        // console.log(isBoardAdmin);
 
         if (isAdmin) {
             arcAuthor = "관리자";

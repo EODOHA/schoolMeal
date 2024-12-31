@@ -106,7 +106,7 @@ const ProcessedFoodUpload = () => {
         })
             .then(response => response.json())
             .then(data => {
-                console.log('성공:', data);
+                // console.log('성공:', data);
                 alert('업로드가 완료되었습니다! 목록페이지로 돌아갑니다.');
                 navigate('../processedFood');
 

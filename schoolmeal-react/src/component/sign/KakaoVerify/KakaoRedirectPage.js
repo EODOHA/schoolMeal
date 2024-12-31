@@ -29,11 +29,16 @@ const KakaoRedirectPage = () => {
                         });
                 })
                 .then(response => {
-                    console.log(response.data);
+                    // console.log(response.data);
                     const { success, message } = response.data;
                     if (success) {
+                        localStorage.removeItem("accessToken");
+                        localStorage.removeItem("memberId"); // 필요한 경우 추가 초기화
+
                         alert("인증이 완료되었습니다.\n로그인 선택 페이지로 이동합니다.");
+
                         navigate("/") // 인증 완료 후 페이지 이동
+
                     } else {
                         alert(message || "인증 실패: 다시 시도해 주세요.");
                         navigate("/signup"); //인증 실패 시 회원가입 페이지로 이동
@@ -41,15 +46,15 @@ const KakaoRedirectPage = () => {
                 })
                 .catch(error => {
                     const errorMessage = error.response?.data?.message || "인증처리 중 오류가 발생헀습니다.\n다시 시도해 주세요.";
-                    console.error("카카오 인증 오류: ", errorMessage);
+                    // console.error("카카오 인증 오류: ", errorMessage);
                     alert(errorMessage);
                     navigate("/signup");
-                });
+                })
         } else {
             alert("인증 코드가 없습니다.\n 다시 시도해 주세요.");
             navigate("/signup");
         }
-    }, [location, navigate]);
+    }, [location.search, navigate]);
 
 
     return (

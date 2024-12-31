@@ -43,8 +43,8 @@ const navLinksInitial = [
     { path: "/mealCounsel", label: "영양상담",
         subLinks: [
             { path: "/mealCounsel/meal-counsel", label: "매뉴얼 및 상담 관련 자료" },
-            { path: "/counsel", label: "식생활·습관 진단 프로그램" },
-            { path: "/mealcounsel/meal-counsel-history", label: "영양상담 이력관리"}
+            { path: "/mealCounsel/foodLife", label: "식생활·습관 진단 프로그램" },
+            { path: "/mealCounsel/meal-counsel-history", label: "영양상담 이력관리"}
         
         ],
         showSearch: true  // 검색창을 보여줄 항목
@@ -62,14 +62,13 @@ const navLinksInitial = [
         showSearch: true
     },
     {
-        path: "/test7", label: "테스트7",
+        path: "/stats", label: "통계분석",
         subLinks: [
-            { path: "/test7/sub1", label: "테스트7-서브1" },
-            { path: "/test7/sub2", label: "테스트7-서브2" }
+            { path: "/stats/members", label: "가입자 수 통계" },
+            { path: "/stats/pages", label: "선호페이지 통계" }
         ],
         showSearch: true  // 검색창을 보여줄 항목
     },
-
 ];
 
 // NavLinksContext를 createContext로 생성합니다.

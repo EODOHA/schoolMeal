@@ -42,7 +42,7 @@ function MealCounselHistoryDetail() {
         setLoading(false);
       })
       .catch((err) => {
-        console.log("Error:", err); // 오류 정보 로그
+        // console.log("Error:", err); // 오류 정보 로그
         setError("데이터를 가져오는 중 오류가 발생했습니다.");
         setLoading(false);
       });

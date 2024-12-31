@@ -48,9 +48,9 @@ const ProductSafetyUpload = () => {
             return;
         }
         const reader = new FileReader();
-        reader.onloadstart = () => console.log("파일 읽기 시작...");
-        reader.onloadend = () => console.log("파일 읽기 완료!");
-        reader.onerror = (err) => console.error("파일 읽기 중 오류 발생:", err);
+        // reader.onloadstart = () => console.log("파일 읽기 시작...");
+        // reader.onloadend = () => console.log("파일 읽기 완료!");
+        // reader.onerror = (err) => console.error("파일 읽기 중 오류 발생:", err);
 
 
         reader.onload = (e) => {
@@ -65,7 +65,7 @@ const ProductSafetyUpload = () => {
 
             //시트 데이터를 JSON으로 변환
             const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });   //첫번째 행을 헤더로 사용
-            console.log("jsonData: ", jsonData);
+            // console.log("jsonData: ", jsonData);
 
             //첫번째 행(헤더)를 제외하고, 두번째 행부터 매핑
             // 데이터 필터링 및 매핑
@@ -111,7 +111,7 @@ const ProductSafetyUpload = () => {
         })
             .then(response => response.json())
             .then(data => {
-                console.log('성공:', data);
+                // console.log('성공:', data);
                 alert('업로드가 완료되었습니다! 목록페이지로 돌아갑니다.');
                 navigate('../product-safety');
 

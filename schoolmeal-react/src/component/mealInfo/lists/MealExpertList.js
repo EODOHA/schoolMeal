@@ -68,7 +68,7 @@ function MealExpertList() {
             qualifications: expert.qualifications || [],
             histories: expert.histories || [],
         };
-        console.log("보내는 데이터:", payload); // 데이터 확인
+        // console.log("보내는 데이터:", payload); // 데이터 확인
         // console.log("자격증 배열:", expert.qualifications);
         // console.log("경력 사항 배열:", expert.histories);
 
@@ -82,7 +82,7 @@ function MealExpertList() {
                 }
             })
             .then(response => {
-                console.log("전문인력 정보 수정 완료:", response.data);
+                // console.log("전문인력 정보 수정 완료:", response.data);
                 alert("전문인력 정보가 수정되었습니다.")
                 fetchExperts();
             })
@@ -125,7 +125,7 @@ function MealExpertList() {
 
     // 상세보기 페이지로 전환하는 함수
     const goToDetailPage = (exp_id) => {
-        console.log(`${SERVER_URL}mealExpert/${exp_id}`);  // 요청 URL 확인
+        // console.log(`${SERVER_URL}mealExpert/${exp_id}`);  // 요청 URL 확인
 
         navigate(`/mealInfo/meal-expert/${exp_id}`);
     }
@@ -150,7 +150,7 @@ function MealExpertList() {
                     {(isAdmin || isBoardAdmin) && (
                         <Stack sx={{ mt: 2, mb: 2 }}>
                             <MealExpertWrite addExpert={(newExpert) => {
-                                console.log("추가된 전문가 데이터:", newExpert); // 전달된 데이터 확인
+                                // console.log("추가된 전문가 데이터:", newExpert); // 전달된 데이터 확인
                                 addExpert(newExpert);
                             }} />
                         </Stack>

@@ -26,7 +26,7 @@ const SchoolSearch = ({ onSchoolSelect }) => {
                 setOpenModal(true); // 모달 열기
             }
         } catch (err) {
-            console.log(err);
+            // console.log(err);
             alert('학교 검색 중 오류가 발생했습니다.');
             setSchoolName(''); // 검색창 초기화
             setSearchResults([]); // 결과 초기화

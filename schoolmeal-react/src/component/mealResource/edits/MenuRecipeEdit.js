@@ -77,7 +77,7 @@ function MenuRecipeEdit() {
                     alert("파일 크기가 너무 큽니다. 최대 10MB까지 지원됩니다.");
                     return;
                 }
-                console.log("Selected file:", file.name);
+                // console.log("Selected file:", file.name);
             }
             setMenuRecipe({
                 ...menuRecipe,

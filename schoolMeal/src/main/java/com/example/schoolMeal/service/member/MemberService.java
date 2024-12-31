@@ -340,4 +340,25 @@ public class MemberService {
 		}
 		return false; // 인증 실패
 	}
+	// 카카오 로그아웃 처리
+//		public void logoutFromKakao(String accessToken) {
+//			String kakaoLogoutUrl = "https://kapi.kakao.com/v1/user/logout";
+//			try {
+//				// 로그아웃 요청 및 처리
+//				WebClient logoutClient = WebClient.builder()
+//						.baseUrl(kakaoLogoutUrl)
+//						.defaultHeader("Authorization", "Bearer " + accessToken)
+//						.build();
+	//
+//				logoutClient.post()
+//				.retrieve()
+//				.bodyToMono(Void.class) // 응답 데이터 없음
+//				.block();
+	//
+//				logger.debug("@@@@@ 로그아웃 성공");
+//			} catch (Exception e) {
+//				System.err.println("@@@@ 카카오 로그아웃 실패: " + e.getMessage());
+//			}
+	//
+//		}
 }

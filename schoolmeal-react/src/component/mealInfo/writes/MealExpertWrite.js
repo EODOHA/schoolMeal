@@ -55,11 +55,11 @@ function MealExpertWrite({ addExpert }) {
                     'Content-Type': 'application/json',
                 },
             });
-            console.log("Sending POST request to:", `${SERVER_URL}mealExpert`);
+            // console.log("Sending POST request to:", `${SERVER_URL}mealExpert`);
 
             alert('전문인력 정보가 저장되었습니다.');
             addExpert(data);  // 부모 컴포넌트로 데이터 전달
-            console.log(data);
+            // console.log(data);
             handleClose();  // 모달 닫기
 
         } catch (error) {
