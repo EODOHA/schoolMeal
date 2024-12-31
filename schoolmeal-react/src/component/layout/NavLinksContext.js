@@ -61,14 +61,7 @@ const navLinksInitial = [
         ],
         showSearch: true
     },
-    {
-        path: "/stats", label: "통계분석",
-        subLinks: [
-            { path: "/stats/members", label: "가입자 수 통계" },
-            { path: "/stats/pages", label: "선호페이지 통계" }
-        ],
-        showSearch: true  // 검색창을 보여줄 항목
-    },
+
 ];
 
 // NavLinksContext를 createContext로 생성합니다.

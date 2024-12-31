@@ -4,7 +4,7 @@ import { useNavLinks } from './NavLinksContext'; // NavLinksContext import
 import '../../css/layout/Sidebar.css';  // Sidebar.css 파일을 import
 import ChatApp from '../../ChatApp';
 
-const Sidebar = ({ isMemberManageOpen, isProfileUpdateOpen }) => {
+const Sidebar = ({ isMemberManageOpen, isProfileUpdateOpen, isStatsOpen }) => {
     const location = useLocation();
     const { navLinks, selectedParent, setSelectedParent } = useNavLinks();
 
@@ -24,7 +24,7 @@ const Sidebar = ({ isMemberManageOpen, isProfileUpdateOpen }) => {
     // 부모 게시판 자동 선택 로직 추가
     useEffect(() => {
         // 현재 경로에 해당하는 부모 게시판을 탐색
-        const parent = navLinks.find((link) => 
+        const parent = navLinks.find((link) =>
             link.subLinks.some((subLink) => location.pathname.startsWith(subLink.path))
         );
         if (parent && parent !== selectedParent) {
@@ -35,7 +35,7 @@ const Sidebar = ({ isMemberManageOpen, isProfileUpdateOpen }) => {
     return (
         <div className="sidebar">
             {/* 선택된 부모 게시판이 있을 때만 그 부모의 자식 게시판을 표시 */}
-            {!isMemberManageOpen && !isProfileUpdateOpen && selectedParent && (
+            {!isMemberManageOpen && !isProfileUpdateOpen && !isStatsOpen && selectedParent && (
                 <div className="sub-links">
                     <h3>{selectedParent.label}</h3>
                     <ul>
@@ -64,6 +64,20 @@ const Sidebar = ({ isMemberManageOpen, isProfileUpdateOpen }) => {
                         </li>
                         <li>
                             <Link to="/adminNoticeManager">메인 공지사항 관리</Link>
+                        </li>
+                    </ul>
+                </div>
+            )}
+            {/* 통계 분석 메뉴 추가 */}
+            {isStatsOpen && (
+                <div className="sub-links">
+                    <h3>통계분석</h3>
+                    <ul>
+                        <li>
+                            <Link to="/stats/members">가입자 수 통계</Link>
+                        </li>
+                        <li>
+                            <Link to="/stats/pages">게시판별 방문 통계</Link>
                         </li>
                     </ul>
                 </div>
