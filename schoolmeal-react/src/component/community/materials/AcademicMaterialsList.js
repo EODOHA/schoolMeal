@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { SERVER_URL } from "../../../Constants";
 import "../../../css/community/AcademicMaterialsList.css";
+import LoadingSpinner from '../../common/LoadingSpinner';
 
 const AcademicMaterialsList = () => {
   const [materialsList, setMaterialsList] = useState([]);
@@ -25,7 +26,7 @@ const AcademicMaterialsList = () => {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div><LoadingSpinner /></div>;
   }
 
   return (

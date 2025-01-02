@@ -6,6 +6,7 @@ import { useAuth } from "../../sign/AuthContext";
 import { Button } from '@mui/material';
 import RegionalCommunityComments from './RegionalCommunityComments';
 import "../../../css/community/RegionalCommunityDetail.css";
+import LoadingSpinner from '../../common/LoadingSpinner';
 
 const RegionalCommunityDetail = () => {
   const { id: postId } = useParams();
@@ -14,8 +15,7 @@ const RegionalCommunityDetail = () => {
   const [loading, setLoading] = useState(true);
 
   // AuthContext에서 인증 상태와 권한 정보 가져오기
-  const { memberId, role, token } = useAuth();
-  const [isAuthor, setIsAuthor] = useState(false);
+  const { memberId, role, token, isAuth } = useAuth();
 
   useEffect(() => {
     // 게시글 상세 조회
@@ -35,7 +35,9 @@ const RegionalCommunityDetail = () => {
 
   // 권한 판단 함수
   const canEditOrDelete = () => {
+
     return role === "ADMIN" || role === "BOARDADMIN" || post?.author === memberId; // ADMIN, BOARDADMIN, 작성자인 경우
+
   };
 
   // 게시글 삭제 처리
@@ -57,7 +59,9 @@ const RegionalCommunityDetail = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>
+      <LoadingSpinner />
+    </div>;
   }
 
   if (!post) {
@@ -88,7 +92,7 @@ const RegionalCommunityDetail = () => {
       </table>
       <div className="regionCommunityDetailbutton-group">
         {/* 수정 버튼 */}
-        {(isAuthor && canEditOrDelete()) && (
+        {(isAuth && canEditOrDelete()) && (
           <Button
             variant="outlined"
             color="success"
@@ -107,7 +111,7 @@ const RegionalCommunityDetail = () => {
         </Button>
 
         {/* 삭제 버튼 */}
-        {(isAuthor && canEditOrDelete()) && (
+        {(isAuth && canEditOrDelete()) && (
           <Button
             variant="contained"
             color="error"

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { SERVER_URL } from "../../../Constants";
 import "../../../css/community/SchoolMealNewsList.css"; 
 import SchoolMealNewsAnalyzer from '../../artificial_intelligence/SchoolMealNewsAnalyzer';
+import LoadingSpinner from '../../common/LoadingSpinner';
 
 const SchoolMealNewsList = () => {
   const [news, setNews] = useState([]);
@@ -26,9 +27,8 @@ const SchoolMealNewsList = () => {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div><LoadingSpinner /></div>;
   }
-
   return (
     <div className="news-list-container">
       <SchoolMealNewsAnalyzer />

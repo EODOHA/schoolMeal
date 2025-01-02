@@ -5,6 +5,7 @@ import { SERVER_URL } from "../../../Constants";
 import { useAuth } from "../../sign/AuthContext";  // 권한설정
 import Pagination from '@mui/material/Pagination';
 import "../../../css/community/RegionalCommunityList.css";
+import LoadingSpinner from '../../common/LoadingSpinner';
 
 const RegionalCommunityList = () => {
   const [posts, setPosts] = useState([]);
@@ -74,7 +75,7 @@ const RegionalCommunityList = () => {
   const currentItems = posts.slice(indexOfFirstItem, indexOfLastItem);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div><LoadingSpinner /></div>;
   }
 
   return (

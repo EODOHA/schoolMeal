@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from './component/sign/AuthContext';
 import { NavLinksProvider } from './component/layout/NavLinksContext';  // NavLinksProvider 임포트
 import AdminRoute from './component/sign/AdminRoute';
+import LoginAuthRoute from './component/sign/LoginAuthRoute';
 
 // 페이지 컴포넌트들 임포트
 import Layout from './component/layout/Layout';
@@ -107,9 +108,9 @@ function App() {
 
               {/* 커뮤니티-지역별 커뮤니티 관련 라우팅 추가 */}
               <Route path="community/regions" element={<RegionalCommunityList />} />
-              <Route path="community/regions/create" element={<CreateRegionalCommunity />} />
+              <Route path="community/regions/create" element={<LoginAuthRoute element={<CreateRegionalCommunity />} />} />
               <Route path="community/regions/:id" element={<RegionalCommunityDetail />} />
-              <Route path="community/regions/edit/:id" element={<CreateRegionalCommunity />} />
+              <Route path="community/regions/edit/:id" element={<LoginAuthRoute element={<CreateRegionalCommunity />} />} />
 
               {/* 커뮤니티-급식 뉴스 및 학술 자료 관련 라우팅 추가 */}
               <Route path="community/crawling/school-news" element={<SchoolMealNewsList />} />
