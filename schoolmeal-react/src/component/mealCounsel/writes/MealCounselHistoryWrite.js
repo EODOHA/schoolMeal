@@ -120,10 +120,20 @@ function MealCounselHistoryWrite() {
     const handleSubmit = (e) => {
         e.preventDefault();
         setLoading(true);
+        
+        // counselClientId 에 @이 있는 경우 @ 다음의 문자를 counselClient로 저장
+        let counselClient;
+        if (counselClientId.includes("@")) {
+            counselClient = counselClientId.split("@")[1];
+        } else {
+            counselClient = counselClientId;
+        }
+
         const formData = new FormData();
         formData.append("title", title);
         formData.append("writer", writer);
         formData.append("content", content);
+        formData.append("counselClient", counselClient);
 
         if (file) {
             formData.append("file", file);

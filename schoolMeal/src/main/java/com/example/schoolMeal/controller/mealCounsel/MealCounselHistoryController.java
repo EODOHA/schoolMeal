@@ -50,12 +50,16 @@ public class MealCounselHistoryController {
 
 	// 작성 처리
 	@PostMapping("/writepost")
-	public String mealCounselHistoryWritePost(@RequestParam("title") String title, @RequestParam("writer") String writer,
-			@RequestParam("content") String content, @RequestParam(value = "file", required = false) MultipartFile file,
+	public String mealCounselHistoryWritePost(@RequestParam("title") String title,
+			@RequestParam("writer") String writer,
+			@RequestParam("counselClient") String counselClient,
+			@RequestParam("content") String content,
+			@RequestParam(value = "file", required = false) MultipartFile file,
 			RedirectAttributes redirectAttributes) throws IOException {
 		MealCounselHistory mealCounselHistory = new MealCounselHistory();
 		mealCounselHistory.setTitle(title);
 		mealCounselHistory.setWriter(writer);
+		mealCounselHistory.setCounselClient(counselClient);
 		mealCounselHistory.setContent(content);
 
 		// 파일 디버깅 출력
@@ -87,6 +91,7 @@ public class MealCounselHistoryController {
 			@RequestParam(value = "title", required = false) String title,
 			@RequestParam(value = "content", required = false) String content,
 			@RequestParam(value = "writer", required = false) String writer,
+			@RequestParam(value = "counselClient", required = false) String counselClient,
 			@RequestParam(value = "file", required = false) MultipartFile file) {
 		try {
 			// 기존 데이터 조회
@@ -102,6 +107,8 @@ public class MealCounselHistoryController {
 				existingMealCounselHistory.setContent(content);
 			if (writer != null)
 				existingMealCounselHistory.setWriter(writer);
+			if (counselClient != null)
+				existingMealCounselHistory.setCounselClient(counselClient);
 
 			// 파일 처리 로직
 			if (file != null && !file.isEmpty()) {

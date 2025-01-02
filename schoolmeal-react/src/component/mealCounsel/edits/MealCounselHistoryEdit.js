@@ -11,6 +11,7 @@ function MealCounselHistoryEdit() {
     const [mealCounselHistory, setMealCounselHistory] = useState({
         title: "",
         writer: "",
+        counselClient: "",
         createdDate: "",
         content: "",
         fileId: "",
@@ -49,6 +50,7 @@ function MealCounselHistoryEdit() {
                     setMealCounselHistory({
                         title: data.title,
                         writer: data.writer,
+                        counselClient: data.counselClient,
                         createdDate: data.createdDate,
                         content: data.content,
                         fileId: data.fileId,
@@ -93,6 +95,7 @@ function MealCounselHistoryEdit() {
         const formData = new FormData();
         formData.append("title", mealCounselHistory.title);
         formData.append("writer", mealCounselHistory.writer);
+        formData.append("counselClient", mealCounselHistory.counselClient);
         formData.append("content", mealCounselHistory.content);
 
         if (mealCounselHistory.file) {
@@ -148,6 +151,16 @@ function MealCounselHistoryEdit() {
                                 type="text"
                                 name="writer"
                                 value={mealCounselHistory.writer}
+                                onChange={handleChange}
+                                disabled
+                            />
+                        </div>
+                        <div className="meal-counsel-history-form-group">
+                            <label>내담자:</label>
+                            <input
+                                type="text"
+                                name="counselClient"
+                                value={mealCounselHistory.counselClient}
                                 onChange={handleChange}
                                 disabled
                             />

@@ -256,9 +256,6 @@ const HaccpInfoList = () => {
     const calculateTotalNumber = (index) => {
         return totalElements - ((currentPage - 1) * pageSize + index);    // 페이지가 1부터 시작하도록 수정
     };
-    if (error) {
-        return <h3 style={{ textAlign: 'center' }}>데이터를 가져오는 중 오류가 발생했습니다: {error.message}</h3>;
-    }
     return (
         <div className="ingredient-info-list-container">
             <h1 className="ingredient-info-title">HACCP 인증 정보</h1>

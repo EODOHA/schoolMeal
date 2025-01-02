@@ -18,7 +18,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Table(name = "mealcounsel_history") // 테이블 명
 @Entity
 @Getter
 @Setter
@@ -41,6 +40,10 @@ public class MealCounselHistory {
 	// 작성자 필드
 	@Column(nullable = false)
 	private String writer;
+
+	// 내담자 필드
+	@Column(nullable = false)
+	private String counselClient;
 
 	// 생성 날짜와 시간을 저장하는 필드
 	@Column(nullable = false)

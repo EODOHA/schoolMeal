@@ -60,7 +60,7 @@
 }
 
 .meal-counsel-history-table th:nth-child(2), .meal-counsel-history-table td:nth-child(2) {
-    width: 40%; /* 제목 열의 너비 (가장 넓게 설정) */
+    width: 30%; /* 제목 열의 너비 (가장 넓게 설정) */
 }
 
 .meal-counsel-history-table th:nth-child(3), .meal-counsel-history-table td:nth-child(3) {
@@ -71,6 +71,9 @@
     width: 15%; /* 작성자 열의 너비 */
 }
 
+.meal-counsel-history-table th:nth-child(5), .meal-counsel-history-table td:nth-child(5) {
+    width: 15%; /* 내담자 열의 너비 */
+}
 .meal-counsel-history-table th:nth-child(5), .meal-counsel-history-table td:nth-child(5) {
     width: 15%; /* 첨부파일 열의 너비 */
 }

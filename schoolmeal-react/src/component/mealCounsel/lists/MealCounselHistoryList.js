@@ -34,12 +34,15 @@ function MealCounselHistoryList() {
             return item.title.toLowerCase().includes(searchQuery.toLowerCase());
         } else if (selectedFilter === '작성자') {
             return item.writer.toLowerCase().includes(searchQuery.toLowerCase());
+        } else if (selectedFilter === '내담자') {
+            return item.counselClient.toLowerCase().includes(searchQuery.toLowerCase());
         } else if (selectedFilter === '내용') {
             return item.content.toLowerCase().includes(searchQuery.toLowerCase());
         } else { // 전체
             return (
                 item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 item.writer.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                item.counselClient.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 item.content.toLowerCase().includes(searchQuery.toLowerCase())
             );
         }
@@ -115,6 +118,7 @@ function MealCounselHistoryList() {
                         selectedFilter={selectedFilter}
                         setSelectedFilter={setSelectedFilter}
                         setSearchQuery={setSearchQuery}
+                        filterOptions={["전체", "작성자", "내담자", "내용"]}
                         onFilterChange={(filterType, filterValue) => {
                             setSelectedFilter(filterType);
                             setSearchQuery(filterValue);
@@ -129,6 +133,7 @@ function MealCounselHistoryList() {
                         <th>제목</th>
                         <th>등록일</th>
                         <th>작성자</th>
+                        <th>내담자</th>
                         <th>첨부파일</th>
                     </tr>
                 </thead>
@@ -153,6 +158,7 @@ function MealCounselHistoryList() {
                                     <td>{mealCounselHistory.title}</td>
                                     <td>{formatDate(mealCounselHistory.createdDate)}</td>
                                     <td>{mealCounselHistory.writer}</td>
+                                    <td>{mealCounselHistory.counselClient}</td>
                                     <td>
                                         {mealCounselHistory.fileUrlId ? (
                                             <span className="meal-counsel-history-attachment-icon"><MdAttachFile /></span>

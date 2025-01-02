@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { Button, Menu, MenuItem, Stack, Popover, TextField, InputAdornment } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+// 공통 필터 옵션
+const DEFAULT_FILTER_OPTIONS = ["전체", "제목", "작성자", "내용"];
 
-function SearchBar({ onFilterChange }) {
+function SearchBar({ onFilterChange, filterOptions = DEFAULT_FILTER_OPTIONS }) {
     const [searchQuery, setSearchQuery] = useState("");  // 검색어 상태
     const [anchorEl, setAnchorEl] = useState(null);  // 필터 메뉴 앵커
-    const [selectedFilter, setSelectedFilter] = useState("전체");  // 선택된 필터
+    const [selectedFilter, setSelectedFilter] = useState(filterOptions[0]);  // 선택된 필터
 
-    const filterOptions = ["전체", "제목", "작성자", "내용"];  // 필터 옵션
 
     // 검색어가 변경될 때마다 호출
     const handleSearchChange = (e) => {
