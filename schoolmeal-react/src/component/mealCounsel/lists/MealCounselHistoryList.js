@@ -118,7 +118,7 @@ function MealCounselHistoryList() {
                         selectedFilter={selectedFilter}
                         setSelectedFilter={setSelectedFilter}
                         setSearchQuery={setSearchQuery}
-                        filterOptions={["전체", "작성자", "내담자", "내용"]}
+                        filterOptions={["전체", "제목", "작성자", "내담자", "내용"]}
                         onFilterChange={(filterType, filterValue) => {
                             setSelectedFilter(filterType);
                             setSearchQuery(filterValue);
