@@ -15,6 +15,7 @@ const RegionalCommunityDetail = () => {
 
   // AuthContext에서 인증 상태와 권한 정보 가져오기
   const { memberId, role, token } = useAuth();
+  const [isAuthor, setIsAuthor] = useState(false);
 
   useEffect(() => {
     // 게시글 상세 조회
@@ -87,7 +88,7 @@ const RegionalCommunityDetail = () => {
       </table>
       <div className="regionCommunityDetailbutton-group">
         {/* 수정 버튼 */}
-        {canEditOrDelete() && (
+        {(isAuthor && canEditOrDelete()) && (
           <Button
             variant="outlined"
             color="success"
@@ -96,7 +97,6 @@ const RegionalCommunityDetail = () => {
             수정
           </Button>
         )}
-
         {/* 뒤로 가기 버튼 */}
         <Button
           variant="outlined"
@@ -107,7 +107,7 @@ const RegionalCommunityDetail = () => {
         </Button>
 
         {/* 삭제 버튼 */}
-        {canEditOrDelete() && (
+        {(isAuthor && canEditOrDelete()) && (
           <Button
             variant="contained"
             color="error"
